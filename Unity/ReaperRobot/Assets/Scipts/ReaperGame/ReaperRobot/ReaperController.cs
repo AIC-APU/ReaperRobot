@@ -86,12 +86,6 @@ namespace smart3tene.Reaper
         {
             _reaperManager.RotateCutter(!_reaperManager.IsCutting.Value);
         }
-        private void RotateCamera(InputAction.CallbackContext obj)
-        {
-            var move = obj.ReadValue<Vector2>();
-            var rotateSpeed = 1f;
-            _reaperManager.RotateCamera(-1 * move.y * rotateSpeed, move.x * rotateSpeed, 0);
-        }
         private void MoveCamera(InputAction.CallbackContext obj)
         {
             var move = obj.ReadValue<Vector2>();
