@@ -147,6 +147,17 @@
                 },
                 {
                     "name": "",
+                    "id": "fa26a385-5742-4284-abad-84ad4db8414b",
+                    "path": "<HID>",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "d6e028e5-5fed-41ec-b0ef-ee47d1270618",
                     "path": "<Keyboard>/e",
                     "interactions": "",
