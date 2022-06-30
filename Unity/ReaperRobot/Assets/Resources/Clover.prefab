@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fffee2d5a324264a8b67a315ffb1aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cutEffectPrefab: {fileID: 3839245975310408970, guid: 7f0326d1dab876d40b76063981bcee3b, type: 3}
 --- !u!114 &-2188655380372793538
 MonoBehaviour:
   m_ObjectHideFlags: 0

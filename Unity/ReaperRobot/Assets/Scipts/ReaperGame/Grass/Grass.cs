@@ -17,6 +17,9 @@ namespace smart3tene.Reaper
         //    L Step2(カットが終了した状態)
         //(この時の_maxStep は 2 になります)
 
+        #region Serialized Private Fields
+        [SerializeField] private GameObject _cutEffectPrefab;
+        #endregion
 
         #region private Fields
         public IReadOnlyReactiveProperty<bool> IsCut => _isCut;
@@ -26,6 +29,7 @@ namespace smart3tene.Reaper
         private float _cutTime = 0;
         private int _nowStep = 0;
         private int _maxStep;
+        private GameObject _cutEffectInstance;
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -59,7 +63,21 @@ namespace smart3tene.Reaper
                 {
                     _isCut.Value = true;
                     GameSystem.Instance.AddCutGrassCount(1);
+                    Destroy(_cutEffectInstance);
                 }
+
+                if(_cutEffectInstance == null)
+                {
+                    _cutEffectInstance = Instantiate(_cutEffectPrefab, transform.position, Quaternion.identity);
+                }              
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Cutting"))
+            {
+                Destroy(_cutEffectInstance);
             }
         }
 

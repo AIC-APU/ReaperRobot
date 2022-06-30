@@ -31,7 +31,7 @@ namespace smart3tene.Reaper
             //プロポを使っているかどうかの判断
             //ジョイスティックの接続・切断した時のコールバックとかあれば本当はそこで処理をしたい
             //見つけられなかったのでUpdateでやってる
-            if (Input.GetJoystickNames()[0] == "WSC-1")
+            if (Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0] == "WSC-1")
             {
                 _isUsingPropo = true;
             }
