@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using Cysharp.Threading.Tasks;
+using UnityEngine.Events;
+using System;
 
 namespace smart3tene.Reaper
 {
@@ -30,6 +33,7 @@ namespace smart3tene.Reaper
         private int _nowStep = 0;
         private int _maxStep;
         private GameObject _cutEffectInstance;
+        private ParticleSystem _particleSystem;
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -44,7 +48,7 @@ namespace smart3tene.Reaper
                 transform.GetChild(i).gameObject.SetActive(false);
             }
 
-            GameSystem.Instance.ResetEvent += ResetGrass;
+            GameSystem.Instance.ResetEvent += ResetGrass;           
         }
 
         private void OnTriggerStay(Collider other)
@@ -55,29 +59,47 @@ namespace smart3tene.Reaper
             {
                 _cutTime += Time.deltaTime;
 
-                //ここで草が切れる音やエフェクトを出す
-
                 ReshapeGrass();
 
-                if (_nowStep == _maxStep)
-                {
-                    _isCut.Value = true;
-                    GameSystem.Instance.AddCutGrassCount(1);
-                    Destroy(_cutEffectInstance);
-                }
-
-                if(_cutEffectInstance == null)
+                //草が切れるエフェクトを出す
+                if (_cutEffectInstance == null)
                 {
                     _cutEffectInstance = Instantiate(_cutEffectPrefab, transform.position, Quaternion.identity);
-                }              
+                    _particleSystem = _cutEffectInstance.GetComponent<ParticleSystem>();
+                }
+                else if(_particleSystem.isStopped)
+                {
+                    _particleSystem.Play(true);
+                }
+
+                //cutが完了したかの判定
+                if (_nowStep == _maxStep)
+                {
+                    //カット完了
+                    _isCut.Value = true;
+
+                    //CutGrassに加算
+                    GameSystem.Instance.AddCutGrassCount(1);
+
+                    //パーティクルの停止と破棄
+                    _particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                    _ = DelayAsync(3f, () => Destroy(_particleSystem));
+                    _ = DelayAsync(3f, () => Destroy(_cutEffectInstance));
+                }   
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
+            if (_isCut.Value) return;
+
             if (other.CompareTag("Cutting"))
             {
-                Destroy(_cutEffectInstance);
+                if(_particleSystem != null)
+                {
+                    //パーティクルを停止
+                    _particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                }
             }
         }
 
@@ -121,6 +143,15 @@ namespace smart3tene.Reaper
             {
                 transform.GetChild(i).gameObject.SetActive(false);
             }
+
+            Destroy(_particleSystem);
+            Destroy(_cutEffectInstance);
+        }
+
+        private async UniTask DelayAsync(float seconds, UnityAction callback)
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(seconds));
+            callback?.Invoke();
         }
         #endregion
     }
