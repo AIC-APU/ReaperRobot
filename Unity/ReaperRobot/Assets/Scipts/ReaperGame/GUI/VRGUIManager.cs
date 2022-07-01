@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.XR.Management;
 using UnityEngine;
 
 namespace smart3tene.Reaper
@@ -16,9 +18,10 @@ namespace smart3tene.Reaper
 
         #region MonoBehaviour Callbacks
 
-        void Start()
+        void Awake()
         {
-
+            var manualXRControl = new ManualXRControl();
+            StartCoroutine(manualXRControl.StartXRCoroutine());
         }
 
         void Update()
@@ -29,7 +32,13 @@ namespace smart3tene.Reaper
         #endregion
 
         #region public method
-
+        public static void SetInitializeXROnStartup(BuildTargetGroup buildTargetGroup, bool enabled)
+        {
+            var xrGeneralSettings = XRGeneralSettingsPerBuildTarget.XRGeneralSettingsForBuildTarget(buildTargetGroup);
+            xrGeneralSettings.InitManagerOnStart = enabled;
+            EditorUtility.SetDirty(xrGeneralSettings);
+            AssetDatabase.SaveAssets();
+        }
         #endregion
 
         #region private method
