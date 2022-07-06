@@ -58,6 +58,7 @@ namespace smart3tene.Reaper
         }
         #endregion
 
+
         #region private method
         private void Move(InputAction.CallbackContext obj)
         {
@@ -67,6 +68,10 @@ namespace smart3tene.Reaper
 
         private void Stop(InputAction.CallbackContext obj)
         {
+            //Oculusコントローラでの操作時は以下の停止処理をさせない
+            //この分岐がないと、なぜかOculusコントローラでは毎フレームこの停止処理をしてしまう
+            if (obj.control.name == "thumbstick") return;
+
             _ = _reaperManager.AsyncMove(0, 0);
         }
         private void Brake(InputAction.CallbackContext obj)
