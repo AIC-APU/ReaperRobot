@@ -14,7 +14,7 @@ Shader "IndexTexture"
         Pass
         {
             CGPROGRAM
-           #include "UnityCG.cginc"
+            #include "UnityCG.cginc"
             float _Id;
 
             #pragma vertex vert
@@ -33,14 +33,10 @@ Shader "IndexTexture"
                 float4 annoID  : COLOR0;
             };
             
-            sampler2D _CameraDepthTexture;
-            float4 _CameraDepthTexture_ST;
-            
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                // o.uv = TRANSFORM_TEX(v.uv, _CameraDepthTexture);
                 o.annoID.r = _Id;
                 return o;
             }
