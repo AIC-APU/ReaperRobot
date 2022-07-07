@@ -106,7 +106,7 @@ namespace smart3tene.Reaper
             {
                 GameSystem.Instance.ChangeOperationMode();
 
-                if(GameSystem.Instance.NowOperationMode.Value == GameSystem.OperationMode.tpv)
+                if(GameSystem.Instance.NowOperationMode.Value == GameSystem.OperationMode.TPV)
                 {
                     GetComponent<PlayerInput>().SwitchCurrentActionMap("Person");
                 }

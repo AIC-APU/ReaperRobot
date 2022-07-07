@@ -21,11 +21,12 @@ namespace smart3tene.Reaper
         #region Enum
         public enum OperationMode
         {
-            reaper,
-            tpv,
-            fpv,
+            REAPER,
+            TPV,
+            FPV,
+            VR,
         }
-        public ReactiveProperty<OperationMode> NowOperationMode { get; private set; } = new ReactiveProperty<OperationMode>(OperationMode.reaper);
+        public ReactiveProperty<OperationMode> NowOperationMode { get; private set; } = new ReactiveProperty<OperationMode>(OperationMode.REAPER);        
         #endregion
 
         #region Serialized private Fields
@@ -34,6 +35,8 @@ namespace smart3tene.Reaper
 
         public GameObject PersonInstance => _personInstance;
         [SerializeField, Tooltip("マルチプレイの時はnullにしておいてください")] private GameObject _personInstance = null;
+
+        [SerializeField] private OperationMode _defaultOperationMode = OperationMode.REAPER;
         #endregion
 
         #region private Fields
@@ -61,19 +64,21 @@ namespace smart3tene.Reaper
                 Destroy(gameObject);
             }
 
-            //プレイヤーの生成
-            if(_reaperInstance == null)
+            NowOperationMode.Value = _defaultOperationMode;
+
+            //草刈り機の生成
+            if (_reaperInstance == null)
             {
                 var reaperPrefab = (GameObject)Resources.Load("ReaperCrawlerResource");
                 _reaperInstance = Instantiate(reaperPrefab, new Vector3(0, 0.05f, 0), Quaternion.identity);
             }
 
-            if(_personInstance == null)
+            //人モデルの生成
+            //VRモードの時は人出さなくていい？　マルチの時は欲しかったりする？　VRを使ったマルチってあるの？
+            if(NowOperationMode.Value != OperationMode.VR &&　_personInstance == null)
             {
                 var personPrefab = (GameObject)Resources.Load("PersonModel");
                 _personInstance = Instantiate(personPrefab, new Vector3(0, 0.05f, 0), Quaternion.identity);
-
-                //VRModeだとここ人モデルと一緒にCameraRigも生成する？
             }
 
             //草の総数をカウント
@@ -83,7 +88,7 @@ namespace smart3tene.Reaper
             _gameStartTime = Time.time;
             this.UpdateAsObservable()
                 .Subscribe(_ => _gameTime.Value = Time.time - _gameStartTime)
-                .AddTo(this);
+                .AddTo(this);           
         }
 
         #endregion
@@ -105,17 +110,22 @@ namespace smart3tene.Reaper
 
         public void ChangeOperationMode()
         {
-            if (NowOperationMode.Value == OperationMode.reaper)
+            switch (NowOperationMode.Value)
             {
-                NowOperationMode.Value = OperationMode.fpv;
-            }
-            else if (NowOperationMode.Value == OperationMode.fpv)
-            {
-                NowOperationMode.Value = OperationMode.tpv;
-            }
-            else if (NowOperationMode.Value == OperationMode.tpv)
-            {
-                NowOperationMode.Value = OperationMode.reaper;
+                case OperationMode.REAPER:
+                    NowOperationMode.Value = OperationMode.FPV;
+                    break;
+                case OperationMode.FPV:
+                    NowOperationMode.Value = OperationMode.TPV;
+                    break;
+                case OperationMode.TPV:
+                    NowOperationMode.Value = OperationMode.REAPER;
+                    break;
+                case OperationMode.VR:
+                    //VRモードの時はモードを変えない
+                    break;
+                default:
+                    break;
             }
         }
         #endregion

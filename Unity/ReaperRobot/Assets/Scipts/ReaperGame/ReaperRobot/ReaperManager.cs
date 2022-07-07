@@ -83,12 +83,12 @@ namespace smart3tene.Reaper
             {
                 GameSystem.Instance.NowOperationMode.Subscribe(x =>
                 {
-                    if (x == GameSystem.OperationMode.reaper)
+                    if (x == GameSystem.OperationMode.REAPER)
                     {
                         _isOperatable = true;
                         _isCameraOperatable = true;
                     }
-                    else if (x == GameSystem.OperationMode.fpv)
+                    else if (x == GameSystem.OperationMode.FPV || x == GameSystem.OperationMode.VR)
                     {
                         _isOperatable = true;
                         _isCameraOperatable = false;

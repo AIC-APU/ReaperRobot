@@ -41,7 +41,7 @@ namespace smart3tene.Reaper
             {
                 GameSystem.Instance.NowOperationMode.Subscribe(x =>
                 {
-                    if(x == GameSystem.OperationMode.tpv)
+                    if(x == GameSystem.OperationMode.TPV)
                     {
                         _isOperatable = true;
                     }
@@ -59,7 +59,7 @@ namespace smart3tene.Reaper
         {
             _TPVCamera.position = transform.position + _cameraOffsetWorldPos;
             
-            if(GameSystem.Instance != null && GameSystem.Instance.NowOperationMode.Value == GameSystem.OperationMode.fpv)
+            if(GameSystem.Instance != null && GameSystem.Instance.NowOperationMode.Value == GameSystem.OperationMode.FPV)
             {
                 transform.LookAt(GameSystem.Instance.ReaperInstance.transform);
             }
