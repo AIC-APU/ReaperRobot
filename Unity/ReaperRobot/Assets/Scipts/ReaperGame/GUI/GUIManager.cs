@@ -131,7 +131,7 @@ namespace smart3tene.Reaper
                 //âÊñ êÿÇËë÷Ç¶ÅAÇ‡Ç¡Ç∆Ç¢Ç¢ï˚ñ@Ç†ÇÍÇŒÇªÇ§ÇµÇΩÇ¢
                 switch (mode)
                 {
-                    case GameSystem.OperationMode.reaper:
+                    case GameSystem.OperationMode.REAPER:
                         _mainCamera.enabled = true;
                         _tpvCamera.enabled = false;
                         _fpvCamera.enabled = false;
@@ -140,7 +140,7 @@ namespace smart3tene.Reaper
                         _mainScreen.enabled = true;
                         break;
 
-                    case GameSystem.OperationMode.tpv:
+                    case GameSystem.OperationMode.TPV:
                         _mainCamera.enabled = false;
                         _tpvCamera.enabled = true;
                         _fpvCamera.enabled = false;
@@ -149,7 +149,7 @@ namespace smart3tene.Reaper
                         _mainScreen.enabled = false;
                         break;
 
-                    case GameSystem.OperationMode.fpv:
+                    case GameSystem.OperationMode.FPV:
                         _mainCamera.enabled = false;
                         _tpvCamera.enabled = false;
                         _fpvCamera.enabled = true;
