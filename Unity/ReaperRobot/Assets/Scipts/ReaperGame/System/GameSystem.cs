@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using Photon.Pun;
 
 namespace smart3tene.Reaper
 {
@@ -19,14 +20,14 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Enum
-        public enum OperationMode
+        public enum ViewMode
         {
             REAPER,
             TPV,
             FPV,
             VR,
         }
-        public ReactiveProperty<OperationMode> NowOperationMode { get; private set; } = new ReactiveProperty<OperationMode>(OperationMode.REAPER);        
+        public ReactiveProperty<ViewMode> NowViewMode { get; private set; } = new ReactiveProperty<ViewMode>(ViewMode.REAPER);        
         #endregion
 
         #region Serialized private Fields
@@ -36,7 +37,9 @@ namespace smart3tene.Reaper
         public GameObject PersonInstance => _personInstance;
         [SerializeField, Tooltip("マルチプレイの時はnullにしておいてください")] private GameObject _personInstance = null;
 
-        [SerializeField] private OperationMode _defaultOperationMode = OperationMode.REAPER;
+        [SerializeField] private ViewMode _defaultOperationMode = ViewMode.REAPER;
+
+        [SerializeField] private List<Transform> _instantiatePos = new List<Transform>();
         #endregion
 
         #region private Fields
@@ -64,21 +67,28 @@ namespace smart3tene.Reaper
                 Destroy(gameObject);
             }
 
-            NowOperationMode.Value = _defaultOperationMode;
+            NowViewMode.Value = _defaultOperationMode;
 
+            if (!PhotonNetwork.IsConnected)
+            {
+                //オフラインとして参加する
+                PhotonNetwork.OfflineMode = true;
+                PhotonNetwork.JoinRandomRoom();
+            }
+
+            var posId = GameData.PlayerId - 1; 
             //草刈り機の生成
             if (_reaperInstance == null)
             {
-                var reaperPrefab = (GameObject)Resources.Load("ReaperCrawlerResource");
-                _reaperInstance = Instantiate(reaperPrefab, new Vector3(0, 0.05f, 0), Quaternion.identity);
+                _reaperInstance = PhotonNetwork.Instantiate("ReaperCrawlerResource", _instantiatePos[posId].position, _instantiatePos[posId].rotation, 0);
             }
 
             //人モデルの生成
-            //VRモードの時は人出さなくていい？　マルチの時は欲しかったりする？　VRを使ったマルチってあるの？
-            if(NowOperationMode.Value != OperationMode.VR &&　_personInstance == null)
+            //VRモードの時は人出さなくていい？
+            if(NowViewMode.Value != ViewMode.VR &&　_personInstance == null)
             {
-                var personPrefab = (GameObject)Resources.Load("PersonModel");
-                _personInstance = Instantiate(personPrefab, new Vector3(0, 0.05f, 0), Quaternion.identity);
+                var playerBackDistance = 3f;
+                _personInstance = PhotonNetwork.Instantiate("PersonModel", _instantiatePos[posId].position + (-1 * _instantiatePos[posId].forward * playerBackDistance), _instantiatePos[posId].rotation, 0);
             }
 
             //草の総数をカウント
@@ -108,20 +118,20 @@ namespace smart3tene.Reaper
             //スコアとかつけてるならそれもリセットするか？
         }
 
-        public void ChangeOperationMode()
+        public void ChangeViewMode()
         {
-            switch (NowOperationMode.Value)
+            switch (NowViewMode.Value)
             {
-                case OperationMode.REAPER:
-                    NowOperationMode.Value = OperationMode.FPV;
+                case ViewMode.REAPER:
+                    NowViewMode.Value = ViewMode.FPV;
                     break;
-                case OperationMode.FPV:
-                    NowOperationMode.Value = OperationMode.TPV;
+                case ViewMode.FPV:
+                    NowViewMode.Value = ViewMode.TPV;
                     break;
-                case OperationMode.TPV:
-                    NowOperationMode.Value = OperationMode.REAPER;
+                case ViewMode.TPV:
+                    NowViewMode.Value = ViewMode.REAPER;
                     break;
-                case OperationMode.VR:
+                case ViewMode.VR:
                     //VRモードの時はモードを変えない
                     break;
                 default:

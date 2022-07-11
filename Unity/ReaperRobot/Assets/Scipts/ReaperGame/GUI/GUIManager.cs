@@ -73,6 +73,7 @@ namespace smart3tene.Reaper
             //カメラ類の取得
             _mainCamera = Camera.main;
             _reaperCamera = GameSystem.Instance.ReaperInstance.GetComponentInChildren<Camera>(true);
+            
 
             //人に取り付けられたカメラの取得
             //Findをできれば使わずに取得できたらいいけど,,,
@@ -126,12 +127,12 @@ namespace smart3tene.Reaper
             });
 
             //カメラの切り替え
-            GameSystem.Instance.NowOperationMode.Subscribe(mode =>
+            GameSystem.Instance.NowViewMode.Subscribe(mode =>
             {
                 //画面切り替え、もっといい方法あればそうしたい
                 switch (mode)
                 {
-                    case GameSystem.OperationMode.REAPER:
+                    case GameSystem.ViewMode.REAPER:
                         _mainCamera.enabled = true;
                         _tpvCamera.enabled = false;
                         _fpvCamera.enabled = false;
@@ -140,7 +141,7 @@ namespace smart3tene.Reaper
                         _mainScreen.enabled = true;
                         break;
 
-                    case GameSystem.OperationMode.TPV:
+                    case GameSystem.ViewMode.TPV:
                         _mainCamera.enabled = false;
                         _tpvCamera.enabled = true;
                         _fpvCamera.enabled = false;
@@ -149,7 +150,7 @@ namespace smart3tene.Reaper
                         _mainScreen.enabled = false;
                         break;
 
-                    case GameSystem.OperationMode.FPV:
+                    case GameSystem.ViewMode.FPV:
                         _mainCamera.enabled = false;
                         _tpvCamera.enabled = false;
                         _fpvCamera.enabled = true;

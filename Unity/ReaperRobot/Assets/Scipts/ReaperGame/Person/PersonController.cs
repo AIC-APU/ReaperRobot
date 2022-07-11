@@ -24,12 +24,12 @@ namespace smart3tene.Reaper
         }
         private void OnEnable()
         {
-            _personAction["ChangeMode"].started += ChangeMode;
+            _personAction["ChangeMode"].started += ChangeViewMode;
         }
 
         private void OnDisable()
         {
-            _personAction["ChangeMode"].started -= ChangeMode;
+            _personAction["ChangeMode"].started -= ChangeViewMode;
         }
 
         private void LateUpdate()
@@ -46,14 +46,14 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Private Fields
-        private void ChangeMode(InputAction.CallbackContext obj)
+        private void ChangeViewMode(InputAction.CallbackContext obj)
         {
             if (GameSystem.Instance != null)
             {
-                GameSystem.Instance.ChangeOperationMode();
+                GameSystem.Instance.ChangeViewMode();
 
-                if (GameSystem.Instance.NowOperationMode.Value == GameSystem.OperationMode.REAPER ||
-                    GameSystem.Instance.NowOperationMode.Value == GameSystem.OperationMode.TPV)
+                if (GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.REAPER ||
+                    GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.TPV)
                 {
                     GetComponent<PlayerInput>().SwitchCurrentActionMap("Reaper");
                 }

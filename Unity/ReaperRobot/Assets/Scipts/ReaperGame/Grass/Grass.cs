@@ -5,10 +5,11 @@ using UniRx;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Events;
 using System;
+using Photon.Pun;
 
 namespace smart3tene.Reaper
 {
-    public class Grass : MonoBehaviour
+    public class Grass : MonoBehaviourPun
     {
         //これをアタッチしたGameObjectに,Grassの形態を表す子オブジェクトを順に設定してください
         //子オブジェクトの数は2つ以上であれば大丈夫です
@@ -79,7 +80,7 @@ namespace smart3tene.Reaper
                     _isCut.Value = true;
 
                     //CutGrassに加算
-                    GameSystem.Instance.AddCutGrassCount(1);
+                    AddCutGrass();
 
                     //パーティクルの停止と破棄
                     _particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
@@ -129,7 +130,7 @@ namespace smart3tene.Reaper
             //切られていたらcutGrassCountをもとに戻す
             if (_isCut.Value)
             {
-                GameSystem.Instance.AddCutGrassCount(-1);
+                MinusCutGrass();
             }
 
             //パラメータと形状を初期化
@@ -152,6 +153,16 @@ namespace smart3tene.Reaper
         {
             await UniTask.Delay(TimeSpan.FromSeconds(seconds));
             callback?.Invoke();
+        }
+
+        private void AddCutGrass()
+        {
+            GameSystem.Instance.AddCutGrassCount(1);
+        }
+
+        private void MinusCutGrass()
+        {
+            GameSystem.Instance.AddCutGrassCount(-1);
         }
         #endregion
     }
