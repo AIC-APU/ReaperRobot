@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UniRx;
+using UnityEngine.UI;
+using Photon.Pun;
 
 namespace smart3tene
 {
@@ -20,6 +22,9 @@ namespace smart3tene
 
         [Header("Text")]
         [SerializeField] private TMP_Text _roomPlayerNum;
+
+        [Header("Button")]
+        [SerializeField] private Button _cancelButton;
         #endregion
 
         #region Private Fields
@@ -37,12 +42,17 @@ namespace smart3tene
 
             GameData.CountOfPlayersInRooms.Subscribe(x => _roomPlayerNum.text = $"{x}/{GameData.MaxPlayers}");
 
-            _sceneTransitionManager.StartWaiting += ShowWaitingPanel;
+            _sceneTransitionManager.MultiStartEvent += ShowWaitingPanel;
+        }
+
+        private void Update()
+        {
+            _cancelButton.interactable = PhotonNetwork.InRoom;
         }
 
         private void OnDestroy()
         {
-            _sceneTransitionManager.StartWaiting -= ShowWaitingPanel;
+            _sceneTransitionManager.MultiStartEvent -= ShowWaitingPanel;
         }
         #endregion
 
@@ -65,6 +75,10 @@ namespace smart3tene
             GameData.NowGameCourse = GameData.GameCourse.SimpleField;
 
             StartGame();
+        }
+        public void CanselMulti()
+        {
+            _sceneTransitionManager.LeaveRoom();
         }
         #endregion
 

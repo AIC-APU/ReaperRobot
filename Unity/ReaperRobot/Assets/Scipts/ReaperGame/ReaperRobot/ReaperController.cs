@@ -22,10 +22,7 @@ namespace smart3tene.Reaper
                 _reaperManager = GameSystem.Instance.ReaperInstance.GetComponent<ReaperManager>();
             }
             _reaperAction = GetComponent<PlayerInput>().actions.FindActionMap("Reaper");
-        }
 
-        private void OnEnable()
-        {
             _reaperAction["Move"].performed += Move;
             _reaperAction["Move"].canceled += Stop;
             _reaperAction["Brake"].started += Brake;

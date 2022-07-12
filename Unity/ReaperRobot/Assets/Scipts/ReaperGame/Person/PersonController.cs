@@ -21,9 +21,7 @@ namespace smart3tene.Reaper
                 _personManager = GameSystem.Instance.PersonInstance.GetComponent<PersonManager>();
             }
             _personAction = GetComponent<PlayerInput>().actions.FindActionMap("Person");
-        }
-        private void OnEnable()
-        {
+
             _personAction["ChangeMode"].started += ChangeViewMode;
         }
 

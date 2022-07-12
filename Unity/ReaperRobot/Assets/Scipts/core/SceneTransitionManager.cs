@@ -14,7 +14,7 @@ namespace smart3tene
     public class SceneTransitionManager : SingletonMonoBehaviourPunCallbacks<SceneTransitionManager>
     {
         #region Event
-        public event Action StartWaiting;
+        public event Action MultiStartEvent;
         #endregion
 
         #region private Fields
@@ -34,16 +34,27 @@ namespace smart3tene
         {
             if (!PhotonNetwork.IsConnected)
             {
+                MultiStartEvent.Invoke();
+
                 //Photonのセットアップを行い、オンラインで参加する
                 PhotonNetwork.AutomaticallySyncScene = true;
                 PhotonNetwork.GameVersion = GameData.GameVersion;
                 PhotonNetwork.NickName = GameData.PlayerName;
                 PhotonNetwork.OfflineMode = false;
-                isConnectToMasterServer = PhotonNetwork.ConnectUsingSettings(); // -> call "OnConnectedToMaster" or "OnDisconnected"
+                isConnectToMasterServer = PhotonNetwork.ConnectUsingSettings(); // -> call "OnConnectedToMaster" or "OnDisconnected"     
             }
             else
             {
                 PhotonNetwork.JoinRandomRoom();
+            }
+        }
+
+        public void LeaveRoom()
+        {
+            if (PhotonNetwork.InRoom)
+            {
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.Disconnect();
             }
         }
 
@@ -71,10 +82,6 @@ namespace smart3tene
         }
         #endregion
 
-        #region private method
-
-        #endregion
-
         #region Photon Callbacks
         public override void OnConnectedToMaster()
         {
@@ -97,22 +104,16 @@ namespace smart3tene
         {
             GameData.PlayerId = PhotonNetwork.LocalPlayer.ActorNumber;
 
-            int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-            GameData.CountOfPlayersInRooms.Value = playerCount;
+            GameData.CountOfPlayersInRooms.Value = PhotonNetwork.CurrentRoom.PlayerCount;
 
             if (PhotonNetwork.OfflineMode)
             {
                 PhotonNetwork.LoadLevel($"{GameData.NowGameCourse}_{GameData.NowGameMode}");
             }
-            else if (playerCount != GameData.MaxPlayers)
-            {
-                StartWaiting.Invoke();
-            }
         }
 
         public override void OnJoinRandomFailed(short returnCode, string message)
         {
-            Debug.Log(message);
             PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = GameData.MaxPlayers }); //-> call OnJoinedRoom
         }
 
@@ -126,12 +127,16 @@ namespace smart3tene
                 {
                     PhotonNetwork.CurrentRoom.IsOpen = false;
 
-                    Debug.Log("遷移をします");
-
+                    //数秒待ってシーン遷移
                     await UniTask.Delay(TimeSpan.FromSeconds(3));
                     PhotonNetwork.LoadLevel($"{GameData.NowGameCourse}_{GameData.NowGameMode}");
                 }
             }
+        }
+
+        public override void OnLeftRoom()
+        {
+            GameData.CountOfPlayersInRooms.Value = 0;
         }
         #endregion
     }
