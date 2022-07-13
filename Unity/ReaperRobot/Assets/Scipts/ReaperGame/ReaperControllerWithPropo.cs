@@ -29,7 +29,7 @@ namespace smart3tene.Reaper
         void Update()
         {
             //ジョイスティックが接続されていないなら何もしない
-            if (Input.GetJoystickNames()[0] == "") return;
+            if (Input.GetJoystickNames() == null) return;
 
             //プロポを使っているかどうかの判断
             //ジョイスティックの接続・切断した時のコールバックとかあれば本当はそこで処理をしたい
@@ -42,8 +42,6 @@ namespace smart3tene.Reaper
             {
                 _isUsingPropo = false;
             }
-
-            if (!_isUsingPropo) return;
         }
 
         private void FixedUpdate()
