@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "9e2163616b9c527fa9461544e2bcc5f93fd12d83"
+      "hash": "78db78c7bd5c1c75902dabb1496c85bd2316fca5"
     },
     "com.unity.collab-proxy": {
       "version": "1.17.1",
@@ -45,7 +45,7 @@
       }
     },
     "com.unity.ide.rider": {
-      "version": "3.0.14",
+      "version": "3.0.15",
       "depth": 0,
       "source": "registry",
       "dependencies": {
