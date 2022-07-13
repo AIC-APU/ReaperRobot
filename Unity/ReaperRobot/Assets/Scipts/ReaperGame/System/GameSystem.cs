@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,10 +32,10 @@ namespace smart3tene.Reaper
 
         #region Serialized private Fields
         public GameObject ReaperInstance => _reaperInstance;
-        [SerializeField, Tooltip("ƒ}ƒ‹ƒ`ƒvƒŒƒC‚Ì‚Ínull‚É‚µ‚Ä‚¨‚¢‚Ä‚­‚¾‚³‚¢")] private GameObject _reaperInstance = null;
+        [SerializeField, Tooltip("ãƒãƒ«ãƒãƒ—ãƒ¬ã‚¤ã®æ™‚ã¯nullã«ã—ã¦ãŠã„ã¦ãã ã•ã„")] private GameObject _reaperInstance = null;
 
         public GameObject PersonInstance => _personInstance;
-        [SerializeField, Tooltip("ƒ}ƒ‹ƒ`ƒvƒŒƒC‚Ì‚Ínull‚É‚µ‚Ä‚¨‚¢‚Ä‚­‚¾‚³‚¢")] private GameObject _personInstance = null;
+        [SerializeField, Tooltip("ãƒãƒ«ãƒãƒ—ãƒ¬ã‚¤ã®æ™‚ã¯nullã«ã—ã¦ãŠã„ã¦ãã ã•ã„")] private GameObject _personInstance = null;
 
         [SerializeField] private ViewMode _defaultOperationMode = ViewMode.REAPER;
 
@@ -71,30 +71,30 @@ namespace smart3tene.Reaper
 
             if (!PhotonNetwork.IsConnected)
             {
-                //ƒIƒtƒ‰ƒCƒ“‚Æ‚µ‚ÄQ‰Á‚·‚é
+                //ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ã¨ã—ã¦å‚åŠ ã™ã‚‹
                 PhotonNetwork.OfflineMode = true;
                 PhotonNetwork.JoinRandomRoom();
             }
 
             var posId = GameData.PlayerId - 1; 
-            //‘Š ‚è‹@‚Ì¶¬
+            //è‰åˆˆã‚Šæ©Ÿã®ç”Ÿæˆ
             if (_reaperInstance == null)
             {
                 _reaperInstance = PhotonNetwork.Instantiate("ReaperCrawlerResource", _instantiatePos[posId].position, _instantiatePos[posId].rotation, 0);
             }
 
-            //lƒ‚ƒfƒ‹‚Ì¶¬
-            //VRƒ‚[ƒh‚Ì‚Ílo‚³‚È‚­‚Ä‚¢‚¢H
-            if(NowViewMode.Value != ViewMode.VR &&@_personInstance == null)
+            //äººãƒ¢ãƒ‡ãƒ«ã®ç”Ÿæˆ
+            //VRãƒ¢ãƒ¼ãƒ‰ã®æ™‚ã¯äººå‡ºã•ãªãã¦ã„ã„ï¼Ÿ
+            if(NowViewMode.Value != ViewMode.VR &&ã€€_personInstance == null)
             {
                 var playerBackDistance = 3f;
                 _personInstance = PhotonNetwork.Instantiate("PersonModel", _instantiatePos[posId].position + (-1 * _instantiatePos[posId].forward * playerBackDistance), _instantiatePos[posId].rotation, 0);
             }
 
-            //‘‚Ì‘”‚ğƒJƒEƒ“ƒg
+            //è‰ã®ç·æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆ
             _allGrassCount = GameObject.FindGameObjectsWithTag("Grass").Length;
 
-            //ƒQ[ƒ€ŠÔ‚Ì‘ª’è
+            //ã‚²ãƒ¼ãƒ æ™‚é–“ã®æ¸¬å®š
             _gameStartTime = Time.time;
             this.UpdateAsObservable()
                 .Subscribe(_ => _gameTime.Value = Time.time - _gameStartTime)
@@ -113,9 +113,9 @@ namespace smart3tene.Reaper
         {
             ResetEvent?.Invoke();
 
-            //ŠÔ‚ÌƒŠƒZƒbƒg‚Í‚¢‚é‚¾‚ë‚¤‚©
+            //æ™‚é–“ã®ãƒªã‚»ãƒƒãƒˆã¯ã„ã‚‹ã ã‚ã†ã‹
 
-            //ƒXƒRƒA‚Æ‚©‚Â‚¯‚Ä‚é‚È‚ç‚»‚ê‚àƒŠƒZƒbƒg‚·‚é‚©H
+            //ã‚¹ã‚³ã‚¢ã¨ã‹ã¤ã‘ã¦ã‚‹ãªã‚‰ãã‚Œã‚‚ãƒªã‚»ãƒƒãƒˆã™ã‚‹ã‹ï¼Ÿ
         }
 
         public void ChangeViewMode()
@@ -132,7 +132,7 @@ namespace smart3tene.Reaper
                     NowViewMode.Value = ViewMode.REAPER;
                     break;
                 case ViewMode.VR:
-                    //VRƒ‚[ƒh‚Ì‚Íƒ‚[ƒh‚ğ•Ï‚¦‚È‚¢
+                    //VRãƒ¢ãƒ¼ãƒ‰ã®æ™‚ã¯ãƒ¢ãƒ¼ãƒ‰ã‚’å¤‰ãˆãªã„
                     break;
                 default:
                     break;

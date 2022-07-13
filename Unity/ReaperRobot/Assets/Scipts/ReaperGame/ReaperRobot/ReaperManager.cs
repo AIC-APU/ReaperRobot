@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
@@ -37,7 +37,7 @@ namespace smart3tene.Reaper
         private bool _isOperatable = true;
         private bool _isCameraOperatable = true;
 
-        //ƒJƒƒ‰
+        //ã‚«ãƒ¡ãƒ©
         public IReadOnlyReactiveProperty<Vector3> CameraOffsetPos => _cameraOffsetPos;
         private ReactiveProperty<Vector3> _cameraOffsetPos = new();
 
@@ -48,7 +48,7 @@ namespace smart3tene.Reaper
         readonly Vector3 cameraDefaultOffsetRot = new(30f, 0f, 0f);
 
 
-        //ƒJƒbƒ^[&ƒŠƒtƒgŠÖ˜A
+        //ã‚«ãƒƒã‚¿ãƒ¼&ãƒªãƒ•ãƒˆé–¢é€£
         public IReadOnlyReactiveProperty<bool> IsCutting => _isCutting;
         private ReactiveProperty<bool> _isCutting = new(true);
         public IReadOnlyReactiveProperty<bool> IsLiftDown => _isLiftDown;
@@ -59,7 +59,7 @@ namespace smart3tene.Reaper
         private float _nowCutterSpeed = 0f;
 
 
-        //Wheel ColliderŠÖ˜A
+        //Wheel Collideré–¢é€£
         readonly float rotateTorqueMultiplier = 100f;
         readonly float moveTorqueMultiplier = 300f;
         readonly float brakeTorque = 500f;
@@ -107,8 +107,8 @@ namespace smart3tene.Reaper
         {
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
 
-            //crawlerƒAƒjƒ[ƒVƒ‡ƒ“‚Ìˆ—
-            //‘f‚Ìrpm‚Í’l‚ª‘å‚«‚·‚¬‚é‚Ì‚ÅA’¼i‚ÌÅ‘årpmiŒv‘ª’lj‚ÅœZ‚µ‚Ä‚¢‚é
+            //crawlerã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®å‡¦ç†
+            //ç´ ã®rpmã¯å€¤ãŒå¤§ãã™ãã‚‹ã®ã§ã€ç›´é€²æ™‚ã®æœ€å¤§rpmï¼ˆè¨ˆæ¸¬å€¤ï¼‰ã§é™¤ç®—ã—ã¦ã„ã‚‹
             _leftRpm.Value = _wheelColliderL2.rpm;
             _rightRpm.Value = _wheelColliderR2.rpm;
             _crawlerL.SetFloat("WheelTorque", _leftRpm.Value / 70);
@@ -119,13 +119,13 @@ namespace smart3tene.Reaper
         {
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
 
-            //ƒJƒƒ‰ˆÊ’u
+            //ã‚«ãƒ¡ãƒ©ä½ç½®
             SetCameraTransform();
         }
 
         private void OnDestroy()
         {
-            //”ñ“¯Šúˆ—‚Ì’â~
+            //éåŒæœŸå‡¦ç†ã®åœæ­¢
             _liftCancellationTokenSource?.Cancel();
             _cutterCancellationTokenSource?.Cancel();
         }
@@ -134,23 +134,23 @@ namespace smart3tene.Reaper
 
         #region public method
         /// <summary>
-        /// Reaperƒƒ{ƒbƒg‚ğˆÚ“®‚³‚¹‚éŠÖ”BFixedUpdate‚Ìƒ^ƒCƒ~ƒ“ƒO‚ÅŒÄ‚Ô‚±‚Æ
+        /// Reaperãƒ­ãƒœãƒƒãƒˆã‚’ç§»å‹•ã•ã›ã‚‹é–¢æ•°ã€‚FixedUpdateã®ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã§å‘¼ã¶ã“ã¨
         /// </summary>
-        /// <param name="horizontal">…•½•ûŒü‚Ì“ü—ÍB-1~+1‚Ì”ÍˆÍ</param>
-        /// <param name="vertical">‚’¼•ûŒü‚Ì“ü—ÍB-1~+1‚Ì”ÍˆÍ</param>
+        /// <param name="horizontal">æ°´å¹³æ–¹å‘ã®å…¥åŠ›ã€‚-1~+1ã®ç¯„å›²</param>
+        /// <param name="vertical">å‚ç›´æ–¹å‘ã®å…¥åŠ›ã€‚-1~+1ã®ç¯„å›²</param>
         public async UniTaskVoid AsyncMove(float horizontal, float vertical)
         {
             if (!_isOperatable) return;
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
 
-            //‚±‚Ìˆ—‚ÍFixedUpdate‚Ìƒ^ƒCƒ~ƒ“ƒO‚Ås‚¤
+            //ã“ã®å‡¦ç†ã¯FixedUpdateã®ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã§è¡Œã†
             await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
 
-            //“ü—Í’l‚Ì”ÍˆÍ‚ğ§ŒÀ
+            //å…¥åŠ›å€¤ã®ç¯„å›²ã‚’åˆ¶é™
             horizontal = Mathf.Clamp(horizontal, -1, 1);
             vertical = Mathf.Clamp(vertical, -1, 1);
 
-            //¶‰EÔ—Ö‚Ìƒgƒ‹ƒN‚ğŒvZ
+            //å·¦å³è»Šè¼ªã®ãƒˆãƒ«ã‚¯ã‚’è¨ˆç®—
             var torqueL = moveTorqueMultiplier * vertical;
             var torqueR = moveTorqueMultiplier * vertical;
 
@@ -162,7 +162,7 @@ namespace smart3tene.Reaper
             _wheelColliderR2.motorTorque = torqueR;
             _wheelColliderR3.motorTorque = torqueR;
 
-            //ƒ‚[ƒ^[‰¹
+            //ãƒ¢ãƒ¼ã‚¿ãƒ¼éŸ³
 
         }
 
@@ -266,7 +266,7 @@ namespace smart3tene.Reaper
 
         #region private method
         /// <summary>
-        /// isCutting‚ªtrue‚È‚çƒŠƒtƒg‚ğ‰º‚°‚éAfalse‚È‚çã‚°‚é”ñ“¯Šúˆ—
+        /// isCuttingãŒtrueãªã‚‰ãƒªãƒ•ãƒˆã‚’ä¸‹ã’ã‚‹ã€falseãªã‚‰ä¸Šã’ã‚‹éåŒæœŸå‡¦ç†
         /// </summary>
         private async UniTaskVoid AsyncMoveLift(bool isDown, CancellationToken ct = default)
         {
@@ -277,7 +277,7 @@ namespace smart3tene.Reaper
             var liftSpeed = 10f;
             if (isDown)
             {
-                //0“x‚Ü‚ÅƒŠƒtƒg‚ğ‰º‚°‚é‚½‚ß‚Ìƒ‹[ƒv
+                //0åº¦ã¾ã§ãƒªãƒ•ãƒˆã‚’ä¸‹ã’ã‚‹ãŸã‚ã®ãƒ«ãƒ¼ãƒ—
                 while (GetConvertedLocalAngleX(reaperTransform) > 0)
                 {
                     reaperTransform.Rotate(liftSpeed * Time.deltaTime, 0, 0);
@@ -286,7 +286,7 @@ namespace smart3tene.Reaper
             }
             else
             {
-                //20“x‚Ü‚ÅƒŠƒtƒg‚ğã‚°‚é‚½‚ß‚Ìƒ‹[ƒv
+                //20åº¦ã¾ã§ãƒªãƒ•ãƒˆã‚’ä¸Šã’ã‚‹ãŸã‚ã®ãƒ«ãƒ¼ãƒ—
                 while (GetConvertedLocalAngleX(reaperTransform) < 20)
                 {
                     reaperTransform.Rotate(-liftSpeed * Time.deltaTime, 0, 0);
@@ -294,7 +294,7 @@ namespace smart3tene.Reaper
                 }
             }
 
-            //reaper‚ÌŠp“x‚ªA0“x‚ğ‹N“_‚É}180“x‚É‚È‚é‚æ‚¤‚É•ÏŠ·‚·‚éƒ[ƒJƒ‹ƒƒ]ƒbƒgi^ã‚ª+90“xj
+            //reaperã®è§’åº¦ãŒã€0åº¦ã‚’èµ·ç‚¹ã«Â±180åº¦ã«ãªã‚‹ã‚ˆã†ã«å¤‰æ›ã™ã‚‹ãƒ­ãƒ¼ã‚«ãƒ«ãƒ¡ã‚¾ãƒƒãƒˆï¼ˆçœŸä¸ŠãŒ+90åº¦ï¼‰
             static float GetConvertedLocalAngleX(Transform reaper)
             {
                 var reaperAngleX = reaper.localEulerAngles.x;
@@ -303,7 +303,7 @@ namespace smart3tene.Reaper
         }
 
         /// <summary>
-        ///  isCutting‚ªtrue‚È‚çƒJƒbƒ^[‚ğ‰ñ“]‚³‚¹‚éAfalse‚È‚ç‰ñ“]‚ğ~‚ß‚é”ñ“¯Šúˆ—
+        ///  isCuttingãŒtrueãªã‚‰ã‚«ãƒƒã‚¿ãƒ¼ã‚’å›è»¢ã•ã›ã‚‹ã€falseãªã‚‰å›è»¢ã‚’æ­¢ã‚ã‚‹éåŒæœŸå‡¦ç†
         /// </summary>
         private async UniTaskVoid AsyncRotateCutter(bool isCutting, CancellationToken ct = default)
         {
@@ -315,21 +315,21 @@ namespace smart3tene.Reaper
             var acceleration = 3f;
             while (true)
             {
-                //n‚Ì‘¬“x‚ğ‰Á‘¬iãŒÀ‰ºŒÀ‚Å‚¨‚³‚¦‚éj
+                //åˆƒã®é€Ÿåº¦ã‚’åŠ é€Ÿï¼ˆä¸Šé™ä¸‹é™ã§ãŠã•ãˆã‚‹ï¼‰
                 _nowCutterSpeed += isCutting ? acceleration : -acceleration;
                 _nowCutterSpeed = Mathf.Clamp(_nowCutterSpeed, minRotateSpeed, maxRotateSpeed);
 
-                //‰ñ“]
+                //å›è»¢
                 _cutterL.Rotate(0, _nowCutterSpeed * Time.deltaTime, 0);
                 _cutterR.Rotate(0, -_nowCutterSpeed * Time.deltaTime, 0);
 
-                //ƒ‚[ƒ^[‰¹
+                //ãƒ¢ãƒ¼ã‚¿ãƒ¼éŸ³
 
 
                 await UniTask.Yield(PlayerLoopTiming.Update, ct);
 
-                //‚à‚µn‚ª~‚Ü‚Á‚Ä‚¢‚é‚Éƒ‹[ƒv‚ğ”²‚¯‚½‚¢‚È‚çˆÈ‰º‚Ìˆ—‚ğ“ü‚ê‚é
-                //D‚İ‚¾‚Æv‚¤
+                //ã‚‚ã—åˆƒãŒæ­¢ã¾ã£ã¦ã„ã‚‹æ™‚ã«ãƒ«ãƒ¼ãƒ—ã‚’æŠœã‘ãŸã„ãªã‚‰ä»¥ä¸‹ã®å‡¦ç†ã‚’å…¥ã‚Œã‚‹
+                //å¥½ã¿ã ã¨æ€ã†
                 if (!isCutting && _nowCutterSpeed == 0) break;
             }
         }

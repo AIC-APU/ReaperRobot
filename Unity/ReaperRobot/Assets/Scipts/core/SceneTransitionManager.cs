@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,7 +25,7 @@ namespace smart3tene
         #region public method
         public void StartOfflineGame()
         {
-            //ƒIƒtƒ‰ƒCƒ“‚Æ‚µ‚ÄQ‰Á‚·‚é
+            //ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ã¨ã—ã¦å‚åŠ ã™ã‚‹
             PhotonNetwork.OfflineMode = true;
             PhotonNetwork.JoinRandomRoom();
         }
@@ -36,7 +36,7 @@ namespace smart3tene
             {
                 MultiStartEvent.Invoke();
 
-                //Photon‚ÌƒZƒbƒgƒAƒbƒv‚ğs‚¢AƒIƒ“ƒ‰ƒCƒ“‚ÅQ‰Á‚·‚é
+                //Photonã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—ã‚’è¡Œã„ã€ã‚ªãƒ³ãƒ©ã‚¤ãƒ³ã§å‚åŠ ã™ã‚‹
                 PhotonNetwork.AutomaticallySyncScene = true;
                 PhotonNetwork.GameVersion = GameData.GameVersion;
                 PhotonNetwork.NickName = GameData.PlayerName;
@@ -74,7 +74,7 @@ namespace smart3tene
             #endif
         }
 
-        //photon‚Ö‚ÌÚ‘±‚ª‚Å‚«‚È‚©‚Á‚½‚É‚â‚è’¼‚·‚½‚ß‚Ég‚¤
+        //photonã¸ã®æ¥ç¶šãŒã§ããªã‹ã£ãŸæ™‚ã«ã‚„ã‚Šç›´ã™ãŸã‚ã«ä½¿ã†
         public void ReloadScene()
         {
             var nowScene = SceneManager.GetActiveScene();
@@ -127,7 +127,7 @@ namespace smart3tene
                 {
                     PhotonNetwork.CurrentRoom.IsOpen = false;
 
-                    //”•b‘Ò‚Á‚ÄƒV[ƒ“‘JˆÚ
+                    //æ•°ç§’å¾…ã£ã¦ã‚·ãƒ¼ãƒ³é·ç§»
                     await UniTask.Delay(TimeSpan.FromSeconds(3));
                     PhotonNetwork.LoadLevel($"{GameData.NowGameCourse}_{GameData.NowGameMode}");
                 }

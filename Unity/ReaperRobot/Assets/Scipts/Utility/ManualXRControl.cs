@@ -1,8 +1,8 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Management;
 
-//Ql: https://docs.unity3d.com/Packages/com.unity.xr.management@4.0/manual/EndUser.html
+//å‚è€ƒ: https://docs.unity3d.com/Packages/com.unity.xr.management@4.0/manual/EndUser.html
 public class ManualXRControl
 {
     public IEnumerator StartXRCoroutine()

@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -13,7 +13,7 @@ namespace smart3tene.Reaper
     public class VRGUIManager : MonoBehaviour
     {
         #region Serialized private Fields
-        [Header("Canvas Follow@Parameter")]
+        [Header("Canvas Followã€€Parameter")]
         [SerializeField] private Transform _mainCamera;       
         [SerializeField] private bool _isImmediateMove;
         [SerializeField] private bool _isLockX;
@@ -59,7 +59,7 @@ namespace smart3tene.Reaper
             //Time
             GameSystem.Instance.GameTime.Subscribe(x => _timeNum.text = UpdateGameTime(x));
 
-            //Lift‚Ìƒ‰ƒ“ƒv
+            //Liftã®ãƒ©ãƒ³ãƒ—
             _reaperManager.IsLiftDown.Subscribe(isDown =>
             {
                 if (isDown)
@@ -73,7 +73,7 @@ namespace smart3tene.Reaper
             });
 
 
-            //Cutter‚Ìƒ‰ƒ“ƒv
+            //Cutterã®ãƒ©ãƒ³ãƒ—
             _reaperManager.IsCutting.Subscribe(isCutting =>
             {
                 if (isCutting)
@@ -94,11 +94,11 @@ namespace smart3tene.Reaper
 
         private void LateUpdate()
         {
-            //ƒ~ƒjƒ}ƒbƒvƒJƒƒ‰‚ÌˆÊ’u         
+            //ãƒŸãƒ‹ãƒãƒƒãƒ—ã‚«ãƒ¡ãƒ©ã®ä½ç½®         
             _miniMapCamera.position = new Vector3(_reaperTransform.position.x, _miniMapCamera.position.y, _reaperTransform.position.z);
             _miniMapCamera.eulerAngles = new Vector3(_miniMapCamera.eulerAngles.x, _reaperTransform.eulerAngles.y, _miniMapCamera.eulerAngles.z);
 
-            //Canvas‚ğƒkƒ‹‚Á‚Æ’Ç]‚³‚¹‚é‚Æ‚«‚Ìˆ—
+            //Canvasã‚’ãƒŒãƒ«ã£ã¨è¿½å¾“ã•ã›ã‚‹ã¨ãã®å‡¦ç†
             if (_isImmediateMove) transform.position = _mainCamera.position;
             else transform.position = Vector3.Lerp(transform.position, _mainCamera.position + _mainCamera.forward * _positionOffset, _followMoveSpeed);
 
@@ -113,7 +113,7 @@ namespace smart3tene.Reaper
         #endregion
 
         #region public method
-        //ƒ{ƒ^ƒ“‚Ì‹““®‚Æ‚©
+        //ãƒœã‚¿ãƒ³ã®æŒ™å‹•ã¨ã‹
         #endregion
 
         #region private method

@@ -1,12 +1,12 @@
-using System;
+ï»¿using System;
 using UnityEngine;
 using Photon.Pun;
 
 namespace smart3tene
 {
-    //‚±‚ê‚ğŒp³‚µ‚½SingletonMonoBehaviourPunCallbacks‚ÍƒV[ƒ“ã‚Éˆê‚Â‚µ‚©‘¶İ‚µ‚È‚­‚È‚é
-    //GameManager‚È‚Ç•¡”‚ ‚é‚Æ¢‚éƒNƒ‰ƒX‚ªŒp³‚·‚é‚Æ‚¢‚¢
-    //QlFhttps://qiita.com/okuhiiro/items/3d69c602b8538c04a479
+    //ã“ã‚Œã‚’ç¶™æ‰¿ã—ãŸSingletonMonoBehaviourPunCallbacksã¯ã‚·ãƒ¼ãƒ³ä¸Šã«ä¸€ã¤ã—ã‹å­˜åœ¨ã—ãªããªã‚‹
+    //GameManagerãªã©è¤‡æ•°ã‚ã‚‹ã¨å›°ã‚‹ã‚¯ãƒ©ã‚¹ãŒç¶™æ‰¿ã™ã‚‹ã¨ã„ã„
+    //å‚è€ƒï¼šhttps://qiita.com/okuhiiro/items/3d69c602b8538c04a479
     public abstract class SingletonMonoBehaviourPunCallbacks<T> : MonoBehaviourPunCallbacks where T : MonoBehaviourPunCallbacks
     {
         private static T _instance;
@@ -21,7 +21,7 @@ namespace smart3tene
                 _instance = (T)FindObjectOfType(t);
                 if (_instance == null)
                 {
-                    Debug.LogError(t + " ‚ğƒAƒ^ƒbƒ`‚µ‚Ä‚¢‚éGameObject‚Í‚ ‚è‚Ü‚¹‚ñ");
+                    Debug.LogError(t + " ã‚’ã‚¢ã‚¿ãƒƒãƒã—ã¦ã„ã‚‹GameObjectã¯ã‚ã‚Šã¾ã›ã‚“");
                 }
 
                 return _instance;
@@ -32,8 +32,8 @@ namespace smart3tene
 
         protected virtual void Awake()
         {
-            // ‘¼‚ÌGameObject‚ÉƒAƒ^ƒbƒ`‚³‚ê‚Ä‚¢‚é‚©’²‚×‚é.
-            // ƒAƒ^ƒbƒ`‚³‚ê‚Ä‚¢‚éê‡‚Í”jŠü‚·‚é.
+            // ä»–ã®GameObjectã«ã‚¢ã‚¿ãƒƒãƒã•ã‚Œã¦ã„ã‚‹ã‹èª¿ã¹ã‚‹.
+            // ã‚¢ã‚¿ãƒƒãƒã•ã‚Œã¦ã„ã‚‹å ´åˆã¯ç ´æ£„ã™ã‚‹.
             if (this != Instance)
             {
                 Destroy(this);

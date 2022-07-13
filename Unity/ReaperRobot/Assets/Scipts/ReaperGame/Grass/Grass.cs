@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
@@ -11,15 +11,15 @@ namespace smart3tene.Reaper
 {
     public class Grass : MonoBehaviourPun
     {
-        //‚±‚ê‚ğƒAƒ^ƒbƒ`‚µ‚½GameObject‚É,Grass‚ÌŒ`‘Ô‚ğ•\‚·qƒIƒuƒWƒFƒNƒg‚ğ‡‚Éİ’è‚µ‚Ä‚­‚¾‚³‚¢
-        //qƒIƒuƒWƒFƒNƒg‚Ì”‚Í2‚ÂˆÈã‚Å‚ ‚ê‚Î‘åä•v‚Å‚·
+        //ã“ã‚Œã‚’ã‚¢ã‚¿ãƒƒãƒã—ãŸGameObjectã«,Grassã®å½¢æ…‹ã‚’è¡¨ã™å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’é †ã«è¨­å®šã—ã¦ãã ã•ã„
+        //å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æ•°ã¯2ã¤ä»¥ä¸Šã§ã‚ã‚Œã°å¤§ä¸ˆå¤«ã§ã™
 
-        //—á:
-        // GrassObject(GrassƒNƒ‰ƒX‚ğƒAƒ^ƒbƒ`)
+        //ä¾‹:
+        // GrassObject(Grassã‚¯ãƒ©ã‚¹ã‚’ã‚¢ã‚¿ãƒƒãƒ)
         //    L Step0(default)
         //    L Step1
-        //    L Step2(ƒJƒbƒg‚ªI—¹‚µ‚½ó‘Ô)
-        //(‚±‚Ì‚Ì_maxStep ‚Í 2 ‚É‚È‚è‚Ü‚·)
+        //    L Step2(ã‚«ãƒƒãƒˆãŒçµ‚äº†ã—ãŸçŠ¶æ…‹)
+        //(ã“ã®æ™‚ã®_maxStep ã¯ 2 ã«ãªã‚Šã¾ã™)
 
         #region Serialized Private Fields
         [SerializeField] private GameObject _cutEffectPrefab;
@@ -42,7 +42,7 @@ namespace smart3tene.Reaper
         {
             _maxStep = transform.childCount - 1;
 
-            //Step0‚Ì‚İ‚ğactive‚É
+            //Step0ã®ã¿ã‚’activeã«
             transform.GetChild(0).gameObject.SetActive(true);
             for(int i = 1; i <= _maxStep; i++)
             {
@@ -62,7 +62,7 @@ namespace smart3tene.Reaper
 
                 ReshapeGrass();
 
-                //‘‚ªØ‚ê‚éƒGƒtƒFƒNƒg‚ğo‚·
+                //è‰ãŒåˆ‡ã‚Œã‚‹ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å‡ºã™
                 if (_cutEffectInstance == null)
                 {
                     _cutEffectInstance = Instantiate(_cutEffectPrefab, transform.position, Quaternion.identity);
@@ -73,16 +73,16 @@ namespace smart3tene.Reaper
                     _particleSystem.Play(true);
                 }
 
-                //cut‚ªŠ®—¹‚µ‚½‚©‚Ì”»’è
+                //cutãŒå®Œäº†ã—ãŸã‹ã®åˆ¤å®š
                 if (_nowStep == _maxStep)
                 {
-                    //ƒJƒbƒgŠ®—¹
+                    //ã‚«ãƒƒãƒˆå®Œäº†
                     _isCut.Value = true;
 
-                    //CutGrass‚É‰ÁZ
+                    //CutGrassã«åŠ ç®—
                     AddCutGrass();
 
-                    //ƒp[ƒeƒBƒNƒ‹‚Ì’â~‚Æ”jŠü
+                    //ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®åœæ­¢ã¨ç ´æ£„
                     _particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
                     _ = DelayAsync(3f, () => Destroy(_particleSystem));
                     _ = DelayAsync(3f, () => Destroy(_cutEffectInstance));
@@ -98,7 +98,7 @@ namespace smart3tene.Reaper
             {
                 if(_particleSystem != null)
                 {
-                    //ƒp[ƒeƒBƒNƒ‹‚ğ’â~
+                    //ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã‚’åœæ­¢
                     _particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
                 }
             }
@@ -115,8 +115,8 @@ namespace smart3tene.Reaper
         {
             if (_nowStep >= _maxStep) return;
 
-            //cutTime‚É‰‚¶‚ÄStep‚ğ•Ï‰»‚³‚¹‚Ü‚·
-            //finish cut time‚É‚¿‚å‚¤‚ÇÅŒã‚ÌStep‚É•Ï‰»‚µ‚Ü‚·
+            //cutTimeã«å¿œã˜ã¦Stepã‚’å¤‰åŒ–ã•ã›ã¾ã™
+            //finish cut timeã«ã¡ã‚‡ã†ã©æœ€å¾Œã®Stepã«å¤‰åŒ–ã—ã¾ã™
             if(_cutTime > _finishCutTime * (1 + _nowStep) / _maxStep) 
             {
                 transform.GetChild(_nowStep).gameObject.SetActive(false);
@@ -127,18 +127,18 @@ namespace smart3tene.Reaper
 
         private void ResetGrass()
         {
-            //Ø‚ç‚ê‚Ä‚¢‚½‚çcutGrassCount‚ğ‚à‚Æ‚É–ß‚·
+            //åˆ‡ã‚‰ã‚Œã¦ã„ãŸã‚‰cutGrassCountã‚’ã‚‚ã¨ã«æˆ»ã™
             if (_isCut.Value)
             {
                 MinusCutGrass();
             }
 
-            //ƒpƒ‰ƒ[ƒ^‚ÆŒ`ó‚ğ‰Šú‰»
+            //ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¨å½¢çŠ¶ã‚’åˆæœŸåŒ–
             _isCut.Value = false;
             _cutTime = 0;
             _nowStep = 0;
 
-            //Step0‚Ì‚İ‚ğactive‚É
+            //Step0ã®ã¿ã‚’activeã«
             transform.GetChild(0).gameObject.SetActive(true);
             for (int i = 1; i <= _maxStep; i++)
             {
