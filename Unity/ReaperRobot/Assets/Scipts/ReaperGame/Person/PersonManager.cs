@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
@@ -88,7 +88,7 @@ namespace smart3tene.Reaper
                 transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
             }
 
-            //•K—v‚È‚ç‚±‚±‚ÅƒAƒjƒ[ƒVƒ‡ƒ“‚È‚Ç‚Ì‘€ì
+            //å¿…è¦ãªã‚‰ã“ã“ã§ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãªã©ã®æ“ä½œ
 
         }
 
@@ -97,14 +97,14 @@ namespace smart3tene.Reaper
             if (!_isOperatable) return;
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
 
-            //‰ñ“]‚Ì‘O‚ÉƒJƒƒ‰‚ÌˆÊ’u‚ğXV‚µ‚Ä‚¨‚­
+            //å›è»¢ã®å‰ã«ã‚«ãƒ¡ãƒ©ã®ä½ç½®ã‚’æ›´æ–°ã—ã¦ãŠã
             _TPVCamera.position = transform.position + _cameraOffsetWorldPos;
 
-            //…•½•ûŒü‚Ì‰ñ“]
+            //æ°´å¹³æ–¹å‘ã®å›è»¢
             var horizontalAngle = horizontal * rotateSpeed;
             _TPVCamera.RotateAround(transform.position, Vector3.up, horizontalAngle);
 
-            //‚’¼•ûŒü‚Ì‰ñ“]
+            //å‚ç›´æ–¹å‘ã®å›è»¢
             var verticalAngle = vertical * rotateSpeed;
             if((verticalAngle > 0 && _TPVCamera.eulerAngles.x < 60)
                 || (verticalAngle < 0 && _TPVCamera.eulerAngles.x > 1))
@@ -112,7 +112,7 @@ namespace smart3tene.Reaper
                 _TPVCamera.RotateAround(transform.position, _TPVCamera.right, verticalAngle);
             }
 
-            //ˆÊ’uî•ñ‚ÌXV
+            //ä½ç½®æƒ…å ±ã®æ›´æ–°
             _cameraOffsetWorldPos = (_TPVCamera.position - transform.position).normalized * _cameraDistance;
         }
         #endregion

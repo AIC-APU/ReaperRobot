@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -60,7 +60,7 @@ namespace smart3tene.Reaper
             _reaperManager = GameSystem.Instance.ReaperInstance.GetComponent<ReaperManager>();
             _reaperTransform = GameSystem.Instance.ReaperInstance.transform;
 
-            //------ˆÈ‰ºŠeíGUI‚Ì‹““®------
+            //------ä»¥ä¸‹å„ç¨®GUIã®æŒ™å‹•------
             //ReapRate
             GameSystem.Instance.CutGrassCount.Subscribe(x => _reaperRateNum.text = UpdateReapRate());
 
@@ -70,20 +70,20 @@ namespace smart3tene.Reaper
             //DelaySlider
             InitializeDelaySlider();
 
-            //ƒJƒƒ‰—Ş‚Ìæ“¾
+            //ã‚«ãƒ¡ãƒ©é¡ã®å–å¾—
             _mainCamera = Camera.main;
             _reaperCamera = GameSystem.Instance.ReaperInstance.GetComponentInChildren<Camera>(true);
             
 
-            //l‚Éæ‚è•t‚¯‚ç‚ê‚½ƒJƒƒ‰‚Ìæ“¾
-            //Find‚ğ‚Å‚«‚ê‚Îg‚í‚¸‚Éæ“¾‚Å‚«‚½‚ç‚¢‚¢‚¯‚Ç,,,
+            //äººã«å–ã‚Šä»˜ã‘ã‚‰ã‚ŒãŸã‚«ãƒ¡ãƒ©ã®å–å¾—
+            //Findã‚’ã§ãã‚Œã°ä½¿ã‚ãšã«å–å¾—ã§ããŸã‚‰ã„ã„ã‘ã©,,,
             _tpvCamera = GameSystem.Instance.PersonInstance.transform.Find("TPVCamera").GetComponent<Camera>();
             _fpvCamera = GameSystem.Instance.PersonInstance.transform.Find("FPVCamera").GetComponent<Camera>();
 
-            //ReaperCamera‚ğprojector‚Éİ’è
+            //ReaperCameraã‚’projectorã«è¨­å®š
             _projector.recordingCamera = _reaperCamera;
 
-            //ReaperCamera‚ÌˆÊ’uEŠp“xƒeƒLƒXƒg
+            //ReaperCameraã®ä½ç½®ãƒ»è§’åº¦ãƒ†ã‚­ã‚¹ãƒˆ
             _reaperManager.CameraOffsetPos.Subscribe(vec =>
             {
                 _positonXNum.text = vec.x.ToString("F1");
@@ -99,7 +99,7 @@ namespace smart3tene.Reaper
             });
 
 
-            //Lift‚Ìƒ‰ƒ“ƒv
+            //Liftã®ãƒ©ãƒ³ãƒ—
             _reaperManager.IsLiftDown.Subscribe(isDown =>
             {
                 if (isDown)
@@ -113,7 +113,7 @@ namespace smart3tene.Reaper
             });
 
 
-            //Cutter‚Ìƒ‰ƒ“ƒv
+            //Cutterã®ãƒ©ãƒ³ãƒ—
             _reaperManager.IsCutting.Subscribe(isCutting =>
             {
                 if (isCutting)
@@ -126,10 +126,10 @@ namespace smart3tene.Reaper
                 }
             });
 
-            //ƒJƒƒ‰‚ÌØ‚è‘Ö‚¦
+            //ã‚«ãƒ¡ãƒ©ã®åˆ‡ã‚Šæ›¿ãˆ
             GameSystem.Instance.NowViewMode.Subscribe(mode =>
             {
-                //‰æ–ÊØ‚è‘Ö‚¦A‚à‚Á‚Æ‚¢‚¢•û–@‚ ‚ê‚Î‚»‚¤‚µ‚½‚¢
+                //ç”»é¢åˆ‡ã‚Šæ›¿ãˆã€ã‚‚ã£ã¨ã„ã„æ–¹æ³•ã‚ã‚Œã°ãã†ã—ãŸã„
                 switch (mode)
                 {
                     case GameSystem.ViewMode.REAPER:
@@ -167,7 +167,7 @@ namespace smart3tene.Reaper
 
         private void LateUpdate()
         {
-            //ƒ~ƒjƒ}ƒbƒvƒJƒƒ‰‚ÌˆÊ’u         
+            //ãƒŸãƒ‹ãƒãƒƒãƒ—ã‚«ãƒ¡ãƒ©ã®ä½ç½®         
             _miniMapCamera.position = new Vector3(_reaperTransform.position.x, _miniMapCamera.position.y, _reaperTransform.position.z);
             _miniMapCamera.eulerAngles = new Vector3(_miniMapCamera.eulerAngles.x, _reaperTransform.eulerAngles.y, _miniMapCamera.eulerAngles.z);
         }

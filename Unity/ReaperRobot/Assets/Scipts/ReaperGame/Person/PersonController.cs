@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,7 +9,7 @@ namespace smart3tene.Reaper
     public class PersonController : MonoBehaviour
     {
         #region private Fields
-        [SerializeField, Tooltip("ƒ}ƒ‹ƒ`ƒvƒŒƒC‚Ì‚Ínull‚É‚µ‚Ä‚¨‚¢‚Ä‚­‚¾‚³‚¢")] private PersonManager _personManager;
+        [SerializeField, Tooltip("ãƒãƒ«ãƒãƒ—ãƒ¬ã‚¤ã®æ™‚ã¯nullã«ã—ã¦ãŠã„ã¦ãã ã•ã„")] private PersonManager _personManager;
         private InputActionMap _personAction;
         #endregion
 

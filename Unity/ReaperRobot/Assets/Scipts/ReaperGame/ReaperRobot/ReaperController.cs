@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,7 +9,7 @@ namespace smart3tene.Reaper
     public class ReaperController : MonoBehaviour
     {
         #region private Fields
-        [SerializeField, Tooltip("ƒ}ƒ‹ƒ`ƒvƒŒƒC‚Ì‚Ínull‚É‚µ‚Ä‚¨‚¢‚Ä‚­‚¾‚³‚¢")] private ReaperManager _reaperManager;
+        [SerializeField, Tooltip("ãƒãƒ«ãƒãƒ—ãƒ¬ã‚¤ã®æ™‚ã¯nullã«ã—ã¦ãŠã„ã¦ãã ã•ã„")] private ReaperManager _reaperManager;
         private InputActionMap _reaperAction;
         #endregion
 
@@ -65,8 +65,8 @@ namespace smart3tene.Reaper
 
         private void Stop(InputAction.CallbackContext obj)
         {
-            //OculusƒRƒ“ƒgƒ[ƒ‰‚Å‚Ì‘€ì‚ÍˆÈ‰º‚Ì’â~ˆ—‚ğ‚³‚¹‚È‚¢
-            //‚±‚Ì•ªŠò‚ª‚È‚¢‚ÆA‚È‚º‚©OculusƒRƒ“ƒgƒ[ƒ‰‚Å‚Í–ˆƒtƒŒ[ƒ€‚±‚Ì’â~ˆ—‚ğ‚µ‚Ä‚µ‚Ü‚¤
+            //Oculusã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã§ã®æ“ä½œæ™‚ã¯ä»¥ä¸‹ã®åœæ­¢å‡¦ç†ã‚’ã•ã›ãªã„
+            //ã“ã®åˆ†å²ãŒãªã„ã¨ã€ãªãœã‹Oculusã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã§ã¯æ¯ãƒ•ãƒ¬ãƒ¼ãƒ ã“ã®åœæ­¢å‡¦ç†ã‚’ã—ã¦ã—ã¾ã†
             if (obj.control.name == "thumbstick") return;
 
             _ = _reaperManager.AsyncMove(0, 0);
