@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: InputSystem.inputsettings
   m_EditorClassIdentifier: 
   m_SupportedDevices:
-  - XRInputV1::Oculus::OculusTouchControllerOpenXR
+  - OculusTouchController
+  - Gamepad
+  - Keyboard
+  - Mouse
   - XRController
   m_UpdateMode: 1
   m_MaxEventBytesPerUpdate: 5242880
