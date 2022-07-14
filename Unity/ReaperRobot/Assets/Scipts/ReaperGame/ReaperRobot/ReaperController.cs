@@ -32,6 +32,8 @@ namespace smart3tene.Reaper
             _reaperAction["MoveCamera"].performed += MoveCamera;
             _reaperAction["ResetCamera"].started += ResetCamera;
             _reaperAction["ChangeMode"].started += ChangeMode;
+            _reaperAction["CloseApp"].started += CloseApp;
+            
         }
 
         private void OnDisable()
@@ -45,6 +47,7 @@ namespace smart3tene.Reaper
             _reaperAction["MoveCamera"].performed -= MoveCamera;
             _reaperAction["ResetCamera"].started -= ResetCamera;
             _reaperAction["ChangeMode"].started -= ChangeMode;
+            _reaperAction["CloseApp"].started -= CloseApp;
         }
 
         private void LateUpdate()
@@ -109,7 +112,14 @@ namespace smart3tene.Reaper
                 }
             }
         }
-
+        private void CloseApp(InputAction.CallbackContext obj)
+        {
+            //SceneTransitionManagerがシーンにないとCloseAppできません
+            if (SceneTransitionManager.Instantiated)
+            {
+                SceneTransitionManager.Instance.CloseApp();
+            }
+        }
         #endregion
     }
 

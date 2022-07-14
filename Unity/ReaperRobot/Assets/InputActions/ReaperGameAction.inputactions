@@ -76,6 +76,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "CloseApp",
+                    "type": "Button",
+                    "id": "78caee75-863f-4425-8dc1-f7eda8296814",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -419,6 +428,17 @@
                     "action": "MoveCamera",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "befe93ee-f46b-4515-b817-833dd3bf9606",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "CloseApp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -448,6 +468,15 @@
                     "name": "ChangeMode",
                     "type": "Button",
                     "id": "f7e72ed3-d5f5-403b-9588-3d950adbb031",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CloseApp",
+                    "type": "Button",
+                    "id": "d08caa25-02d7-434b-b4eb-a6ce47395dbd",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -606,6 +635,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "ChangeMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d673ab3c-5afb-4e6e-b70e-f83bfdb22761",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "CloseApp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
