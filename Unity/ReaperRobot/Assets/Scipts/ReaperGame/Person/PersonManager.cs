@@ -1,12 +1,13 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using Photon.Pun;
 
 namespace smart3tene.Reaper
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class PersonManager : MonoBehaviour
+    public class PersonManager : MonoBehaviourPun
     {
         #region Serialized Private Fields
         [SerializeField] private Transform _TPVCamera;
@@ -26,7 +27,7 @@ namespace smart3tene.Reaper
         #endregion
 
         #region MonoBehaviour Callbacks
-        private void Awake()
+        private void Start()
         {
             _rigidBody = GetComponent<Rigidbody>();
 
@@ -39,9 +40,9 @@ namespace smart3tene.Reaper
 
             if (GameSystem.Instance != null)
             {
-                GameSystem.Instance.NowOperationMode.Subscribe(x =>
+                GameSystem.Instance.NowViewMode.Subscribe(x =>
                 {
-                    if(x == GameSystem.OperationMode.tpv)
+                    if(x == GameSystem.ViewMode.TPV)
                     {
                         _isOperatable = true;
                     }
@@ -59,7 +60,7 @@ namespace smart3tene.Reaper
         {
             _TPVCamera.position = transform.position + _cameraOffsetWorldPos;
             
-            if(GameSystem.Instance != null && GameSystem.Instance.NowOperationMode.Value == GameSystem.OperationMode.fpv)
+            if(GameSystem.Instance != null && GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.FPV)
             {
                 transform.LookAt(GameSystem.Instance.ReaperInstance.transform);
             }
@@ -70,6 +71,7 @@ namespace smart3tene.Reaper
         public void Move(float horizontal, float vertical)
         {
             if (!_isOperatable) return;
+            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
 
             var cameraForward = Vector3.Scale(_TPVCamera.forward, new Vector3(1, 0, 1)).normalized;
 
@@ -86,22 +88,23 @@ namespace smart3tene.Reaper
                 transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
             }
 
-            //ïKóvÇ»ÇÁÇ±Ç±Ç≈ÉAÉjÉÅÅ[ÉVÉáÉìÇ»Ç«ÇÃëÄçÏ
+            //ÂøÖË¶Å„Å™„Çâ„Åì„Åì„Åß„Ç¢„Éã„É°„Éº„Ç∑„Éß„É≥„Å™„Å©„ÅÆÊìç‰Ωú
 
         }
 
         public void RotateCamera(float horizontal, float vertical)
         {
             if (!_isOperatable) return;
+            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
 
-            //âÒì]ÇÃëOÇ…ÉJÉÅÉâÇÃà íuÇçXêVÇµÇƒÇ®Ç≠
+            //ÂõûËª¢„ÅÆÂâç„Å´„Ç´„É°„É©„ÅÆ‰ΩçÁΩÆ„ÇíÊõ¥Êñ∞„Åó„Å¶„Åä„Åè
             _TPVCamera.position = transform.position + _cameraOffsetWorldPos;
 
-            //êÖïΩï˚å¸ÇÃâÒì]
+            //Ê∞¥Âπ≥ÊñπÂêë„ÅÆÂõûËª¢
             var horizontalAngle = horizontal * rotateSpeed;
             _TPVCamera.RotateAround(transform.position, Vector3.up, horizontalAngle);
 
-            //êÇíºï˚å¸ÇÃâÒì]
+            //ÂûÇÁõ¥ÊñπÂêë„ÅÆÂõûËª¢
             var verticalAngle = vertical * rotateSpeed;
             if((verticalAngle > 0 && _TPVCamera.eulerAngles.x < 60)
                 || (verticalAngle < 0 && _TPVCamera.eulerAngles.x > 1))
@@ -109,7 +112,7 @@ namespace smart3tene.Reaper
                 _TPVCamera.RotateAround(transform.position, _TPVCamera.right, verticalAngle);
             }
 
-            //à íuèÓïÒÇÃçXêV
+            //‰ΩçÁΩÆÊÉÖÂ†±„ÅÆÊõ¥Êñ∞
             _cameraOffsetWorldPos = (_TPVCamera.position - transform.position).normalized * _cameraDistance;
         }
         #endregion

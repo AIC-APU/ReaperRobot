@@ -1,9 +1,10 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using Photon.Pun;
 
 namespace smart3tene.Reaper
 {
@@ -19,21 +20,26 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Enum
-        public enum OperationMode
+        public enum ViewMode
         {
-            reaper,
-            tpv,
-            fpv,
+            REAPER,
+            TPV,
+            FPV,
+            VR,
         }
-        public ReactiveProperty<OperationMode> NowOperationMode { get; private set; } = new ReactiveProperty<OperationMode>(OperationMode.reaper);
+        public ReactiveProperty<ViewMode> NowViewMode { get; private set; } = new ReactiveProperty<ViewMode>(ViewMode.REAPER);        
         #endregion
 
         #region Serialized private Fields
         public GameObject ReaperInstance => _reaperInstance;
-        [SerializeField, Tooltip("ƒ}ƒ‹ƒ`ƒvƒŒƒC‚Ì‚Ínull‚É‚µ‚Ä‚¨‚¢‚Ä‚­‚¾‚³‚¢")] private GameObject _reaperInstance = null;
+        [SerializeField, Tooltip("ãƒãƒ«ãƒãƒ—ãƒ¬ã‚¤ã®æ™‚ã¯nullã«ã—ã¦ãŠã„ã¦ãã ã•ã„")] private GameObject _reaperInstance = null;
 
         public GameObject PersonInstance => _personInstance;
-        [SerializeField, Tooltip("ƒ}ƒ‹ƒ`ƒvƒŒƒC‚Ì‚Ínull‚É‚µ‚Ä‚¨‚¢‚Ä‚­‚¾‚³‚¢")] private GameObject _personInstance = null;
+        [SerializeField, Tooltip("ãƒãƒ«ãƒãƒ—ãƒ¬ã‚¤ã®æ™‚ã¯nullã«ã—ã¦ãŠã„ã¦ãã ã•ã„")] private GameObject _personInstance = null;
+
+        [SerializeField] private ViewMode _defaultOperationMode = ViewMode.REAPER;
+
+        [SerializeField] private List<Transform> _instantiatePos = new List<Transform>();
         #endregion
 
         #region private Fields
@@ -61,29 +67,38 @@ namespace smart3tene.Reaper
                 Destroy(gameObject);
             }
 
-            //ƒvƒŒƒCƒ„[‚Ì¶¬
-            if(_reaperInstance == null)
+            NowViewMode.Value = _defaultOperationMode;
+
+            if (!PhotonNetwork.IsConnected)
             {
-                var reaperPrefab = (GameObject)Resources.Load("ReaperCrawlerResource");
-                _reaperInstance = Instantiate(reaperPrefab, new Vector3(0, 0.05f, 0), Quaternion.identity);
+                //ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ã¨ã—ã¦å‚åŠ ã™ã‚‹
+                PhotonNetwork.OfflineMode = true;
+                PhotonNetwork.JoinRandomRoom();
             }
 
-            if(_personInstance == null)
+            var posId = GameData.PlayerId - 1; 
+            //è‰åˆˆã‚Šæ©Ÿã®ç”Ÿæˆ
+            if (_reaperInstance == null)
             {
-                var personPrefab = (GameObject)Resources.Load("PersonModel");
-                _personInstance = Instantiate(personPrefab, new Vector3(0, 0.05f, 0), Quaternion.identity);
-
-                //VRMode‚¾‚Æ‚±‚±lƒ‚ƒfƒ‹‚Æˆê‚ÉCameraRig‚à¶¬‚·‚éH
+                _reaperInstance = PhotonNetwork.Instantiate("ReaperCrawlerResource", _instantiatePos[posId].position, _instantiatePos[posId].rotation, 0);
             }
 
-            //‘‚Ì‘”‚ğƒJƒEƒ“ƒg
+            //äººãƒ¢ãƒ‡ãƒ«ã®ç”Ÿæˆ
+            //VRãƒ¢ãƒ¼ãƒ‰ã®æ™‚ã¯äººå‡ºã•ãªãã¦ã„ã„ï¼Ÿ
+            if(NowViewMode.Value != ViewMode.VR &&ã€€_personInstance == null)
+            {
+                var playerBackDistance = 3f;
+                _personInstance = PhotonNetwork.Instantiate("PersonModel", _instantiatePos[posId].position + (-1 * _instantiatePos[posId].forward * playerBackDistance), _instantiatePos[posId].rotation, 0);
+            }
+
+            //è‰ã®ç·æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆ
             _allGrassCount = GameObject.FindGameObjectsWithTag("Grass").Length;
 
-            //ƒQ[ƒ€ŠÔ‚Ì‘ª’è
+            //ã‚²ãƒ¼ãƒ æ™‚é–“ã®æ¸¬å®š
             _gameStartTime = Time.time;
             this.UpdateAsObservable()
                 .Subscribe(_ => _gameTime.Value = Time.time - _gameStartTime)
-                .AddTo(this);
+                .AddTo(this);           
         }
 
         #endregion
@@ -98,24 +113,29 @@ namespace smart3tene.Reaper
         {
             ResetEvent?.Invoke();
 
-            //ŠÔ‚ÌƒŠƒZƒbƒg‚Í‚¢‚é‚¾‚ë‚¤‚©
+            //æ™‚é–“ã®ãƒªã‚»ãƒƒãƒˆã¯ã„ã‚‹ã ã‚ã†ã‹
 
-            //ƒXƒRƒA‚Æ‚©‚Â‚¯‚Ä‚é‚È‚ç‚»‚ê‚àƒŠƒZƒbƒg‚·‚é‚©H
+            //ã‚¹ã‚³ã‚¢ã¨ã‹ã¤ã‘ã¦ã‚‹ãªã‚‰ãã‚Œã‚‚ãƒªã‚»ãƒƒãƒˆã™ã‚‹ã‹ï¼Ÿ
         }
 
-        public void ChangeOperationMode()
+        public void ChangeViewMode()
         {
-            if (NowOperationMode.Value == OperationMode.reaper)
+            switch (NowViewMode.Value)
             {
-                NowOperationMode.Value = OperationMode.fpv;
-            }
-            else if (NowOperationMode.Value == OperationMode.fpv)
-            {
-                NowOperationMode.Value = OperationMode.tpv;
-            }
-            else if (NowOperationMode.Value == OperationMode.tpv)
-            {
-                NowOperationMode.Value = OperationMode.reaper;
+                case ViewMode.REAPER:
+                    NowViewMode.Value = ViewMode.FPV;
+                    break;
+                case ViewMode.FPV:
+                    NowViewMode.Value = ViewMode.TPV;
+                    break;
+                case ViewMode.TPV:
+                    NowViewMode.Value = ViewMode.REAPER;
+                    break;
+                case ViewMode.VR:
+                    //VRãƒ¢ãƒ¼ãƒ‰ã®æ™‚ã¯ãƒ¢ãƒ¼ãƒ‰ã‚’å¤‰ãˆãªã„
+                    break;
+                default:
+                    break;
             }
         }
         #endregion

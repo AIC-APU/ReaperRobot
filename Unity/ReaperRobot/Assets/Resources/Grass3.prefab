@@ -110,6 +110,8 @@ GameObject:
   - component: {fileID: 4675106317429863205}
   - component: {fileID: 8082864682470345551}
   - component: {fileID: 7509116029525214411}
+  - component: {fileID: 651375719211885414}
+  - component: {fileID: 288212598976819600}
   m_Layer: 0
   m_Name: Grass3
   m_TagString: Grass
@@ -161,6 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fffee2d5a324264a8b67a315ffb1aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cutEffectPrefab: {fileID: 3839245975310408970, guid: 7f0326d1dab876d40b76063981bcee3b, type: 3}
 --- !u!114 &7509116029525214411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,6 +176,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eccb782f91af214e9a50d3d1cd21fd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &651375719211885414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8765850157089991517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &288212598976819600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8765850157089991517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1001 &1067757496827646116
 PrefabInstance:
   m_ObjectHideFlags: 0
