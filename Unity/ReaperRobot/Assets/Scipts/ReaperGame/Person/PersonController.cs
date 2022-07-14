@@ -23,11 +23,13 @@ namespace smart3tene.Reaper
             _personAction = GetComponent<PlayerInput>().actions.FindActionMap("Person");
 
             _personAction["ChangeMode"].started += ChangeViewMode;
+            _personAction["CloseApp"].started += CloseApp;
         }
 
         private void OnDisable()
         {
             _personAction["ChangeMode"].started -= ChangeViewMode;
+            _personAction["CloseApp"].started -= CloseApp;
         }
 
         private void LateUpdate()
@@ -55,6 +57,16 @@ namespace smart3tene.Reaper
                 {
                     GetComponent<PlayerInput>().SwitchCurrentActionMap("Reaper");
                 }
+            }
+        }
+
+
+        private void CloseApp(InputAction.CallbackContext obj)
+        {
+            //SceneTransitionManagerがシーンにないとCloseAppできません
+            if (SceneTransitionManager.Instantiated)
+            {
+                SceneTransitionManager.Instance.CloseApp();
             }
         }
         #endregion
