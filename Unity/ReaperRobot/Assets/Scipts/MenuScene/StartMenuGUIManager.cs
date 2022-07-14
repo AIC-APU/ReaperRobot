@@ -17,6 +17,7 @@ namespace smart3tene
         [Header("Panels")]
         [SerializeField] private GameObject _tiltePanel;
         [SerializeField] private GameObject _courseselectPanel;
+        [SerializeField] private GameObject _nowLoadingPanel;
         [SerializeField] private GameObject _waitingPanel;
         [SerializeField] private GameObject _multiFailedPanel;
 
@@ -42,7 +43,7 @@ namespace smart3tene
 
             GameData.CountOfPlayersInRooms.Subscribe(x => _roomPlayerNum.text = $"{x}/{GameData.MaxPlayers}");
 
-            _sceneTransitionManager.MultiStartEvent += ShowWaitingPanel;
+            //_sceneTransitionManager.MultiStartEvent += ShowWaitingPanel;
         }
 
         private void Update()
@@ -52,7 +53,7 @@ namespace smart3tene
 
         private void OnDestroy()
         {
-            _sceneTransitionManager.MultiStartEvent -= ShowWaitingPanel;
+            //_sceneTransitionManager.MultiStartEvent -= ShowWaitingPanel;
         }
         #endregion
 
@@ -89,9 +90,11 @@ namespace smart3tene
             {
                 case GameData.GameMode.SOLO:
                 case GameData.GameMode.VR:
+                    ShowNowLoadingPanel();
                     SceneTransitionManager.Instance.StartOfflineGame();
                     break;
                 case GameData.GameMode.MULTI:
+                    ShowWaitingPanel();
                     SceneTransitionManager.Instance.StartMultiGame();
                     break;
                 default:
@@ -101,9 +104,21 @@ namespace smart3tene
 
         private void ShowWaitingPanel()
         {
+            _waitingPanel.SetActive(true);
+
             _tiltePanel.SetActive(false);
             _courseselectPanel.SetActive(false);
-            _waitingPanel.SetActive(true);
+            _nowLoadingPanel.SetActive(false);
+            _multiFailedPanel.SetActive(false);
+        }
+
+        private void ShowNowLoadingPanel()
+        {
+            _nowLoadingPanel.SetActive(true);
+
+            _tiltePanel.SetActive(false);
+            _courseselectPanel.SetActive(false);
+            _waitingPanel.SetActive(false);
             _multiFailedPanel.SetActive(false);
         }
         #endregion

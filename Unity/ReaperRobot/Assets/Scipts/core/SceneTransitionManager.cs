@@ -13,14 +13,9 @@ namespace smart3tene
 {
     public class SceneTransitionManager : SingletonMonoBehaviourPunCallbacks<SceneTransitionManager>
     {
-        #region Event
-        public event Action MultiStartEvent;
-        #endregion
-
         #region private Fields
         private bool isConnectToMasterServer = false;
         #endregion
-
 
         #region public method
         public void StartOfflineGame()
@@ -34,8 +29,6 @@ namespace smart3tene
         {
             if (!PhotonNetwork.IsConnected)
             {
-                MultiStartEvent.Invoke();
-
                 //Photonのセットアップを行い、オンラインで参加する
                 PhotonNetwork.AutomaticallySyncScene = true;
                 PhotonNetwork.GameVersion = GameData.GameVersion;
