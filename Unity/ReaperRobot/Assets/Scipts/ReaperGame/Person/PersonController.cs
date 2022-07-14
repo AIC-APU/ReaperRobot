@@ -1,4 +1,4 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,7 +9,7 @@ namespace smart3tene.Reaper
     public class PersonController : MonoBehaviour
     {
         #region private Fields
-        [SerializeField, Tooltip("É}ÉãÉ`ÉvÉåÉCÇÃéûÇÕnullÇ…ÇµÇƒÇ®Ç¢ÇƒÇ≠ÇæÇ≥Ç¢")] private PersonManager _personManager;
+        [SerializeField, Tooltip("„Éû„É´„ÉÅ„Éó„É¨„Ç§„ÅÆÊôÇ„ÅØnull„Å´„Åó„Å¶„Åä„ÅÑ„Å¶„Åè„Å†„Åï„ÅÑ")] private PersonManager _personManager;
         private InputActionMap _personAction;
         #endregion
 
@@ -21,15 +21,13 @@ namespace smart3tene.Reaper
                 _personManager = GameSystem.Instance.PersonInstance.GetComponent<PersonManager>();
             }
             _personAction = GetComponent<PlayerInput>().actions.FindActionMap("Person");
-        }
-        private void OnEnable()
-        {
-            _personAction["ChangeMode"].started += ChangeMode;
+
+            _personAction["ChangeMode"].started += ChangeViewMode;
         }
 
         private void OnDisable()
         {
-            _personAction["ChangeMode"].started -= ChangeMode;
+            _personAction["ChangeMode"].started -= ChangeViewMode;
         }
 
         private void LateUpdate()
@@ -46,14 +44,14 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Private Fields
-        private void ChangeMode(InputAction.CallbackContext obj)
+        private void ChangeViewMode(InputAction.CallbackContext obj)
         {
             if (GameSystem.Instance != null)
             {
-                GameSystem.Instance.ChangeOperationMode();
+                GameSystem.Instance.ChangeViewMode();
 
-                if (GameSystem.Instance.NowOperationMode.Value == GameSystem.OperationMode.reaper ||
-                    GameSystem.Instance.NowOperationMode.Value == GameSystem.OperationMode.tpv)
+                if (GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.REAPER ||
+                    GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.TPV)
                 {
                     GetComponent<PlayerInput>().SwitchCurrentActionMap("Reaper");
                 }

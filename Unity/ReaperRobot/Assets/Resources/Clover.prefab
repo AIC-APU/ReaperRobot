@@ -77,6 +77,8 @@ GameObject:
   - component: {fileID: -3486385866682768134}
   - component: {fileID: -7515006604644917960}
   - component: {fileID: -2188655380372793538}
+  - component: {fileID: -8768509462273556676}
+  - component: {fileID: 5004887665666233200}
   m_Layer: 0
   m_Name: Clover
   m_TagString: Grass
@@ -127,6 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fffee2d5a324264a8b67a315ffb1aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cutEffectPrefab: {fileID: 3839245975310408970, guid: 7f0326d1dab876d40b76063981bcee3b, type: 3}
 --- !u!114 &-2188655380372793538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,6 +142,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eccb782f91af214e9a50d3d1cd21fd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-8768509462273556676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621448483990063720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &5004887665666233200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621448483990063720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1001 &2912946307228740036
 PrefabInstance:
   m_ObjectHideFlags: 0

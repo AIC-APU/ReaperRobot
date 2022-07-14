@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,11 +8,11 @@ namespace smart3tene
     [RequireComponent(typeof(RawImage))]
     public class CameraProjector : MonoBehaviour
     {
-        //ƒJƒƒ‰‚ªB‰e‚µ‚½‰f‘œ‚ğRawImage‚É“Š‰e‚µ‚Ü‚·
-        //delay‚Ì•b”,•\¦‚ğ’x‚ç‚¹‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·
+        //ã‚«ãƒ¡ãƒ©ãŒæ’®å½±ã—ãŸæ˜ åƒã‚’RawImageã«æŠ•å½±ã—ã¾ã™
+        //delayã®ç§’æ•°,è¡¨ç¤ºã‚’é…ã‚‰ã›ã‚‹ã“ã¨ãŒã§ãã¾ã™
 
         #region public Fields
-        [System.NonSerialized] public float delay = 0f; //’PˆÊ: •b
+        [System.NonSerialized] public float delay = 0f; //å˜ä½: ç§’
         [System.NonSerialized] public Camera recordingCamera;
         #endregion
 
@@ -32,13 +32,13 @@ namespace smart3tene
 
         private void FixedUpdate()
         {
-            //ƒeƒNƒXƒ`ƒƒ‚Ì¶¬
+            //ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ç”Ÿæˆ
             _textureSize = Vector2Int.RoundToInt(_rawImage.rectTransform.rect.size);
             var recordedTexture = RecordTexture(recordingCamera, _textureSize);
             _savedTexQueue.Enqueue(recordedTexture);
 
 
-            //delay‚Ì‚½‚ß‚É•Û‘¶‚ª•K—v‚ÈƒeƒNƒXƒ`ƒƒ‚Ì–‡”‚ğŒvZ
+            //delayã®ãŸã‚ã«ä¿å­˜ãŒå¿…è¦ãªãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æšæ•°ã‚’è¨ˆç®—
             var optimalTexQueueSize = (int)(delay / Time.fixedDeltaTime);
 
             if (_savedTexQueue.Count < optimalTexQueueSize + 1) return;
@@ -59,7 +59,7 @@ namespace smart3tene
         #region private method
         private Texture2D RecordTexture(Camera camera, Vector2Int textureSize)
         {
-            //camera‚Ì‰æ‘œ‚ğƒeƒNƒXƒ`ƒƒ‚Æ‚µ‚Äæ“¾
+            //cameraã®ç”»åƒã‚’ãƒ†ã‚¯ã‚¹ãƒãƒ£ã¨ã—ã¦å–å¾—
             var texture = new Texture2D(textureSize.x, textureSize.y, TextureFormat.RGB24, false);
             var render = new RenderTexture(textureSize.x, textureSize.y, 0);
 
@@ -69,8 +69,8 @@ namespace smart3tene
             var cache = RenderTexture.active;
             RenderTexture.active = render;
 
-            //ReadPixels‚Íd‚¢ˆ—‚ç‚µ‚¢B
-            //https://docs.unity3d.com/jp/current/ScriptReference/Texture2D.ReadPixels.html ‚É‘ã‘ÖˆÄ‚ ‚è
+            //ReadPixelsã¯é‡ã„å‡¦ç†ã‚‰ã—ã„ã€‚
+            //https://docs.unity3d.com/jp/current/ScriptReference/Texture2D.ReadPixels.html ã«ä»£æ›¿æ¡ˆã‚ã‚Š
             texture.ReadPixels(new Rect(0, 0, textureSize.x, textureSize.y), 0, 0);
             texture.Apply();
 

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,7 +9,7 @@ namespace smart3tene.Reaper
     public class ReaperController : MonoBehaviour
     {
         #region private Fields
-        [SerializeField, Tooltip("�}���`�v���C�̎���null�ɂ��Ă����Ă�������")] private ReaperManager _reaperManager;
+        [SerializeField, Tooltip("マルチプレイの時はnullにしておいてください")] private ReaperManager _reaperManager;
         private InputActionMap _reaperAction;
         #endregion
 
@@ -22,10 +22,7 @@ namespace smart3tene.Reaper
                 _reaperManager = GameSystem.Instance.ReaperInstance.GetComponent<ReaperManager>();
             }
             _reaperAction = GetComponent<PlayerInput>().actions.FindActionMap("Reaper");
-        }
 
-        private void OnEnable()
-        {
             _reaperAction["Move"].performed += Move;
             _reaperAction["Move"].canceled += Stop;
             _reaperAction["Brake"].started += Brake;
@@ -56,18 +53,22 @@ namespace smart3tene.Reaper
             var rotateSpeed = 0.5f;
             _reaperManager.RotateCamera(-1 * move.y * rotateSpeed, move.x * rotateSpeed, 0);
         }
-
         #endregion
+
 
         #region private method
         private void Move(InputAction.CallbackContext obj)
         {
-            var move = obj.ReadValue<Vector2>();
+            var move = _reaperAction["Move"].ReadValue<Vector2>();
             _ = _reaperManager.AsyncMove(move.x, move.y);
         }
 
         private void Stop(InputAction.CallbackContext obj)
         {
+            //Oculusコントローラでの操作時は以下の停止処理をさせない
+            //この分岐がないと、なぜかOculusコントローラでは毎フレームこの停止処理をしてしまう
+            if (obj.control.name == "thumbstick") return;
+
             _ = _reaperManager.AsyncMove(0, 0);
         }
         private void Brake(InputAction.CallbackContext obj)
@@ -100,9 +101,9 @@ namespace smart3tene.Reaper
         {
             if(GameSystem.Instance != null)
             {
-                GameSystem.Instance.ChangeOperationMode();
+                GameSystem.Instance.ChangeViewMode();
 
-                if(GameSystem.Instance.NowOperationMode.Value == GameSystem.OperationMode.tpv)
+                if(GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.TPV)
                 {
                     GetComponent<PlayerInput>().SwitchCurrentActionMap("Person");
                 }

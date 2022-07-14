@@ -1,18 +1,18 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace smart3tene.Reaper
 {
-    //ƒvƒƒ|‚ªInputSystem(VŒ^)‚É‘Î‰‚µ‚Ä‚¢‚È‚¢‚½‚ßAInputMangaer(‹ŒŒ^)‚ÅÀ‘•
-    //GamePad‚Æ‚ÌŠ±Â‚ğ”ğ‚¯‚é‚½‚ßAƒvƒƒ|g—p‚Í‘¼‚ÌƒRƒ“ƒgƒ[ƒ‰‚ğÚ‘±‚µ‚È‚¢‚Å‚­‚¾‚³‚¢
-    //(ƒL[ƒ{[ƒh‚Å‚Ì“ü—Í‚Æ•¹—p‚·‚é‚±‚Æ‚Í‚Å‚«‚Ü‚·)
+    //ãƒ—ãƒ­ãƒãŒInputSystem(æ–°å‹)ã«å¯¾å¿œã—ã¦ã„ãªã„ãŸã‚ã€InputMangaer(æ—§å‹)ã§å®Ÿè£…
+    //GamePadã¨ã®å¹²æ¸‰ã‚’é¿ã‘ã‚‹ãŸã‚ã€ãƒ—ãƒ­ãƒä½¿ç”¨æ™‚ã¯ä»–ã®ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã‚’æ¥ç¶šã—ãªã„ã§ãã ã•ã„
+    //(ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã§ã®å…¥åŠ›ã¨ä½µç”¨ã™ã‚‹ã“ã¨ã¯ã§ãã¾ã™)
 
     public class ReaperControllerWithPropo : MonoBehaviour
     {
         #region private Fields
-        [SerializeField, Tooltip("ƒ}ƒ‹ƒ`ƒvƒŒƒC‚Ì‚Ínull‚É‚µ‚Ä‚¨‚¢‚Ä‚­‚¾‚³‚¢")] private ReaperManager _reaperManager;
+        [SerializeField, Tooltip("ãƒãƒ«ãƒãƒ—ãƒ¬ã‚¤ã®æ™‚ã¯nullã«ã—ã¦ãŠã„ã¦ãã ã•ã„")] private ReaperManager _reaperManager;
         private bool _isUsingPropo = false;
         private bool _isNoVerticalLast = false;
         #endregion
@@ -28,10 +28,13 @@ namespace smart3tene.Reaper
 
         void Update()
         {
-            //ƒvƒƒ|‚ğg‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Ì”»’f
-            //ƒWƒ‡ƒCƒXƒeƒBƒbƒN‚ÌÚ‘±EØ’f‚µ‚½‚ÌƒR[ƒ‹ƒoƒbƒN‚Æ‚©‚ ‚ê‚Î–{“–‚Í‚»‚±‚Åˆ—‚ğ‚µ‚½‚¢
-            //Œ©‚Â‚¯‚ç‚ê‚È‚©‚Á‚½‚Ì‚ÅUpdate‚Å‚â‚Á‚Ä‚é
-            if (Input.GetJoystickNames()[0] == "WSC-1")
+            //ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯ãŒæ¥ç¶šã•ã‚Œã¦ã„ãªã„ãªã‚‰ä½•ã‚‚ã—ãªã„
+            if (Input.GetJoystickNames() == null) return;
+
+            //ãƒ—ãƒ­ãƒã‚’ä½¿ã£ã¦ã„ã‚‹ã‹ã©ã†ã‹ã®åˆ¤æ–­
+            //ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®æ¥ç¶šãƒ»åˆ‡æ–­ã—ãŸæ™‚ã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã¨ã‹ã‚ã‚Œã°æœ¬å½“ã¯ãã“ã§å‡¦ç†ã‚’ã—ãŸã„
+            //è¦‹ã¤ã‘ã‚‰ã‚Œãªã‹ã£ãŸã®ã§Updateã§ã‚„ã£ã¦ã‚‹
+            if (Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0] == "WSC-1")
             {
                 _isUsingPropo = true;
             }
@@ -39,20 +42,18 @@ namespace smart3tene.Reaper
             {
                 _isUsingPropo = false;
             }
-
-            if (!_isUsingPropo) return;
         }
 
         private void FixedUpdate()
         {
             if (!_isUsingPropo) return;
 
-            //ˆÚ“®‚Ìˆ—
+            //ç§»å‹•ã®å‡¦ç†
             var horizontal = Input.GetAxis("WSC-1_CH1");
             var vertical = Input.GetAxis("WSC-1_CH2");
             var speed = Mathf.Abs(Input.GetAxis("WSC-1_CH4"));
 
-            //À‹@‚Ì‹““®‚É•í‚¢A’¼i‚µ‚È‚¢‚È‚ç‰ñ“]‚à‚µ‚È‚¢‚æ‚¤‚É‚µ‚Ä‚¢‚é
+            //å®Ÿæ©Ÿã®æŒ™å‹•ã«å€£ã„ã€ç›´é€²ã—ãªã„ãªã‚‰å›è»¢ã‚‚ã—ãªã„ã‚ˆã†ã«ã—ã¦ã„ã‚‹
             if (vertical == 0)
             {   
                 if (_isNoVerticalLast)
