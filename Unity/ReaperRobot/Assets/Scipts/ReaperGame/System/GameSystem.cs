@@ -91,6 +91,12 @@ namespace smart3tene.Reaper
                 _personInstance = PhotonNetwork.Instantiate("PersonModel", _instantiatePos[posId].position + (-1 * _instantiatePos[posId].forward * playerBackDistance), _instantiatePos[posId].rotation, 0);
             }
 
+            if(NowViewMode.Value == ViewMode.VR)
+            {
+                var manualXRControl = new ManualXRControl();
+                StartCoroutine(manualXRControl.StartXRCoroutine());
+            }
+
             //草の総数をカウント
             _allGrassCount = GameObject.FindGameObjectsWithTag("Grass").Length;
 
@@ -101,6 +107,14 @@ namespace smart3tene.Reaper
                 .AddTo(this);           
         }
 
+        private void OnDisable()
+        {
+            if (NowViewMode.Value == ViewMode.VR)
+            {
+                var manualXRControl = new ManualXRControl();
+                manualXRControl.StopXR();
+            }
+        }
         #endregion
 
         #region Public Method
