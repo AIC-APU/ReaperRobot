@@ -88,6 +88,14 @@ namespace smart3tene.Reaper
                     _ = DelayAsync(3f, () => Destroy(_cutEffectInstance));
                 }   
             }
+            else
+            {
+                if (_particleSystem != null)
+                {
+                    //パーティクルを停止
+                    _particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                }
+            }
         }
 
         private void OnTriggerExit(Collider other)
