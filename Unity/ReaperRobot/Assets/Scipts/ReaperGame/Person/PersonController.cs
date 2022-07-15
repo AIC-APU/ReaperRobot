@@ -35,7 +35,7 @@ namespace smart3tene.Reaper
         private void LateUpdate()
         {
             var move = _personAction["Look"].ReadValue<Vector2>();
-            _personManager.RotateCamera(move.x, move.y);
+            _personManager.RotateTPVCamera(move.x, move.y);
         }
 
         private void FixedUpdate()

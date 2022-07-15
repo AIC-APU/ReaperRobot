@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
-using UniRx;
+using UniRx; 
 
 namespace smart3tene.Reaper
 {
@@ -24,10 +24,13 @@ namespace smart3tene.Reaper
         [SerializeField] private Slider _delaySlider;
         [SerializeField] private TMP_Text _delayNumText;
 
-        [Header("Mini Map")]
+        [Header("Camera")]
+        [SerializeField] private Camera _tpvCamera;
+        [SerializeField] private Camera _fpvCamera;
+        [SerializeField] private Camera _reaperCamera;
         [SerializeField] private Transform _miniMapCamera;
 
-        [Header("Reaper Camera")]
+        [Header("Reaper Camera Parameter")]
         [SerializeField] private TMP_Text _positonXNum;
         [SerializeField] private TMP_Text _positonYNum;
         [SerializeField] private TMP_Text _positonZNum;
@@ -48,10 +51,7 @@ namespace smart3tene.Reaper
         private Transform _reaperTransform;
         private ReaperManager _reaperManager;
 
-        private Camera _mainCamera;
-        private Camera _reaperCamera;
-        private Camera _fpvCamera;
-        private Camera _tpvCamera;
+        private Camera _mainCamera;   
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -70,18 +70,17 @@ namespace smart3tene.Reaper
             //DelaySlider
             InitializeDelaySlider();
 
-            //カメラ類の取得
+            //メインカメラの取得
             _mainCamera = Camera.main;
-            _reaperCamera = GameSystem.Instance.ReaperInstance.GetComponentInChildren<Camera>(true);
-            
-
-            //人に取り付けられたカメラの取得
-            //Findをできれば使わずに取得できたらいいけど,,,
-            _tpvCamera = GameSystem.Instance.PersonInstance.transform.Find("TPVCamera").GetComponent<Camera>();
-            _fpvCamera = GameSystem.Instance.PersonInstance.transform.Find("FPVCamera").GetComponent<Camera>();
 
             //ReaperCameraをprojectorに設定
             _projector.recordingCamera = _reaperCamera;
+
+            _reaperManager.reaperCameraTransform = _reaperCamera.transform;
+
+            var personManager = GameSystem.Instance.PersonInstance.GetComponent<PersonManager>();
+            personManager.FPVCameraTransform = _fpvCamera.transform;
+            personManager.TPVCameraTransform = _tpvCamera.transform;
 
             //ReaperCameraの位置・角度テキスト
             _reaperManager.CameraOffsetPos.Subscribe(vec =>
@@ -167,7 +166,7 @@ namespace smart3tene.Reaper
 
         private void LateUpdate()
         {
-            //ミニマップカメラの位置         
+            //ミニマップカメラの位置
             _miniMapCamera.position = new Vector3(_reaperTransform.position.x, _miniMapCamera.position.y, _reaperTransform.position.z);
             _miniMapCamera.eulerAngles = new Vector3(_miniMapCamera.eulerAngles.x, _reaperTransform.eulerAngles.y, _miniMapCamera.eulerAngles.z);
         }
