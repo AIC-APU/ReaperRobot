@@ -10,6 +10,10 @@ namespace smart3tene.Reaper
 {
     public class ReaperManager : MonoBehaviourPun
     {
+        #region Public Field
+        public Transform reaperCameraTransform;
+        #endregion
+
         #region Serialized Private Field
         [Header("Reaper")]
         [SerializeField] private GameObject _reaper;
@@ -27,9 +31,6 @@ namespace smart3tene.Reaper
         [Header("Crawler")]
         [SerializeField] private Animator _crawlerL;
         [SerializeField] private Animator _crawlerR;
-
-        [Header("Camera")]
-        [SerializeField] private Transform _reaperCamera;
         #endregion
 
 
@@ -72,11 +73,10 @@ namespace smart3tene.Reaper
 
 
         #region MonoBehaviour Callbacks
-        private void Awake()
+        private void Start()
         {
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-
             ResetCameraPos();
+            SetCameraTransform();
             RotateCutter(_isCutting.Value);
             MoveLift(_isLiftDown.Value);
 
@@ -105,20 +105,16 @@ namespace smart3tene.Reaper
 
         private void Update()
         {
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-
             //crawlerアニメーションの処理
             //素のrpmは値が大きすぎるので、直進時の最大rpm（計測値）で除算している
             _leftRpm.Value = _wheelColliderL2.rpm;
             _rightRpm.Value = _wheelColliderR2.rpm;
-            _crawlerL.SetFloat("WheelTorque", _leftRpm.Value / 70);
-            _crawlerR.SetFloat("WheelTorque", _rightRpm.Value / 70);           
+
+            photonView.RPC(nameof(RPCPlayCrawlerAnimation), RpcTarget.All, _leftRpm.Value, _rightRpm.Value);          
         }
 
         private void LateUpdate()
         {
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-
             //カメラ位置
             SetCameraTransform();
         }
@@ -141,7 +137,6 @@ namespace smart3tene.Reaper
         public async UniTaskVoid AsyncMove(float horizontal, float vertical)
         {
             if (!_isOperatable) return;
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
 
             //この処理はFixedUpdateのタイミングで行う
             await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
@@ -190,41 +185,17 @@ namespace smart3tene.Reaper
 
         public void MoveLift(bool isDown)
         {
-            if (!_isOperatable) return;
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-
-            _liftCancellationTokenSource?.Cancel();
-            _liftCancellationTokenSource = new();
-            AsyncMoveLift(isDown, _liftCancellationTokenSource.Token).Forget();
-
-            _isLiftDown.Value = isDown;
+            photonView.RPC(nameof(RPCMoveLift), RpcTarget.All, isDown);
         }
-
+        
         public void RotateCutter(bool isRotate)
         {
-            if (!_isOperatable) return;
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-
-            _cutterCancellationTokenSource?.Cancel();
-            _cutterCancellationTokenSource = new();
-            AsyncRotateCutter(isRotate, _cutterCancellationTokenSource.Token).Forget();
-
-            _isCutting.Value = isRotate;
-
-            if (isRotate)
-            {
-                _reaper.tag = "Cutting";
-            }
-            else
-            {
-                _reaper.tag = "Untagged";
-            }
+            photonView.RPC(nameof(RPCRotateCutter), RpcTarget.All, isRotate);
         }
 
         public void ResetCameraPos()
         {
             if (!_isOperatable || !_isCameraOperatable) return;
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
 
             _cameraOffsetPos.Value = cameraDefaultOffsetPos;
             _cameraOffsetRot.Value = cameraDefaultOffsetRot;
@@ -233,7 +204,6 @@ namespace smart3tene.Reaper
         public void MoveCamera(float x, float y, float z)
         {
             if (!_isOperatable || !_isCameraOperatable) return;
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
 
             _cameraOffsetPos.Value += new Vector3(x, y, z);
 
@@ -249,7 +219,6 @@ namespace smart3tene.Reaper
         public void RotateCamera(float x, float y, float z)
         {
             if (!_isOperatable || !_isCameraOperatable) return;
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
 
             _cameraOffsetRot.Value += new Vector3(x, y, z);
 
@@ -271,7 +240,6 @@ namespace smart3tene.Reaper
         private async UniTaskVoid AsyncMoveLift(bool isDown, CancellationToken ct = default)
         {
             if (!_isOperatable) return;
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
 
             var reaperTransform = _reaper.transform;
             var liftSpeed = 10f;
@@ -308,7 +276,6 @@ namespace smart3tene.Reaper
         private async UniTaskVoid AsyncRotateCutter(bool isCutting, CancellationToken ct = default)
         {
             if (!_isOperatable) return;
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
 
             var maxRotateSpeed = 1000f;
             var minRotateSpeed = 0f;
@@ -336,8 +303,52 @@ namespace smart3tene.Reaper
 
         private void SetCameraTransform()
         {
-            _reaperCamera.position = transform.TransformPoint(_cameraOffsetPos.Value);
-            _reaperCamera.eulerAngles = transform.eulerAngles + _cameraOffsetRot.Value;
+            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
+
+            reaperCameraTransform.position = transform.TransformPoint(_cameraOffsetPos.Value);
+            reaperCameraTransform.eulerAngles = transform.eulerAngles + _cameraOffsetRot.Value;
+        }
+
+        [PunRPC]
+        public void RPCRotateCutter(bool isRotate)
+        {
+            if (!_isOperatable) return;
+
+            _cutterCancellationTokenSource?.Cancel();
+            _cutterCancellationTokenSource = new();
+            AsyncRotateCutter(isRotate, _cutterCancellationTokenSource.Token).Forget();
+
+            _isCutting.Value = isRotate;
+
+            if (isRotate)
+            {
+                _reaper.tag = "Cutting";
+            }
+            else
+            {
+                _reaper.tag = "Untagged";
+            }
+        }
+
+        [PunRPC]
+        public void RPCMoveLift(bool isDown)
+        {
+            if (!_isOperatable) return;
+
+            _liftCancellationTokenSource?.Cancel();
+            _liftCancellationTokenSource = new();
+            AsyncMoveLift(isDown, _liftCancellationTokenSource.Token).Forget();
+
+            _isLiftDown.Value = isDown;
+        }
+
+        [PunRPC]
+        public void RPCPlayCrawlerAnimation(float leftRpm, float rightRpm)
+        {
+            //crawlerアニメーションの処理
+            //素のrpmは値が大きすぎるので、直進時の最大rpm（計測値）で除算している
+            _crawlerL.SetFloat("WheelTorque", leftRpm / 70);
+            _crawlerR.SetFloat("WheelTorque", rightRpm / 70);
         }
         #endregion
     }

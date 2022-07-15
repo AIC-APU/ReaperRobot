@@ -28,7 +28,7 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: 
+  DevRegion: jp
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
@@ -39,6 +39,15 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - AddCutGrass
+  - MinusCutGrass
+  - ResetGrass
+  - ReshapeGrass
+  - <MoveLift>g__RPCMoveLift|45_0
+  - <RotateCutter>g__RPCRotateCutter|46_0
+  - RPCMoveLift
+  - RPCRotateCutter
+  - RPCPlayCrawlerAnimation
   DisableAutoOpenWizard: 1
   ShowSettings: 0
-  DevRegionSetOnce: 0
+  DevRegionSetOnce: 1

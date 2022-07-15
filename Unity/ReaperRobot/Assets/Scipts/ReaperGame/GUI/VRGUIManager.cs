@@ -14,7 +14,6 @@ namespace smart3tene.Reaper
     {
         #region Serialized private Fields
         [Header("Canvas Follow　Parameter")]
-        [SerializeField] private Transform _mainCamera;       
         [SerializeField] private bool _isImmediateMove;
         [SerializeField] private bool _isLockX;
         [SerializeField] private bool _isLockY;
@@ -31,10 +30,11 @@ namespace smart3tene.Reaper
         [SerializeField] private Image _liftLamp;
         [SerializeField] private Image _cutterLamp;
 
-        
+
         #endregion
 
         #region private Fields
+        private Transform _mainCamera;
         private Transform _reaperTransform;
         private ReaperManager _reaperManager;
         #endregion
@@ -86,10 +86,7 @@ namespace smart3tene.Reaper
                 }
             });
 
-            if (!_mainCamera)
-            {
-                _mainCamera = Camera.main.transform;
-            }
+            _mainCamera = Camera.main.transform;
         }
 
         private void LateUpdate()
