@@ -13,6 +13,10 @@ namespace smart3tene
 {
     public class SceneTransitionManager : SingletonMonoBehaviourPunCallbacks<SceneTransitionManager>
     {
+        #region Event
+        public event Action StartMultiEvent;
+        #endregion
+
         #region private Fields
         private bool isConnectToMasterServer = false;
         #endregion
@@ -30,10 +34,10 @@ namespace smart3tene
             if (!PhotonNetwork.IsConnected)
             {
                 //Photonのセットアップを行い、オンラインで参加する
+                PhotonNetwork.OfflineMode = false;
                 PhotonNetwork.AutomaticallySyncScene = true;
                 PhotonNetwork.GameVersion = GameData.GameVersion;
                 PhotonNetwork.NickName = GameData.PlayerName;
-                PhotonNetwork.OfflineMode = false;
                 isConnectToMasterServer = PhotonNetwork.ConnectUsingSettings(); // -> call "OnConnectedToMaster" or "OnDisconnected"     
             }
             else
@@ -53,8 +57,8 @@ namespace smart3tene
 
         public void EndGame()
         {
-            PhotonNetwork.LeaveRoom();
-            SceneManager.LoadScene("StartMenuScene");
+            SceneManager.LoadScene("StartMenu");
+            PhotonNetwork.LeaveRoom();           
             PhotonNetwork.Disconnect();
         }
 
@@ -87,7 +91,7 @@ namespace smart3tene
 
         public override void OnDisconnected(DisconnectCause cause)
         {
-            if (cause != DisconnectCause.DisconnectByClientLogic)
+            if (cause != DisconnectCause.DisconnectByClientLogic && cause != DisconnectCause.None)
             {
                 Debug.LogWarning(cause);
             }
@@ -98,6 +102,11 @@ namespace smart3tene
             GameData.PlayerId = PhotonNetwork.LocalPlayer.ActorNumber;
 
             GameData.CountOfPlayersInRooms.Value = PhotonNetwork.CurrentRoom.PlayerCount;
+
+            if(PhotonNetwork.CurrentRoom.PlayerCount == GameData.MaxPlayers)
+            {
+                StartMultiEvent?.Invoke();
+            }
 
             if (PhotonNetwork.OfflineMode)
             {
@@ -119,6 +128,8 @@ namespace smart3tene
                 if (PhotonNetwork.CurrentRoom.PlayerCount == GameData.MaxPlayers)
                 {
                     PhotonNetwork.CurrentRoom.IsOpen = false;
+
+                    StartMultiEvent?.Invoke();
 
                     //数秒待ってシーン遷移
                     await UniTask.Delay(TimeSpan.FromSeconds(3));

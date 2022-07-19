@@ -85,6 +85,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Menu",
+                    "type": "Button",
+                    "id": "e747b382-8c15-44dc-9b22-86ba98d67899",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -439,6 +448,39 @@
                     "action": "CloseApp",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5f946226-f53e-4b42-9d19-e7b204b21a2d",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fd00cb70-5eb7-475a-a346-1a1a43cacd59",
+                    "path": "<Keyboard>/m",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f30e9eb7-a864-4c9f-ad8e-e8002793fc83",
+                    "path": "<OculusTouchController>/menu",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -477,6 +519,15 @@
                     "name": "CloseApp",
                     "type": "Button",
                     "id": "d08caa25-02d7-434b-b4eb-a6ce47395dbd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Menu",
+                    "type": "Button",
+                    "id": "87c4cc2f-e957-4c2f-adf5-f277807ac15f",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -646,6 +697,39 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "CloseApp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "57eb6591-c828-4e2c-9dd1-e2a34e79b6f1",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "013daffd-6582-4faa-b41b-970f318c74d1",
+                    "path": "<Keyboard>/m",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d2a5dd6a-ac41-4726-b89c-8e1b9658e610",
+                    "path": "<OculusTouchController>/menu",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR",
+                    "action": "Menu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

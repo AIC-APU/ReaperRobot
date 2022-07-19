@@ -11,9 +11,6 @@ namespace smart3tene
     public class StartMenuGUIManager : MonoBehaviour
     {
         #region Serialized Private Fields
-        [Header("SceneTransitionManager")]
-        [SerializeField] private SceneTransitionManager _sceneTransitionManager;
-
         [Header("Panels")]
         [SerializeField] private GameObject _tiltePanel;
         [SerializeField] private GameObject _courseselectPanel;
@@ -43,7 +40,7 @@ namespace smart3tene
 
             GameData.CountOfPlayersInRooms.Subscribe(x => _roomPlayerNum.text = $"{x}/{GameData.MaxPlayers}");
 
-            //_sceneTransitionManager.MultiStartEvent += ShowWaitingPanel;
+            SceneTransitionManager.Instance.StartMultiEvent += ShowNowLoadingPanel;
         }
 
         private void Update()
@@ -53,7 +50,7 @@ namespace smart3tene
 
         private void OnDestroy()
         {
-            //_sceneTransitionManager.MultiStartEvent -= ShowWaitingPanel;
+            SceneTransitionManager.Instance.StartMultiEvent -= ShowNowLoadingPanel;
         }
         #endregion
 
@@ -79,7 +76,7 @@ namespace smart3tene
         }
         public void CanselMulti()
         {
-            _sceneTransitionManager.LeaveRoom();
+            SceneTransitionManager.Instance.LeaveRoom();
         }
         #endregion
 

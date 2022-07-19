@@ -41,6 +41,9 @@ namespace smart3tene.Reaper
         [Header("Lift and Cutter")]
         [SerializeField] private Image _liftLamp;
         [SerializeField] private Image _cutterLamp;
+
+        [Header("Menu Panel")]
+        [SerializeField] private GameObject _menu;
         #endregion
 
         #region Readonly Fields
@@ -161,6 +164,8 @@ namespace smart3tene.Reaper
                         break;
                 }
             });
+
+            GameSystem.Instance.MenuEvent += ShowAndHideMenu;
         }
 
 
@@ -169,6 +174,11 @@ namespace smart3tene.Reaper
             //ミニマップカメラの位置
             _miniMapCamera.position = new Vector3(_reaperTransform.position.x, _miniMapCamera.position.y, _reaperTransform.position.z);
             _miniMapCamera.eulerAngles = new Vector3(_miniMapCamera.eulerAngles.x, _reaperTransform.eulerAngles.y, _miniMapCamera.eulerAngles.z);
+        }
+
+        private void OnDestroy()
+        {
+            GameSystem.Instance.MenuEvent -= ShowAndHideMenu;
         }
         #endregion
 
@@ -202,6 +212,11 @@ namespace smart3tene.Reaper
         public void ResetButtonClick()
         {
             GameSystem.Instance.ResetGrasses();
+        }
+
+        public void EndGameButtonClick()
+        {
+            SceneTransitionManager.Instance.EndGame();
         }
         #endregion
 
@@ -239,6 +254,10 @@ namespace smart3tene.Reaper
             }
 
             return reapRate.ToString("F1");
+        }
+        private void ShowAndHideMenu()
+        {
+            _menu.SetActive(!_menu.activeSelf);
         }
         #endregion
     }
