@@ -33,6 +33,7 @@ namespace smart3tene.Reaper
             _reaperAction["ResetCamera"].started += ResetCamera;
             _reaperAction["ChangeMode"].started += ChangeMode;
             _reaperAction["CloseApp"].started += CloseApp;
+            _reaperAction["Menu"].started += InvokeMenuEvent;
             
         }
 
@@ -48,6 +49,7 @@ namespace smart3tene.Reaper
             _reaperAction["ResetCamera"].started -= ResetCamera;
             _reaperAction["ChangeMode"].started -= ChangeMode;
             _reaperAction["CloseApp"].started -= CloseApp;
+            _reaperAction["Menu"].started -= InvokeMenuEvent;
         }
 
         private void LateUpdate()
@@ -119,6 +121,11 @@ namespace smart3tene.Reaper
             {
                 SceneTransitionManager.Instance.CloseApp();
             }
+        }
+
+        private void InvokeMenuEvent(InputAction.CallbackContext obj)
+        {
+            GameSystem.Instance.InvokeMenuEvent();
         }
         #endregion
     }

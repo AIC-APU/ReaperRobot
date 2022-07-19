@@ -80,7 +80,14 @@ namespace smart3tene.Reaper
                     _isCut.Value = true;
 
                     //CutGrassに加算
-                    photonView.RPC(nameof(AddCutGrass), RpcTarget.All);
+                    if (PhotonNetwork.IsConnected)
+                    {
+                        photonView.RPC(nameof(AddCutGrass), RpcTarget.All);
+                    }
+                    else
+                    {
+                        AddCutGrass();
+                    }
 
                     //パーティクルの停止と破棄
                     _particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
@@ -138,7 +145,14 @@ namespace smart3tene.Reaper
             //切られていたらcutGrassCountをもとに戻す
             if (_isCut.Value)
             {
-                photonView.RPC(nameof(MinusCutGrass), RpcTarget.All);
+                if (PhotonNetwork.IsConnected)
+                {
+                    photonView.RPC(nameof(MinusCutGrass), RpcTarget.All);
+                }
+                else
+                {
+                    MinusCutGrass();
+                }
             }
 
             //パラメータと形状を初期化

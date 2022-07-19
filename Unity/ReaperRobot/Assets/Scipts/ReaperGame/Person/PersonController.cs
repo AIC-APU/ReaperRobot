@@ -24,12 +24,14 @@ namespace smart3tene.Reaper
 
             _personAction["ChangeMode"].started += ChangeViewMode;
             _personAction["CloseApp"].started += CloseApp;
+            _personAction["Menu"].started += InvokeMenuEvent;
         }
 
         private void OnDisable()
         {
             _personAction["ChangeMode"].started -= ChangeViewMode;
             _personAction["CloseApp"].started -= CloseApp;
+            _personAction["Menu"].started -= InvokeMenuEvent;
         }
 
         private void LateUpdate()
@@ -68,6 +70,10 @@ namespace smart3tene.Reaper
             {
                 SceneTransitionManager.Instance.CloseApp();
             }
+        }
+        private void InvokeMenuEvent(InputAction.CallbackContext obj)
+        {
+            GameSystem.Instance.InvokeMenuEvent();
         }
         #endregion
     }

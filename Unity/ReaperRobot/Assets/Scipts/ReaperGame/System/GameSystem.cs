@@ -13,6 +13,8 @@ namespace smart3tene.Reaper
     {
         #region Event
         public event Action ResetEvent;
+        public event Action MenuEvent;
+        public void InvokeMenuEvent() => MenuEvent?.Invoke();
         #endregion
 
         #region public Fields

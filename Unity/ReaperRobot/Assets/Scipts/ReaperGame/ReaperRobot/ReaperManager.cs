@@ -110,7 +110,14 @@ namespace smart3tene.Reaper
             _leftRpm.Value = _wheelColliderL2.rpm;
             _rightRpm.Value = _wheelColliderR2.rpm;
 
-            photonView.RPC(nameof(RPCPlayCrawlerAnimation), RpcTarget.All, _leftRpm.Value, _rightRpm.Value);          
+            if (PhotonNetwork.IsConnected)
+            {
+                photonView.RPC(nameof(RPCPlayCrawlerAnimation), RpcTarget.All, _leftRpm.Value, _rightRpm.Value);
+            }
+            else
+            {
+                RPCPlayCrawlerAnimation(_leftRpm.Value, _rightRpm.Value);
+            }
         }
 
         private void LateUpdate()
@@ -121,7 +128,7 @@ namespace smart3tene.Reaper
 
         private void OnDestroy()
         {
-            //非同期処理の停止
+            //非同期処理の停止            
             _liftCancellationTokenSource?.Cancel();
             _cutterCancellationTokenSource?.Cancel();
         }
@@ -185,12 +192,26 @@ namespace smart3tene.Reaper
 
         public void MoveLift(bool isDown)
         {
-            photonView.RPC(nameof(RPCMoveLift), RpcTarget.All, isDown);
+            if (PhotonNetwork.IsConnected)
+            {
+                photonView.RPC(nameof(RPCMoveLift), RpcTarget.All, isDown);
+            }
+            else
+            {
+                RPCMoveLift(isDown);
+            }
         }
         
         public void RotateCutter(bool isRotate)
-        {
-            photonView.RPC(nameof(RPCRotateCutter), RpcTarget.All, isRotate);
+        {         
+            if (PhotonNetwork.IsConnected)
+            {
+                photonView.RPC(nameof(RPCRotateCutter), RpcTarget.All, isRotate);
+            }
+            else
+            {
+                RPCRotateCutter(isRotate);
+            }
         }
 
         public void ResetCameraPos()
@@ -345,6 +366,7 @@ namespace smart3tene.Reaper
         [PunRPC]
         public void RPCPlayCrawlerAnimation(float leftRpm, float rightRpm)
         {
+
             //crawlerアニメーションの処理
             //素のrpmは値が大きすぎるので、直進時の最大rpm（計測値）で除算している
             _crawlerL.SetFloat("WheelTorque", leftRpm / 70);
