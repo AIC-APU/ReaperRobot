@@ -7799,7 +7799,7 @@ MonoBehaviour:
   _tpvCamera: {fileID: 325397905}
   _fpvCamera: {fileID: 1077133558}
   _reaperCamera: {fileID: 1647033345}
-  _miniMapCamera: {fileID: 4347272088370781981}
+  _miniMapCamera: {fileID: 4347272088370781983}
   _positonXNum: {fileID: 2098429707}
   _positonYNum: {fileID: 1091408723}
   _positonZNum: {fileID: 91954785}

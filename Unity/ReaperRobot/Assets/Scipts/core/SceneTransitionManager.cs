@@ -14,14 +14,14 @@ namespace smart3tene
     public class SceneTransitionManager : SingletonMonoBehaviourPunCallbacks<SceneTransitionManager>
     {
         #region Event
-        public event Action StartMultiEvent;
+        public event Action RoomFilledEvent;
         #endregion
 
         #region private Fields
         private bool isConnectToMasterServer = false;
         #endregion
 
-        #region public method
+        #region public Method
         public void StartOfflineGame()
         {
             //オフラインとして参加する
@@ -46,19 +46,21 @@ namespace smart3tene
             }
         }
 
-        public void LeaveRoom()
+        public void LeaveAndDisconnect()
         {
-            if (PhotonNetwork.InRoom)
+            if (PhotonNetwork.IsConnected)
             {
                 PhotonNetwork.LeaveRoom();
                 PhotonNetwork.Disconnect();
             }
         }
 
-        public void EndGame()
+        public async void EndGame()
         {
-            SceneManager.LoadScene("StartMenu");
-            PhotonNetwork.LeaveRoom();           
+            PhotonNetwork.AutomaticallySyncScene = false;
+            
+            await SceneManager.LoadSceneAsync("StartMenu", LoadSceneMode.Single);
+
             PhotonNetwork.Disconnect();
         }
 
@@ -69,6 +71,15 @@ namespace smart3tene
             #else
                 Application.Quit();
             #endif
+        }
+
+        public void RoadScene()
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                //GameDataを参照し、ロードするシーンを決めている
+                PhotonNetwork.LoadLevel($"{GameData.NowGameCourse}_{GameData.NowGameMode}");
+            }    
         }
 
         //photonへの接続ができなかった時にやり直すために使う
@@ -91,26 +102,30 @@ namespace smart3tene
 
         public override void OnDisconnected(DisconnectCause cause)
         {
-            if (cause != DisconnectCause.DisconnectByClientLogic && cause != DisconnectCause.None)
+            switch (cause)
             {
-                Debug.LogWarning(cause);
+                case DisconnectCause.None:
+                    break;
+                case DisconnectCause.DisconnectByClientLogic:
+                    break;
+                default:
+                    Debug.LogWarning(cause);
+                    break;
             }
         }
 
         public override void OnJoinedRoom()
         {
             GameData.PlayerId = PhotonNetwork.LocalPlayer.ActorNumber;
-
             GameData.CountOfPlayersInRooms.Value = PhotonNetwork.CurrentRoom.PlayerCount;
-
-            if(PhotonNetwork.CurrentRoom.PlayerCount == GameData.MaxPlayers)
-            {
-                StartMultiEvent?.Invoke();
-            }
 
             if (PhotonNetwork.OfflineMode)
             {
-                PhotonNetwork.LoadLevel($"{GameData.NowGameCourse}_{GameData.NowGameMode}");
+                RoomFilledEvent?.Invoke();
+            }
+            else if(PhotonNetwork.CurrentRoom.PlayerCount == GameData.MaxPlayers)
+            {
+                RoomFilledEvent?.Invoke();
             }
         }
 
@@ -119,22 +134,15 @@ namespace smart3tene
             PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = GameData.MaxPlayers }); //-> call OnJoinedRoom
         }
 
-        public override async void OnPlayerEnteredRoom(Player newPlayer)
+        public override void OnPlayerEnteredRoom(Player newPlayer)
         {
             GameData.CountOfPlayersInRooms.Value = PhotonNetwork.CurrentRoom.PlayerCount;
 
-            if (PhotonNetwork.IsMasterClient)
+            if (PhotonNetwork.CurrentRoom.PlayerCount == GameData.MaxPlayers)
             {
-                if (PhotonNetwork.CurrentRoom.PlayerCount == GameData.MaxPlayers)
-                {
-                    PhotonNetwork.CurrentRoom.IsOpen = false;
+                PhotonNetwork.CurrentRoom.IsOpen = false;
 
-                    StartMultiEvent?.Invoke();
-
-                    //数秒待ってシーン遷移
-                    await UniTask.Delay(TimeSpan.FromSeconds(3));
-                    PhotonNetwork.LoadLevel($"{GameData.NowGameCourse}_{GameData.NowGameMode}");
-                }
+                RoomFilledEvent?.Invoke();
             }
         }
 

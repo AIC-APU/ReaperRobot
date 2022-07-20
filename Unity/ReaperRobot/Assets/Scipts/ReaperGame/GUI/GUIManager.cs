@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
+using UniRx.Triggers;
 using TMPro;
-using System;
-using UniRx; 
+
 
 namespace smart3tene.Reaper
 {
@@ -28,7 +30,7 @@ namespace smart3tene.Reaper
         [SerializeField] private Camera _tpvCamera;
         [SerializeField] private Camera _fpvCamera;
         [SerializeField] private Camera _reaperCamera;
-        [SerializeField] private Transform _miniMapCamera;
+        [SerializeField] private GameObject _miniMapCamera;
 
         [Header("Reaper Camera Parameter")]
         [SerializeField] private TMP_Text _positonXNum;
@@ -165,15 +167,18 @@ namespace smart3tene.Reaper
                 }
             });
 
+            this.LateUpdateAsObservable()
+                .Where(_ => _miniMapCamera.transform != null)
+                .Where(_ => _reaperTransform != null)
+                .Subscribe(_ =>
+                {
+                    //ミニマップカメラの位置
+                    _miniMapCamera.transform.position = new Vector3(_reaperTransform.position.x, _miniMapCamera.transform.position.y, _reaperTransform.position.z);
+                    _miniMapCamera.transform.eulerAngles = new Vector3(_miniMapCamera.transform.eulerAngles.x, _reaperTransform.eulerAngles.y, _miniMapCamera.transform.eulerAngles.z);
+                })
+                .AddTo(this);
+
             GameSystem.Instance.MenuEvent += ShowAndHideMenu;
-        }
-
-
-        private void LateUpdate()
-        {
-            //ミニマップカメラの位置
-            _miniMapCamera.position = new Vector3(_reaperTransform.position.x, _miniMapCamera.position.y, _reaperTransform.position.z);
-            _miniMapCamera.eulerAngles = new Vector3(_miniMapCamera.eulerAngles.x, _reaperTransform.eulerAngles.y, _miniMapCamera.eulerAngles.z);
         }
 
         private void OnDestroy()

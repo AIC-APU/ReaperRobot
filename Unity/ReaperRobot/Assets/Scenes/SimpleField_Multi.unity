@@ -5238,7 +5238,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1392477803}
         m_TargetAssemblyTypeName: smart3tene.Reaper.GUIManager, Assembly-CSharp
         m_MethodName: EndGameButtonClick
         m_Mode: 1
@@ -7982,7 +7982,7 @@ MonoBehaviour:
   _tpvCamera: {fileID: 477464628}
   _fpvCamera: {fileID: 1432304354}
   _reaperCamera: {fileID: 1443216034}
-  _miniMapCamera: {fileID: 4347272088370781981}
+  _miniMapCamera: {fileID: 4347272088370781983}
   _positonXNum: {fileID: 2098429707}
   _positonYNum: {fileID: 1091408723}
   _positonZNum: {fileID: 91954785}
@@ -7991,7 +7991,7 @@ MonoBehaviour:
   _rotationZNum: {fileID: 1173466059}
   _liftLamp: {fileID: 27867800}
   _cutterLamp: {fileID: 904584220}
-  _menu: {fileID: 0}
+  _menu: {fileID: 1357210039}
 --- !u!1 &1396684472
 GameObject:
   m_ObjectHideFlags: 0
