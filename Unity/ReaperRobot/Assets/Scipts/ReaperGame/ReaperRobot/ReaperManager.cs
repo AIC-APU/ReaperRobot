@@ -131,6 +131,11 @@ namespace smart3tene.Reaper
             //非同期処理の停止            
             _liftCancellationTokenSource?.Cancel();
             _cutterCancellationTokenSource?.Cancel();
+
+            if (PhotonNetwork.IsConnected)
+            {
+                PhotonNetwork.RemoveRPCs(PhotonNetwork.LocalPlayer);
+            }        
         }
         #endregion
 
