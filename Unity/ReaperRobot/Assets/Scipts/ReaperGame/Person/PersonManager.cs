@@ -19,13 +19,14 @@ namespace smart3tene.Reaper
         private Rigidbody _rigidBody; 
         private Vector3 _tpvCameraOffsetPos;
         private float _cameraDistance;
+        private Animator _animator;
         #endregion
 
         #region Readonly Fields
-        readonly Vector3 fpvCameraOffsetPos = new Vector3(0, 1, 0);
+        readonly Vector3 fpvCameraOffsetPos = new Vector3(0, 1.5f, 0);
         readonly Vector3 defaultTPVCameraLocalPos = new(0, 2f, -2f);
         readonly Vector3 defaultTPVCameraEulerAngles = new(20, 0, 0);
-        readonly float moveSpeed = 1.5f;
+        readonly float moveSpeed = 2f;
         readonly float rotateSpeed = 0.8f;
         #endregion
 
@@ -35,6 +36,7 @@ namespace smart3tene.Reaper
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
                  
             _rigidBody = GetComponent<Rigidbody>();
+            _animator = GetComponent<Animator>();
 
             SetTPVCameraAtPlayerBack();
 
@@ -99,7 +101,8 @@ namespace smart3tene.Reaper
             }
 
             //必要ならここでアニメーションなどの操作
-
+            var speed = new Vector2(_rigidBody.velocity.x, _rigidBody.velocity.z).magnitude;
+            _animator.SetFloat("Speed", speed, 0.1f, Time.deltaTime);
         }
 
         public void RotateTPVCamera(float horizontal, float vertical)
