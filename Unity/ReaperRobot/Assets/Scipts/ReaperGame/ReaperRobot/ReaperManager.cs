@@ -75,6 +75,8 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         private void Start()
         {
+            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
+
             ResetCameraPos();
             SetCameraTransform();
             RotateCutter(_isCutting.Value);
