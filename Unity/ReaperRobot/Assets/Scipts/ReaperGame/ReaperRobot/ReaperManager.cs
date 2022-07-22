@@ -166,6 +166,12 @@ namespace smart3tene.Reaper
             torqueL += rotateTorqueMultiplier * horizontal;
             torqueR -= rotateTorqueMultiplier * horizontal;
 
+            if (_isCutting.Value)
+            {
+                torqueL /= 2;
+                torqueR /= 2;
+            }
+
             _wheelColliderL2.motorTorque = torqueL;
             _wheelColliderL3.motorTorque = torqueL;
             _wheelColliderR2.motorTorque = torqueR;
@@ -344,10 +350,14 @@ namespace smart3tene.Reaper
 
             _cutterCancellationTokenSource?.Cancel();
             _cutterCancellationTokenSource = new();
+
+            //オブジェクトの回転
             AsyncRotateCutter(isRotate, _cutterCancellationTokenSource.Token).Forget();
 
+            //フラグの変更
             _isCutting.Value = isRotate;
 
+            //タグの変更
             if (isRotate)
             {
                 _reaper.tag = "Cutting";
