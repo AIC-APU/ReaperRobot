@@ -23,10 +23,10 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Readonly Fields
-        readonly Vector3 fpvCameraOffsetPos = new Vector3(0, 1.5f, 0);
+        readonly Vector3 fpvCameraOffsetPos = new Vector3(0, 1f, 0);
         readonly Vector3 defaultTPVCameraLocalPos = new(0, 2f, -2f);
         readonly Vector3 defaultTPVCameraEulerAngles = new(20, 0, 0);
-        readonly float moveSpeed = 2f;
+        readonly float moveSpeed = 1.5f;
         readonly float rotateSpeed = 0.8f;
         #endregion
 
@@ -52,8 +52,7 @@ namespace smart3tene.Reaper
                     }
                     else
                     {
-                        //Move(0, 0);
-                        //RotateTPVCamera(0, 0);
+                        StopMove();
                         _isOperatable = false;
                     }
                 });
@@ -135,6 +134,15 @@ namespace smart3tene.Reaper
 
             TPVCameraTransform.forward = transform.forward;
             TPVCameraTransform.eulerAngles += defaultTPVCameraEulerAngles;
+        }
+
+        private void StopMove()
+        {
+            _rigidBody.velocity = new Vector3(0, _rigidBody.velocity.y, 0);
+            _rigidBody.angularVelocity = Vector3.zero;
+            Move(0, 0);
+            _animator.SetFloat("Speed", 0);
+
         }
         #endregion
 

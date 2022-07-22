@@ -90,7 +90,7 @@ namespace smart3tene.Reaper
             if(NowViewMode.Value != ViewMode.VR &&　_personInstance == null)
             {
                 var playerBackDistance = 3f;
-                _personInstance = PhotonNetwork.Instantiate("PersonModel", _instantiatePos[posId].position + (-1 * _instantiatePos[posId].forward * playerBackDistance), _instantiatePos[posId].rotation, 0);
+                _personInstance = PhotonNetwork.Instantiate("RingoResource", _instantiatePos[posId].position + (-1 * _instantiatePos[posId].forward * playerBackDistance), _instantiatePos[posId].rotation, 0);
             }
 
             if(NowViewMode.Value == ViewMode.VR)

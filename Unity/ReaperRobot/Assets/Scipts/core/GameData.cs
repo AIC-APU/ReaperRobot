@@ -35,7 +35,7 @@ namespace smart3tene
 
         #region Public Property
         public static string PlayerName { get; set; } = "NONAME";
-        public static int PlayerId { get; set; }
+        public static int PlayerId { get; set; } = 1;
         #endregion
 
 
