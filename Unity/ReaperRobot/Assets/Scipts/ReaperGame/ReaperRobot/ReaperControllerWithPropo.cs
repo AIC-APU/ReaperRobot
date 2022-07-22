@@ -24,17 +24,28 @@ namespace smart3tene.Reaper
             {
                 _reaperManager = GameSystem.Instance.ReaperInstance.GetComponent<ReaperManager>();
             }
+
+            foreach (string controller in Input.GetJoystickNames())
+            {
+                Debug.Log(controller);
+            }
+
         }
 
         void Update()
         {
-            //ジョイスティックが接続されていないなら何もしない
-            if (Input.GetJoystickNames() == null) return;
+            if (Input.GetJoystickNames() == null)
+            {
+                return;
+            }
+
+            var controllerList = new List<string>();
+            controllerList.AddRange(Input.GetJoystickNames());
 
             //プロポを使っているかどうかの判断
             //ジョイスティックの接続・切断した時のコールバックとかあれば本当はそこで処理をしたい
             //見つけられなかったのでUpdateでやってる
-            if (Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0] == "WSC-1")
+            if (Input.GetJoystickNames().Length > 0 && controllerList.Contains("WSC-1"))
             {
                 _isUsingPropo = true;
             }

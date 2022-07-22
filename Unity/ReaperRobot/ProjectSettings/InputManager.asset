@@ -308,7 +308,7 @@ InputManager:
     invert: 0
     type: 2
     axis: 0
-    joyNum: 1
+    joyNum: 0
   - serializedVersion: 3
     m_Name: WSC-1_CH2
     descriptiveName: 
@@ -324,7 +324,7 @@ InputManager:
     invert: 1
     type: 2
     axis: 1
-    joyNum: 1
+    joyNum: 0
   - serializedVersion: 3
     m_Name: WSC-1_CH3
     descriptiveName: 
@@ -340,7 +340,7 @@ InputManager:
     invert: 1
     type: 2
     axis: 2
-    joyNum: 1
+    joyNum: 0
   - serializedVersion: 3
     m_Name: WSC-1_CH4
     descriptiveName: 
@@ -356,5 +356,5 @@ InputManager:
     invert: 1
     type: 2
     axis: 3
-    joyNum: 1
+    joyNum: 0
   m_UsePhysicalKeys: 0
