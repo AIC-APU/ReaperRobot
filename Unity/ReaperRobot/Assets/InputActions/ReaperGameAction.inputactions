@@ -352,22 +352,22 @@
                 },
                 {
                     "name": "",
-                    "id": "5db3df0d-67e8-4467-8b68-3cd793090e10",
-                    "path": "<Keyboard>/space",
+                    "id": "143c476b-9063-4aaa-a93f-cda899b14b32",
+                    "path": "<Gamepad>/select",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "Gamepad",
                     "action": "ChangeMode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "143c476b-9063-4aaa-a93f-cda899b14b32",
-                    "path": "<Gamepad>/select",
+                    "id": "5db3df0d-67e8-4467-8b68-3cd793090e10",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Gamepad",
+                    "groups": "Keyboard&Mouse",
                     "action": "ChangeMode",
                     "isComposite": false,
                     "isPartOfComposite": false

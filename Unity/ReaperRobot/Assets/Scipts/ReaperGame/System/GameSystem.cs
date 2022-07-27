@@ -24,12 +24,14 @@ namespace smart3tene.Reaper
         #region Enum
         public enum ViewMode
         {
-            REAPER,
-            TPV,
-            FPV,
-            VR,
+            REAPER_FPV,
+            REAPER_BIRDVIEW,
+            REAPER_VR,
+            REAPER_FromPerson,
+            REAPER_AROUND,
+            PERSON_TPV,
         }
-        public ReactiveProperty<ViewMode> NowViewMode { get; private set; } = new ReactiveProperty<ViewMode>(ViewMode.REAPER);        
+        public ReactiveProperty<ViewMode> NowViewMode { get; private set; } = new ReactiveProperty<ViewMode>(ViewMode.REAPER_FPV);        
         #endregion
 
         #region Serialized private Fields
@@ -39,7 +41,7 @@ namespace smart3tene.Reaper
         public GameObject PersonInstance => _personInstance;
         [SerializeField, Tooltip("マルチプレイの時はnullにしておいてください")] private GameObject _personInstance = null;
 
-        [SerializeField] private ViewMode _defaultOperationMode = ViewMode.REAPER;
+        [SerializeField] private ViewMode _defaultOperationMode = ViewMode.REAPER_FPV;
 
         [SerializeField] private List<Transform> _instantiatePos = new List<Transform>();
         #endregion
@@ -87,13 +89,13 @@ namespace smart3tene.Reaper
 
             //人モデルの生成
             //VRモードの時は人出さなくていい？
-            if(NowViewMode.Value != ViewMode.VR &&　_personInstance == null)
+            if(NowViewMode.Value != ViewMode.REAPER_VR &&　_personInstance == null)
             {
                 var playerBackDistance = 3f;
                 _personInstance = PhotonNetwork.Instantiate("RingoResource", _instantiatePos[posId].position + (-1 * _instantiatePos[posId].forward * playerBackDistance), _instantiatePos[posId].rotation, 0);
             }
 
-            if(NowViewMode.Value == ViewMode.VR)
+            if(NowViewMode.Value == ViewMode.REAPER_VR)
             {
                 var manualXRControl = new ManualXRControl();
                 StartCoroutine(manualXRControl.StartXRCoroutine());
@@ -111,7 +113,7 @@ namespace smart3tene.Reaper
 
         private void OnDisable()
         {
-            if (NowViewMode.Value == ViewMode.VR)
+            if (NowViewMode.Value == ViewMode.REAPER_VR)
             {
                 var manualXRControl = new ManualXRControl();
                 manualXRControl.StopXR();
@@ -138,20 +140,33 @@ namespace smart3tene.Reaper
         {
             switch (NowViewMode.Value)
             {
-                case ViewMode.REAPER:
-                    NowViewMode.Value = ViewMode.FPV;
+                case ViewMode.REAPER_FPV:
+                    NowViewMode.Value = ViewMode.REAPER_AROUND;
                     break;
-                case ViewMode.FPV:
-                    NowViewMode.Value = ViewMode.TPV;
+
+                case ViewMode.REAPER_AROUND:
+                    NowViewMode.Value = ViewMode.REAPER_BIRDVIEW;
                     break;
-                case ViewMode.TPV:
-                    NowViewMode.Value = ViewMode.REAPER;
+
+                case ViewMode.REAPER_BIRDVIEW:
+                    NowViewMode.Value = ViewMode.PERSON_TPV;
                     break;
-                case ViewMode.VR:
+
+                case ViewMode.PERSON_TPV:
+                    NowViewMode.Value = ViewMode.REAPER_FromPerson;
+                    break;
+
+                case ViewMode.REAPER_FromPerson:
+                    NowViewMode.Value = ViewMode.REAPER_FPV;
+                    break;
+
+                case ViewMode.REAPER_VR:
                     //VRモードの時はモードを変えない
                     break;
+
                 default:
                     break;
+                    
             }
         }
         #endregion

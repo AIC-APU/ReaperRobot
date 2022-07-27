@@ -10,10 +10,6 @@ namespace smart3tene.Reaper
 {
     public class ReaperManager : MonoBehaviourPun
     {
-        #region Public Field
-        public Transform reaperCameraTransform;
-        #endregion
-
         #region Serialized Private Field
         [Header("Reaper")]
         [SerializeField] private GameObject _reaper;
@@ -35,20 +31,6 @@ namespace smart3tene.Reaper
 
 
         #region private & readonly Field
-        private bool _isOperatable = true;
-        private bool _isCameraOperatable = true;
-
-        //カメラ
-        public IReadOnlyReactiveProperty<Vector3> CameraOffsetPos => _cameraOffsetPos;
-        private ReactiveProperty<Vector3> _cameraOffsetPos = new();
-
-        public IReadOnlyReactiveProperty<Vector3> CameraOffsetRot => _cameraOffsetRot;
-        private ReactiveProperty<Vector3> _cameraOffsetRot = new();
-
-        readonly Vector3 cameraDefaultOffsetPos = new(0f, 1.2f, -0.5f);
-        readonly Vector3 cameraDefaultOffsetRot = new(30f, 0f, 0f);
-
-
         //カッター&リフト関連
         public IReadOnlyReactiveProperty<bool> IsCutting => _isCutting;
         private ReactiveProperty<bool> _isCutting = new(true);
@@ -77,32 +59,8 @@ namespace smart3tene.Reaper
         {
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
 
-            ResetCameraPos();
-            SetCameraTransform();
             RotateCutter(_isCutting.Value);
             MoveLift(_isLiftDown.Value);
-
-            if (GameSystem.Instance != null)
-            {
-                GameSystem.Instance.NowViewMode.Subscribe(x =>
-                {
-                    if (x == GameSystem.ViewMode.REAPER)
-                    {
-                        _isOperatable = true;
-                        _isCameraOperatable = true;
-                    }
-                    else if (x == GameSystem.ViewMode.FPV || x == GameSystem.ViewMode.VR)
-                    {
-                        _isOperatable = true;
-                        _isCameraOperatable = false;
-                    }
-                    else
-                    {
-                        _ = AsyncMove(0, 0);
-                        _isOperatable = false;
-                    }
-                });
-            }
         }
 
         private void Update()
@@ -120,12 +78,6 @@ namespace smart3tene.Reaper
             {
                 RPCPlayCrawlerAnimation(_leftRpm.Value, _rightRpm.Value);
             }
-        }
-
-        private void LateUpdate()
-        {
-            //カメラ位置
-            SetCameraTransform();
         }
 
         private void OnDestroy()
@@ -150,8 +102,6 @@ namespace smart3tene.Reaper
         /// <param name="vertical">垂直方向の入力。-1~+1の範囲</param>
         public async UniTaskVoid AsyncMove(float horizontal, float vertical)
         {
-            if (!_isOperatable) return;
-
             //この処理はFixedUpdateのタイミングで行う
             await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
 
@@ -168,8 +118,8 @@ namespace smart3tene.Reaper
 
             if (_isCutting.Value)
             {
-                torqueL /= 2;
-                torqueR /= 2;
+                torqueL /= 2f;
+                torqueR /= 2f;
             }
 
             _wheelColliderL2.motorTorque = torqueL;
@@ -183,7 +133,6 @@ namespace smart3tene.Reaper
 
         public void PutOnBrake()
         {
-            if (!_isOperatable) return;
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
 
             _wheelColliderL2.brakeTorque = brakeTorque;
@@ -194,7 +143,6 @@ namespace smart3tene.Reaper
 
         public void ReleaseBrake()
         {
-            if (!_isOperatable) return;
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
 
             _wheelColliderL2.brakeTorque = 0;
@@ -226,44 +174,6 @@ namespace smart3tene.Reaper
                 RPCRotateCutter(isRotate);
             }
         }
-
-        public void ResetCameraPos()
-        {
-            if (!_isOperatable || !_isCameraOperatable) return;
-
-            _cameraOffsetPos.Value = cameraDefaultOffsetPos;
-            _cameraOffsetRot.Value = cameraDefaultOffsetRot;
-        }
-
-        public void MoveCamera(float x, float y, float z)
-        {
-            if (!_isOperatable || !_isCameraOperatable) return;
-
-            _cameraOffsetPos.Value += new Vector3(x, y, z);
-
-            var clampedVec = _cameraOffsetPos.Value;
-
-            clampedVec.x = Mathf.Clamp(clampedVec.x, -1f, 1f);
-            clampedVec.y = Mathf.Clamp(clampedVec.y, 0.5f, 2f);
-            clampedVec.z = Mathf.Clamp(clampedVec.z, -2f, 2f);
-
-            _cameraOffsetPos.Value = clampedVec;
-        }
-
-        public void RotateCamera(float x, float y, float z)
-        {
-            if (!_isOperatable || !_isCameraOperatable) return;
-
-            _cameraOffsetRot.Value += new Vector3(x, y, z);
-
-            var clampedVec = _cameraOffsetRot.Value;
-
-            clampedVec.x = Mathf.Clamp(clampedVec.x, -90f, 90f);
-            clampedVec.y = Mathf.Clamp(clampedVec.y, -90f, 90f);
-            clampedVec.z = Mathf.Clamp(clampedVec.z, -90f, 90f);
-
-            _cameraOffsetRot.Value = clampedVec;
-        }
         #endregion
 
 
@@ -273,8 +183,6 @@ namespace smart3tene.Reaper
         /// </summary>
         private async UniTaskVoid AsyncMoveLift(bool isDown, CancellationToken ct = default)
         {
-            if (!_isOperatable) return;
-
             var reaperTransform = _reaper.transform;
             var liftSpeed = 10f;
             if (isDown)
@@ -309,8 +217,6 @@ namespace smart3tene.Reaper
         /// </summary>
         private async UniTaskVoid AsyncRotateCutter(bool isCutting, CancellationToken ct = default)
         {
-            if (!_isOperatable) return;
-
             var maxRotateSpeed = 1000f;
             var minRotateSpeed = 0f;
             var acceleration = 3f;
@@ -329,25 +235,14 @@ namespace smart3tene.Reaper
 
                 await UniTask.Yield(PlayerLoopTiming.Update, ct);
 
-                //もし刃が止まっている時にループを抜けたいなら以下の処理を入れる
-                //好みだと思う
+                //刃が止まったらループを抜ける
                 if (!isCutting && _nowCutterSpeed == 0) break;
             }
-        }
-
-        private void SetCameraTransform()
-        {
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-
-            reaperCameraTransform.position = transform.TransformPoint(_cameraOffsetPos.Value);
-            reaperCameraTransform.eulerAngles = transform.eulerAngles + _cameraOffsetRot.Value;
         }
 
         [PunRPC]
         public void RPCRotateCutter(bool isRotate)
         {
-            if (!_isOperatable) return;
-
             _cutterCancellationTokenSource?.Cancel();
             _cutterCancellationTokenSource = new();
 
@@ -371,8 +266,6 @@ namespace smart3tene.Reaper
         [PunRPC]
         public void RPCMoveLift(bool isDown)
         {
-            if (!_isOperatable) return;
-
             _liftCancellationTokenSource?.Cancel();
             _liftCancellationTokenSource = new();
             AsyncMoveLift(isDown, _liftCancellationTokenSource.Token).Forget();
@@ -383,7 +276,6 @@ namespace smart3tene.Reaper
         [PunRPC]
         public void RPCPlayCrawlerAnimation(float leftRpm, float rightRpm)
         {
-
             //crawlerアニメーションの処理
             //素のrpmは値が大きすぎるので、直進時の最大rpm（計測値）で除算している
             _crawlerL.SetFloat("WheelTorque", leftRpm / 70);

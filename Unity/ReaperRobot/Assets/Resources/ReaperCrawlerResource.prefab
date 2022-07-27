@@ -1406,6 +1406,9 @@ GameObject:
   - component: {fileID: 1780129434565651634}
   - component: {fileID: 7195942872361190858}
   - component: {fileID: 6415836810043712861}
+  - component: {fileID: 4603619459721373801}
+  - component: {fileID: 1315532389388914593}
+  - component: {fileID: 8417792011675329800}
   m_Layer: 0
   m_Name: ReaperCrawlerResource
   m_TagString: Player
@@ -1474,7 +1477,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30982129f9fed88469fbce703661f386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reaperCameraTransform: {fileID: 0}
   _reaper: {fileID: 815183232392862236}
   _cutterL: {fileID: 2133710927379082967}
   _cutterR: {fileID: 2883701372465503094}
@@ -1523,6 +1525,51 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &4603619459721373801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8958998419709330552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75aa0ba04d10ff544a5a243ac0e46814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 0}
+  cameraDefaultOffsetPos: {x: 0, y: 1.2, z: -0.5}
+  cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+--- !u!114 &1315532389388914593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8958998419709330552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a030d73ea6444442b9d79b914d392c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 0}
+  cameraDefaultOffsetPos: {x: 0, y: 3, z: -5}
+  cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+--- !u!114 &8417792011675329800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8958998419709330552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dd960977ad916642b4469ebf92431e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 0}
+  cameraDefaultOffsetPos: {x: 0, y: 1, z: -1.5}
+  cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
 --- !u!1001 &3917847029009730825
 PrefabInstance:
   m_ObjectHideFlags: 0
