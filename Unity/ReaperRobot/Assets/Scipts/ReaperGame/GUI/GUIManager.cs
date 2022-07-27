@@ -222,6 +222,7 @@ namespace smart3tene.Reaper
                 })
                 .AddTo(this);
 
+            _menu.SetActive(false);
             GameSystem.Instance.MenuEvent += ShowAndHideMenu;
         }
 

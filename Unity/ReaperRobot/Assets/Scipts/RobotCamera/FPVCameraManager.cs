@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using Photon.Pun;
 
 namespace smart3tene
 {
-    public class FPVCameraManager : MonoBehaviour, IRobotCamera
+    public class FPVCameraManager : MonoBehaviourPun, IRobotCamera
     {
         #region Public Fields
         public Camera Camera { get => _camera; set => _camera = value; }
@@ -26,8 +27,10 @@ namespace smart3tene
         #endregion
 
         #region MonoBehaviour Callbacks
-        private void Awake()
+        private void Start()
         {
+            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
+
             ResetCamera();
             FollowRobot();
         }

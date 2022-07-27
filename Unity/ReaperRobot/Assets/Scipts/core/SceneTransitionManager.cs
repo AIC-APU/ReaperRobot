@@ -61,7 +61,10 @@ namespace smart3tene
             
             await SceneManager.LoadSceneAsync("StartMenu", LoadSceneMode.Single);
 
-            PhotonNetwork.Disconnect();
+            if (PhotonNetwork.IsConnected)
+            {
+                PhotonNetwork.Disconnect();
+            }
         }
 
         public void CloseApp()
@@ -110,6 +113,10 @@ namespace smart3tene
                     break;
                 default:
                     Debug.LogWarning(cause);
+                    if(SceneManager.GetActiveScene().name != "StartMenu")
+                    {
+                        EndGame();
+                    }
                     break;
             }
         }

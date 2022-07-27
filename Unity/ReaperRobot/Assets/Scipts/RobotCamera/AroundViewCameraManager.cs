@@ -1,8 +1,9 @@
 using UnityEngine;
+using Photon.Pun;
 
 namespace smart3tene
 {
-    public class AroundViewCameraManager : MonoBehaviour, IRobotCamera
+    public class AroundViewCameraManager : MonoBehaviourPun, IRobotCamera
     {
         #region Public Fields
         public Camera Camera { get => _camera; set => _camera = value;}
@@ -25,8 +26,10 @@ namespace smart3tene
         #endregion
 
         #region MonoBehaviour Callbacks
-        private void Awake()
+        private void Start()
         {
+            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
+
             ResetCamera();
             FollowRobot();
         }
