@@ -12,7 +12,7 @@ namespace smart3tene.Reaper
     public class ReaperControllerWithPropo : MonoBehaviour
     {
         #region private Fields
-        [SerializeField, Tooltip("マルチプレイの時はnullにしておいてください")] private ReaperManager _reaperManager;
+        private ReaperManager _reaperManager;
         private bool _isUsingPropo = false;
         private bool _isNoVerticalLast = false;
         #endregion
@@ -20,10 +20,7 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            if (_reaperManager == null)
-            {
-                _reaperManager = GameSystem.Instance.ReaperInstance.GetComponent<ReaperManager>();
-            }
+            _reaperManager = GameSystem.Instance.ReaperInstance.GetComponent<ReaperManager>();
 
             foreach (string controller in Input.GetJoystickNames())
             {

@@ -27,10 +27,13 @@ namespace smart3tene.Reaper
         [SerializeField] private TMP_Text _delayNumText;
 
         [Header("Camera")]
-        [SerializeField] private Camera _tpvCamera;
-        [SerializeField] private Camera _fpvCamera;
-        [SerializeField] private Camera _reaperCamera;
-        [SerializeField] private GameObject _miniMapCamera;
+        [SerializeField] private Camera _personTPVCamera;
+        [SerializeField] private Camera _personFPVCamera;
+        [SerializeField] private Camera _robotFPVCamera;
+        [SerializeField] private Camera _robotBirdViewCamera;
+        [SerializeField] private Camera _robotAroundCamera;
+        [SerializeField] private Camera _miniMapCamera;
+
 
         [Header("Reaper Camera Parameter")]
         [SerializeField] private TMP_Text _positonXNum;
@@ -46,6 +49,9 @@ namespace smart3tene.Reaper
 
         [Header("Menu Panel")]
         [SerializeField] private GameObject _menu;
+
+        [Header("ViewMode Panel")]
+        [SerializeField] private TMP_Text _viewModeText;
         #endregion
 
         #region Readonly Fields
@@ -55,7 +61,7 @@ namespace smart3tene.Reaper
         #region Private Fields
         private Transform _reaperTransform;
         private ReaperManager _reaperManager;
-
+        private FPVCameraManager _fpvCameraManager;
         private Camera _mainCamera;   
         #endregion
 
@@ -64,6 +70,7 @@ namespace smart3tene.Reaper
         {
             _reaperManager = GameSystem.Instance.ReaperInstance.GetComponent<ReaperManager>();
             _reaperTransform = GameSystem.Instance.ReaperInstance.transform;
+            _fpvCameraManager = GameSystem.Instance.ReaperInstance.GetComponent<FPVCameraManager>();
 
             //------以下各種GUIの挙動------
             //ReapRate
@@ -78,24 +85,27 @@ namespace smart3tene.Reaper
             //メインカメラの取得
             _mainCamera = Camera.main;
 
-            //ReaperCameraをprojectorに設定
-            _projector.recordingCamera = _reaperCamera;
+            //robotFPVCameraをprojectorに設定
+            _projector.recordingCamera = _robotFPVCamera;
 
-            _reaperManager.reaperCameraTransform = _reaperCamera.transform;
+            //各ロボットカメラの設定
+            GameSystem.Instance.ReaperInstance.GetComponent<FPVCameraManager>().Camera = _robotFPVCamera;
+            GameSystem.Instance.ReaperInstance.GetComponent<BirdViewCameraManager>().Camera = _robotBirdViewCamera;
+            GameSystem.Instance.ReaperInstance.GetComponent<AroundViewCameraManager>().Camera = _robotAroundCamera;
 
             var personManager = GameSystem.Instance.PersonInstance.GetComponent<PersonManager>();
-            personManager.FPVCameraTransform = _fpvCamera.transform;
-            personManager.TPVCameraTransform = _tpvCamera.transform;
+            personManager.FPVCameraTransform = _personFPVCamera.transform;
+            personManager.TPVCameraTransform = _personTPVCamera.transform;
 
             //ReaperCameraの位置・角度テキスト
-            _reaperManager.CameraOffsetPos.Subscribe(vec =>
+            _fpvCameraManager.CameraOffsetPos.Subscribe(vec =>
             {
                 _positonXNum.text = vec.x.ToString("F1");
                 _positonYNum.text = vec.y.ToString("F1");
                 _positonZNum.text = vec.z.ToString("F1");
             });
 
-            _reaperManager.CameraOffsetRot.Subscribe(vec =>
+            _fpvCameraManager.CameraOffsetRot.Subscribe(vec =>
             {
                 _rotationXNum.text = ((int)vec.x).ToString();
                 _rotationYNum.text = ((int)vec.y).ToString();
@@ -133,35 +143,69 @@ namespace smart3tene.Reaper
             //カメラの切り替え
             GameSystem.Instance.NowViewMode.Subscribe(mode =>
             {
+                _viewModeText.text = mode.ToString();
+
                 //画面切り替え、もっといい方法あればそうしたい
                 switch (mode)
                 {
-                    case GameSystem.ViewMode.REAPER:
+                    case GameSystem.ViewMode.REAPER_FPV:
                         _mainCamera.enabled = true;
-                        _tpvCamera.enabled = false;
-                        _fpvCamera.enabled = false;
+                        _personTPVCamera.enabled = false;
+                        _personFPVCamera.enabled = false;
+                        _robotBirdViewCamera.enabled = false;
+                        _robotAroundCamera.enabled = false;
                        
                         GetComponent<Canvas>().enabled = true;
                         _mainScreen.enabled = true;
                         break;
 
-                    case GameSystem.ViewMode.TPV:
+                    case GameSystem.ViewMode.REAPER_BIRDVIEW:
                         _mainCamera.enabled = false;
-                        _tpvCamera.enabled = true;
-                        _fpvCamera.enabled = false;
-                        
-                        GetComponent<Canvas>().enabled = false;
-                        _mainScreen.enabled = false;
-                        break;
-
-                    case GameSystem.ViewMode.FPV:
-                        _mainCamera.enabled = false;
-                        _tpvCamera.enabled = false;
-                        _fpvCamera.enabled = true;
+                        _personTPVCamera.enabled = false;
+                        _personFPVCamera.enabled = false;
+                        _robotBirdViewCamera.enabled = true;
+                        _robotAroundCamera.enabled = false;
 
                         GetComponent<Canvas>().enabled = true;
                         _mainScreen.enabled = false;
                         break;
+
+                    case GameSystem.ViewMode.REAPER_AROUND:
+                        _mainCamera.enabled = false;
+                        _personTPVCamera.enabled = false;
+                        _personFPVCamera.enabled = false;
+                        _robotBirdViewCamera.enabled = false;
+                        _robotAroundCamera.enabled = true;
+
+                        GetComponent<Canvas>().enabled = true;
+                        _mainScreen.enabled = false;
+                        break;
+
+                    case GameSystem.ViewMode.REAPER_FromPerson:
+                        _mainCamera.enabled = false;
+                        _personTPVCamera.enabled = false;
+                        _personFPVCamera.enabled = true;
+                        _robotBirdViewCamera.enabled = false;
+                        _robotAroundCamera.enabled = false;
+
+                        GetComponent<Canvas>().enabled = false;
+                        _mainScreen.enabled = false;
+                        break;
+
+                    case GameSystem.ViewMode.PERSON_TPV:
+                        _mainCamera.enabled = false;
+                        _personTPVCamera.enabled = true;
+                        _personFPVCamera.enabled = false;
+                        _robotBirdViewCamera.enabled = false;
+                        _robotAroundCamera.enabled = false;
+
+                        GetComponent<Canvas>().enabled = false;
+                        _mainScreen.enabled = false;
+                        break;
+
+                    case GameSystem.ViewMode.REAPER_VR:
+                        break;
+
                     default:
                         break;
                 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UniRx;
 
 namespace smart3tene.Reaper
 {
@@ -9,22 +10,32 @@ namespace smart3tene.Reaper
     public class PersonController : MonoBehaviour
     {
         #region private Fields
-        [SerializeField, Tooltip("マルチプレイの時はnullにしておいてください")] private PersonManager _personManager;
+        private PersonManager _personManager;
         private InputActionMap _personAction;
         #endregion
 
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            if(_personManager == null)
-            {
-                _personManager = GameSystem.Instance.PersonInstance.GetComponent<PersonManager>();
-            }
+            _personManager = GameSystem.Instance.PersonInstance.GetComponent<PersonManager>();
             _personAction = GetComponent<PlayerInput>().actions.FindActionMap("Person");
 
             _personAction["ChangeMode"].started += ChangeViewMode;
             _personAction["CloseApp"].started += CloseApp;
             _personAction["Menu"].started += InvokeMenuEvent;
+
+            if (GameSystem.Instance == null) return;
+            GameSystem.Instance.NowViewMode.Subscribe(mode =>
+            {
+                switch (mode)
+                {
+                    case GameSystem.ViewMode.PERSON_TPV:
+                        GetComponent<PlayerInput>().SwitchCurrentActionMap("Person");
+                        break;
+                    default:
+                        break;
+                }
+            });
         }
 
         private void OnDisable()
@@ -53,12 +64,6 @@ namespace smart3tene.Reaper
             if (GameSystem.Instance != null)
             {
                 GameSystem.Instance.ChangeViewMode();
-
-                if (GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.REAPER ||
-                    GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.TPV)
-                {
-                    GetComponent<PlayerInput>().SwitchCurrentActionMap("Reaper");
-                }
             }
         }
 

@@ -1042,7 +1042,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _reaperInstance: {fileID: 497014801}
   _personInstance: {fileID: 0}
-  _defaultOperationMode: 3
+  _defaultOperationMode: 2
   _instantiatePos:
   - {fileID: 835089160}
   - {fileID: 835089159}
@@ -1188,17 +1188,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8958998419709330552, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
   m_PrefabInstance: {fileID: 1192199877}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &497014802 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1780129434565651634, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-  m_PrefabInstance: {fileID: 1192199877}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 497014801}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30982129f9fed88469fbce703661f386, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &568039164
 GameObject:
   m_ObjectHideFlags: 0
@@ -1874,7 +1863,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23501ee1b329e244786f05cac95b8491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _reaperManager: {fileID: 497014802}
 --- !u!114 &653367590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4609,7 +4597,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1464594758}
   - component: {fileID: 1464594757}
-  - component: {fileID: 1464594756}
   m_Layer: 0
   m_Name: ReaperCamera
   m_TagString: Untagged
@@ -4617,14 +4604,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1464594756
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1464594755}
-  m_Enabled: 1
 --- !u!20 &1464594757
 Camera:
   m_ObjectHideFlags: 0
