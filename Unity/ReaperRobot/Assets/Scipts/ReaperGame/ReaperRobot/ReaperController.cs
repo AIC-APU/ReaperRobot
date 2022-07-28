@@ -54,8 +54,9 @@ namespace smart3tene.Reaper
             _reaperAction["ChangeMode"].started     += ChangeViewMode;
             _reaperAction["CloseApp"].started       += CloseApp;
             _reaperAction["Menu"].started           += InvokeMenuEvent;
+            _reaperAction["ChangeReaperAndPerson"].started += ChangeReaperAndPerson;
 
-            
+
             if (GameSystem.Instance == null) return;
             GameSystem.Instance.NowViewMode.Subscribe(mode =>
             {
@@ -69,7 +70,7 @@ namespace smart3tene.Reaper
                         _isCameraOperatable = true;
                         _robotCamera = _fpvCameraManager; 
                         break;
-                    case GameSystem.ViewMode.REAPER_FromPerson:
+                    case GameSystem.ViewMode.REAPER_FromPERSON:
                         if (playerInput.currentActionMap.name != "Reaper") playerInput.SwitchCurrentActionMap("Reaper");
                         _isCameraOperatable = false;
                         break;
@@ -96,17 +97,18 @@ namespace smart3tene.Reaper
 
         private void OnDisable()
         {
-            _reaperAction["Move"].performed         -= Move;
-            _reaperAction["Move"].canceled          -= Stop;
-            _reaperAction["Brake"].started          -= Brake;
-            _reaperAction["Brake"].canceled         -= OffBrake;
-            _reaperAction["Lift"].started           -= MoveLift;
-            _reaperAction["Cutter"].started         -= RotateCutter;
-            _reaperAction["MoveCamera"].performed   -= MoveCamera;
-            _reaperAction["ResetCamera"].started    -= ResetCamera;
-            _reaperAction["ChangeMode"].started     -= ChangeViewMode;
-            _reaperAction["CloseApp"].started       -= CloseApp;
-            _reaperAction["Menu"].started           -= InvokeMenuEvent; 
+            _reaperAction["Move"].performed                 -= Move;
+            _reaperAction["Move"].canceled                  -= Stop;
+            _reaperAction["Brake"].started                  -= Brake;
+            _reaperAction["Brake"].canceled                 -= OffBrake;
+            _reaperAction["Lift"].started                   -= MoveLift;
+            _reaperAction["Cutter"].started                 -= RotateCutter;
+            _reaperAction["MoveCamera"].performed           -= MoveCamera;
+            _reaperAction["ResetCamera"].started            -= ResetCamera;
+            _reaperAction["ChangeMode"].started             -= ChangeViewMode;
+            _reaperAction["CloseApp"].started               -= CloseApp;
+            _reaperAction["Menu"].started                   -= InvokeMenuEvent;
+            _reaperAction["ChangeReaperAndPerson"].started  -= ChangeReaperAndPerson;
         }
 
         private void LateUpdate()
@@ -178,6 +180,13 @@ namespace smart3tene.Reaper
             if(GameSystem.Instance != null)
             {
                 GameSystem.Instance.ChangeViewMode();
+            }
+        }
+        private void ChangeReaperAndPerson(InputAction.CallbackContext obj)
+        {
+            if (GameSystem.Instance != null)
+            {
+                GameSystem.Instance.ChangeReaperAndPerson();
             }
         }
         private void CloseApp(InputAction.CallbackContext obj)

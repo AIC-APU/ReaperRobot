@@ -67,7 +67,7 @@ namespace smart3tene.Reaper
             TPVCameraTransform.position = transform.position + _tpvCameraOffsetPos;
 
             //FPVモードの時はPersonは草刈機を見る
-            if (GameSystem.Instance != null && GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.REAPER_FromPerson)
+            if (GameSystem.Instance != null && GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.REAPER_FromPERSON)
             {
                 transform.LookAt(GameSystem.Instance.ReaperInstance.transform);
                 SetTPVCameraAtPlayerBack();

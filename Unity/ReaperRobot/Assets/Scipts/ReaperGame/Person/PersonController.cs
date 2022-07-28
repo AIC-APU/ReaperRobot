@@ -23,6 +23,8 @@ namespace smart3tene.Reaper
             _personAction["ChangeMode"].started += ChangeViewMode;
             _personAction["CloseApp"].started += CloseApp;
             _personAction["Menu"].started += InvokeMenuEvent;
+            _personAction["ChangeReaperAndPerson"].started += ChangeReaperAndPerson;
+
 
             if (GameSystem.Instance == null) return;
             GameSystem.Instance.NowViewMode.Subscribe(mode =>
@@ -43,6 +45,7 @@ namespace smart3tene.Reaper
             _personAction["ChangeMode"].started -= ChangeViewMode;
             _personAction["CloseApp"].started -= CloseApp;
             _personAction["Menu"].started -= InvokeMenuEvent;
+            _personAction["ChangeReaperAndPerson"].started -= ChangeReaperAndPerson;
         }
 
         private void LateUpdate()
@@ -64,6 +67,13 @@ namespace smart3tene.Reaper
             if (GameSystem.Instance != null)
             {
                 GameSystem.Instance.ChangeViewMode();
+            }
+        }
+        private void ChangeReaperAndPerson(InputAction.CallbackContext obj)
+        {
+            if (GameSystem.Instance != null)
+            {
+                GameSystem.Instance.ChangeReaperAndPerson();
             }
         }
 

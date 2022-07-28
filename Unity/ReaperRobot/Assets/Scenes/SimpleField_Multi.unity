@@ -2726,7 +2726,7 @@ GameObject:
   - component: {fileID: 505519048}
   - component: {fileID: 505519047}
   m_Layer: 5
-  m_Name: ReapRateAndTimePanel
+  m_Name: ReaperRateAndTimePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2754,7 +2754,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 82.5, y: -60}
+  m_AnchoredPosition: {x: 82.5, y: -120}
   m_SizeDelta: {x: 165, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &505519047
@@ -3090,7 +3090,7 @@ GameObject:
   - component: {fileID: 638962279}
   - component: {fileID: 638962278}
   m_Layer: 5
-  m_Name: ReaperCameraPanel
+  m_Name: ReaperFPVCameraPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3122,7 +3122,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 82.5, y: -197}
+  m_AnchoredPosition: {x: 82.5, y: -257}
   m_SizeDelta: {x: 165, y: 155}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &638962278
@@ -3695,8 +3695,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
-  m_fontSizeBase: 28
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -4008,10 +4008,10 @@ RectTransform:
   m_Father: {fileID: 1833239801}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 30}
-  m_SizeDelta: {x: 300, y: 60}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 82.5, y: -30}
+  m_SizeDelta: {x: 165, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &830339917
 MonoBehaviour:
@@ -8651,6 +8651,7 @@ MonoBehaviour:
   _robotBirdViewCamera: {fileID: 434888664}
   _robotAroundCamera: {fileID: 452546756}
   _miniMapCamera: {fileID: 4347272088370781982}
+  _reaperFPVCameraPanel: {fileID: 638962276}
   _positonXNum: {fileID: 2098429707}
   _positonYNum: {fileID: 1091408723}
   _positonZNum: {fileID: 91954785}
