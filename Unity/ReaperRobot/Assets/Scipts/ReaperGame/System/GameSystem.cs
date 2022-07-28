@@ -27,7 +27,7 @@ namespace smart3tene.Reaper
             REAPER_FPV,
             REAPER_BIRDVIEW,
             REAPER_VR,
-            REAPER_FromPerson,
+            REAPER_FromPERSON,
             REAPER_AROUND,
             PERSON_TPV,
         }
@@ -57,6 +57,8 @@ namespace smart3tene.Reaper
         private ReactiveProperty<float> _gameTime = new(0);        
 
         private float _gameStartTime;
+
+        private ViewMode _lastViewMode;
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -149,14 +151,10 @@ namespace smart3tene.Reaper
                     break;
 
                 case ViewMode.REAPER_BIRDVIEW:
-                    NowViewMode.Value = ViewMode.PERSON_TPV;
+                    NowViewMode.Value = ViewMode.REAPER_FromPERSON;
                     break;
 
-                case ViewMode.PERSON_TPV:
-                    NowViewMode.Value = ViewMode.REAPER_FromPerson;
-                    break;
-
-                case ViewMode.REAPER_FromPerson:
+                case ViewMode.REAPER_FromPERSON:
                     NowViewMode.Value = ViewMode.REAPER_FPV;
                     break;
 
@@ -167,6 +165,19 @@ namespace smart3tene.Reaper
                 default:
                     break;
                     
+            }
+        }
+
+        public void ChangeReaperAndPerson()
+        {
+            if(NowViewMode.Value != ViewMode.PERSON_TPV)
+            {
+                _lastViewMode = NowViewMode.Value;
+                NowViewMode.Value = ViewMode.PERSON_TPV;
+            }
+            else
+            {
+                NowViewMode.Value = _lastViewMode;
             }
         }
         #endregion

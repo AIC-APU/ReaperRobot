@@ -78,6 +78,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "ChangeReaperAndPerson",
+                    "type": "Button",
+                    "id": "596cb0d8-4cff-4b32-90a1-5c4665203984",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "CloseApp",
                     "type": "Button",
                     "id": "78caee75-863f-4425-8dc1-f7eda8296814",
@@ -481,6 +490,28 @@
                     "action": "Menu",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "00a66461-cd2c-49dc-8ffa-d618c9efef31",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ChangeReaperAndPerson",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "50d62b22-c78a-4ee0-a2af-62895c1c0a83",
+                    "path": "<Keyboard>/n",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ChangeReaperAndPerson",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -510,6 +541,15 @@
                     "name": "ChangeMode",
                     "type": "Button",
                     "id": "f7e72ed3-d5f5-403b-9588-3d950adbb031",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ChangeReaperAndPerson",
+                    "type": "Button",
+                    "id": "8daae8ef-1e94-4838-8c36-daea6b7fa9c9",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -730,6 +770,28 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e1990b03-b619-47a0-89d3-7f5ba3b46c1e",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ChangeReaperAndPerson",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "02403d3d-1e1b-4892-b178-b458abc85e0b",
+                    "path": "<Keyboard>/n",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ChangeReaperAndPerson",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

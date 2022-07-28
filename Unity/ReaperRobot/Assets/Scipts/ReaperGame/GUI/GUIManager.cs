@@ -36,6 +36,7 @@ namespace smart3tene.Reaper
 
 
         [Header("Reaper Camera Parameter")]
+        [SerializeField] private GameObject _reaperFPVCameraPanel;
         [SerializeField] private TMP_Text _positonXNum;
         [SerializeField] private TMP_Text _positonYNum;
         [SerializeField] private TMP_Text _positonZNum;
@@ -157,6 +158,8 @@ namespace smart3tene.Reaper
                        
                         GetComponent<Canvas>().enabled = true;
                         _mainScreen.enabled = true;
+
+                        _reaperFPVCameraPanel.SetActive(true);
                         break;
 
                     case GameSystem.ViewMode.REAPER_BIRDVIEW:
@@ -168,6 +171,8 @@ namespace smart3tene.Reaper
 
                         GetComponent<Canvas>().enabled = true;
                         _mainScreen.enabled = false;
+
+                        _reaperFPVCameraPanel.SetActive(false);
                         break;
 
                     case GameSystem.ViewMode.REAPER_AROUND:
@@ -179,9 +184,11 @@ namespace smart3tene.Reaper
 
                         GetComponent<Canvas>().enabled = true;
                         _mainScreen.enabled = false;
+
+                        _reaperFPVCameraPanel.SetActive(false);
                         break;
 
-                    case GameSystem.ViewMode.REAPER_FromPerson:
+                    case GameSystem.ViewMode.REAPER_FromPERSON:
                         _mainCamera.enabled = false;
                         _personTPVCamera.enabled = false;
                         _personFPVCamera.enabled = true;
@@ -190,6 +197,8 @@ namespace smart3tene.Reaper
 
                         GetComponent<Canvas>().enabled = false;
                         _mainScreen.enabled = false;
+
+                        _reaperFPVCameraPanel.SetActive(false);
                         break;
 
                     case GameSystem.ViewMode.PERSON_TPV:
@@ -201,9 +210,8 @@ namespace smart3tene.Reaper
 
                         GetComponent<Canvas>().enabled = false;
                         _mainScreen.enabled = false;
-                        break;
 
-                    case GameSystem.ViewMode.REAPER_VR:
+                        _reaperFPVCameraPanel.SetActive(false);
                         break;
 
                     default:
