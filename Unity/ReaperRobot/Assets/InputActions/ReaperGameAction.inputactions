@@ -199,7 +199,7 @@
                 {
                     "name": "",
                     "id": "70494f2f-23b6-4d62-951a-9dfc1cf955c6",
-                    "path": "<Keyboard>/k",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -232,7 +232,7 @@
                 {
                     "name": "",
                     "id": "295ff081-be35-44f3-a6b6-034cb8725cbf",
-                    "path": "<Keyboard>/l",
+                    "path": "<Keyboard>/t",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -331,7 +331,7 @@
                 {
                     "name": "",
                     "id": "ccdf2f0f-85da-4355-8582-3c4dbac08e84",
-                    "path": "<Keyboard>/numpad0",
+                    "path": "<Keyboard>/o",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -373,7 +373,7 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "2468",
+                    "name": "IJKL",
                     "id": "2ad5be67-51c1-4f1f-843a-5519037d8875",
                     "path": "2DVector",
                     "interactions": "",
@@ -386,7 +386,7 @@
                 {
                     "name": "up",
                     "id": "813fd94f-5346-40d2-a33a-4a2ab37a08f7",
-                    "path": "<Keyboard>/numpad8",
+                    "path": "<Keyboard>/i",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -397,7 +397,7 @@
                 {
                     "name": "down",
                     "id": "6b54a844-256d-4176-88c4-32898d5f2ce1",
-                    "path": "<Keyboard>/numpad2",
+                    "path": "<Keyboard>/k",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -408,7 +408,7 @@
                 {
                     "name": "left",
                     "id": "7c32076d-b815-4499-9d98-1832b8886716",
-                    "path": "<Keyboard>/numpad4",
+                    "path": "<Keyboard>/j",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -419,7 +419,7 @@
                 {
                     "name": "right",
                     "id": "c9443218-ef64-44a9-8aac-71f922c688fa",
-                    "path": "<Keyboard>/numpad6",
+                    "path": "<Keyboard>/l",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -547,7 +547,7 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "WASD",
+                    "name": "Arrows",
                     "id": "27f23813-cd62-4030-a5f3-bcbbb02d8773",
                     "path": "2DVector",
                     "interactions": "",
