@@ -63,7 +63,10 @@ namespace smart3tene.Reaper
         private Transform _reaperTransform;
         private ReaperManager _reaperManager;
         private FPVCameraManager _fpvCameraManager;
-        private Camera _mainCamera;   
+        private Camera _mainCamera;
+        
+        public Camera NowUsingCamera => _nowUsingCamera;
+        private Camera _nowUsingCamera;
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -155,11 +158,13 @@ namespace smart3tene.Reaper
                         _personFPVCamera.enabled = false;
                         _robotBirdViewCamera.enabled = false;
                         _robotAroundCamera.enabled = false;
-                       
+
                         GetComponent<Canvas>().enabled = true;
                         _mainScreen.enabled = true;
 
                         _reaperFPVCameraPanel.SetActive(true);
+
+                        _nowUsingCamera = _robotFPVCamera;
                         break;
 
                     case GameSystem.ViewMode.REAPER_BIRDVIEW:
@@ -173,6 +178,8 @@ namespace smart3tene.Reaper
                         _mainScreen.enabled = false;
 
                         _reaperFPVCameraPanel.SetActive(false);
+
+                        _nowUsingCamera = _robotBirdViewCamera;
                         break;
 
                     case GameSystem.ViewMode.REAPER_AROUND:
@@ -186,6 +193,8 @@ namespace smart3tene.Reaper
                         _mainScreen.enabled = false;
 
                         _reaperFPVCameraPanel.SetActive(false);
+
+                        _nowUsingCamera = _robotAroundCamera;
                         break;
 
                     case GameSystem.ViewMode.REAPER_FromPERSON:
@@ -199,6 +208,8 @@ namespace smart3tene.Reaper
                         _mainScreen.enabled = false;
 
                         _reaperFPVCameraPanel.SetActive(false);
+
+                        _nowUsingCamera = _personFPVCamera;
                         break;
 
                     case GameSystem.ViewMode.PERSON_TPV:
@@ -212,6 +223,8 @@ namespace smart3tene.Reaper
                         _mainScreen.enabled = false;
 
                         _reaperFPVCameraPanel.SetActive(false);
+
+                        _nowUsingCamera = _personTPVCamera;
                         break;
 
                     default:
@@ -317,6 +330,7 @@ namespace smart3tene.Reaper
         {
             _menu.SetActive(!_menu.activeSelf);
         }
+
         #endregion
     }
 }
