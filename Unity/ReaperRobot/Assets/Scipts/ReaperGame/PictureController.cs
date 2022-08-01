@@ -11,6 +11,7 @@ namespace smart3tene.Reaper
     {
         #region Private Fields
         [SerializeField] private GUIManager _GuiManager;
+        [SerializeField] private string _fileName = "";
         private PictureTaker _pictureTaker;        
         #endregion
 
@@ -24,9 +25,9 @@ namespace smart3tene.Reaper
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                _ = _pictureTaker.TakeColorPicture(_GuiManager.NowUsingCamera);
+                _ = _pictureTaker.TakeColorPicture(_GuiManager.NowUsingCamera, _fileName);
 
-                _ = _pictureTaker.TakeTagPicture(_GuiManager.NowUsingCamera);
+                _ = _pictureTaker.TakeTagPicture(_GuiManager.NowUsingCamera, _fileName);
             }
         }
         #endregion

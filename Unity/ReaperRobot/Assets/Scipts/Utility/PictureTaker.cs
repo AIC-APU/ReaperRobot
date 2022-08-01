@@ -8,7 +8,6 @@ namespace smart3tene
     public class PictureTaker : MonoBehaviour
     {
         #region Private Fields
-        [SerializeField, Tooltip("拡張子は付けないでください")] private string _fileName = "picture";
         [SerializeField] private Camera _colorCamera;
         [SerializeField] private Camera _tagCamera;
         #endregion
@@ -30,11 +29,12 @@ namespace smart3tene
         #endregion
 
         #region Public method
-        public async UniTaskVoid TakeColorPicture(Camera camera, string directory = null)
+        public async UniTaskVoid TakeColorPicture(Camera camera, string fileName = "" , string directory = "")
         {
-            if (directory == null) directory = Application.streamingAssetsPath + "/Picture";
+            if (fileName == "") fileName = "picture";
+            if (directory == "") directory = Application.streamingAssetsPath + "/Picture";
 
-            var filePath = $"{directory}/{_fileName}_color.png";
+            var filePath = $"{directory}/{fileName}_color.png";
             filePath = NumberingFileName(filePath);
 
             //指定されたカメラと同じ位置に撮影用カメラを移動させる
@@ -47,11 +47,12 @@ namespace smart3tene
             Debug.Log($"{filePath} にファイルを保存しました。");
         }
 
-        public async UniTaskVoid TakeTagPicture(Camera camera, string directory = null)
+        public async UniTaskVoid TakeTagPicture(Camera camera, string fileName = "" , string directory = "")
         {
-            if (directory == null) directory = Application.streamingAssetsPath + "/Picture";
+            if (fileName == "") fileName = "picture";
+            if (directory == "") directory = Application.streamingAssetsPath + "/Picture";
 
-            var filePath = $"{directory}/{_fileName}_tag.png";
+            var filePath = $"{directory}/{fileName}_tag.png";
             filePath = NumberingFileName(filePath);
 
             //指定されたカメラと同じ位置に撮影用カメラを移動させる
