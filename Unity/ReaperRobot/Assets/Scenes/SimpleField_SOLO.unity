@@ -923,7 +923,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f3227182360a96479913bca30a3ae5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fileName: picture
   _colorCamera: {fileID: 1293402227}
   _tagCamera: {fileID: 892754378}
 --- !u!4 &160222081
@@ -956,6 +955,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _GuiManager: {fileID: 1392477803}
+  _fileName: 
 --- !u!1 &163859719
 GameObject:
   m_ObjectHideFlags: 0
@@ -3854,14 +3854,14 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 5
-  field of view: 90
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1
-  m_RenderingPath: 1
+    m_Bits: 55
+  m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 4
   m_TargetEye: 3
@@ -8018,7 +8018,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 3
