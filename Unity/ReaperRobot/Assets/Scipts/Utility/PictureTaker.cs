@@ -29,12 +29,12 @@ namespace smart3tene
         #endregion
 
         #region Public method
-        public async UniTaskVoid TakeColorPicture(Camera camera, string fileName = "" , string directory = "")
+        public async UniTask<string> TakeColorPicture(Camera camera, string fileName = "" , string directory = "")
         {
             if (fileName == "") fileName = "picture";
-            if (directory == "") directory = Application.streamingAssetsPath + "/Picture";
+            if (directory == "") directory = Application.streamingAssetsPath + "/../../../AppleAnnotationImages/images";
 
-            var filePath = $"{directory}/{fileName}_color.png";
+            var filePath = Path.GetFullPath($"{directory}/{fileName}_color.png");
             filePath = NumberingFileName(filePath);
 
             //指定されたカメラと同じ位置に撮影用カメラを移動させる
@@ -45,14 +45,16 @@ namespace smart3tene
             await CaptureFromCamera.Capture(imageWidth, imageHeigth, _colorCamera, TextureFormat.RGB24, filePath);
 
             Debug.Log($"{filePath} にファイルを保存しました。");
+
+            return filePath;
         }
 
-        public async UniTaskVoid TakeTagPicture(Camera camera, string fileName = "" , string directory = "")
+        public async UniTask<string> TakeTagPicture(Camera camera, string fileName = "" , string directory = "")
         {
             if (fileName == "") fileName = "picture";
-            if (directory == "") directory = Application.streamingAssetsPath + "/Picture";
+            if (directory == "") directory = Application.streamingAssetsPath + "/../../../AppleAnnotationImages/tags";
 
-            var filePath = $"{directory}/{fileName}_tag.png";
+            var filePath = Path.GetFullPath($"{directory}/{fileName}_tag.png");
             filePath = NumberingFileName(filePath);
 
             //指定されたカメラと同じ位置に撮影用カメラを移動させる
@@ -63,6 +65,8 @@ namespace smart3tene
             await CaptureFromCamera.Capture(imageWidth, imageHeigth, _tagCamera, TextureFormat.R8, filePath);
 
             Debug.Log($"{filePath} にファイルを保存しました。");
+
+            return filePath;
         }
         #endregion
 

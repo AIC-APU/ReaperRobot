@@ -15,6 +15,8 @@ namespace smart3tene.Reaper
         public event Action ResetEvent;
         public event Action MenuEvent;
         public void InvokeMenuEvent() => MenuEvent?.Invoke();
+        public event Action<string> SaveFileEvent;
+        public void InvokeSaveFileEvent(string fileName) => SaveFileEvent?.Invoke(fileName);
         #endregion
 
         #region public Fields

@@ -51,8 +51,10 @@ namespace smart3tene
                 Directory.CreateDirectory(directryName);
             }
             File.WriteAllBytes(savePath, bytes);
-            AssetDatabase.Refresh();
 
+            #if UNITY_EDITOR
+            AssetDatabase.Refresh();
+            #endif
 
             //テクスチャの破棄（メモリリーク防止）
             Object.Destroy(texture);
