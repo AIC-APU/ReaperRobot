@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using UniRx.Triggers;
 using TMPro;
-
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
 namespace smart3tene.Reaper
 {
@@ -53,6 +55,10 @@ namespace smart3tene.Reaper
 
         [Header("ViewMode Panel")]
         [SerializeField] private TMP_Text _viewModeText;
+
+        [Header("Save File Panel")]
+        [SerializeField] private GameObject _saveFilePanel;
+        [SerializeField] private TMP_Text _filePathText;
         #endregion
 
         #region Readonly Fields
@@ -67,6 +73,9 @@ namespace smart3tene.Reaper
         
         public Camera NowUsingCamera => _nowUsingCamera;
         private Camera _nowUsingCamera;
+
+        private CancellationTokenSource _savePanelCancelTaken;
+        private UniTask _saveFileTask;
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -245,11 +254,16 @@ namespace smart3tene.Reaper
 
             _menu.SetActive(false);
             GameSystem.Instance.MenuEvent += ShowAndHideMenu;
+
+            _savePanelCancelTaken = new CancellationTokenSource();
+            GameSystem.Instance.SaveFileEvent += OnSaveFileEvent;
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             GameSystem.Instance.MenuEvent -= ShowAndHideMenu;
+
+            GameSystem.Instance.SaveFileEvent -= OnSaveFileEvent;
         }
         #endregion
 
@@ -331,6 +345,33 @@ namespace smart3tene.Reaper
             _menu.SetActive(!_menu.activeSelf);
         }
 
+        private async void OnSaveFileEvent(string fileName)
+        {
+            await _saveFileTask;
+
+            _saveFileTask = ShowSaveFilePanel(fileName, _savePanelCancelTaken.Token);
+        }
+
+        private async UniTask ShowSaveFilePanel(string fileName, CancellationToken ct = default)
+        {
+            var canvasGroup = _saveFilePanel.GetComponent<CanvasGroup>();
+
+            _filePathText.text = $"{fileName} was photographed";
+
+            while (canvasGroup.alpha < 1)
+            {
+                canvasGroup.alpha += 0.01f;
+                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+            }
+
+            await UniTask.Delay(TimeSpan.FromSeconds(2));
+
+            while (canvasGroup.alpha > 0)
+            {
+                canvasGroup.alpha -= 0.01f;
+                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+            }
+        }
         #endregion
     }
 }
