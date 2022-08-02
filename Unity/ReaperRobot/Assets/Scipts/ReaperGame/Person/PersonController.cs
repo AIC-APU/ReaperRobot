@@ -12,12 +12,15 @@ namespace smart3tene.Reaper
         #region private Fields
         private PersonManager _personManager;
         private InputActionMap _personAction;
+
+        private bool _isOperatable = true;
         #endregion
 
         #region MonoBehaviour Callbacks
         private void Awake()
         {
             _personManager = GameSystem.Instance.PersonInstance.GetComponent<PersonManager>();
+
             _personAction = GetComponent<PlayerInput>().actions.FindActionMap("Person");
 
             _personAction["ChangeMode"].started += ChangeViewMode;
@@ -29,12 +32,18 @@ namespace smart3tene.Reaper
             if (GameSystem.Instance == null) return;
             GameSystem.Instance.NowViewMode.Subscribe(mode =>
             {
+                _personManager.StopMove();
+
+                var playerInput = GetComponent<PlayerInput>();
+
                 switch (mode)
                 {
                     case GameSystem.ViewMode.PERSON_TPV:
-                        GetComponent<PlayerInput>().SwitchCurrentActionMap("Person");
+                        if(playerInput.currentActionMap.name != "Person") playerInput.SwitchCurrentActionMap("Person");
+                        _isOperatable = true;
                         break;
                     default:
+                        _isOperatable = false;
                         break;
                 }
             });
@@ -50,12 +59,26 @@ namespace smart3tene.Reaper
 
         private void LateUpdate()
         {
+            if (GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.REAPER_FromPERSON)
+            {
+                _personManager.FPVCameraFollow(GameSystem.Instance.ReaperInstance.transform);
+            }
+
+            if (!_isOperatable) return;
+
             var move = _personAction["Look"].ReadValue<Vector2>();
             _personManager.RotateTPVCamera(move.x, move.y);
+            
+            if (GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.PERSON_TPV)
+            {
+                _personManager.TPVCameraFollow();
+            }
         }
 
         private void FixedUpdate()
         {
+            if (!_isOperatable) return;
+
             var move = _personAction["Move"].ReadValue<Vector2>();
             _personManager.Move(move.x, move.y);
         }
@@ -88,7 +111,10 @@ namespace smart3tene.Reaper
         }
         private void InvokeMenuEvent(InputAction.CallbackContext obj)
         {
-            GameSystem.Instance.InvokeMenuEvent();
+            if(GameSystem.Instance != null)
+            {
+                GameSystem.Instance.InvokeMenuEvent();
+            }
         }
         #endregion
     }
