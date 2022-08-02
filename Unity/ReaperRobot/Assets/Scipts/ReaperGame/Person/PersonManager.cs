@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UniRx;
 using Photon.Pun;
 
 namespace smart3tene.Reaper
@@ -15,11 +14,10 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Private Fields
-        private bool _isOperatable = true;
-        private Rigidbody _rigidBody; 
+        private Rigidbody _rigidBody;
+        private Animator _animator;
         private Vector3 _tpvCameraOffsetPos;
         private float _cameraDistance;
-        private Animator _animator;
         #endregion
 
         #region Readonly Fields
@@ -31,59 +29,26 @@ namespace smart3tene.Reaper
         #endregion
 
         #region MonoBehaviour Callbacks
+        private void Awake()
+        {
+            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
+
+            _rigidBody = GetComponent<Rigidbody>();
+            _animator = GetComponent<Animator>();
+        }
+
         private void Start()
         {
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
                  
-            _rigidBody = GetComponent<Rigidbody>();
-            _animator = GetComponent<Animator>();
-
-            SetTPVCameraAtPlayerBack();
-
+            ResetTPVCameraTransform();
             _cameraDistance = Vector3.Distance(transform.position, TPVCameraTransform.position);
-
-            if (GameSystem.Instance != null)
-            {
-                GameSystem.Instance.NowViewMode.Subscribe(x =>
-                {
-                    if(x == GameSystem.ViewMode.PERSON_TPV)
-                    {
-                        _isOperatable = true;
-                    }
-                    else
-                    {
-                        StopMove();
-                        _isOperatable = false;
-                    }
-                });
-            }
-        }
-
-        private void LateUpdate()
-        {
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-
-            //TPVCameraの位置
-            TPVCameraTransform.position = transform.position + _tpvCameraOffsetPos;
-
-            //FPVモードの時はPersonは草刈機を見る
-            if (GameSystem.Instance != null && GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.REAPER_FromPERSON)
-            {
-                transform.LookAt(GameSystem.Instance.ReaperInstance.transform);
-                SetTPVCameraAtPlayerBack();
-            }
-
-            //FPVCameraの位置と角度
-            FPVCameraTransform.position = transform.position + fpvCameraOffsetPos;
-            FPVCameraTransform.forward = transform.forward;
         }
         #endregion
 
         #region Public Method
         public void Move(float horizontal, float vertical)
         {
-            if (!_isOperatable) return;
-
             var cameraForward = Vector3.Scale(TPVCameraTransform.forward, new Vector3(1, 0, 1)).normalized;
 
             var moveForward = moveSpeed * vertical * cameraForward + moveSpeed * horizontal * TPVCameraTransform.right;
@@ -99,15 +64,13 @@ namespace smart3tene.Reaper
                 transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
             }
 
-            //必要ならここでアニメーションなどの操作
+            //アニメーション操作
             var speed = new Vector2(_rigidBody.velocity.x, _rigidBody.velocity.z).magnitude;
             _animator.SetFloat("Speed", speed, 0.1f, Time.deltaTime);
         }
 
         public void RotateTPVCamera(float horizontal, float vertical)
         {
-            if (!_isOperatable) return;
-
             //回転の前にカメラの位置を更新しておく
             TPVCameraTransform.position = transform.position + _tpvCameraOffsetPos;
 
@@ -127,22 +90,40 @@ namespace smart3tene.Reaper
             _tpvCameraOffsetPos = (TPVCameraTransform.position - transform.position).normalized * _cameraDistance;
         }
 
-        private void SetTPVCameraAtPlayerBack()
+        public void StopMove()
+        {
+            _rigidBody.velocity = new Vector3(0, _rigidBody.velocity.y, 0);
+            _rigidBody.angularVelocity = Vector3.zero;
+            Move(0, 0);
+            RotateTPVCamera(0, 0);
+            _animator.SetFloat("Speed", 0);
+        }
+
+        public void TPVCameraFollow()
+        {
+            //TPVCameraの位置
+            TPVCameraTransform.position = transform.position + _tpvCameraOffsetPos;
+        }
+
+        public void FPVCameraFollow(Transform robotTransform)
+        {
+            //Person自体の向きを
+            transform.LookAt(robotTransform);
+
+            //FPVCameraの位置と角度を合わせる
+            FPVCameraTransform.position = transform.position + fpvCameraOffsetPos;
+            FPVCameraTransform.forward = transform.forward;
+        }
+        #endregion
+
+        #region Private Method
+        private void ResetTPVCameraTransform()
         {
             _tpvCameraOffsetPos = transform.TransformVector(defaultTPVCameraLocalPos);
             TPVCameraTransform.position = transform.position + _tpvCameraOffsetPos;
 
             TPVCameraTransform.forward = transform.forward;
             TPVCameraTransform.eulerAngles += defaultTPVCameraEulerAngles;
-        }
-
-        private void StopMove()
-        {
-            _rigidBody.velocity = new Vector3(0, _rigidBody.velocity.y, 0);
-            _rigidBody.angularVelocity = Vector3.zero;
-            Move(0, 0);
-            _animator.SetFloat("Speed", 0);
-
         }
         #endregion
 
