@@ -32,10 +32,12 @@ namespace smart3tene
         public async UniTask<string> TakeColorPicture(Camera camera, string fileName = "" , string directory = "")
         {
             if (fileName == "") fileName = "picture";
-            if (directory == "") directory = Application.streamingAssetsPath + "/../../../AppleAnnotationImages/images";
+            if (directory == "") directory = Application.streamingAssetsPath + "/../../../AnnotationImages/images";
 
-            var filePath = Path.GetFullPath($"{directory}/{fileName}_color.png");
-            filePath = NumberingFileName(filePath);
+            if (fileName.EndsWith(".png")) fileName = fileName.Remove(fileName.Length - 4, 4);
+
+            var filePath = Path.GetFullPath($"{directory}/{fileName}_color_0000.png");
+            filePath = NumberingFilePath(filePath);
 
             //指定されたカメラと同じ位置に撮影用カメラを移動させる
             _colorCamera.transform.position = camera.transform.position;
@@ -52,10 +54,12 @@ namespace smart3tene
         public async UniTask<string> TakeTagPicture(Camera camera, string fileName = "" , string directory = "")
         {
             if (fileName == "") fileName = "picture";
-            if (directory == "") directory = Application.streamingAssetsPath + "/../../../AppleAnnotationImages/tags";
+            if (directory == "") directory = Application.streamingAssetsPath + "/../../../AnnotationImages/tags";
 
-            var filePath = Path.GetFullPath($"{directory}/{fileName}_tag.png");
-            filePath = NumberingFileName(filePath);
+            if (fileName.EndsWith(".png")) fileName = fileName.Remove(fileName.Length - 4, 4);
+
+            var filePath = Path.GetFullPath($"{directory}/{fileName}_tag_0000.png");
+            filePath = NumberingFilePath(filePath);
 
             //指定されたカメラと同じ位置に撮影用カメラを移動させる
             _tagCamera.transform.position = camera.transform.position;
@@ -74,7 +78,7 @@ namespace smart3tene
         /// <summary>
         /// ディレクトリに同名のファイルがあれば、ファイル名に番号を付けたパスを返す。
         /// </summary>
-        private string NumberingFileName(string filePath)
+        private string NumberingFilePath(string filePath)
         {
             //ディレクトリに同名のパスがあれば、それに番号を付けた物を返す。
             var directry = Path.GetDirectoryName(filePath);
@@ -83,7 +87,7 @@ namespace smart3tene
             
             while (File.Exists($"{directry}/{fileName}{extension}"))
             {
-                //同名のファイルが存在した場合、ファイル名の末尾に数字を付ける
+                //同名のファイルが存在した場合、ファイル名の末尾の数字を足す
                 fileName = IncrementStringEnd(fileName);
             }
 
@@ -113,7 +117,7 @@ namespace smart3tene
             }
             else
             {
-                //ついていないなら１を付ける
+                //ついていないなら1を付ける
                 str += "1";
             }
 

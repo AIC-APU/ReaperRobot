@@ -36,9 +36,9 @@ namespace smart3tene
 
         public void ResetCamera()
         {
-            _cameraOffsetPos = cameraDefaultOffsetPos;
+            _cameraOffsetPos = _target.TransformDirection(cameraDefaultOffsetPos);
             _cameraOffsetRot = cameraDefaultOffsetRot;
-            _camera.transform.eulerAngles = _cameraOffsetRot;
+            _camera.transform.eulerAngles = _target.transform.eulerAngles + _cameraOffsetRot;
         }
 
         public void MoveCamera(float horizontal, float vertical)

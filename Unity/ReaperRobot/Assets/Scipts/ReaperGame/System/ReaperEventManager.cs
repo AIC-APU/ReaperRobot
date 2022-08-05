@@ -15,6 +15,9 @@ namespace smart3tene.Reaper
 
         public static event Action<string> SaveFileEvent;
         public static void InvokeSaveFileEvent(string fileName) => SaveFileEvent?.Invoke(fileName);
+
+        public static event Action FullReapRateEvent;
+        public static void InvokeFullReapRateEvent() => FullReapRateEvent?.Invoke();
         
     }
 }

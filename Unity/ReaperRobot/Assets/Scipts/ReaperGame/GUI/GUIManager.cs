@@ -278,11 +278,11 @@ namespace smart3tene.Reaper
         {
             var canvasGroup = _saveFilePanel.GetComponent<CanvasGroup>();
 
-            _filePathText.text = $"{fileName} was photographed";
+            _filePathText.text = $"{fileName} was saved";
 
             while (canvasGroup.alpha < 1)
             {
-                canvasGroup.alpha += 0.01f;
+                canvasGroup.alpha += 0.05f;
                 await UniTask.Yield(PlayerLoopTiming.Update, ct);
             }
 
@@ -290,7 +290,7 @@ namespace smart3tene.Reaper
 
             while (canvasGroup.alpha > 0)
             {
-                canvasGroup.alpha -= 0.01f;
+                canvasGroup.alpha -= 0.05f;
                 await UniTask.Yield(PlayerLoopTiming.Update, ct);
             }
         }
