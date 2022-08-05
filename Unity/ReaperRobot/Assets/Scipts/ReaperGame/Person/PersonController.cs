@@ -1,121 +1,80 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UniRx;
 
 namespace smart3tene.Reaper
 {
     [RequireComponent(typeof(PlayerInput))]
-    public class PersonController : MonoBehaviour
+    public class PersonController : MonoBehaviour, ICameraController
     {
+        #region Serialized Private Fields
+        public GameObject Person;
+        #endregion
+
+        #region Public Fields
+        public IControllableCamera CCamera 
+        {
+            get => _controllableCamera;
+            set
+            {
+                _controllableCamera = value;
+                _controllableCamera.ResetCamera();
+            } 
+        }
+        private IControllableCamera _controllableCamera;
+        #endregion
+
+        #region Serialized Private Fields
+        [SerializeField, Tooltip("ここからIControllableCameraを設定することもできます（デバッグ用）")] private GameObject _controllableCameraObject;
+        #endregion
+
         #region private Fields
         private PersonManager _personManager;
+        private PlayerInput _playerInput;
         private InputActionMap _personAction;
-
-        private bool _isOperatable = true;
         #endregion
 
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            _personManager = GameSystem.Instance.PersonInstance.GetComponent<PersonManager>();
+            _personManager = Person.GetComponent<PersonManager>();
+            _playerInput = GetComponent<PlayerInput>();
 
-            _personAction = GetComponent<PlayerInput>().actions.FindActionMap("Person");
-
-            _personAction["ChangeMode"].started += ChangeViewMode;
-            _personAction["CloseApp"].started += CloseApp;
-            _personAction["Menu"].started += InvokeMenuEvent;
-            _personAction["ChangeReaperAndPerson"].started += ChangeReaperAndPerson;
-
-
-            if (GameSystem.Instance == null) return;
-            GameSystem.Instance.NowViewMode.Subscribe(mode =>
+            //インターフェースの取得
+            if(_controllableCameraObject != null)
             {
-                _personManager.StopMove();
+                _controllableCamera = _controllableCameraObject.GetComponent<IControllableCamera>();
+            }
 
-                var playerInput = GetComponent<PlayerInput>();
+            _personAction = _playerInput.actions.FindActionMap("Person");
 
-                switch (mode)
-                {
-                    case GameSystem.ViewMode.PERSON_TPV:
-                        if(playerInput.currentActionMap.name != "Person") playerInput.SwitchCurrentActionMap("Person");
-                        _isOperatable = true;
-                        break;
-                    default:
-                        _isOperatable = false;
-                        break;
-                }
-            });
-        }
-
-        private void OnDisable()
-        {
-            _personAction["ChangeMode"].started -= ChangeViewMode;
-            _personAction["CloseApp"].started -= CloseApp;
-            _personAction["Menu"].started -= InvokeMenuEvent;
-            _personAction["ChangeReaperAndPerson"].started -= ChangeReaperAndPerson;
+            //viewmodeが変わった時にstop処理をする
+            ViewMode.NowViewMode
+                .Where(mode => mode != ViewMode.ViewModeCategory.PERSON_TPV)
+                .Subscribe(_ => _personManager.StopMove())
+                .AddTo(this);
         }
 
         private void LateUpdate()
         {
-            if (GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.REAPER_FromPERSON)
-            {
-                _personManager.FPVCameraFollow(GameSystem.Instance.ReaperInstance.transform);
-            }
+            if (_playerInput.currentActionMap.name != "Person") return;
 
-            if (!_isOperatable) return;
+            //カメラの回転
+            _controllableCamera.FollowTarget();
 
             var move = _personAction["Look"].ReadValue<Vector2>();
-            _personManager.RotateTPVCamera(move.x, move.y);
-            
-            if (GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.PERSON_TPV)
-            {
-                _personManager.TPVCameraFollow();
-            }
+            _controllableCamera.RotateCamera(move.x, move.y);
         }
 
         private void FixedUpdate()
         {
-            if (!_isOperatable) return;
+            if (_playerInput.currentActionMap.name != "Person") return;
 
+            //移動
             var move = _personAction["Move"].ReadValue<Vector2>();
-            _personManager.Move(move.x, move.y);
+            _personManager.Move(move.x, move.y, _controllableCamera.Camera.transform);
         }
         #endregion
 
-        #region Private Fields
-        private void ChangeViewMode(InputAction.CallbackContext obj)
-        {
-            if (GameSystem.Instance != null)
-            {
-                GameSystem.Instance.ChangeViewMode();
-            }
-        }
-        private void ChangeReaperAndPerson(InputAction.CallbackContext obj)
-        {
-            if (GameSystem.Instance != null)
-            {
-                GameSystem.Instance.ChangeReaperAndPerson();
-            }
-        }
-
-
-        private void CloseApp(InputAction.CallbackContext obj)
-        {
-            //SceneTransitionManagerがシーンにないとCloseAppできません
-            if (SceneTransitionManager.Instantiated)
-            {
-                SceneTransitionManager.Instance.CloseApp();
-            }
-        }
-        private void InvokeMenuEvent(InputAction.CallbackContext obj)
-        {
-            if(GameSystem.Instance != null)
-            {
-                GameSystem.Instance.InvokeMenuEvent();
-            }
-        }
-        #endregion
     }
 }

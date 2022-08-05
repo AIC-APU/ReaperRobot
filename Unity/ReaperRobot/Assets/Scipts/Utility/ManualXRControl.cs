@@ -5,6 +5,8 @@ using UnityEngine.XR.Management;
 //参考: https://docs.unity3d.com/Packages/com.unity.xr.management@4.0/manual/EndUser.html
 public class ManualXRControl
 {
+    public bool IsRunning => XRGeneralSettings.Instance.InitManagerOnStart;
+
     public IEnumerator StartXRCoroutine()
     {
         Debug.Log("Initializing XR...");

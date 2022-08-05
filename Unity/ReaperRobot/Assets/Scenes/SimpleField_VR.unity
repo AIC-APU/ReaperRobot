@@ -1006,6 +1006,7 @@ GameObject:
   m_Component:
   - component: {fileID: 439129845}
   - component: {fileID: 439129846}
+  - component: {fileID: 439129847}
   m_Layer: 0
   m_Name: GameSystem
   m_TagString: Untagged
@@ -1040,14 +1041,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73f3fe74202313f4abe46df7d5a081d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _defaultViewMode: 0
   _reaperInstance: {fileID: 497014801}
   _personInstance: {fileID: 0}
-  _defaultOperationMode: 2
   _instantiatePos:
   - {fileID: 835089160}
   - {fileID: 835089159}
   - {fileID: 835089158}
   - {fileID: 835089157}
+--- !u!114 &439129847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439129843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f0db5741c5d65b42a6a48a902a437d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &494502860
 GameObject:
   m_ObjectHideFlags: 0
@@ -1863,6 +1876,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23501ee1b329e244786f05cac95b8491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _targetRobot: {fileID: 0}
+  _controllableCameraObject: {fileID: 0}
 --- !u!114 &653367590
 MonoBehaviour:
   m_ObjectHideFlags: 0
