@@ -31,7 +31,7 @@ namespace smart3tene.Reaper
         #region private Fields
         private PersonManager _personManager;
         private PlayerInput _playerInput;
-        private InputActionMap _personAction;
+        private InputActionMap _personActionMap;
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -41,18 +41,20 @@ namespace smart3tene.Reaper
             _playerInput = GetComponent<PlayerInput>();
 
             //インターフェースの取得
-            if(_controllableCameraObject != null)
+            if (_controllableCameraObject != null)
             {
                 _controllableCamera = _controllableCameraObject.GetComponent<IControllableCamera>();
             }
+            
+            _personActionMap = _playerInput.actions.FindActionMap("Person");
+            _personActionMap["ChangeMode"].started += StopMove;
+            _personActionMap["ChangeReaperAndPerson"].started += StopMove;
+        }
 
-            _personAction = _playerInput.actions.FindActionMap("Person");
-
-            //viewmodeが変わった時にstop処理をする
-            ViewMode.NowViewMode
-                .Where(mode => mode != ViewMode.ViewModeCategory.PERSON_TPV)
-                .Subscribe(_ => _personManager.StopMove())
-                .AddTo(this);
+        private void OnDisable()
+        {
+            _personActionMap["ChangeMode"].started -= StopMove;
+            _personActionMap["ChangeReaperAndPerson"].started -= StopMove;
         }
 
         private void LateUpdate()
@@ -62,7 +64,7 @@ namespace smart3tene.Reaper
             //カメラの回転
             _controllableCamera.FollowTarget();
 
-            var move = _personAction["Look"].ReadValue<Vector2>();
+            var move = _personActionMap["Look"].ReadValue<Vector2>();
             _controllableCamera.RotateCamera(move.x, move.y);
         }
 
@@ -71,10 +73,16 @@ namespace smart3tene.Reaper
             if (_playerInput.currentActionMap.name != "Person") return;
 
             //移動
-            var move = _personAction["Move"].ReadValue<Vector2>();
+            var move = _personActionMap["Move"].ReadValue<Vector2>();
             _personManager.Move(move.x, move.y, _controllableCamera.Camera.transform);
         }
         #endregion
 
+        #region Private Method
+        private void StopMove(InputAction.CallbackContext obj)
+        {
+            _personManager.StopMove();
+        }
+        #endregion
     }
 }
