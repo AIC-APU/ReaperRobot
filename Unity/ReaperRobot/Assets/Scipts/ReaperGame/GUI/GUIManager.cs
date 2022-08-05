@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using Cysharp.Threading.Tasks;
+using System;
+using System.Threading;
+using TMPro;
 using UniRx;
 using UniRx.Triggers;
-using TMPro;
-using Cysharp.Threading.Tasks;
-using System.Threading;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace smart3tene.Reaper
 {
@@ -29,15 +26,11 @@ namespace smart3tene.Reaper
         [SerializeField] private TMP_Text _delayNumText;
 
         [Header("Camera")]
-        [SerializeField] private Camera _personTPVCamera;
-        [SerializeField] private Camera _personFPVCamera;
-        [SerializeField] private Camera _robotFPVCamera;
-        [SerializeField] private Camera _robotBirdViewCamera;
-        [SerializeField] private Camera _robotAroundCamera;
         [SerializeField] private Camera _miniMapCamera;
 
 
         [Header("Reaper Camera Parameter")]
+        [SerializeField] private FPVCamera _fpvCameraManager;
         [SerializeField] private GameObject _reaperFPVCameraPanel;
         [SerializeField] private TMP_Text _positonXNum;
         [SerializeField] private TMP_Text _positonYNum;
@@ -68,11 +61,7 @@ namespace smart3tene.Reaper
         #region Private Fields
         private Transform _reaperTransform;
         private ReaperManager _reaperManager;
-        private FPVCameraManager _fpvCameraManager;
-        private Camera _mainCamera;
         
-        public Camera NowUsingCamera => _nowUsingCamera;
-        private Camera _nowUsingCamera;
 
         private CancellationTokenSource _savePanelCancelTaken;
         private UniTask _saveFileTask;
@@ -81,34 +70,18 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            _reaperManager = GameSystem.Instance.ReaperInstance.GetComponent<ReaperManager>();
-            _reaperTransform = GameSystem.Instance.ReaperInstance.transform;
-            _fpvCameraManager = GameSystem.Instance.ReaperInstance.GetComponent<FPVCameraManager>();
+            _reaperManager = ReaperGameSystem.Instance.ReaperInstance.GetComponent<ReaperManager>();
+            _reaperTransform = ReaperGameSystem.Instance.ReaperInstance.transform;
 
             //------以下各種GUIの挙動------
             //ReapRate
-            GameSystem.Instance.CutGrassCount.Subscribe(x => _reaperRateNum.text = UpdateReapRate());
-
-            //Time
-            GameSystem.Instance.GameTime.Subscribe(x => _timeNum.text = UpdateGameTime(x));
+            GrassCounter.CutGrassCount.Subscribe(_ => _reaperRateNum.text = GrassCounter.CutGrassPercent().ToString("F1"));
 
             //DelaySlider
             InitializeDelaySlider();
 
-            //メインカメラの取得
-            _mainCamera = Camera.main;
-
             //robotFPVCameraをprojectorに設定
-            _projector.recordingCamera = _robotFPVCamera;
-
-            //各ロボットカメラの設定
-            GameSystem.Instance.ReaperInstance.GetComponent<FPVCameraManager>().Camera = _robotFPVCamera;
-            GameSystem.Instance.ReaperInstance.GetComponent<BirdViewCameraManager>().Camera = _robotBirdViewCamera;
-            GameSystem.Instance.ReaperInstance.GetComponent<AroundViewCameraManager>().Camera = _robotAroundCamera;
-
-            var personManager = GameSystem.Instance.PersonInstance.GetComponent<PersonManager>();
-            personManager.FPVCameraTransform = _personFPVCamera.transform;
-            personManager.TPVCameraTransform = _personTPVCamera.transform;
+            _projector.recordingCamera = Camera.main;
 
             //ReaperCameraの位置・角度テキスト
             _fpvCameraManager.CameraOffsetPos.Subscribe(vec =>
@@ -154,86 +127,42 @@ namespace smart3tene.Reaper
             });
 
             //カメラの切り替え
-            GameSystem.Instance.NowViewMode.Subscribe(mode =>
+            ViewMode.NowViewMode.Subscribe(mode =>
             {
                 _viewModeText.text = mode.ToString();
 
                 //画面切り替え、もっといい方法あればそうしたい
                 switch (mode)
                 {
-                    case GameSystem.ViewMode.REAPER_FPV:
-                        _mainCamera.enabled = true;
-                        _personTPVCamera.enabled = false;
-                        _personFPVCamera.enabled = false;
-                        _robotBirdViewCamera.enabled = false;
-                        _robotAroundCamera.enabled = false;
-
+                    case ViewMode.ViewModeCategory.REAPER_FPV:
                         GetComponent<Canvas>().enabled = true;
                         _mainScreen.enabled = true;
-
                         _reaperFPVCameraPanel.SetActive(true);
-
-                        _nowUsingCamera = _robotFPVCamera;
                         break;
 
-                    case GameSystem.ViewMode.REAPER_BIRDVIEW:
-                        _mainCamera.enabled = false;
-                        _personTPVCamera.enabled = false;
-                        _personFPVCamera.enabled = false;
-                        _robotBirdViewCamera.enabled = true;
-                        _robotAroundCamera.enabled = false;
-
+                    case ViewMode.ViewModeCategory.REAPER_BIRDVIEW:
                         GetComponent<Canvas>().enabled = true;
                         _mainScreen.enabled = false;
 
                         _reaperFPVCameraPanel.SetActive(false);
-
-                        _nowUsingCamera = _robotBirdViewCamera;
                         break;
 
-                    case GameSystem.ViewMode.REAPER_AROUND:
-                        _mainCamera.enabled = false;
-                        _personTPVCamera.enabled = false;
-                        _personFPVCamera.enabled = false;
-                        _robotBirdViewCamera.enabled = false;
-                        _robotAroundCamera.enabled = true;
-
+                    case ViewMode.ViewModeCategory.REAPER_AROUND:
                         GetComponent<Canvas>().enabled = true;
                         _mainScreen.enabled = false;
-
                         _reaperFPVCameraPanel.SetActive(false);
-
-                        _nowUsingCamera = _robotAroundCamera;
                         break;
 
-                    case GameSystem.ViewMode.REAPER_FromPERSON:
-                        _mainCamera.enabled = false;
-                        _personTPVCamera.enabled = false;
-                        _personFPVCamera.enabled = true;
-                        _robotBirdViewCamera.enabled = false;
-                        _robotAroundCamera.enabled = false;
-
+                    case ViewMode.ViewModeCategory.REAPER_FromPERSON:
                         GetComponent<Canvas>().enabled = false;
                         _mainScreen.enabled = false;
-
                         _reaperFPVCameraPanel.SetActive(false);
-
-                        _nowUsingCamera = _personFPVCamera;
                         break;
 
-                    case GameSystem.ViewMode.PERSON_TPV:
-                        _mainCamera.enabled = false;
-                        _personTPVCamera.enabled = true;
-                        _personFPVCamera.enabled = false;
-                        _robotBirdViewCamera.enabled = false;
-                        _robotAroundCamera.enabled = false;
-
+                    case ViewMode.ViewModeCategory.PERSON_TPV:
                         GetComponent<Canvas>().enabled = false;
                         _mainScreen.enabled = false;
-
                         _reaperFPVCameraPanel.SetActive(false);
-
-                        _nowUsingCamera = _personTPVCamera;
                         break;
 
                     default:
@@ -252,18 +181,25 @@ namespace smart3tene.Reaper
                 })
                 .AddTo(this);
 
+            //Timer
+            GameTimer.Start();
+
+            this.UpdateAsObservable()
+                .Subscribe(_ => _timeNum.text = GameTimer.GetCurrentTimeSpan.ToString(@"hh\:mm\:ss"))
+                .AddTo(this);
+
             _menu.SetActive(false);
-            GameSystem.Instance.MenuEvent += ShowAndHideMenu;
+            ReaperEventManager.MenuEvent += ShowAndHideMenu;
 
             _savePanelCancelTaken = new CancellationTokenSource();
-            GameSystem.Instance.SaveFileEvent += OnSaveFileEvent;
+            ReaperEventManager.SaveFileEvent += OnSaveFileEvent;
         }
 
         private void OnDisable()
         {
-            GameSystem.Instance.MenuEvent -= ShowAndHideMenu;
+            ReaperEventManager.MenuEvent -= ShowAndHideMenu;
 
-            GameSystem.Instance.SaveFileEvent -= OnSaveFileEvent;
+            ReaperEventManager.SaveFileEvent -= OnSaveFileEvent;
         }
         #endregion
 
@@ -296,7 +232,12 @@ namespace smart3tene.Reaper
 
         public void ResetButtonClick()
         {
-            GameSystem.Instance.ResetGrasses();
+            ReaperEventManager.InvokeResetEvent();
+
+            //時間のリセットはいるだろうか
+            GameTimer.Restart();
+
+            //スコアとかつけてるならそれもリセットするか？
         }
 
         public void EndGameButtonClick()
@@ -320,26 +261,7 @@ namespace smart3tene.Reaper
             _delayNumText.text = _delaySlider.value.ToString("F1");
         }
 
-        private string UpdateGameTime(float gameTime)
-        {
-            var span = new TimeSpan(0, 0, (int)gameTime);
-            return span.ToString(@"hh\:mm\:ss");
-        }
-
-        private string UpdateReapRate()
-        {
-            float reapRate;
-            if (GameSystem.Instance.AllGrassCount != 0)
-            {
-                reapRate = 100f * (float)GameSystem.Instance.CutGrassCount.Value / (float)GameSystem.Instance.AllGrassCount;
-            }
-            else
-            {
-                return "--";
-            }
-
-            return reapRate.ToString("F1");
-        }
+        
         private void ShowAndHideMenu()
         {
             _menu.SetActive(!_menu.activeSelf);

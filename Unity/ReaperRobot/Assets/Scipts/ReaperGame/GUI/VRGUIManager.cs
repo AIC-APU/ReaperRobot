@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using TMPro;
+using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System;
-using UniRx;
 
 namespace smart3tene.Reaper
 {
@@ -29,8 +26,6 @@ namespace smart3tene.Reaper
         [Header("Lift and Cutter")]
         [SerializeField] private Image _liftLamp;
         [SerializeField] private Image _cutterLamp;
-
-
         #endregion
 
         #region private Fields
@@ -50,14 +45,16 @@ namespace smart3tene.Reaper
 
         void Awake()
         {
-            _reaperManager = GameSystem.Instance.ReaperInstance.GetComponent<ReaperManager>();
-            _reaperTransform = GameSystem.Instance.ReaperInstance.transform;
+            _reaperManager = ReaperGameSystem.Instance.ReaperInstance.GetComponent<ReaperManager>();
+            _reaperTransform = ReaperGameSystem.Instance.ReaperInstance.transform;
 
             //ReapRate
-            GameSystem.Instance.CutGrassCount.Subscribe(x => _reaperRateNum.text = UpdateReapRate());
+            GrassCounter.CutGrassCount.Subscribe(_ => _reaperRateNum.text = GrassCounter.CutGrassPercent().ToString("F1"));
 
             //Time
-            GameSystem.Instance.GameTime.Subscribe(x => _timeNum.text = UpdateGameTime(x));
+            this.UpdateAsObservable()
+                .Subscribe(_ => _timeNum.text = GameTimer.GetCurrentTimeSpan.ToString(@"hh\:mm\:ss"))
+                .AddTo(this);
 
             //Liftのランプ
             _reaperManager.IsLiftDown.Subscribe(isDown =>
@@ -111,29 +108,6 @@ namespace smart3tene.Reaper
 
         #region public method
         //ボタンの挙動とか
-        #endregion
-
-        #region private method
-        private string UpdateGameTime(float gameTime)
-        {
-            var span = new TimeSpan(0, 0, (int)gameTime);
-            return span.ToString(@"hh\:mm\:ss");
-        }
-
-        private string UpdateReapRate()
-        {
-            float reapRate;
-            if (GameSystem.Instance.AllGrassCount != 0)
-            {
-                reapRate = 100f * (float)GameSystem.Instance.CutGrassCount.Value / (float)GameSystem.Instance.AllGrassCount;
-            }
-            else
-            {
-                return "--";
-            }
-
-            return reapRate.ToString("F1");
-        }
         #endregion
     }
 }

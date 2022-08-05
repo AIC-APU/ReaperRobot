@@ -49,7 +49,9 @@ namespace smart3tene.Reaper
                 transform.GetChild(i).gameObject.SetActive(false);
             }
 
-            GameSystem.Instance.ResetEvent += ResetGrass;           
+            GrassCounter.AddAllGrass();
+
+            ReaperEventManager.ResetEvent += ResetGrass;           
         }
 
         private void OnTriggerStay(Collider other)
@@ -121,7 +123,7 @@ namespace smart3tene.Reaper
 
         private void OnDestroy()
         {
-            GameSystem.Instance.ResetEvent -= ResetGrass;
+            ReaperEventManager.ResetEvent -= ResetGrass;
         }
         #endregion
 
@@ -180,13 +182,13 @@ namespace smart3tene.Reaper
         [PunRPC]
         private void AddCutGrass()
         {
-            GameSystem.Instance.AddCutGrassCount(1);
+            GrassCounter.AddCutGrass();
         }
 
         [PunRPC]
         private void MinusCutGrass()
         {
-            GameSystem.Instance.AddCutGrassCount(-1);
+            GrassCounter.MinusCutGrass();
         }
         #endregion
     }

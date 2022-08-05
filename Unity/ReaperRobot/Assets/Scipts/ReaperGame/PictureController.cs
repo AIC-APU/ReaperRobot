@@ -1,18 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using System.IO;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using Cysharp.Threading.Tasks;
 
 
 namespace smart3tene.Reaper
 {
-    //まだあくまでデバック用です
+    //デバック用です
     public class PictureController : MonoBehaviour
     {
         #region Private Fields
-        [SerializeField] private GUIManager _GuiManager;
         [SerializeField] private string _fileName = ""; //末に拡張子は付けない
         private PictureTaker _pictureTaker;        
         #endregion
@@ -34,13 +30,14 @@ namespace smart3tene.Reaper
 
         private async UniTaskVoid TakePicture()
         {
-            var colorFilePath = await _pictureTaker.TakeColorPicture(_GuiManager.NowUsingCamera, _fileName);
+            var colorFilePath = await _pictureTaker.TakeColorPicture(Camera.main, _fileName);
             var colorFileName = Path.GetFileName(colorFilePath);
-            GameSystem.Instance.InvokeSaveFileEvent(colorFileName);
+            ReaperEventManager.InvokeSaveFileEvent(colorFileName);
 
-            var tagFilePath = await _pictureTaker.TakeTagPicture(_GuiManager.NowUsingCamera, _fileName);
+            var tagFilePath = await _pictureTaker.TakeTagPicture(Camera.main, _fileName);
             var tagFileName = Path.GetFileName(tagFilePath);
-            GameSystem.Instance.InvokeSaveFileEvent(tagFileName);
+            ReaperEventManager.InvokeSaveFileEvent(tagFileName);
+            ReaperEventManager.InvokeSaveFileEvent(tagFileName);
         }
     }
 

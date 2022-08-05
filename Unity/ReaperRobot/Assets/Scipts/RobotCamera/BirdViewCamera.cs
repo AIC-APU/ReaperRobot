@@ -1,15 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
 namespace smart3tene
 {
-    public class BirdViewCameraManager : MonoBehaviourPun, IRobotCamera
+    public class BirdViewCamera : MonoBehaviour, IControllableCamera
     {
         #region Public Fields
         public Camera Camera { get => _camera; set => _camera = value; }
         [SerializeField] private Camera _camera;
+
+        public Transform Target { get =>_target; set => _target = value; }
+        [SerializeField] private Transform _target;
         #endregion
 
         #region Serialized Private Field
@@ -25,36 +25,26 @@ namespace smart3tene
         readonly float _minHeight = 0.5f;
         #endregion
 
-        #region MonoBehaviour Callbacks
-        private void Start()
-        {
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-
-            ResetCamera();
-            FollowRobot();
-        }
-        #endregion
-
         #region Public method
         /// <summary>
         /// LateUpdateなどで毎回呼ぶことで、カメラが追従する
         /// </summary>
-        public void FollowRobot()
+        public void FollowTarget()
         {
-            _camera.transform.LookAt(transform.position);
+            _camera.transform.LookAt(_target.transform.position);
         }
 
         public void ResetCamera()
         {
-            _camera.transform.position = transform.TransformPoint(cameraDefaultOffsetPos);
-            _camera.transform.eulerAngles = transform.eulerAngles + cameraDefaultOffsetRot;
-            _camera.transform.LookAt(transform.position);
+            _camera.transform.position = _target.transform.TransformPoint(cameraDefaultOffsetPos);
+            _camera.transform.eulerAngles = _target.transform.eulerAngles + cameraDefaultOffsetRot;
+            _camera.transform.LookAt(_target.transform.position);
         }
 
         public void MoveCamera(float horizontal, float vertical)
         {
             //vertical...ロボットに近づく
-            var distance = Vector3.Distance(transform.position, _camera.transform.position);
+            var distance = Vector3.Distance(_target.transform.position, _camera.transform.position);
             if ((distance > _zoomSpeed * 2f && vertical > 0) || (distance < _zoomSpeed * 9f && vertical < 0))
             {
                 _camera.transform.position += _zoomSpeed * vertical * _camera.transform.forward;
@@ -75,9 +65,9 @@ namespace smart3tene
             _camera.transform.position = cameraPos;        
 
             //horizontal...gameobjectを中心に回転
-            var center = new Vector3(transform.position.x, _camera.transform.position.y, transform.position.z);
+            var center = new Vector3(_target.transform.position.x, _camera.transform.position.y, _target.transform.position.z);
             _camera.transform.RotateAround(center, Vector3.up,  -1 * horizontal * _rotateSpeed);
-            _camera.transform.LookAt(transform.position);
+            _camera.transform.LookAt(_target.transform.position);
         }
         #endregion
     }

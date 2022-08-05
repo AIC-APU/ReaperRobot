@@ -1,20 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UniRx;
-using Photon.Pun;
+using UnityEngine;
 
 namespace smart3tene
 {
-    public class FPVCameraManager : MonoBehaviourPun, IRobotCamera
+    public class FPVCamera : MonoBehaviour, IControllableCamera
     {
         #region Public Fields
         public Camera Camera { get => _camera; set => _camera = value; }
         [SerializeField] private Camera _camera;
+
+        public Transform Target { get => _target; set => _target = value; }
+        [SerializeField] private Transform _target;
         #endregion
 
         #region Serialized Private Field
-        [SerializeField] private  Vector3 cameraDefaultOffsetPos = new(0f, 1.2f, -0.5f);
+        [SerializeField] private Vector3 cameraDefaultOffsetPos = new(0f, 1.2f, -0.5f);
         [SerializeField] private Vector3 cameraDefaultOffsetRot = new(30f, 0f, 0f);
         #endregion
 
@@ -23,27 +23,19 @@ namespace smart3tene
         private ReactiveProperty<Vector3> _cameraOffsetPos = new();
 
         public IReadOnlyReactiveProperty<Vector3> CameraOffsetRot => _cameraOffsetRot;
+
         private ReactiveProperty<Vector3> _cameraOffsetRot = new();
         #endregion
 
-        #region MonoBehaviour Callbacks
-        private void Start()
-        {
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-
-            ResetCamera();
-            FollowRobot();
-        }
-        #endregion
 
         #region Public method
         /// <summary>
         /// LateUpdateなどで毎回呼ぶことで、カメラが追従する
         /// </summary>
-        public void FollowRobot()
+        public void FollowTarget()
         {
-            _camera.transform.position = transform.TransformPoint(_cameraOffsetPos.Value);
-            _camera.transform.eulerAngles = transform.eulerAngles + _cameraOffsetRot.Value;
+            _camera.transform.position = _target.transform.TransformPoint(_cameraOffsetPos.Value);
+            _camera.transform.eulerAngles = _target.transform.eulerAngles + _cameraOffsetRot.Value;
         }
 
         public void ResetCamera()

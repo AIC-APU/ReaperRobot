@@ -20,7 +20,7 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            _reaperManager = GameSystem.Instance.ReaperInstance.GetComponent<ReaperManager>();
+            _reaperManager = ReaperGameSystem.Instance.ReaperInstance.GetComponent<ReaperManager>();
 
             foreach (string controller in Input.GetJoystickNames())
             {
