@@ -51,7 +51,7 @@ namespace smart3tene
             }
 
             //位置情報の更新
-            _cameraOffsetPos = _target.transform.InverseTransformPoint(_camera.transform.position);
+            _cameraOffsetPos = (_camera.transform.position - _target.transform.position);
         }
 
         public void RotateCamera(float horizontal, float vertical)
