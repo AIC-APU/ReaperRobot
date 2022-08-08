@@ -13,16 +13,17 @@ namespace smart3tene
         #endregion
 
         #region Serialized Private Field
-        [SerializeField] private Vector3 cameraDefaultOffsetPos = new(0f, 3f, -5f);
-        [SerializeField] private Vector3 cameraDefaultOffsetRot = new(30f, 0f, 0f);
+        [SerializeField] private Vector3 _cameraDefaultOffsetPos = new(0f, 3f, -5f);
+        [SerializeField] private Vector3 _cameraDefaultOffsetRot = new(30f, 0f, 0f);
         #endregion
 
         #region Readonly Field
-        readonly float _zoomSpeed = 1f;
-        readonly float _rotateSpeed = 0.5f;
-        readonly float _hightSpeed = 4f;
-        readonly float _maxHeight = 20f;
-        readonly float _minHeight = 0.5f;
+        readonly float zoomSpeed = 1f;
+        readonly float rotateSpeed = 0.5f;
+        readonly float hightSpeed = 4f;
+        readonly float maxHeight = 20f;
+        readonly float minHeight = 0.5f;
+        readonly float defaultFOV = 60f;
         #endregion
 
         #region Public method
@@ -36,21 +37,22 @@ namespace smart3tene
 
         public void ResetCamera()
         {
-            _camera.transform.position = _target.transform.TransformPoint(cameraDefaultOffsetPos);
-            _camera.transform.eulerAngles = _target.transform.eulerAngles + cameraDefaultOffsetRot;
+            _camera.transform.position = _target.transform.TransformPoint(_cameraDefaultOffsetPos);
+            _camera.transform.eulerAngles = _target.transform.eulerAngles + _cameraDefaultOffsetRot;
             _camera.transform.LookAt(_target.transform.position);
+            _camera.fieldOfView = defaultFOV;
         }
 
         public void MoveCamera(float horizontal, float vertical)
         {
             //vertical...ロボットに近づく
             var distance = Vector3.Distance(_target.transform.position, _camera.transform.position);
-            if ((distance > _zoomSpeed * 2f && vertical > 0) || (distance < _zoomSpeed * 9f && vertical < 0))
+            if ((distance > zoomSpeed * 2f && vertical > 0) || (distance < zoomSpeed * 9f && vertical < 0))
             {
-                _camera.transform.position += _zoomSpeed * vertical * _camera.transform.forward;
+                _camera.transform.position += zoomSpeed * vertical * _camera.transform.forward;
 
                 var cameraPos = _camera.transform.position;
-                cameraPos.y = Mathf.Clamp(cameraPos.y, _minHeight, _maxHeight);
+                cameraPos.y = Mathf.Clamp(cameraPos.y, minHeight, maxHeight);
                 _camera.transform.position = cameraPos;
             }
         }
@@ -60,13 +62,13 @@ namespace smart3tene
             //vertical...高さを変更
             var cameraPos       = _camera.transform.position;      
 
-            cameraPos.y += vertical * _hightSpeed * Time.deltaTime;
-            cameraPos.y  = Mathf.Clamp(cameraPos.y, _minHeight, _maxHeight);
+            cameraPos.y += vertical * hightSpeed * Time.deltaTime;
+            cameraPos.y  = Mathf.Clamp(cameraPos.y, minHeight, maxHeight);
             _camera.transform.position = cameraPos;        
 
             //horizontal...gameobjectを中心に回転
             var center = new Vector3(_target.transform.position.x, _camera.transform.position.y, _target.transform.position.z);
-            _camera.transform.RotateAround(center, Vector3.up,  -1 * horizontal * _rotateSpeed);
+            _camera.transform.RotateAround(center, Vector3.up,  -1 * horizontal * rotateSpeed);
             _camera.transform.LookAt(_target.transform.position);
         }
         #endregion

@@ -2258,8 +2258,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _camera: {fileID: 0}
   _target: {fileID: 0}
-  cameraDefaultOffsetPos: {x: 0, y: 1.5, z: -1}
-  cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _cameraDefaultOffsetPos: {x: 0, y: 1.5, z: -1}
+  _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
 --- !u!114 &439129849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2290,8 +2290,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _camera: {fileID: 0}
   _target: {fileID: 0}
-  cameraDefaultOffsetPos: {x: 0, y: 1, z: -1.5}
-  cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _cameraDefaultOffsetPos: {x: 0, y: 1, z: -1.5}
+  _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
 --- !u!114 &439129851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2306,8 +2306,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _camera: {fileID: 0}
   _target: {fileID: 0}
-  cameraDefaultOffsetPos: {x: 0, y: 3, z: -5}
-  cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _cameraDefaultOffsetPos: {x: 0, y: 3, z: -5}
+  _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
 --- !u!114 &439129852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2322,8 +2322,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _camera: {fileID: 0}
   _target: {fileID: 0}
-  cameraDefaultOffsetPos: {x: 0, y: 1.2, z: -0.5}
-  cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _cameraDefaultOffsetPos: {x: 0, y: 1.2, z: -0.5}
+  _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
 --- !u!1 &446572424
 GameObject:
   m_ObjectHideFlags: 0

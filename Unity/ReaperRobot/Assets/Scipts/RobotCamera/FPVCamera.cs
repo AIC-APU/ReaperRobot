@@ -14,8 +14,8 @@ namespace smart3tene
         #endregion
 
         #region Serialized Private Field
-        [SerializeField] private Vector3 cameraDefaultOffsetPos = new(0f, 1.2f, -0.5f);
-        [SerializeField] private Vector3 cameraDefaultOffsetRot = new(30f, 0f, 0f);
+        [SerializeField] private Vector3 _cameraDefaultOffsetPos = new(0f, 1.2f, -0.5f);
+        [SerializeField] private Vector3 _cameraDefaultOffsetRot = new(30f, 0f, 0f);
         #endregion
 
         #region Private Fields
@@ -25,6 +25,10 @@ namespace smart3tene
         public IReadOnlyReactiveProperty<Vector3> CameraOffsetRot => _cameraOffsetRot;
 
         private ReactiveProperty<Vector3> _cameraOffsetRot = new();
+        #endregion
+
+        #region Readonly Fields
+        readonly float defaultFOV = 60f;
         #endregion
 
 
@@ -40,8 +44,9 @@ namespace smart3tene
 
         public void ResetCamera()
         {
-            _cameraOffsetPos.Value = cameraDefaultOffsetPos;
-            _cameraOffsetRot.Value = cameraDefaultOffsetRot;
+            _cameraOffsetPos.Value = _cameraDefaultOffsetPos;
+            _cameraOffsetRot.Value = _cameraDefaultOffsetRot;
+            _camera.fieldOfView = defaultFOV;
         }
 
         public void MoveCamera(float horizontal, float vertical)

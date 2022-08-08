@@ -14,18 +14,21 @@ namespace smart3tene
         #endregion
 
         #region Serialized Private Fields
-        [SerializeField] private Vector3 cameraDefaultOffsetPos = new(0f, 1f, -1.5f);
-        [SerializeField] private Vector3 cameraDefaultOffsetRot = new(30f, 0f, 0f);
+        [SerializeField] private Vector3 _cameraDefaultOffsetPos = new(0f, 1f, -1.5f);
+        [SerializeField] private Vector3 _cameraDefaultOffsetRot = new(30f, 0f, 0f);
         #endregion
 
         #region Private Fields
         private Vector3 _cameraOffsetPos;
         private Vector3 _cameraOffsetRot;
+        #endregion
 
-        private float _zoomSpeed = 1f;
-        private float _rotateSpeed = 0.7f;
-        private float _minAngleX = 5f;
-        private float _maxAngleX = 50f;
+        #region Readonly Fields
+        readonly float defaultFOV = 60f;
+        readonly float zoomSpeed = 1f;
+        readonly float rotateSpeed = 0.7f;
+        readonly float minAngleX = 5f;
+        readonly float maxAngleX = 50f;
         #endregion
 
         #region Public method
@@ -36,18 +39,19 @@ namespace smart3tene
 
         public void ResetCamera()
         {
-            _cameraOffsetPos = _target.TransformDirection(cameraDefaultOffsetPos);
-            _cameraOffsetRot = cameraDefaultOffsetRot;
+            _cameraOffsetPos = _target.TransformDirection(_cameraDefaultOffsetPos);
+            _cameraOffsetRot = _cameraDefaultOffsetRot;
             _camera.transform.eulerAngles = _target.transform.eulerAngles + _cameraOffsetRot;
+            _camera.fieldOfView = defaultFOV;
         }
 
         public void MoveCamera(float horizontal, float vertical)
         {
             //vertical...ロボットに近づく
             var distance = Vector3.Distance(_target.transform.position, _camera.transform.position);
-            if ((distance > _zoomSpeed * 2f && vertical > 0) || (distance < _zoomSpeed * 4f && vertical < 0))
+            if ((distance > zoomSpeed * 2f && vertical > 0) || (distance < zoomSpeed * 4f && vertical < 0))
             {
-                _camera.transform.position += _zoomSpeed * vertical * _camera.transform.forward;
+                _camera.transform.position += zoomSpeed * vertical * _camera.transform.forward;
             }
 
             //位置情報の更新
@@ -60,14 +64,14 @@ namespace smart3tene
             _camera.transform.position = _target.transform.position + _cameraOffsetPos;
 
             //horizontal...
-            var horizontalAngle = -1 * horizontal * _rotateSpeed;
+            var horizontalAngle = -1 * horizontal * rotateSpeed;
             var center = new Vector3(_target.transform.position.x, _camera.transform.position.y, _target.transform.position.z);
             _camera.transform.RotateAround(center, Vector3.up, horizontalAngle);
 
             //vertical...
-            var verticalAngle = vertical * _rotateSpeed;
-            if ((verticalAngle > 0 && _camera.transform.eulerAngles.x < _maxAngleX)
-                || (verticalAngle < 0 && _camera.transform.eulerAngles.x > _minAngleX))
+            var verticalAngle = vertical * rotateSpeed;
+            if ((verticalAngle > 0 && _camera.transform.eulerAngles.x < maxAngleX)
+                || (verticalAngle < 0 && _camera.transform.eulerAngles.x > minAngleX))
             {
                 _camera.transform.RotateAround(_target.transform.position, _camera.transform.right, verticalAngle);
             }
