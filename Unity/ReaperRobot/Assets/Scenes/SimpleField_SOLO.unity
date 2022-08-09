@@ -2216,7 +2216,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73f3fe74202313f4abe46df7d5a081d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _defaultViewMode: 0
   _reaperInstance: {fileID: 0}
   _personInstance: {fileID: 0}
   _instantiatePos:
@@ -3229,6 +3228,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b89879ae3eb41a34597a91f3911b3926, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _defaultViewMode: 0
+  _REAPER_FPV: 1
+  _REAPER_AROUND: 1
+  _REAPER_BIRDVIEW: 1
+  _REAPER_FromPERSON: 1
+  _PERSON_TPV: 1
 --- !u!114 &653367596
 MonoBehaviour:
   m_ObjectHideFlags: 0
