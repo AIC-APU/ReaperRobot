@@ -98,11 +98,8 @@ namespace smart3tene.Reaper
         /// </summary>
         /// <param name="horizontal">水平方向の入力。-1~+1の範囲</param>
         /// <param name="vertical">垂直方向の入力。-1~+1の範囲</param>
-        public async UniTaskVoid AsyncMove(float horizontal, float vertical)
+        public void AsyncMove(float horizontal, float vertical)
         {
-            //この処理はFixedUpdateのタイミングで行う
-            await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
-
             //入力値の範囲を制限
             horizontal = Mathf.Clamp(horizontal, -1, 1);
             vertical = Mathf.Clamp(vertical, -1, 1);

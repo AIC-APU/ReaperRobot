@@ -44,10 +44,5 @@ namespace smart3tene.Reaper
             ReaperEventManager.InvokeResetEvent();
         }
 
-        public void EndGameButtonClick()
-        {
-            SceneTransitionManager.Instance.EndGame();
-        }
-
     }
 }

@@ -15,14 +15,6 @@ namespace smart3tene.Reaper
         [SerializeField] private bool _isLockX;
         [SerializeField] private bool _isLockY;
         [SerializeField] private bool _isLockZ;
-
-        [Header("ReapRate and Time")]
-        [SerializeField] private TMP_Text _reaperRateNum;
-        [SerializeField] private TMP_Text _timeNum;
-
-        [Header("Lift and Cutter")]
-        [SerializeField] private Image _liftLamp;
-        [SerializeField] private Image _cutterLamp;
         #endregion
 
         #region private Fields

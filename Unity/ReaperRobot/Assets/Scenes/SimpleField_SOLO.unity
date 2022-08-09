@@ -2238,7 +2238,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _camera: {fileID: 963194227}
   _reaperController: {fileID: 653367588}
+  _reaperCameraController: {fileID: 653367597}
   _personController: {fileID: 653367589}
+  _personCameraController: {fileID: 653367598}
   _reaperFPV: {fileID: 439129852}
   _reaperBirdView: {fileID: 439129851}
   _reaperAround: {fileID: 439129850}
@@ -3093,7 +3095,9 @@ GameObject:
   - component: {fileID: 653367591}
   - component: {fileID: 653367590}
   - component: {fileID: 653367589}
+  - component: {fileID: 653367598}
   - component: {fileID: 653367588}
+  - component: {fileID: 653367597}
   - component: {fileID: 653367592}
   - component: {fileID: 653367596}
   - component: {fileID: 653367595}
@@ -3119,7 +3123,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetRobot: {fileID: 0}
-  _controllableCameraObject: {fileID: 0}
 --- !u!114 &653367589
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3133,7 +3136,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Person: {fileID: 0}
-  _controllableCameraObject: {fileID: 0}
 --- !u!114 &653367590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3239,6 +3241,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a553690be5ddf644b390cb940cfc3c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &653367597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653367586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1525089d0da5c3242a268398d0ce00cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _controllableCameraObject: {fileID: 0}
+--- !u!114 &653367598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653367586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41cdcddce3c380a4cb5a9c335ffe6ceb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _controllableCameraObject: {fileID: 0}
 --- !u!1 &664984227
 GameObject:
   m_ObjectHideFlags: 0
@@ -8538,7 +8566,7 @@ RectTransform:
   - {fileID: 1410884059}
   - {fileID: 1857796766}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -9282,7 +9310,7 @@ MonoBehaviour:
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
+    m_ColorMultiplier: 4.36
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
@@ -9300,8 +9328,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1392477803}
-        m_TargetAssemblyTypeName: smart3tene.Reaper.GUIManager, Assembly-CSharp
+      - m_Target: {fileID: 1869938160}
+        m_TargetAssemblyTypeName: smart3tene.Reaper.MenuPanel, Assembly-CSharp
         m_MethodName: EndGameButtonClick
         m_Mode: 1
         m_Arguments:
@@ -9713,7 +9741,7 @@ RectTransform:
   m_Children:
   - {fileID: 133722831}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
