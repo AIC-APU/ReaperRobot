@@ -11,7 +11,9 @@ namespace smart3tene.Reaper
 
         [Header("Controllers")]
         [SerializeField] private ReaperController _reaperController;
+        [SerializeField] private ReaperCameraController _reaperCameraController;
         [SerializeField] private PersonController _personController;
+        [SerializeField] private PersonCameraController _personCameraController;
 
         [Header("Controller Camera")]
         [SerializeField] private FPVCamera _reaperFPV;
@@ -52,25 +54,25 @@ namespace smart3tene.Reaper
                 switch (mode)
                 {
                     case ViewMode.ViewModeCategory.REAPER_FPV:
-                        _reaperController.CCamera = _reaperFPV;
+                        _reaperCameraController.CCamera = _reaperFPV;
                         break;
 
                     case ViewMode.ViewModeCategory.REAPER_BIRDVIEW:
-                        _reaperController.CCamera = _reaperBirdView;
+                        _reaperCameraController.CCamera = _reaperBirdView;
                         break;
 
                     case ViewMode.ViewModeCategory.REAPER_AROUND:
-                        _reaperController.CCamera = _reaperAround;
+                        _reaperCameraController.CCamera = _reaperAround;
                         break;
 
                     case ViewMode.ViewModeCategory.REAPER_FromPERSON:
                         _reaperGaze.Gazer = _person.transform;
-                        _reaperController.CCamera = _reaperGaze;
+                        _reaperCameraController.CCamera = _reaperGaze;
                         
                         break;
 
                     case ViewMode.ViewModeCategory.PERSON_TPV:
-                        _personController.CCamera = _personAround;
+                        _personCameraController.CCamera = _personAround;
                         break;
                     default:
                         break;

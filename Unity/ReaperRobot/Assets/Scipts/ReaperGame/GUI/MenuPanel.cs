@@ -24,6 +24,11 @@ namespace smart3tene.Reaper
         {
             _menuPanel.SetActive(!_menuPanel.activeSelf);
         }
+
+        public void EndGameButtonClick()
+        {
+            SceneTransitionManager.Instance.EndGame();
+        }
     }
 
 }

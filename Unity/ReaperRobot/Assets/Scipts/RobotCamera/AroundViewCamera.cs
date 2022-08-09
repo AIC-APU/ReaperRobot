@@ -64,7 +64,7 @@ namespace smart3tene
             _camera.transform.position = _target.transform.position + _cameraOffsetPos;
 
             //horizontal...
-            var horizontalAngle = -1 * horizontal * rotateSpeed;
+            var horizontalAngle = horizontal * rotateSpeed;
             var center = new Vector3(_target.transform.position.x, _camera.transform.position.y, _target.transform.position.z);
             _camera.transform.RotateAround(center, Vector3.up, horizontalAngle);
 

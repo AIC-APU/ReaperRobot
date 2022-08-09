@@ -66,6 +66,8 @@ namespace smart3tene.Reaper
             _camera.fieldOfView = defaultFoV;
 
             _heigthOffset = 0;
+            _sideOffset = 0;
+            _targetOffset = Vector3.zero;
         }
 
         public void RotateCamera(float horizontal, float vertical)

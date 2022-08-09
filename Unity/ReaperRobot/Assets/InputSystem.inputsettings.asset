@@ -17,7 +17,6 @@ MonoBehaviour:
   - Gamepad
   - Keyboard
   - Mouse
-  - OculusHMD
   - OpenXRHmd
   m_UpdateMode: 1
   m_MaxEventBytesPerUpdate: 5242880
