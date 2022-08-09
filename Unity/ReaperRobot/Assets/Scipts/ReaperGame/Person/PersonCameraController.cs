@@ -38,6 +38,7 @@ namespace smart3tene.Reaper
             if (_controllableCameraObject != null)
             {
                 _controllableCamera = _controllableCameraObject.GetComponent<IControllableCamera>();
+                _controllableCamera.ResetCamera();
             }
         }
 
@@ -49,7 +50,6 @@ namespace smart3tene.Reaper
             _controllableCamera.FollowTarget();
 
             var move = _personActionMap["Look"].ReadValue<Vector2>();
-            Debug.Log(move);
             _controllableCamera.RotateCamera(move.x, move.y);
         }
         #endregion

@@ -12,8 +12,6 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Serialized private Fields
-        [SerializeField] private ViewMode.ViewModeCategory _defaultViewMode = ViewMode.ViewModeCategory.REAPER_FPV;
-
         public GameObject ReaperInstance => _reaperInstance;
         [SerializeField, Tooltip("マルチプレイの時はnullにしておいてください")] private GameObject _reaperInstance = null;
 
@@ -41,9 +39,6 @@ namespace smart3tene.Reaper
                 PhotonNetwork.OfflineMode = true;
                 PhotonNetwork.JoinRandomRoom();
             }
-
-            //ViewModeの設定
-            ViewMode.NowViewMode.Value = _defaultViewMode;
 
             var posId = GameData.PlayerId - 1; 
             //草刈り機の生成

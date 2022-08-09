@@ -18,6 +18,8 @@ namespace smart3tene.Reaper
 
         public static event Action FullReapRateEvent;
         public static void InvokeFullReapRateEvent() => FullReapRateEvent?.Invoke();
-        
+
+        public static event Action AllCheckPointPathEvent;
+        public static void InvokeAllCheckPointPassEvent() => AllCheckPointPathEvent?.Invoke();
     }
 }

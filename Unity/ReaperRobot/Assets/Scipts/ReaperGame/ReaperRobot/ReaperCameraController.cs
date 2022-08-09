@@ -38,6 +38,7 @@ namespace smart3tene.Reaper
             if(_controllableCamera == null && _controllableCameraObject != null)
             {
                 _controllableCamera = _controllableCameraObject.GetComponent<IControllableCamera>();
+                _controllableCamera.ResetCamera();
             }
 
             _reaperActionMap["MoveCamera"].performed += MoveCamera;

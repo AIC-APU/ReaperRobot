@@ -13,6 +13,8 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         private void Awake()
         {
+            ViewMode.NowViewMode.Value = ViewMode.ViewModeCategory.REAPER_VR;
+
             //VRモードならVRモードを起動
             _manualXRControl = new ManualXRControl();
             StartCoroutine(_manualXRControl.StartXRCoroutine());
