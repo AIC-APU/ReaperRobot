@@ -30,11 +30,7 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         void Awake()
         {
-            if (IsAllViewFalse())
-            {
-                Debug.LogError("1つ以上のビューを選択してください");
-                Debug.Break();
-            }
+            SetViewTrue(_defaultViewMode);
 
             ViewMode.ChangeViewMode(_defaultViewMode);
 
@@ -62,6 +58,11 @@ namespace smart3tene.Reaper
         #region Private method
         private void ChangeViewMode(InputAction.CallbackContext obj)
         {
+            if (IsAllViewFalse())
+            {
+                SetViewTrue(_defaultViewMode);
+            }
+
             var nextView = NextViewMode(ViewMode.NowViewMode.Value);
             ViewMode.ChangeViewMode(nextView);
         }
@@ -140,10 +141,32 @@ namespace smart3tene.Reaper
         {
             return !_REAPER_FPV && !_REAPER_BIRDVIEW && !_REAPER_FromPERSON && !_REAPER_FPV && !_REAPER_AROUND && !_PERSON_TPV;
         }
+
+        private void SetViewTrue(ViewMode.ViewModeCategory viewMode)
+        {
+            switch (viewMode)
+            {
+                case ViewMode.ViewModeCategory.REAPER_FPV:
+                    _REAPER_FPV = true;
+                    break;
+
+                case ViewMode.ViewModeCategory.REAPER_AROUND:
+                    _REAPER_AROUND = true;
+                    break;
+                case ViewMode.ViewModeCategory.REAPER_BIRDVIEW:
+                    _REAPER_BIRDVIEW = true;
+                    break;
+                case ViewMode.ViewModeCategory.REAPER_FromPERSON:
+                    _REAPER_FromPERSON = true;
+                    break;
+                case ViewMode.ViewModeCategory.PERSON_TPV:
+                    _PERSON_TPV = true;
+                    break;
+                default:
+                    break;
+            }
+        }
         #endregion
-
-
-
     }
 }
 

@@ -26,6 +26,7 @@ namespace smart3tene.Reaper
         #region Private Fields
         private PlayerInput _playerInput;
         private InputActionMap _personActionMap;
+        private ReactiveProperty<bool> _isPersonMap = new(false);
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -40,6 +41,19 @@ namespace smart3tene.Reaper
                 _controllableCamera = _controllableCameraObject.GetComponent<IControllableCamera>();
                 _controllableCamera.ResetCamera();
             }
+
+            _isPersonMap.Subscribe(x =>
+            {
+                if (x && CCamera != null)
+                {
+                    CCamera.ResetCamera();
+                }
+            });
+        }
+
+        private void Update()
+        {
+            _isPersonMap.Value = _playerInput.currentActionMap.name == "Person";
         }
 
         private void LateUpdate()

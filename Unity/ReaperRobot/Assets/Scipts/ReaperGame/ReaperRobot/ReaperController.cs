@@ -21,6 +21,11 @@ namespace smart3tene.Reaper
 
         private void Awake()
         {
+            if(TargetRobot == null)
+            {
+                TargetRobot = ReaperGameSystem.Instance.ReaperInstance;
+            }
+
             _reaperManager      = _targetRobot.GetComponent<ReaperManager>();
             _playerInput        = GetComponent<PlayerInput>();
 

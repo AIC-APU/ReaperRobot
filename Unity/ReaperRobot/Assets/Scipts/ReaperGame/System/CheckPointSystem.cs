@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using System;
+using System.Threading;
 using UniRx;
+using UnityEngine;
 
 namespace smart3tene.Reaper
 {
@@ -17,13 +16,15 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Private Fields
-        private ReactiveProperty<int> _checkIndex = new(0);
+        [SerializeField] private ReactiveProperty<int> _checkIndex = new(0);
 
+        private CancellationTokenSource _cancelTokenSource = new();
         #endregion
 
         #region MonoBehaviour Callbacks
         private void Awake()
         {
+            //チェックポイントを通過したら、チェックポイントを消してindexを増加
             foreach (GameObject checkPoint in _checkPointList)
             {
                 var check = checkPoint.GetComponent<CheckPoint>();
@@ -59,11 +60,13 @@ namespace smart3tene.Reaper
 
         private void OnDisable()
         {
+            _cancelTokenSource.Cancel();
             ReaperEventManager.AllCheckPointPathEvent -= AllCheckPointPass;
         }
         #endregion
 
         #region Private method
+
         private void ResetCheckPoints()
         {
             foreach (GameObject checkPoint in _checkPointList)
@@ -73,6 +76,9 @@ namespace smart3tene.Reaper
 
             _checkIndex.Value = 0;
             _checkPointList[0].SetActive(true);
+
+            //各チェックポイントのリセットもしないといけない
+
         }
 
         private void AllCheckPointPass()
