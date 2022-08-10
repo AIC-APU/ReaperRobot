@@ -15,9 +15,6 @@ namespace smart3tene.Reaper
         public TimeSpan CheckTime { get; private set; }
         #endregion
 
-        #region Private Fields
-
-        #endregion
 
         #region MonoBehaviour Callbacks
         private void OnTriggerEnter(Collider other)
@@ -31,14 +28,6 @@ namespace smart3tene.Reaper
                 Debug.Log($"{name} is checked {CheckTime:hh\\:mm\\:ss}");
             }
         }
-        #endregion
-
-        #region Public method
-
-        #endregion
-
-        #region Private method
-
         #endregion
     }
 

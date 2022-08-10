@@ -20,6 +20,11 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         private void Awake()
         {
+            if(Person == null)
+            {
+                Person = ReaperGameSystem.Instance.PersonInstance;
+            }
+            
             _personManager = Person.GetComponent<PersonManager>();
             _playerInput = GetComponent<PlayerInput>();
 
