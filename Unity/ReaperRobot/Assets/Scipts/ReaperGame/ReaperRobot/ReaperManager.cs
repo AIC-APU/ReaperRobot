@@ -25,6 +25,9 @@ namespace smart3tene.Reaper
         [Header("Crawler")]
         [SerializeField] private Animator _crawlerL;
         [SerializeField] private Animator _crawlerR;
+
+        [Header("Center of Gravity")]
+        [SerializeField] private Vector3 _centerOfGravity = new(0, 0, -0.2f);
         #endregion
 
 
@@ -59,6 +62,8 @@ namespace smart3tene.Reaper
 
             RotateCutter(_isCutting.Value);
             MoveLift(_isLiftDown.Value);
+
+            GetComponent<Rigidbody>().centerOfMass = _centerOfGravity;
         }
 
         private void Update()

@@ -1460,8 +1460,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.7, y: 0.38, z: 1}
-  m_Center: {x: 0, y: 0.23, z: -0.22}
+  m_Size: {x: 0.33903795, y: 0.28275073, z: 0.83761096}
+  m_Center: {x: 0.0047828257, y: 0.26901364, z: -0.30119455}
 --- !u!114 &1780129434565651634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1483,6 +1483,7 @@ MonoBehaviour:
   _wheelColliderR3: {fileID: 205683000655548139}
   _crawlerL: {fileID: 852624867254926367}
   _crawlerR: {fileID: 216392403894340294}
+  _centerOfGravity: {x: 0, y: 0, z: -0.2}
 --- !u!114 &7195942872361190858
 MonoBehaviour:
   m_ObjectHideFlags: 0
