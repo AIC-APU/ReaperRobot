@@ -25,11 +25,11 @@ namespace smart3tene.Reaper
 
             if(_target == TargetMode.Reaper)
             {
-                _CCamera.Target = ReaperGameSystem.Instance.ReaperInstance.transform;
+                _CCamera.Target = InstanceHolder.Instance.ReaperInstance.transform;
             }
             else if(_target == TargetMode.Person)
             {
-                _CCamera.Target = ReaperGameSystem.Instance.PersonInstance.transform;
+                _CCamera.Target = InstanceHolder.Instance.PersonInstance.transform;
             }
         }
     }

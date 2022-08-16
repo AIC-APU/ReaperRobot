@@ -12,7 +12,7 @@ namespace smart3tene.Reaper
         private void Awake()
         {
             _gazeCamera = GetComponent<GazeCamera>();
-            _gazeCamera.Gazer = ReaperGameSystem.Instance.PersonInstance.transform;
+            _gazeCamera.Gazer = InstanceHolder.Instance.PersonInstance.transform;
         }
     }
 

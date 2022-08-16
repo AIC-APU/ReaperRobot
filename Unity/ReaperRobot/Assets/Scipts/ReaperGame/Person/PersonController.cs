@@ -22,7 +22,7 @@ namespace smart3tene.Reaper
         {
             if(Person == null)
             {
-                Person = ReaperGameSystem.Instance.PersonInstance;
+                Person = InstanceHolder.Instance.PersonInstance;
             }
             
             _personManager = Person.GetComponent<PersonManager>();

@@ -8,16 +8,18 @@ namespace smart3tene.Reaper
 {
     public class LiftAndCutterUI : MonoBehaviour
     {
+        [SerializeField] private ReaperManager _reaperManager;
         [SerializeField] private Image _liftLamp;
         [SerializeField] private Image _cutterLamp;
-
-        private ReaperManager _reaperManager;
 
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            _reaperManager = ReaperGameSystem.Instance.ReaperInstance.GetComponent<ReaperManager>();
-
+            if(_reaperManager == null)
+            {
+                _reaperManager = InstanceHolder.Instance.ReaperInstance.GetComponent<ReaperManager>();
+            }
+            
             //Liftのランプ
             _reaperManager.IsLiftDown.Subscribe(isDown =>
             {

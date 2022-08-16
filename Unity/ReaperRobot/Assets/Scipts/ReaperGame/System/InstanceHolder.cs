@@ -5,10 +5,10 @@ using UnityEngine;
 namespace smart3tene.Reaper
 {
     [DefaultExecutionOrder(-2)]
-    public class ReaperGameSystem : MonoBehaviour
+    public class InstanceHolder : MonoBehaviour
     {
         #region public Fields
-        public static ReaperGameSystem Instance = null;
+        public static InstanceHolder Instance = null;
         #endregion
 
         #region Serialized private Fields

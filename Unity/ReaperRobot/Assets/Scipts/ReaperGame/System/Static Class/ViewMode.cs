@@ -15,9 +15,17 @@ namespace smart3tene.Reaper
         }
 
         public static ReactiveProperty<ViewModeCategory> NowViewMode { get; private set; } = new ReactiveProperty<ViewModeCategory>(ViewModeCategory.REAPER_FPV);
-    
+
+        public static bool IsLock { get;  set; } = false;
+
         public static void ChangeViewMode(ViewModeCategory viewMode)
         {
+            if (IsLock)
+            {
+                UnityEngine.Debug.Log("ロックされているため変更できません。");
+                return;
+            }
+
             NowViewMode.Value = viewMode;
         }
     }

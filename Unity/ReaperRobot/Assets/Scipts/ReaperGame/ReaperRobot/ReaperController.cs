@@ -23,7 +23,7 @@ namespace smart3tene.Reaper
         {
             if(TargetRobot == null)
             {
-                TargetRobot = ReaperGameSystem.Instance.ReaperInstance;
+                TargetRobot = InstanceHolder.Instance.ReaperInstance;
             }
 
             _reaperManager      = _targetRobot.GetComponent<ReaperManager>();

@@ -13,7 +13,7 @@ namespace smart3tene.Reaper
         {
             if(_targetTransform == null)
             {
-                _targetTransform = ReaperGameSystem.Instance.ReaperInstance.transform;
+                _targetTransform = InstanceHolder.Instance.ReaperInstance.transform;
             }
         }
 
