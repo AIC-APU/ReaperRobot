@@ -14,12 +14,12 @@ namespace smart3tene.Reaper
         private void Awake()
         {
             _clearPanel.SetActive(false);
-            ReaperEventManager.AllCheckPointPathEvent += SetClearTime;
+            ReaperEventManager.AllCheckPointPassEvent += SetClearTime;
         }
 
         private void OnDisable()
         {
-            ReaperEventManager.AllCheckPointPathEvent -= SetClearTime;
+            ReaperEventManager.AllCheckPointPassEvent -= SetClearTime;
         }
 
         private void SetClearTime()

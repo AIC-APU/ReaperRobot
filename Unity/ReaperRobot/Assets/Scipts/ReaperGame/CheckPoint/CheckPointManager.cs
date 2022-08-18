@@ -8,6 +8,11 @@ namespace smart3tene.Reaper
 {
     public class CheckPointManager : MonoBehaviour
     {
+        #region Public Property
+        public IReadOnlyReactiveProperty<string> Introduction => _intro;
+        private ReactiveProperty<string> _intro = new("");
+        #endregion
+
         #region Serialized Private Fields
         [SerializeField] private List<BaseCheckPoint> _checkPointList = new();
         #endregion
@@ -19,7 +24,7 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            ReaperEventManager.AllCheckPointPathEvent += AllCheckPointPass;
+            ReaperEventManager.AllCheckPointPassEvent += AllCheckPointPass;
 
             GameTimer.Start();
 
@@ -29,7 +34,7 @@ namespace smart3tene.Reaper
         private void OnDisable()
         {
             _cancellationTokenSource.Cancel();
-            ReaperEventManager.AllCheckPointPathEvent -= AllCheckPointPass;
+            ReaperEventManager.AllCheckPointPassEvent -= AllCheckPointPass;
         }
         #endregion
 
@@ -40,9 +45,18 @@ namespace smart3tene.Reaper
             {
                 _checkPointList[i].SetUp();
 
+                //introがあれば表示
+                if(_checkPointList[i].Introduction != "")
+                {
+                    _intro.SetValueAndForceNotify(_checkPointList[i].Introduction);
+                } 
+
                 await UniTask.WaitUntil(() => _checkPointList[i].IsChecked.Value, PlayerLoopTiming.Update, ct);
+
+                ReaperEventManager.InvokeCheckPointPassEvent();
             }
 
+            //すべてのチェックポイントを通過したらイベント発生
             ReaperEventManager.InvokeAllCheckPointPassEvent();
         }
 
