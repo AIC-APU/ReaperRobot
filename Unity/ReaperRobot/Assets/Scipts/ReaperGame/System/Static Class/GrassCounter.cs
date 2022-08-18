@@ -10,15 +10,36 @@ namespace smart3tene.Reaper
         public static IReadOnlyReactiveProperty<int> CutGrassCount => _cutGrassCount;
         private static ReactiveProperty<int> _cutGrassCount = new(0);
 
-        public static void AddAllGrass() => _allGrassCount.Value++;
+        public static IReadOnlyReactiveProperty<float> CutGrassPercent => _cutGrassPercent;
+        private static ReactiveProperty<float> _cutGrassPercent = new(0);
 
-        public static void AddCutGrass() => _cutGrassCount.Value++;
+        public static IReadOnlyReactiveProperty<int> RemainingGrass => _remainingGrass;
+        private static ReactiveProperty<int> _remainingGrass = new(0);
 
-        public static void MinusCutGrass() => _cutGrassCount.Value--;
+        public static void AddAllGrass()
+        {
+            _allGrassCount.Value++;
+        }
+        
+        public static void AddCutGrass()
+        {
+            _cutGrassCount.Value++;
 
-        public static float CutGrassPercent() => _allGrassCount.Value == 0 ? 0 : 100f * (float)_cutGrassCount.Value / (float)_allGrassCount.Value;
+            UpdateValues();
+        }
 
-        public static int RemainingGrass() => _allGrassCount.Value - _cutGrassCount.Value;
+        public static void MinusCutGrass()
+        {
+            _cutGrassCount.Value--;
+
+            UpdateValues();
+        }
+
+        private static void UpdateValues()
+        {
+            _cutGrassPercent.Value = _allGrassCount.Value == 0 ? 0 : 100f * (float)_cutGrassCount.Value / (float)_allGrassCount.Value;
+            _remainingGrass.Value  = _allGrassCount.Value - _cutGrassCount.Value;
+        }
     }
 }
 

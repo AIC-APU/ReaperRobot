@@ -8,6 +8,12 @@ namespace smart3tene.Reaper
 {
     public class TouchCheckPoint : BaseCheckPoint
     {
+        #region Public Property
+        public override string Introduction => _introduction;
+        [SerializeField] private string _introduction = "Go to Red Pole!";
+        #endregion
+
+
         #region private Fields
         private TimeSpan CheckTime { get; set; }
         #endregion
@@ -16,10 +22,6 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            _isChecked
-                .Skip(1)
-                .Subscribe(_ => OnChecked());
-
             gameObject.SetActive(false);
         }
 
@@ -31,6 +33,7 @@ namespace smart3tene.Reaper
             if (other.GetComponent<ReaperManager>())
             {   
                 _isChecked.Value = true;
+                OnChecked();
             }
         }
 
