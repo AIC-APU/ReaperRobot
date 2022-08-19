@@ -8750,6 +8750,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6e643ec083614a418710b19ce87c83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _reaperManager: {fileID: 0}
   _liftLamp: {fileID: 27867800}
   _cutterLamp: {fileID: 904584220}
 --- !u!114 &1392477809
@@ -9925,11 +9926,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1774430530}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6221e5523ad96645bc5576b230bfbd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 113a776a7fb56934990a602e52d9e4d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _saveFilePanel: {fileID: 133722830}
-  _filePathText: {fileID: 427089278}
+  _canvasGroup: {fileID: 133722834}
+  _text: {fileID: 427089278}
+  _fadeInSpeed: 60
+  _fadeOutSpeed: 60
+  _popupTime: 2
 --- !u!1 &1857796765
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,6 +28,10 @@ namespace smart3tene.Reaper
         #endregion
 
         #region MonoBehaviour Callbacks
+        private void Awake()
+        {
+            _goal.SetActive(false);
+        }
         private void Update()
         {
             if (!_isActive) return;

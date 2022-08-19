@@ -48,7 +48,7 @@ namespace smart3tene.Reaper
                 //introがあれば表示
                 if(_checkPointList[i].Introduction != "")
                 {
-                    _intro.SetValueAndForceNotify(_checkPointList[i].Introduction);
+                    ReaperEventManager.InvokeTextPopupEvent(_checkPointList[i].Introduction);
                 } 
 
                 await UniTask.WaitUntil(() => _checkPointList[i].IsChecked.Value, PlayerLoopTiming.Update, ct);
