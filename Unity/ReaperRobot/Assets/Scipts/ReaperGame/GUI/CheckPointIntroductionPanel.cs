@@ -9,7 +9,6 @@ using UniRx;
 
 namespace smart3tene.Reaper
 {
-    [DefaultExecutionOrder(-1)]
     public class CheckPointIntroductionPanel : MonoBehaviour
     {
         #region Serialized Private Fields

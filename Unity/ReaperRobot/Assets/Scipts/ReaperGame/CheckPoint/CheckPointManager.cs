@@ -22,7 +22,7 @@ namespace smart3tene.Reaper
         #endregion
 
         #region MonoBehaviour Callbacks
-        private void Awake()
+        private void Start()
         {
             ReaperEventManager.AllCheckPointPassEvent += AllCheckPointPass;
 
