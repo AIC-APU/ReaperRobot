@@ -28,6 +28,7 @@ namespace smart3tene
         public enum GameCourse
         {
             SimpleField,
+            Training,
         }
         public static GameCourse NowGameCourse { get; set; } = GameCourse.SimpleField;
         #endregion

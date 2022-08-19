@@ -23,8 +23,8 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Readonly Fields
-        readonly float _distanceThreshold = 0.2f;
-        readonly float _angleThreshold = 10f;
+        readonly float _distanceThreshold = 0.1f;
+        readonly float _angleThreshold = 5f;
         #endregion
 
         #region MonoBehaviour Callbacks

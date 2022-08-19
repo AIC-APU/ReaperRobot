@@ -85,6 +85,12 @@ namespace smart3tene
 
             SceneTransitionManager.Instance.RoadScene();
         }
+        public void FieldButtonClick_Training()
+        {
+            GameData.NowGameCourse = GameData.GameCourse.Training;
+
+            SceneTransitionManager.Instance.RoadScene();
+        }
         public void CancelButtonClick()
         {
             SceneTransitionManager.Instance.LeaveAndDisconnect();
