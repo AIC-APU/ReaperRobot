@@ -112,6 +112,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a6a9c5b3611e6f4e9d78177270d2c77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _introduction: Go to Red Pole!
+  _mode: 1
 --- !u!1 &5541683490084368504
 GameObject:
   m_ObjectHideFlags: 0
@@ -139,7 +141,7 @@ Transform:
   m_GameObject: {fileID: 5541683490084368504}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -1, z: 0}
-  m_LocalScale: {x: 1, y: 0.01, z: 1}
+  m_LocalScale: {x: 1, y: 0.005, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5541683488892601461}
