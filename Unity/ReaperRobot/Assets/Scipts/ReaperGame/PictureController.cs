@@ -32,12 +32,15 @@ namespace smart3tene.Reaper
         {
             var colorFilePath = await _pictureTaker.TakeColorPicture(Camera.main, _fileName);
             var colorFileName = Path.GetFileName(colorFilePath);
-            ReaperEventManager.InvokeSaveFileEvent(colorFileName);
+
+            var colorText = $"{colorFileName} was saved";
+            ReaperEventManager.InvokeTextPopupEvent(colorText);
 
             var tagFilePath = await _pictureTaker.TakeTagPicture(Camera.main, _fileName);
             var tagFileName = Path.GetFileName(tagFilePath);
-            ReaperEventManager.InvokeSaveFileEvent(tagFileName);
-            ReaperEventManager.InvokeSaveFileEvent(tagFileName);
+
+            var tagText = $"{tagFileName} was saved";
+            ReaperEventManager.InvokeTextPopupEvent(tagText);
         }
     }
 

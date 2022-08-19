@@ -24,5 +24,9 @@ namespace smart3tene.Reaper
 
         public static event Action CheckPointPassEvent;
         public static void InvokeCheckPointPassEvent() => CheckPointPassEvent?.Invoke();
+
+        public static event Action<string> TextPopupEvent;
+        public static void InvokeTextPopupEvent(string text) => TextPopupEvent?.Invoke(text);
+
     }
 }
