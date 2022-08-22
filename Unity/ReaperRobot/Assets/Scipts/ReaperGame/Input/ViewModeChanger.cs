@@ -58,11 +58,10 @@ namespace smart3tene.Reaper
         #region Private method
         private void ChangeViewMode(InputAction.CallbackContext obj)
         {
-            if (IsAllViewFalse())
-            {
-                SetViewTrue(_defaultViewMode);
-            }
+            //NextViewModeの無限ループ対策
+            SetViewTrue(ViewMode.NowViewMode.Value);
 
+            //次のViewに変更
             var nextView = NextViewMode(ViewMode.NowViewMode.Value);
             ViewMode.ChangeViewMode(nextView);
         }
@@ -71,10 +70,13 @@ namespace smart3tene.Reaper
         {
             if (!_PERSON_TPV) return;
 
-            if (ViewMode.NowViewMode.Value != ViewMode.ViewModeCategory.PERSON_TPV)
+            if ((ViewMode.NowViewMode.Value != ViewMode.ViewModeCategory.PERSON_TPV)
+                && (ViewMode.NowViewMode.Value != ViewMode.ViewModeCategory.REAPER_FromPERSON))
             {
                 _lastViewMode = ViewMode.NowViewMode.Value;
-                ViewMode.ChangeViewMode(ViewMode.ViewModeCategory.PERSON_TPV);
+
+                var nextView = NextViewMode(ViewMode.ViewModeCategory.REAPER_FromPERSON);
+                ViewMode.ChangeViewMode(nextView);
             }
             else
             {
@@ -110,16 +112,6 @@ namespace smart3tene.Reaper
                     }
                     break;
                 case ViewMode.ViewModeCategory.REAPER_BIRDVIEW:
-                    if (_REAPER_FromPERSON)
-                    {
-                        nextView = ViewMode.ViewModeCategory.REAPER_FromPERSON;
-                    }
-                    else
-                    {
-                        nextView = NextViewMode(ViewMode.ViewModeCategory.REAPER_FromPERSON);
-                    }
-                    break;
-                case ViewMode.ViewModeCategory.REAPER_FromPERSON:
                     if (_REAPER_FPV)
                     {
                         nextView = ViewMode.ViewModeCategory.REAPER_FPV;
@@ -130,6 +122,27 @@ namespace smart3tene.Reaper
                     }
                     break;
 
+
+                case ViewMode.ViewModeCategory.REAPER_FromPERSON:
+                    if (_PERSON_TPV)
+                    {
+                        nextView = ViewMode.ViewModeCategory.PERSON_TPV;
+                    }
+                    else
+                    {
+                        nextView = NextViewMode(ViewMode.ViewModeCategory.PERSON_TPV);
+                    }
+                    break;
+                case ViewMode.ViewModeCategory.PERSON_TPV:
+                    if (_REAPER_FromPERSON)
+                    {
+                        nextView = ViewMode.ViewModeCategory.REAPER_FromPERSON;
+                    }
+                    else
+                    {
+                        nextView = NextViewMode(ViewMode.ViewModeCategory.REAPER_FromPERSON);
+                    }
+                    break;
                 default:
                     break;
             }
