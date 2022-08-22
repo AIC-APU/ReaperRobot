@@ -5753,10 +5753,10 @@ MonoBehaviour:
   _reaperInstance: {fileID: 0}
   _personInstance: {fileID: 0}
   _instantiatePos:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1247841592}
+  - {fileID: 1247841591}
+  - {fileID: 1247841590}
+  - {fileID: 1247841589}
 --- !u!4 &1138353552
 Transform:
   m_ObjectHideFlags: 0
@@ -7970,6 +7970,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 783fa7b83bb801f4595982b253818444, type: 3}
+--- !u!4 &1247841589 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3211599949974389773, guid: 783fa7b83bb801f4595982b253818444, type: 3}
+  m_PrefabInstance: {fileID: 1247841588}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1247841590 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1836624445038641621, guid: 783fa7b83bb801f4595982b253818444, type: 3}
+  m_PrefabInstance: {fileID: 1247841588}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1247841591 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7239168236849379134, guid: 783fa7b83bb801f4595982b253818444, type: 3}
+  m_PrefabInstance: {fileID: 1247841588}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1247841592 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4569277998085476664, guid: 783fa7b83bb801f4595982b253818444, type: 3}
+  m_PrefabInstance: {fileID: 1247841588}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1247961435
 GameObject:
   m_ObjectHideFlags: 0
@@ -8648,6 +8668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6e643ec083614a418710b19ce87c83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _reaperManager: {fileID: 0}
   _liftLamp: {fileID: 27867800}
   _cutterLamp: {fileID: 904584220}
 --- !u!114 &1392477807
@@ -8676,7 +8697,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _reaperFPVCameraPanel: {fileID: 638962276}
-  _fpvCameraManager: {fileID: 0}
+  _fpvCameraManager: {fileID: 891151571}
   _positonXNum: {fileID: 2098429707}
   _positonYNum: {fileID: 1091408723}
   _positonZNum: {fileID: 91954785}
