@@ -781,8 +781,8 @@ Transform:
   - {fileID: 79269998}
   - {fileID: 1884651777}
   - {fileID: 891221243}
-  - {fileID: 1933117512}
   - {fileID: 1186138805}
+  - {fileID: 1933117512}
   - {fileID: 775777956}
   - {fileID: 202598512}
   - {fileID: 999986642}
@@ -815,8 +815,8 @@ MonoBehaviour:
   - {fileID: 79269999}
   - {fileID: 1884651778}
   - {fileID: 1322666976}
-  - {fileID: 1933117513}
   - {fileID: 1186138806}
+  - {fileID: 1933117513}
   - {fileID: 775777957}
   - {fileID: 202598513}
   - {fileID: 999986638}
@@ -5097,7 +5097,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 157284552}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1186138806
 MonoBehaviour:
@@ -8602,7 +8602,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 157284552}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1933117513
 MonoBehaviour:
