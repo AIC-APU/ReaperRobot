@@ -769,6 +769,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6e643ec083614a418710b19ce87c83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _reaperManager: {fileID: 0}
   _liftLamp: {fileID: 861438681}
   _cutterLamp: {fileID: 235865583}
 --- !u!114 &91695282
@@ -1344,7 +1345,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 439129845}
-  - component: {fileID: 439129846}
   - component: {fileID: 439129847}
   m_Layer: 0
   m_Name: GameSystem
@@ -1368,26 +1368,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &439129846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 439129843}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73f3fe74202313f4abe46df7d5a081d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _defaultViewMode: 2
-  _reaperInstance: {fileID: 497014801}
-  _personInstance: {fileID: 0}
-  _instantiatePos:
-  - {fileID: 835089160}
-  - {fileID: 835089159}
-  - {fileID: 835089158}
-  - {fileID: 835089157}
 --- !u!114 &439129847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1686,6 +1666,7 @@ GameObject:
   - component: {fileID: 653367591}
   - component: {fileID: 653367590}
   - component: {fileID: 653367592}
+  - component: {fileID: 653367593}
   m_Layer: 0
   m_Name: PlayerInput
   m_TagString: Untagged
@@ -1751,6 +1732,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetRobot: {fileID: 497014801}
+--- !u!114 &653367593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653367586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b97d99957a12f9a46876525328be6004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &670177401
 GameObject:
   m_ObjectHideFlags: 0
@@ -4315,26 +4308,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 783fa7b83bb801f4595982b253818444, type: 3}
---- !u!4 &835089157 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3211599949974389773, guid: 783fa7b83bb801f4595982b253818444, type: 3}
-  m_PrefabInstance: {fileID: 835089156}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &835089158 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1836624445038641621, guid: 783fa7b83bb801f4595982b253818444, type: 3}
-  m_PrefabInstance: {fileID: 835089156}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &835089159 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7239168236849379134, guid: 783fa7b83bb801f4595982b253818444, type: 3}
-  m_PrefabInstance: {fileID: 835089156}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &835089160 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4569277998085476664, guid: 783fa7b83bb801f4595982b253818444, type: 3}
-  m_PrefabInstance: {fileID: 835089156}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &838281278
 GameObject:
   m_ObjectHideFlags: 0
