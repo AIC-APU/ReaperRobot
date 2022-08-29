@@ -15,15 +15,13 @@ namespace smart3tene.Reaper
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private TMP_Text _text;
         [SerializeField, Range(1, 100)] private int _fadeInSpeed = 5;
-        [SerializeField, Range(1, 100)] private int _fadeOutSpeed = 5;
         [SerializeField, Range(1, 10)] private int _popupTime = 3;
+        [SerializeField, Range(1, 100)] private int _fadeOutSpeed = 5;
         #endregion
 
         #region Private Fields
         private CancellationTokenSource _cancellationTokenSource;
         private UniTask _introductionTask;
-
-        private Queue<string> _textQueue = new();
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -34,16 +32,6 @@ namespace smart3tene.Reaper
             _canvasGroup.alpha = 0;
 
             ReaperEventManager.TextPopupEvent += ShowPanel;
-        }
-
-        private async void Update()
-        {
-            if(_textQueue.Count != 0)
-            {
-                await _introductionTask;
-
-                _introductionTask = ShowPanelTask(_textQueue.Dequeue(), _cancellationTokenSource.Token);
-            }
         }
 
         private void OnDisable()
@@ -57,11 +45,15 @@ namespace smart3tene.Reaper
         #region Private method
         private void ShowPanel(string text)
         {
-            _textQueue.Enqueue(text);
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            _introductionTask = ShowPanelTask(text, _cancellationTokenSource.Token);
         }
 
         private async UniTask ShowPanelTask(string text, CancellationToken ct = default)
         {
+            _canvasGroup.alpha = 0;
             _text.text = text;
 
             //フェードで表示
@@ -70,6 +62,9 @@ namespace smart3tene.Reaper
                 _canvasGroup.alpha += (float)_fadeInSpeed / 1000f;
                 await UniTask.Yield(PlayerLoopTiming.Update, ct);
             }
+
+            //送られてくる文が長い場合があるなら、
+            //ここで、テキストを一文字ずつ出すTaskをawaitしていいかも。
 
             //数秒待つ
             await UniTask.Delay(TimeSpan.FromSeconds(_popupTime));
