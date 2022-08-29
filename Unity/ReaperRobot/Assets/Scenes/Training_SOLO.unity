@@ -483,7 +483,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d8d6a80b399aa94ab4ee41c70ee2e89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _intro: Use the R key to raise the lift to make the robot easier to climb a slope.
+  _ja: "\u30EA\u30D5\u30C8\u3092\u4E0A\u3052\u308B\u3053\u3068\u3067\u5742\u3092\u4E0A\u308B\u3053\u3068\u304C\u3067\u304D\u307E\u3059\u3002\r\n\u30AD\u30FC\u30DC\u30FC\u30C9:
+    R\u30AD\u30FC\r\n\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9: L\u30DC\u30BF\u30F3"
+  _en: 'Raising the lift allows you to go up the slope.
+
+    Keyboard: R key
+
+    Controller:
+    L button'
   _goal: 0
   _reaperManager: {fileID: 1736775214}
 --- !u!1001 &80959902
@@ -832,6 +839,7 @@ GameObject:
   - component: {fileID: 160962384}
   - component: {fileID: 160962383}
   - component: {fileID: 160962382}
+  - component: {fileID: 160962385}
   m_Layer: 5
   m_Name: ViewModeText
   m_TagString: Untagged
@@ -956,6 +964,46 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &160962385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160962381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:a99e44ca0e0c2cd45a5c185acaaf3fe2
+    m_TableEntryReference:
+      m_KeyId: 7753657700352
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 160962382}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!4 &202598512 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5541683488892601461, guid: af10df3aae263734c819e36471800404, type: 3}
@@ -1757,6 +1805,7 @@ GameObject:
   - component: {fileID: 346688281}
   - component: {fileID: 346688283}
   - component: {fileID: 346688282}
+  - component: {fileID: 346688284}
   m_Layer: 5
   m_Name: ROTATE
   m_TagString: Untagged
@@ -1881,6 +1930,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 346688280}
   m_CullTransparentMesh: 1
+--- !u!114 &346688284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 346688280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:a99e44ca0e0c2cd45a5c185acaaf3fe2
+    m_TableEntryReference:
+      m_KeyId: 30631782469632
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 346688282}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &359222801
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1953,6 +2042,7 @@ GameObject:
   - component: {fileID: 374800885}
   - component: {fileID: 374800887}
   - component: {fileID: 374800886}
+  - component: {fileID: 374800888}
   m_Layer: 5
   m_Name: UP
   m_TagString: Untagged
@@ -2077,6 +2167,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 374800884}
   m_CullTransparentMesh: 1
+--- !u!114 &374800888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374800884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:a99e44ca0e0c2cd45a5c185acaaf3fe2
+    m_TableEntryReference:
+      m_KeyId: 30511091372032
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 374800886}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &375969509
 GameObject:
   m_ObjectHideFlags: 0
@@ -2186,6 +2316,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 157284552}
     m_Modifications:
+    - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
+      propertyPath: _en
+      value: Move robot to go to red pole.
+      objectReference: {fileID: 0}
+    - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
+      propertyPath: _ja
+      value: "\u8D64\u3044\u30DD\u30FC\u30EB\u307E\u3067\u30ED\u30DC\u30C3\u30C8\u3092\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
+      objectReference: {fileID: 0}
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _introduction
       value: Move robot to red pole!
@@ -2646,7 +2784,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84b92064f2e0c37458c74491035cee90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _intro: Use the T key to stop the cutter to make the robot  move faster.
+  _ja: "\u30AB\u30C3\u30BF\u30FC\u3092\u6B62\u3081\u308B\u3068\u901F\u304F\u79FB\u52D5\u3067\u304D\u307E\u3059\u3002\n\u30AD\u30FC\u30DC\u30FC\u30C9:
+    T\u30AD\u30FC\n\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9: R\u30DC\u30BF\u30F3"
+  _en: 'Stop the cutter to move reaper faster.
+
+    Keyboard: T key
+
+    Controller:
+    R button'
   _goal: 1
   _reaperManager: {fileID: 1736775214}
 --- !u!1001 &668110444
@@ -2861,7 +3006,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0fd1eb7491f92d4583330fd5b3ab805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _introduction: Cut all the grasses!
+  _ja: "\u3059\u3079\u3066\u306E\u8349\u3092\u5208\u308A\u307E\u3057\u3087\u3046\u3002"
+  _en: Cut the all grasses.
   goalRate: 100
 --- !u!1 &811392539
 GameObject:
@@ -3157,8 +3303,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11191b773e95b934081969f90ea2a966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _intro: Push SPACE key sometimes to change view mode and rotate  camera with allow
-    key.
+  _ja: "\u8349\u5208\u6A5F\u8996\u70B9\u306F\u3044\u304F\u3064\u304B\u306E\u7A2E\u985E\u304C\u3042\u308A\u307E\u3059\u3002\n\u30AD\u30FC\u30DC\u30FC\u30C9:
+    Space(\u5207\u66FF) / \u77E2\u5370(\u30AB\u30E1\u30E9\u56DE\u8EE2)\n\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9:
+    Select(\u5207\u66FF) / \u53F3\u30B9\u30C6\u30A3\u30C3\u30AF(\u30AB\u30E1\u30E9\u56DE\u8EE2)"
+  _en: 'There are several types of reaper camera.
+
+    Keyboard: Space (switch)
+    / Arrows (rotation)
+
+    Controller: Select (switch) / Right stick (rotation)'
   _justChange: 0
   _goal: 0
 --- !u!4 &878374556
@@ -3507,7 +3660,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75057593aabcf16439d80350ae4de846, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _viewModeText: {fileID: 160962382}
+  _localizeStringEvent: {fileID: 160962385}
 --- !u!114 &897640263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3551,8 +3704,8 @@ MonoBehaviour:
   _canvasGroup: {fileID: 1350701320}
   _text: {fileID: 1517596997}
   _fadeInSpeed: 10
+  _popupTime: 7
   _fadeOutSpeed: 10
-  _popupTime: 4
 --- !u!1 &901376351
 GameObject:
   m_ObjectHideFlags: 0
@@ -3840,6 +3993,7 @@ GameObject:
   - component: {fileID: 930813136}
   - component: {fileID: 930813138}
   - component: {fileID: 930813137}
+  - component: {fileID: 930813139}
   m_Layer: 5
   m_Name: Down
   m_TagString: Untagged
@@ -3964,6 +4118,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 930813135}
   m_CullTransparentMesh: 1
+--- !u!114 &930813139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930813135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:a99e44ca0e0c2cd45a5c185acaaf3fe2
+    m_TableEntryReference:
+      m_KeyId: 30571518709760
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 930813137}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &945164201
 GameObject:
   m_ObjectHideFlags: 0
@@ -4236,6 +4430,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 157284552}
     m_Modifications:
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
+      propertyPath: _en
+      value: Move robot to go to red pole.
+      objectReference: {fileID: 0}
+    - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
+      propertyPath: _ja
+      value: "\u8D64\u3044\u30DD\u30FC\u30EB\u307E\u3067\u30ED\u30DC\u30C3\u30C8\u3092\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _introduction
       value: Move robot to red pole!
       objectReference: {fileID: 0}
@@ -4452,6 +4654,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 157284552}
     m_Modifications:
+    - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
+      propertyPath: _en
+      value: Pass the maze to go to red pole.
+      objectReference: {fileID: 0}
+    - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
+      propertyPath: _ja
+      value: "\u8FF7\u8DEF\u3092\u629C\u3051\u3001\u8D64\u3044\u30DD\u30FC\u30EB\u307E\u3067\u30ED\u30DC\u30C3\u30C8\u3092\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
+      objectReference: {fileID: 0}
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _introduction
       value: Go through the maze to red pole!
@@ -4894,7 +5104,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11191b773e95b934081969f90ea2a966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _intro: Use N key to change to Person_TPV mode.
+  _ja: "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u8996\u70B9\u306B\u5207\u308A\u66FF\u3048\u307E\u3057\u3087\u3046\u3002\n\u30AD\u30FC\u30DC\u30FC\u30C9:
+    N\u30AD\u30FC\n\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9: X\u30DC\u30BF\u30F3"
+  _en: 'Switch views to charactor''s view.
+
+    Keyboard: N key
+
+    Controller:
+    X button'
   _justChange: 0
   _goal: 5
 --- !u!4 &1092795263
@@ -5111,7 +5328,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84b92064f2e0c37458c74491035cee90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _intro: Use the T key to rotate the cutter to cut  grasses.
+  _ja: "\u8349\u3092\u5208\u308B\u305F\u3081\u306B\u30AB\u30C3\u30BF\u30FC\u3092\u56DE\u8EE2\u3055\u305B\u307E\u3059\u3002\r\n\u30AD\u30FC\u30DC\u30FC\u30C9:
+    T\u30AD\u30FC\r\n\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9: R\u30DC\u30BF\u30F3"
+  _en: 'Rotate the cutter to cut  grasses.
+
+    Keyboard: T key
+
+    Controller:
+    R button'
   _goal: 0
   _reaperManager: {fileID: 1736775214}
 --- !u!1 &1191435923
@@ -5278,7 +5502,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb7e3730133f7e84ea543ad876e27af0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _intro: Place the robot to overlap the shadow.
+  _ja: "\u5F71\u306B\u91CD\u306A\u308B\u3088\u3046\u306B\u30ED\u30DC\u30C3\u30C8\u3092\u505C\u6B62\u3055\u305B\u307E\u3057\u3087\u3046\u3002"
+  _en: Stop the robot so that it overlaps the shadow.
   _robot: {fileID: 1736775212}
   _goal: {fileID: 2282614742562018109}
 --- !u!4 &1192479699
@@ -5308,6 +5533,7 @@ GameObject:
   - component: {fileID: 1200931060}
   - component: {fileID: 1200931062}
   - component: {fileID: 1200931061}
+  - component: {fileID: 1200931063}
   m_Layer: 5
   m_Name: STOP
   m_TagString: Untagged
@@ -5432,6 +5658,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1200931059}
   m_CullTransparentMesh: 1
+--- !u!114 &1200931063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1200931059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:a99e44ca0e0c2cd45a5c185acaaf3fe2
+    m_TableEntryReference:
+      m_KeyId: 30687013064704
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1200931061}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1204658610
 GameObject:
   m_ObjectHideFlags: 0
@@ -6073,6 +6339,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 157284552}
     m_Modifications:
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
+      propertyPath: _en
+      value: Move charactor to green pole.
+      objectReference: {fileID: 0}
+    - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
+      propertyPath: _ja
+      value: "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u3092\u7DD1\u306E\u30DD\u30FC\u30EB\u306B\u79FB\u52D5\u3055\u305B\u307E\u3057\u3087\u3046\u3002"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _mode
       value: 0
       objectReference: {fileID: 0}
@@ -6167,8 +6441,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 88}
-  m_SizeDelta: {x: 400, y: 100}
+  m_AnchoredPosition: {x: 0, y: 145.7}
+  m_SizeDelta: {x: 600, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1350701318
 MonoBehaviour:
@@ -6381,6 +6655,7 @@ GameObject:
   - component: {fileID: 1448543745}
   - component: {fileID: 1448543747}
   - component: {fileID: 1448543746}
+  - component: {fileID: 1448543748}
   m_Layer: 5
   m_Name: TimeLabel
   m_TagString: Untagged
@@ -6505,6 +6780,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1448543744}
   m_CullTransparentMesh: 1
+--- !u!114 &1448543748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1448543744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:a99e44ca0e0c2cd45a5c185acaaf3fe2
+    m_TableEntryReference:
+      m_KeyId: 886604779520
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1448543746}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!4 &1452378989 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5541683488892601461, guid: af10df3aae263734c819e36471800404, type: 3}
@@ -6722,10 +7037,10 @@ RectTransform:
   m_Father: {fileID: 1350701317}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 350, y: 100}
+  m_SizeDelta: {x: -60, y: -40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1517596997
 MonoBehaviour:
@@ -6747,7 +7062,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Check Point Introduction.
+  m_text: 'Check Point Introduction.
+
+    Check Point Introduction.
+
+    Check Point
+    Introduction.
+
+    Check Point Introduction.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6774,8 +7096,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 21
+  m_fontSizeBase: 21
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6786,7 +7108,7 @@ MonoBehaviour:
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
-  m_lineSpacing: 25
+  m_lineSpacing: 40
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -7079,6 +7401,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 157284552}
     m_Modifications:
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
+      propertyPath: _en
+      value: Move robot to go to red pole.
+      objectReference: {fileID: 0}
+    - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
+      propertyPath: _ja
+      value: "\u30ED\u30DC\u30C3\u30C8\u3092\u52D5\u304B\u3057\u3066\u8D64\u306E\u30DD\u30FC\u30EB\u307E\u3067\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _mode
       value: 1
       objectReference: {fileID: 0}
@@ -7208,6 +7538,8 @@ GameObject:
   - component: {fileID: 1605514350}
   - component: {fileID: 1605514352}
   - component: {fileID: 1605514351}
+  - component: {fileID: 1605514354}
+  - component: {fileID: 1605514353}
   m_Layer: 5
   m_Name: CutterLabel
   m_TagString: Untagged
@@ -7332,6 +7664,94 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1605514349}
   m_CullTransparentMesh: 1
+--- !u!114 &1605514353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1605514349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69beb381e244f92449b8c4cf954630e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TrackedObjects:
+  - rid: 3865948346926497821
+  references:
+    version: 2
+    RefIds:
+    - rid: 3865948346926497821
+      type: {class: TrackedUGuiGraphic, ns: UnityEngine.Localization.PropertyVariants.TrackedObjects, asm: Unity.Localization}
+      data:
+        m_Target: {fileID: 1605514351}
+        m_TrackedProperties:
+          items:
+          - rid: 3865948346926497822
+          - rid: 3865948346926497823
+        m_UpdateType: 0
+    - rid: 3865948346926497822
+      type: {class: FloatTrackedProperty, ns: UnityEngine.Localization.PropertyVariants.TrackedProperties, asm: Unity.Localization}
+      data:
+        m_PropertyPath: m_fontSize
+        m_VariantData:
+        - localeIdentifier:
+            m_Code: en
+          value: 18
+        - localeIdentifier:
+            m_Code: ja
+          value: 16
+    - rid: 3865948346926497823
+      type: {class: FloatTrackedProperty, ns: UnityEngine.Localization.PropertyVariants.TrackedProperties, asm: Unity.Localization}
+      data:
+        m_PropertyPath: m_fontSizeBase
+        m_VariantData:
+        - localeIdentifier:
+            m_Code: en
+          value: 18
+        - localeIdentifier:
+            m_Code: ja
+          value: 16
+--- !u!114 &1605514354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1605514349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:a99e44ca0e0c2cd45a5c185acaaf3fe2
+    m_TableEntryReference:
+      m_KeyId: 1782742994944
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1605514351}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1609036901
 GameObject:
   m_ObjectHideFlags: 0
@@ -7555,7 +7975,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e17ad66e2413d7f47a99995b6f6df738, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _intro: Use WASD key to move robot. Use Allow key to move camera.
+  _ja: "\u8349\u5208\u6A5F\u3092\u52D5\u304B\u3057\u307E\u3057\u3087\u3046\u3002\n\u30AD\u30FC\u30DC\u30FC\u30C9:
+    WASD\u30AD\u30FC\n\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9: \u5DE6\u30B9\u30C6\u30A3\u30C3\u30AF"
+  _en: 'Move Reaper Robot.
+
+    Keyboard: WASD key
+
+    Controller: Left Stick'
   _moveObject: {fileID: 1736775212}
 --- !u!4 &1662108548
 Transform:
@@ -7583,6 +8009,7 @@ GameObject:
   - component: {fileID: 1674647574}
   - component: {fileID: 1674647576}
   - component: {fileID: 1674647575}
+  - component: {fileID: 1674647577}
   m_Layer: 5
   m_Name: LiftLabel
   m_TagString: Untagged
@@ -7707,6 +8134,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1674647573}
   m_CullTransparentMesh: 1
+--- !u!114 &1674647577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674647573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:a99e44ca0e0c2cd45a5c185acaaf3fe2
+    m_TableEntryReference:
+      m_KeyId: 1447634882560
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1674647575}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1685995397
 GameObject:
   m_ObjectHideFlags: 0
@@ -8049,6 +8516,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 157284552}
     m_Modifications:
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
+      propertyPath: _en
+      value: Move robot to go to red pole.
+      objectReference: {fileID: 0}
+    - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
+      propertyPath: _ja
+      value: "\u8D64\u3044\u30DD\u30FC\u30EB\u307E\u3067\u30ED\u30DC\u30C3\u30C8\u3092\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _introduction
       value: Move robot to red pole!
       objectReference: {fileID: 0}
@@ -8226,7 +8701,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e17ad66e2413d7f47a99995b6f6df738, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _intro: Use WASD key to move person.
+  _ja: "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u3092\u52D5\u304B\u3057\u3066\u307F\u307E\u3057\u3087\u3046\u3002\n\u30AD\u30FC\u30DC\u30FC\u30C9:
+    WASD\u30AD\u30FC\n\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9: \u5DE6\u30B9\u30C6\u30A3\u30C3\u30AF"
+  _en: 'Move Charactor.
+
+    Keyboard: WASD key
+
+    Controller: Left Stick'
   _moveObject: {fileID: 126424204}
 --- !u!1 &1817624768
 GameObject:
@@ -8410,6 +8891,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 157284552}
     m_Modifications:
+    - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
+      propertyPath: _en
+      value: Move robot to go to red pole.
+      objectReference: {fileID: 0}
+    - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
+      propertyPath: _ja
+      value: "\u8D64\u3044\u30DD\u30FC\u30EB\u307E\u3067\u30ED\u30DC\u30C3\u30C8\u3092\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
+      objectReference: {fileID: 0}
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _introduction
       value: Move robot to red pole!
@@ -8616,7 +9105,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d8d6a80b399aa94ab4ee41c70ee2e89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _intro: Use the R key to down the lift to cut grasses.
+  _ja: "\u30EA\u30D5\u30C8\u3092\u4E0B\u3052\u308B\u3068\u8349\u3092\u5208\u308B\u3053\u3068\u304C\u3067\u304D\u307E\u3059\u3002\r\n\u30AD\u30FC\u30DC\u30FC\u30C9:
+    R\u30AD\u30FC\r\n\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9: L\u30DC\u30BF\u30F3"
+  _en: 'Lowering the lift allows you to cut grasses.
+
+    Keyboard: R key
+
+    Controller:
+    L button'
   _goal: 1
   _reaperManager: {fileID: 1736775214}
 --- !u!1001 &1937985293
@@ -8702,6 +9198,7 @@ GameObject:
   - component: {fileID: 2023438370}
   - component: {fileID: 2023438372}
   - component: {fileID: 2023438371}
+  - component: {fileID: 2023438373}
   m_Layer: 5
   m_Name: Clear!Label
   m_TagString: Untagged
@@ -8826,6 +9323,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2023438369}
   m_CullTransparentMesh: 1
+--- !u!114 &2023438373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023438369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:a99e44ca0e0c2cd45a5c185acaaf3fe2
+    m_TableEntryReference:
+      m_KeyId: 175720583168
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2023438371}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &2023779922 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
@@ -9020,7 +9557,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11191b773e95b934081969f90ea2a966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _intro: Use N  key to change to REAPER_FPV mode.
+  _ja: "\u8996\u70B9\u3092\u518D\u3073\u30ED\u30DC\u30C3\u30C8\u306B\u623B\u3057\u307E\u3059\u3002\n\u30AD\u30FC\u30DC\u30FC\u30C9:
+    N\u30AD\u30FC\n\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9: X\u30DC\u30BF\u30F3"
+  _en: 'Switch views to Reaper''s view again.
+
+    Keyboard: N key
+
+    Controller:
+    X button'
   _justChange: 1
   _goal: 0
 --- !u!4 &2112281013 stripped

@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: ReaperStringTable Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: ReaperStringTable
+  m_TableCollectionNameGuidString: a99e44ca0e0c2cd45a5c185acaaf3fe2
+  m_Entries:
+  - m_Id: 175720583168
+    m_Key: CLEAR
+    m_Metadata:
+      m_Items: []
+  - m_Id: 886604779520
+    m_Key: TIME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1447634882560
+    m_Key: LIFT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1782742994944
+    m_Key: CUTTER
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7753657700352
+    m_Key: MODE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18455919284224
+    m_Key: REAPER_FPV
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29451895394304
+    m_Key: REAPER_BIRDVIEW
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29457540927488
+    m_Key: REAPER_VR
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29459319312384
+    m_Key: REAPER_FromPERSON
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29460128813056
+    m_Key: REAPER_AROUND
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29460799901696
+    m_Key: PERSON_TPV
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30511091372032
+    m_Key: UP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30571518709760
+    m_Key: DOWN
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30631782469632
+    m_Key: ROTATE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30687013064704
+    m_Key: STOP
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 3865948346926497816
+  references:
+    version: 2
+    RefIds:
+    - rid: 3865948346926497816
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1661498378122
