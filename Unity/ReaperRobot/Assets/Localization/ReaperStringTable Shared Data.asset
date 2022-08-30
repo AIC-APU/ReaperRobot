@@ -75,6 +75,30 @@ MonoBehaviour:
     m_Key: STOP
     m_Metadata:
       m_Items: []
+  - m_Id: 1428425269268480
+    m_Key: DELAY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1437574426218496
+    m_Key: REAP_RATE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438246555045888
+    m_Key: REAPER_CAMERA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438503212896256
+    m_Key: POSITION
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438711049048064
+    m_Key: ROTATION
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438954700361728
+    m_Key: RESET
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
