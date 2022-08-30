@@ -102,6 +102,74 @@ MonoBehaviour:
     m_Localized: Reset
     m_Metadata:
       m_Items: []
+  - m_Id: 1452772142829568
+    m_Localized: Reaper Trainign
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1458260205064192
+    m_Localized: Solo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1458475691626496
+    m_Localized: Multi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1458652389265408
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1458774699364352
+    m_Localized: Exit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1459066320932864
+    m_Localized: Select Course
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1459272575832064
+    m_Localized: Simple Field
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1459446190657536
+    m_Localized: Trainning
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1459547088834560
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1459709353873408
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1460062317137920
+    m_Localized: "\rWaiting for other users to join..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1460335617986560
+    m_Localized: Now Loading...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1460572982038528
+    m_Localized: Sorry, failed to join the game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1460743740542976
+    m_Localized: Restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1461105960636416
+    m_Localized: Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1461219844378624
+    m_Localized: Close Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1461471099965440
+    m_Localized: End Game
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

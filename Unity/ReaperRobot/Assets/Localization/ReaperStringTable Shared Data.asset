@@ -99,6 +99,74 @@ MonoBehaviour:
     m_Key: RESET
     m_Metadata:
       m_Items: []
+  - m_Id: 1452772142829568
+    m_Key: TITLE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1458260205064192
+    m_Key: SOLO
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1458475691626496
+    m_Key: MULTI
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1458652389265408
+    m_Key: SETTINGS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1458774699364352
+    m_Key: EXIT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1459066320932864
+    m_Key: SELECT_COURSE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1459272575832064
+    m_Key: SIMPLE_FIELD
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1459446190657536
+    m_Key: TRAINNING
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1459547088834560
+    m_Key: BACK
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1459709353873408
+    m_Key: CANCEL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1460062317137920
+    m_Key: WAITING_MULTI
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1460335617986560
+    m_Key: NOWLOADING
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1460572982038528
+    m_Key: MULTI_FAILED
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1460743740542976
+    m_Key: RESTART
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1461105960636416
+    m_Key: MENU
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1461219844378624
+    m_Key: CLOSE_MENU
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1461471099965440
+    m_Key: ENDGAME
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
