@@ -78,6 +78,30 @@ MonoBehaviour:
     m_Localized: STOP
     m_Metadata:
       m_Items: []
+  - m_Id: 1428425269268480
+    m_Localized: 'Delay:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1437574426218496
+    m_Localized: Reap rate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438246555045888
+    m_Localized: Reaper Camera
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438503212896256
+    m_Localized: 'Position:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438711049048064
+    m_Localized: 'Rotation: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438954700361728
+    m_Localized: Reset
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
