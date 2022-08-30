@@ -2318,7 +2318,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _en
-      value: Move robot to go to red pole.
+      value: Move robot to red pole.
       objectReference: {fileID: 0}
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _ja
@@ -2786,7 +2786,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ja: "\u30AB\u30C3\u30BF\u30FC\u3092\u6B62\u3081\u308B\u3068\u901F\u304F\u79FB\u52D5\u3067\u304D\u307E\u3059\u3002\n\u30AD\u30FC\u30DC\u30FC\u30C9:
     T\u30AD\u30FC\n\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9: R\u30DC\u30BF\u30F3"
-  _en: 'Stop the cutter to move reaper faster.
+  _en: 'Stop the cutters to move reaper faster.
 
     Keyboard: T key
 
@@ -3303,15 +3303,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11191b773e95b934081969f90ea2a966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ja: "\u8349\u5208\u6A5F\u8996\u70B9\u306F\u3044\u304F\u3064\u304B\u306E\u7A2E\u985E\u304C\u3042\u308A\u307E\u3059\u3002\n\u30AD\u30FC\u30DC\u30FC\u30C9:
+  _ja: "\u8349\u5208\u6A5F\u8996\u70B9\u306E\u5207\u66FF\u3092\u3057\u3066\u307F\u307E\u3057\u3087\u3046\u3002\n\u30AD\u30FC\u30DC\u30FC\u30C9:
     Space(\u5207\u66FF) / \u77E2\u5370(\u30AB\u30E1\u30E9\u56DE\u8EE2)\n\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9:
     Select(\u5207\u66FF) / \u53F3\u30B9\u30C6\u30A3\u30C3\u30AF(\u30AB\u30E1\u30E9\u56DE\u8EE2)"
-  _en: 'There are several types of reaper camera.
+  _en: 'Switch the reaper viewpoints.
 
-    Keyboard: Space (switch)
-    / Arrows (rotation)
+    Keyboard: Space (switch) / Arrows (rotation)
 
-    Controller: Select (switch) / Right stick (rotation)'
+    Controller:
+    Select (switch) / Right stick (rotation)'
   _justChange: 0
   _goal: 0
 --- !u!4 &878374556
@@ -4431,7 +4431,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _en
-      value: Move robot to go to red pole.
+      value: Move robot to red pole.
       objectReference: {fileID: 0}
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _ja
@@ -4656,7 +4656,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _en
-      value: Pass the maze to go to red pole.
+      value: Pass through the maze to the red pole.
       objectReference: {fileID: 0}
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _ja
@@ -5330,7 +5330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ja: "\u8349\u3092\u5208\u308B\u305F\u3081\u306B\u30AB\u30C3\u30BF\u30FC\u3092\u56DE\u8EE2\u3055\u305B\u307E\u3059\u3002\r\n\u30AD\u30FC\u30DC\u30FC\u30C9:
     T\u30AD\u30FC\r\n\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9: R\u30DC\u30BF\u30F3"
-  _en: 'Rotate the cutter to cut  grasses.
+  _en: 'Rotate the cutters to cut  grasses.
 
     Keyboard: T key
 
@@ -5503,7 +5503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ja: "\u5F71\u306B\u91CD\u306A\u308B\u3088\u3046\u306B\u30ED\u30DC\u30C3\u30C8\u3092\u505C\u6B62\u3055\u305B\u307E\u3057\u3087\u3046\u3002"
-  _en: Stop the robot so that it overlaps the shadow.
+  _en: Stop the reaper robot so that it overlaps the shadow.
   _robot: {fileID: 1736775212}
   _goal: {fileID: 2282614742562018109}
 --- !u!4 &1192479699
@@ -6340,7 +6340,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _en
-      value: Move charactor to green pole.
+      value: Move the charactor to green pole.
       objectReference: {fileID: 0}
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _ja
@@ -7402,7 +7402,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _en
-      value: Move robot to go to red pole.
+      value: Move reaper robot to red pole.
       objectReference: {fileID: 0}
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _ja
@@ -7977,7 +7977,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ja: "\u8349\u5208\u6A5F\u3092\u52D5\u304B\u3057\u307E\u3057\u3087\u3046\u3002\n\u30AD\u30FC\u30DC\u30FC\u30C9:
     WASD\u30AD\u30FC\n\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9: \u5DE6\u30B9\u30C6\u30A3\u30C3\u30AF"
-  _en: 'Move Reaper Robot.
+  _en: 'Move the reaper robot.
 
     Keyboard: WASD key
 
@@ -8517,7 +8517,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _en
-      value: Move robot to go to red pole.
+      value: Move robot to red pole.
       objectReference: {fileID: 0}
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _ja
@@ -8703,7 +8703,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ja: "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u3092\u52D5\u304B\u3057\u3066\u307F\u307E\u3057\u3087\u3046\u3002\n\u30AD\u30FC\u30DC\u30FC\u30C9:
     WASD\u30AD\u30FC\n\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9: \u5DE6\u30B9\u30C6\u30A3\u30C3\u30AF"
-  _en: 'Move Charactor.
+  _en: 'Move the charactor.
 
     Keyboard: WASD key
 
@@ -8893,7 +8893,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _en
-      value: Move robot to go to red pole.
+      value: Move robot to red pole.
       objectReference: {fileID: 0}
     - target: {fileID: 5541683488892601450, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _ja
@@ -9559,7 +9559,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ja: "\u8996\u70B9\u3092\u518D\u3073\u30ED\u30DC\u30C3\u30C8\u306B\u623B\u3057\u307E\u3059\u3002\n\u30AD\u30FC\u30DC\u30FC\u30C9:
     N\u30AD\u30FC\n\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9: X\u30DC\u30BF\u30F3"
-  _en: 'Switch views to Reaper''s view again.
+  _en: 'Switch views to the reaper''s view again.
 
     Keyboard: N key
 
