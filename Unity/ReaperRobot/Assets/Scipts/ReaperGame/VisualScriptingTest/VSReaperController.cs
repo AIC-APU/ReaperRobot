@@ -8,6 +8,7 @@ namespace smart3tene.Reaper
 {
     public class VSReaperController : MonoBehaviour
     {
+        //Visual Scriptingを試すためのテスト用スクリプトです。
         private void FixedUpdate()
         {
             float horizontal = 0f;
