@@ -28,6 +28,7 @@ namespace smart3tene.Reaper
             _reaperActionMap = _playerInput.actions.FindActionMap("Reaper");
 
             _reaperActionMap["Move"].performed += Move;
+            _reaperActionMap["Move"].canceled += Stop;
             _reaperActionMap["Brake"].started += Brake;
             _reaperActionMap["Brake"].canceled += OffBrake;
             _reaperActionMap["Lift"].started += MoveLift;
@@ -38,10 +39,12 @@ namespace smart3tene.Reaper
         {
             _reaperActionMap["Move"].performed -= Move;
             _reaperActionMap["Brake"].started -= Brake;
+            _reaperActionMap["Brake"].canceled -= Stop;
             _reaperActionMap["Brake"].canceled -= OffBrake;
             _reaperActionMap["Lift"].started -= MoveLift;
             _reaperActionMap["Cutter"].started -= RotateCutter;
         }
+
         #endregion
 
         #region Private method
@@ -49,6 +52,12 @@ namespace smart3tene.Reaper
         {
             var move = _reaperActionMap["Move"].ReadValue<Vector2>();
             _reaperManager.AsyncMove(move.x, move.y);
+        }
+        private void Stop(InputAction.CallbackContext obj)
+        {
+            if (obj.control.name == "thumbstick") return;
+
+            _reaperManager.AsyncMove(0, 0);
         }
         private void Brake(InputAction.CallbackContext obj)
         {
