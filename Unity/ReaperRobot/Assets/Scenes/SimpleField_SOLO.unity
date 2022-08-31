@@ -1107,8 +1107,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fileName: 
-  _ja: "\u65E5\u672C\u8A9E\u306E\u8AAC\u660E"
-  _en: Explanation in ENG
+  _ja: "\u306F\u4FDD\u5B58\u3055\u308C\u307E\u3057\u305F"
+  _en: was saved.
 --- !u!1 &163859719
 GameObject:
   m_ObjectHideFlags: 0
@@ -2295,7 +2295,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -40, y: 60}
+  m_SizeDelta: {x: -20, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &427089278
 MonoBehaviour:
