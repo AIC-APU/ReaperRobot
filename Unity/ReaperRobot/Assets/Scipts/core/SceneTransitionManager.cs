@@ -42,6 +42,10 @@ namespace smart3tene
                 PhotonNetwork.SendRate = 20; // 1秒間にメッセージ送信を行う回数
                 PhotonNetwork.SerializationRate = 10; // 1秒間にオブジェクト同期を行う回数
 
+                PhotonNetwork.NetworkingClient.LoadBalancingPeer.DisconnectTimeout = 30000; // in milliseconds. any high value for debug
+
+                PhotonNetwork.ServerPortOverrides = PhotonPortDefinition.AlternativeUdpPorts;
+
                 isConnectToMasterServer = PhotonNetwork.ConnectUsingSettings(); // -> call "OnConnectedToMaster" or "OnDisconnected"     
             }
             else

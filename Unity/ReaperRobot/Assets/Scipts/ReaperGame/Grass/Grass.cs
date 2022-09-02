@@ -9,7 +9,7 @@ using Photon.Pun;
 
 namespace smart3tene.Reaper
 {
-    public class Grass : MonoBehaviourPun, IPunObservable
+    public class Grass : MonoBehaviourPun
     {
         //これをアタッチしたGameObjectに,Grassの形態を表す子オブジェクトを順に設定してください
         //子オブジェクトの数は2つ以上であれば大丈夫です
@@ -170,7 +170,7 @@ namespace smart3tene.Reaper
         }
         #endregion
 
-        #region IPunObservable Method
+/*        #region IPunObservable Method
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.IsWriting)
@@ -184,7 +184,7 @@ namespace smart3tene.Reaper
                 _isCut.Value = (bool)stream.ReceiveNext();
             }
         }
-        #endregion
+        #endregion*/
     }
 
 }
