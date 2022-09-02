@@ -74,6 +74,22 @@ namespace Photon.Chat
             set { this.chatRegion = value; }
         }
 
+        /// <summary>
+        /// Defines a proxy URL for WebSocket connections. Can be the proxy or point to a .pac file.
+        /// </summary>
+        /// <remarks>
+        /// This URL supports various definitions:
+        ///
+        /// "user:pass@proxyaddress:port"<br/>
+        /// "proxyaddress:port"<br/>
+        /// "system:"<br/>
+        /// "pac:"<br/>
+        /// "pac:http://host/path/pacfile.pac"<br/>
+        ///
+        /// Important: Don't define a protocol, except to point to a pac file. the proxy address should not begin with http:// or https://.
+        /// </remarks>
+        public string ProxyServerAddress;
+
         /// <summary>Current state of the ChatClient. Also use CanChat.</summary>
         public ChatState State { get; private set; }
 
@@ -255,6 +271,8 @@ namespace Photon.Chat
                 this.chatPeer.NameServerHost = appSettings.Server;
                 this.chatPeer.NameServerPortOverride = appSettings.Port;
             }
+            
+            this.ProxyServerAddress = appSettings.ProxyServer;
 
             return this.Connect(appSettings.AppIdChat, appSettings.AppVersion, this.AuthValues);
         }
@@ -262,6 +280,9 @@ namespace Photon.Chat
         /// <summary>
         /// Connects this client to the Photon Chat Cloud service, which will also authenticate the user (and set a UserId).
         /// </summary>
+        /// <remarks>
+        /// The ProxyServerAddress is used to connect. Set it before calling this method or use ConnectUsingSettings.
+        /// </remarks>
         /// <param name="appId">Get your Photon Chat AppId from the <a href="https://dashboard.photonengine.com">Dashboard</a>.</param>
         /// <param name="appVersion">Any version string you make up. Used to separate users and variants of your clients, which might be incompatible.</param>
         /// <param name="authValues">Values for authentication. You can leave this null, if you set a UserId before. If you set authValues, they will override any UserId set before.</param>
@@ -297,7 +318,7 @@ namespace Photon.Chat
 
             this.NameServerAddress = this.chatPeer.NameServerAddress;
 
-            bool isConnecting = this.chatPeer.Connect();
+            bool isConnecting = this.chatPeer.Connect(this.NameServerAddress, this.ProxyServerAddress, "NameServer", null);
             if (isConnecting)
             {
                 this.State = ChatState.ConnectingToNameServer;
@@ -1294,7 +1315,7 @@ namespace Photon.Chat
                     }
                     if (channel.PublishSubscribers) // or maybe remove check & always add anyway?
                     {
-                        channel.Subscribers.Add(this.UserId);
+                        channel.AddSubscriber(this.UserId);
                     }
                     if (eventData.Parameters.TryGetValue(ChatParameterCode.ChannelSubscribers, out temp))
                     {
@@ -1304,10 +1325,11 @@ namespace Photon.Chat
                     #if CHAT_EXTENDED
                     if (eventData.Parameters.TryGetValue(ChatParameterCode.UserProperties, out temp))
                     {
-                        Dictionary<string, Dictionary<object, object>> userProperties = temp as Dictionary<string, Dictionary<object, object>>;
+                        //UnityEngine.Debug.LogFormat("temp = {0}", temp);
+                        Dictionary<string, object> userProperties = temp as Dictionary<string, object>;
                         foreach (var pair in userProperties)
                         {
-                            channel.ReadUserProperties(pair.Key, pair.Value);
+                            channel.ReadUserProperties(pair.Key, pair.Value as Dictionary<object, object>);
                         }
                     }
                     #endif
@@ -1455,7 +1477,7 @@ namespace Photon.Chat
             }
             #endif
 
-            if (!this.chatPeer.Connect(this.FrontendAddress, ChatAppName))
+            if (!this.chatPeer.Connect(this.FrontendAddress, this.ProxyServerAddress, ChatAppName, null))
             {
                 if (this.DebugOut >= DebugLevel.ERROR)
                 {
@@ -1514,7 +1536,7 @@ namespace Photon.Chat
                         this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Channel \"{0}\" for incoming UserUnsubscribed (\"{1}\") event does not have PublishSubscribers enabled.", channelName, userId));
                     }
                 }
-                if (!channel.Subscribers.Remove(userId)) // user not found!
+                if (!channel.RemoveSubscriber(userId)) // user not found!
                 {
                     if (this.DebugOut >= DebugLevel.WARNING)
                     {
@@ -1534,8 +1556,6 @@ namespace Photon.Chat
 
         private void HandleUserSubscribedEvent(EventData eventData)
         {
-            //TODO: Handle user properties!
-
             string channelName = eventData.Parameters[ChatParameterCode.Channel] as string;
             string userId = eventData.Parameters[ChatParameterCode.UserId] as string;
             ChatChannel channel;
@@ -1548,7 +1568,7 @@ namespace Photon.Chat
                         this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Channel \"{0}\" for incoming UserSubscribed (\"{1}\") event does not have PublishSubscribers enabled.", channelName, userId));
                     }
                 }
-                if (!channel.Subscribers.Add(userId)) // user came back from the dead ?
+                if (!channel.AddSubscriber(userId)) // user came back from the dead ?
                 {
                     if (this.DebugOut >= DebugLevel.WARNING)
                     {
@@ -1562,6 +1582,14 @@ namespace Photon.Chat
                         this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Channel \"{0}\"'s MaxSubscribers exceeded. count={1} > MaxSubscribers={2}.", channelName, channel.Subscribers.Count, channel.MaxSubscribers));
                     }
                 }
+                #if CHAT_EXTENDED
+                object temp;
+                if (eventData.Parameters.TryGetValue(ChatParameterCode.UserProperties, out temp))
+                {
+                    Dictionary<object, object> userProperties = temp as Dictionary<object, object>;
+                    channel.ReadUserProperties(userId, userProperties);
+                }
+                #endif
             }
             else
             {
