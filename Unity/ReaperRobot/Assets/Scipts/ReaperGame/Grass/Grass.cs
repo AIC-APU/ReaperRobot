@@ -9,7 +9,7 @@ using Photon.Pun;
 
 namespace smart3tene.Reaper
 {
-    public class Grass : MonoBehaviourPun
+    public class Grass : MonoBehaviourPun, IPunObservable
     {
         //これをアタッチしたGameObjectに,Grassの形態を表す子オブジェクトを順に設定してください
         //子オブジェクトの数は2つ以上であれば大丈夫です
@@ -51,6 +51,19 @@ namespace smart3tene.Reaper
 
             GrassCounter.AddAllGrass();
 
+            //カットされた時の挙動
+            _isCut.Skip(1).Subscribe(iscut =>
+            {
+                if (iscut)
+                {
+                    GrassCounter.AddCutGrass();
+                }
+                else
+                {
+                    GrassCounter.MinusCutGrass();
+                }
+            });
+
             ReaperEventManager.ResetEvent += ResetGrass;           
         }
 
@@ -80,16 +93,6 @@ namespace smart3tene.Reaper
                 {
                     //カット完了
                     _isCut.Value = true;
-
-                    //CutGrassに加算
-                    if (PhotonNetwork.IsConnected)
-                    {
-                        photonView.RPC(nameof(AddCutGrass), RpcTarget.All);
-                    }
-                    else
-                    {
-                        AddCutGrass();
-                    }
 
                     //パーティクルの停止と破棄
                     _particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
@@ -144,19 +147,6 @@ namespace smart3tene.Reaper
 
         private void ResetGrass()
         {
-            //切られていたらcutGrassCountをもとに戻す
-            if (_isCut.Value)
-            {
-                if (PhotonNetwork.IsConnected)
-                {
-                    photonView.RPC(nameof(MinusCutGrass), RpcTarget.All);
-                }
-                else
-                {
-                    MinusCutGrass();
-                }
-            }
-
             //パラメータと形状を初期化
             _isCut.Value = false;
             _cutTime = 0;
@@ -178,17 +168,21 @@ namespace smart3tene.Reaper
             await UniTask.Delay(TimeSpan.FromSeconds(seconds));
             callback?.Invoke();
         }
+        #endregion
 
-        [PunRPC]
-        private void AddCutGrass()
+        #region IPunObservable Method
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
-            GrassCounter.AddCutGrass();
-        }
-
-        [PunRPC]
-        private void MinusCutGrass()
-        {
-            GrassCounter.MinusCutGrass();
+            if (stream.IsWriting)
+            {
+                //送信側
+                stream.SendNext(_isCut.Value);
+            }
+            else
+            {
+                //受信側
+                _isCut.Value = (bool)stream.ReceiveNext();
+            }
         }
         #endregion
     }

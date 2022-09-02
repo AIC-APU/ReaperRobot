@@ -38,6 +38,10 @@ namespace smart3tene
                 PhotonNetwork.AutomaticallySyncScene = true;
                 PhotonNetwork.GameVersion = GameData.GameVersion;
                 PhotonNetwork.NickName = GameData.PlayerName;
+
+                PhotonNetwork.SendRate = 20; // 1秒間にメッセージ送信を行う回数
+                PhotonNetwork.SerializationRate = 10; // 1秒間にオブジェクト同期を行う回数
+
                 isConnectToMasterServer = PhotonNetwork.ConnectUsingSettings(); // -> call "OnConnectedToMaster" or "OnDisconnected"     
             }
             else
@@ -113,10 +117,7 @@ namespace smart3tene
                     break;
                 default:
                     Debug.LogWarning(cause);
-                    if(SceneManager.GetActiveScene().name != "StartMenu")
-                    {
-                        EndGame();
-                    }
+                    EndGame();
                     break;
             }
         }
