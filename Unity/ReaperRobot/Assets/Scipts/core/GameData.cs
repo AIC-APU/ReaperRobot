@@ -9,7 +9,7 @@ namespace smart3tene
     {
         #region Const Fields
         public static byte MaxPlayers => MAX_PLAYERS_PER_ROOM;
-        const byte MAX_PLAYERS_PER_ROOM = 2;
+        const byte MAX_PLAYERS_PER_ROOM = 1;
 
         public static string GameVersion => GAME_VERSION;
         const string GAME_VERSION = "0.1";

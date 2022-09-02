@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace smart3tene.Reaper
 {
-    public class ReaperManager : MonoBehaviourPun
+    public class ReaperManager : MonoBehaviourPun, IPunObservable
     {
         #region Serialized Private Field
         [Header("Reaper")]
@@ -42,16 +42,14 @@ namespace smart3tene.Reaper
         private CancellationTokenSource _cutterCancellationTokenSource = new();
         private float _nowCutterSpeed = 0f;
 
+        //タイヤのアニメーション関連
+        private ReactiveProperty<int> _leftRpm = new(0);
+        private ReactiveProperty<int> _rightRpm = new(0);
 
         //Wheel Collider関連
         readonly float rotateTorqueMultiplier = 100f;
         readonly float moveTorqueMultiplier = 300f;
         readonly float brakeTorque = 500f;
-
-        public IReadOnlyReactiveProperty<float> LeftRpm => _leftRpm;
-        private ReactiveProperty<float> _leftRpm = new(0);
-        public IReadOnlyReactiveProperty<float> RightRpm => _rightRpm;
-        private ReactiveProperty<float> _rightRpm = new(0);
         #endregion
 
 
@@ -59,28 +57,49 @@ namespace smart3tene.Reaper
         private void Start()
         {
             if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-
-            RotateCutter(_isCutting.Value);
-            MoveLift(_isLiftDown.Value);
-
+            
+            //重心の設定
             GetComponent<Rigidbody>().centerOfMass = _centerOfGravity;
+
+            //rpmの購読
+            //crawlerアニメーションの処理
+            //素のrpmは値が大きすぎるので、直進時の最大rpm = 70f（計測値）で除算している
+            _leftRpm.Subscribe(x => _crawlerL.SetFloat("WheelTorque", (float)x / 70f));
+            _rightRpm.Subscribe(x => _crawlerR.SetFloat("WheelTorque", (float)x / 70f));
+
+            //isLiftDownの購読
+            _isLiftDown.Subscribe(isDown =>
+            {
+                _liftCancellationTokenSource?.Cancel();
+                _liftCancellationTokenSource = new();
+                AsyncMoveLift(isDown, _liftCancellationTokenSource.Token).Forget();
+            });
+
+            //isCuttingの購読
+            _isCutting.Subscribe(isRotate =>
+            {
+                _cutterCancellationTokenSource?.Cancel();
+                _cutterCancellationTokenSource = new();
+                AsyncRotateCutter(isRotate, _cutterCancellationTokenSource.Token).Forget();
+
+                //タグの変更
+                if (isRotate)
+                {
+                    _reaper.tag = "Cutting";
+                }
+                else
+                {
+                    _reaper.tag = "Untagged";
+                }
+            });
         }
 
         private void Update()
         {
-            //crawlerアニメーションの処理
-            //素のrpmは値が大きすぎるので、直進時の最大rpm（計測値）で除算している
-            _leftRpm.Value = _wheelColliderL2.rpm;
-            _rightRpm.Value = _wheelColliderR2.rpm;
-
-            if (PhotonNetwork.IsConnected)
-            {
-                photonView.RPC(nameof(RPCPlayCrawlerAnimation), RpcTarget.All, _leftRpm.Value, _rightRpm.Value);
-            }
-            else
-            {
-                RPCPlayCrawlerAnimation(_leftRpm.Value, _rightRpm.Value);
-            }
+            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
+            
+            _leftRpm.Value = (int)_wheelColliderL2.rpm;
+            _rightRpm.Value = (int)_wheelColliderR2.rpm;       
         }
 
         private void OnDestroy()
@@ -88,11 +107,6 @@ namespace smart3tene.Reaper
             //非同期処理の停止            
             _liftCancellationTokenSource?.Cancel();
             _cutterCancellationTokenSource?.Cancel();
-
-            if (PhotonNetwork.IsConnected)
-            {
-                PhotonNetwork.RemoveRPCs(PhotonNetwork.LocalPlayer);
-            }        
         }
         #endregion
 
@@ -153,26 +167,12 @@ namespace smart3tene.Reaper
 
         public void MoveLift(bool isDown)
         {
-            if (PhotonNetwork.IsConnected)
-            {
-                photonView.RPC(nameof(RPCMoveLift), RpcTarget.All, isDown);
-            }
-            else
-            {
-                RPCMoveLift(isDown);
-            }
+            _isLiftDown.Value = isDown;
         }
         
         public void RotateCutter(bool isRotate)
-        {         
-            if (PhotonNetwork.IsConnected)
-            {
-                photonView.RPC(nameof(RPCRotateCutter), RpcTarget.All, isRotate);
-            }
-            else
-            {
-                RPCRotateCutter(isRotate);
-            }
+        {
+            _isCutting.Value = isRotate;
         }
         #endregion
 
@@ -239,47 +239,27 @@ namespace smart3tene.Reaper
                 if (!isCutting && _nowCutterSpeed == 0) break;
             }
         }
+        #endregion
 
-        [PunRPC]
-        public void RPCRotateCutter(bool isRotate)
+        #region IPunObservable Method
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
-            _cutterCancellationTokenSource?.Cancel();
-            _cutterCancellationTokenSource = new();
-
-            //オブジェクトの回転
-            AsyncRotateCutter(isRotate, _cutterCancellationTokenSource.Token).Forget();
-
-            //フラグの変更
-            _isCutting.Value = isRotate;
-
-            //タグの変更
-            if (isRotate)
+            if (stream.IsWriting)
             {
-                _reaper.tag = "Cutting";
+                //送信側
+                stream.SendNext(_leftRpm.Value);
+                stream.SendNext(_rightRpm.Value);
+                stream.SendNext(_isLiftDown.Value);
+                stream.SendNext(_isCutting.Value);
             }
             else
             {
-                _reaper.tag = "Untagged";
+                //受信側
+                _leftRpm.Value = (int)stream.ReceiveNext();
+                _rightRpm.Value = (int)stream.ReceiveNext();
+                _isLiftDown.Value = (bool)stream.ReceiveNext();
+                _isCutting.Value = (bool)stream.ReceiveNext();
             }
-        }
-
-        [PunRPC]
-        public void RPCMoveLift(bool isDown)
-        {
-            _liftCancellationTokenSource?.Cancel();
-            _liftCancellationTokenSource = new();
-            AsyncMoveLift(isDown, _liftCancellationTokenSource.Token).Forget();
-
-            _isLiftDown.Value = isDown;
-        }
-
-        [PunRPC]
-        public void RPCPlayCrawlerAnimation(float leftRpm, float rightRpm)
-        {
-            //crawlerアニメーションの処理
-            //素のrpmは値が大きすぎるので、直進時の最大rpm（計測値）で除算している
-            _crawlerL.SetFloat("WheelTorque", leftRpm / 70);
-            _crawlerR.SetFloat("WheelTorque", rightRpm / 70);
         }
         #endregion
     }
