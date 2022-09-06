@@ -3,10 +3,11 @@ using Photon.Pun;
 using System.Threading;
 using UniRx;
 using UnityEngine;
+using System;
 
 namespace smart3tene.Reaper
 {
-    public class ReaperManager : MonoBehaviourPun, IPunObservable
+    public class ReaperManager : MonoBehaviourPun
     {
         #region Serialized Private Field
         [Header("Reaper")]
@@ -55,9 +56,7 @@ namespace smart3tene.Reaper
 
         #region MonoBehaviour Callbacks
         private void Start()
-        {
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-            
+        {            
             //重心の設定
             GetComponent<Rigidbody>().centerOfMass = _centerOfGravity;
 
@@ -92,12 +91,19 @@ namespace smart3tene.Reaper
                     _reaper.tag = "Untagged";
                 }
             });
+
+            //に数秒毎に位置を同期
+            if (PhotonNetwork.IsConnected && photonView.IsMine)
+            {
+                Observable
+                    .Interval(TimeSpan.FromSeconds(1))
+                    .Subscribe(_ => photonView.RPC(nameof(RPCSyncTransform), RpcTarget.Others, transform.position, transform.rotation))
+                    .AddTo(this);
+            }
         }
 
         private void Update()
         {
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-            
             _leftRpm.Value = (int)_wheelColliderL2.rpm;
             _rightRpm.Value = (int)_wheelColliderR2.rpm;       
         }
@@ -117,7 +123,7 @@ namespace smart3tene.Reaper
         /// </summary>
         /// <param name="horizontal">水平方向の入力。-1~+1の範囲</param>
         /// <param name="vertical">垂直方向の入力。-1~+1の範囲</param>
-        public void AsyncMove(float horizontal, float vertical)
+        public void Move(float horizontal, float vertical, bool useRPC = true)
         {
             //入力値の範囲を制限
             horizontal = Mathf.Clamp(horizontal, -1, 1);
@@ -139,16 +145,20 @@ namespace smart3tene.Reaper
             _wheelColliderL2.motorTorque = torqueL;
             _wheelColliderL3.motorTorque = torqueL;
             _wheelColliderR2.motorTorque = torqueR;
-            _wheelColliderR3.motorTorque = torqueR;
+            _wheelColliderR3.motorTorque =  torqueR;
 
             //モーター音
 
+
+            //入力値を同期させる
+            if (PhotonNetwork.IsConnected && useRPC)
+            {
+                photonView.RPC(nameof(RPCMove), RpcTarget.Others, horizontal, vertical);
+            }
         }
 
         public void PutOnBrake()
         {
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-
             _wheelColliderL2.brakeTorque = brakeTorque;
             _wheelColliderL3.brakeTorque = brakeTorque;
             _wheelColliderR2.brakeTorque = brakeTorque;
@@ -157,8 +167,6 @@ namespace smart3tene.Reaper
 
         public void ReleaseBrake()
         {
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-
             _wheelColliderL2.brakeTorque = 0;
             _wheelColliderL3.brakeTorque = 0;
             _wheelColliderR2.brakeTorque = 0;
@@ -168,11 +176,21 @@ namespace smart3tene.Reaper
         public void MoveLift(bool isDown)
         {
             _isLiftDown.Value = isDown;
+
+            if (PhotonNetwork.IsConnected)
+            {
+                photonView.RPC(nameof(RPCMoveLift), RpcTarget.Others, isDown);
+            }
         }
         
         public void RotateCutter(bool isRotate)
         {
             _isCutting.Value = isRotate;
+
+            if (PhotonNetwork.IsConnected)
+            {
+                photonView.RPC(nameof(RPCRotateCutter), RpcTarget.Others, isRotate);
+            }
         }
         #endregion
 
@@ -241,25 +259,29 @@ namespace smart3tene.Reaper
         }
         #endregion
 
-        #region IPunObservable Method
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        #region RPC Methods
+        [PunRPC]
+        private void RPCMove(float horizontal, float vertical)
         {
-            if (stream.IsWriting)
-            {
-                //送信側
-                stream.SendNext(_leftRpm.Value);
-                stream.SendNext(_rightRpm.Value);
-                stream.SendNext(_isLiftDown.Value);
-                stream.SendNext(_isCutting.Value);
-            }
-            else
-            {
-                //受信側
-                _leftRpm.Value = (int)stream.ReceiveNext();
-                _rightRpm.Value = (int)stream.ReceiveNext();
-                _isLiftDown.Value = (bool)stream.ReceiveNext();
-                _isCutting.Value = (bool)stream.ReceiveNext();
-            }
+            Move(horizontal, vertical, false);
+        }
+        [PunRPC]
+        private void RPCMoveLift(bool isLiftDown)
+        {
+            _isLiftDown.Value = isLiftDown;
+        }
+
+        [PunRPC]
+        private void RPCRotateCutter(bool isCutting)
+        {
+            _isCutting.Value = isCutting;
+        }
+
+        [PunRPC]
+        private void RPCSyncTransform(Vector3 pos, Quaternion rot)
+        {
+            transform.position = pos;
+            transform.rotation = rot;
         }
         #endregion
     }

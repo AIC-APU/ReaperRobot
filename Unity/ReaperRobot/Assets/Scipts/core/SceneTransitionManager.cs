@@ -21,6 +21,15 @@ namespace smart3tene
         private bool isConnectToMasterServer = false;
         #endregion
 
+        #region MonoBehaviour Callbacks
+        private void OnDestroy()
+        {
+            LeaveAndDisconnect();
+        }
+
+        #endregion
+
+
         #region public Method
         public void StartOfflineGame()
         {
@@ -56,9 +65,13 @@ namespace smart3tene
 
         public void LeaveAndDisconnect()
         {
-            if (PhotonNetwork.IsConnected)
+            if (PhotonNetwork.InRoom)
             {
                 PhotonNetwork.LeaveRoom();
+            }
+
+            if (PhotonNetwork.IsConnected)
+            {        
                 PhotonNetwork.Disconnect();
             }
         }
@@ -121,7 +134,6 @@ namespace smart3tene
                     break;
                 default:
                     Debug.LogWarning(cause);
-                    EndGame();
                     break;
             }
         }

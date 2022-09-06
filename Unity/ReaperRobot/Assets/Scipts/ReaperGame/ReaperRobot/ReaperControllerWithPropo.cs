@@ -79,7 +79,7 @@ namespace smart3tene.Reaper
                 _isNoVerticalLast = false;
             }
 
-            _reaperManager.AsyncMove(horizontal * speed, vertical * speed);
+            _reaperManager.Move(horizontal * speed, vertical * speed);
         }
 
         private void OnDisable()

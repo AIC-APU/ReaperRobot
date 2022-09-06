@@ -51,13 +51,13 @@ namespace smart3tene.Reaper
         private void Move(InputAction.CallbackContext obj)
         {
             var move = _reaperActionMap["Move"].ReadValue<Vector2>();
-            _reaperManager.AsyncMove(move.x, move.y);
+            _reaperManager.Move(move.x, move.y);
         }
         private void Stop(InputAction.CallbackContext obj)
         {
             if (obj.control.name == "thumbstick") return;
 
-            _reaperManager.AsyncMove(0, 0);
+            _reaperManager.Move(0, 0);
         }
         private void Brake(InputAction.CallbackContext obj)
         {
