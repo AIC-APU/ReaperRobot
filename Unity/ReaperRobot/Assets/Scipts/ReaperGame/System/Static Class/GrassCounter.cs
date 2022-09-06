@@ -1,4 +1,6 @@
 using UniRx;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace smart3tene.Reaper
 {
@@ -15,6 +17,11 @@ namespace smart3tene.Reaper
 
         public static IReadOnlyReactiveProperty<int> RemainingGrass => _remainingGrass;
         private static ReactiveProperty<int> _remainingGrass = new(0);
+
+        static GrassCounter()
+        {
+            SceneManager.sceneUnloaded += Reset;
+        }       
 
         public static void AddAllGrass()
         {
@@ -39,6 +46,14 @@ namespace smart3tene.Reaper
         {
             _cutGrassPercent.Value = _allGrassCount.Value == 0 ? 0 : 100f * (float)_cutGrassCount.Value / (float)_allGrassCount.Value;
             _remainingGrass.Value  = _allGrassCount.Value - _cutGrassCount.Value;
+        }
+
+        private static void Reset(Scene thisScene)
+        {
+            _allGrassCount.Value = 0;
+            _cutGrassCount.Value = 0;
+
+            UpdateValues();
         }
     }
 }
