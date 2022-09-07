@@ -2445,7 +2445,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _reaperInstance: {fileID: 0}
+  _useReaper: 1
   _personInstance: {fileID: 0}
+  _usePerson: 1
   _instantiatePos:
   - {fileID: 932399598}
   - {fileID: 932399597}
@@ -3335,6 +3337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b50d44b9879dde84fa89623731cbc3d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _reaperManager: {fileID: 0}
 --- !u!114 &653367593
 MonoBehaviour:
   m_ObjectHideFlags: 0
