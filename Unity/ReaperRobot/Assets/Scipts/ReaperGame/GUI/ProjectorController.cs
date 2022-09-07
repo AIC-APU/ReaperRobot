@@ -37,7 +37,7 @@ namespace smart3tene.Reaper
                         _delaySlider.value = 0f;
                         break;
                 }
-            });
+            }).AddTo(this);
         }
 
         //スライダーに設定する用の関数

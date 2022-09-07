@@ -39,7 +39,9 @@ namespace smart3tene
             _waitingPanel.SetActive(false);
             _multiFailedPanel.SetActive(false);
 
-            GameData.CountOfPlayersInRooms.Subscribe(x => _roomPlayerNum.text = $"{x}/{GameData.MaxPlayers}");
+            GameData.CountOfPlayersInRooms
+                .Subscribe(x => _roomPlayerNum.text = $"{x}/{GameData.MaxPlayers}")
+                .AddTo(this);
 
             //↓この呼び方にしないとイベントの解除が失敗する
             _sceneTransitionManager = SceneTransitionManager.Instance;

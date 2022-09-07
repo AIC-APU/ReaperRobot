@@ -38,7 +38,7 @@ namespace smart3tene.Reaper
                     _isChecked.Value = true;
                     OnChecked();
                 }
-            });
+            }).AddTo(this);
 
             //テキスト表示
             switch (LocalizationSettings.SelectedLocale.Identifier.Code)

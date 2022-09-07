@@ -36,7 +36,7 @@ namespace smart3tene.Reaper
                         var index = grasses.IndexOf(grass);
                         photonView.RPC(nameof(RPCGrassCut), RpcTarget.All, index);
                     } 
-                });
+                }).AddTo(this);
             }
         }
         #endregion

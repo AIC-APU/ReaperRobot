@@ -63,8 +63,8 @@ namespace smart3tene.Reaper
             //rpmの購読
             //crawlerアニメーションの処理
             //素のrpmは値が大きすぎるので、直進時の最大rpm = 70f（計測値）で除算している
-            _leftRpm.Subscribe(x => _crawlerL.SetFloat("WheelTorque", (float)x / 70f));
-            _rightRpm.Subscribe(x => _crawlerR.SetFloat("WheelTorque", (float)x / 70f));
+            _leftRpm.Subscribe(x => _crawlerL.SetFloat("WheelTorque", (float)x / 70f)).AddTo(this);
+            _rightRpm.Subscribe(x => _crawlerR.SetFloat("WheelTorque", (float)x / 70f)).AddTo(this);
 
             //isLiftDownの購読
             _isLiftDown.Subscribe(isDown =>
@@ -72,7 +72,7 @@ namespace smart3tene.Reaper
                 _liftCancellationTokenSource?.Cancel();
                 _liftCancellationTokenSource = new();
                 AsyncMoveLift(isDown, _liftCancellationTokenSource.Token).Forget();
-            });
+            }).AddTo(this);
 
             //isCuttingの購読
             _isCutting.Subscribe(isRotate =>
@@ -90,7 +90,7 @@ namespace smart3tene.Reaper
                 {
                     _reaper.tag = "Untagged";
                 }
-            });
+            }).AddTo(this); ;
 
             //に数秒毎に位置を同期
             if (PhotonNetwork.IsConnected && photonView.IsMine)

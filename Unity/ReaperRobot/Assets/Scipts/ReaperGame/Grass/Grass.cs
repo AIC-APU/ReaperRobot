@@ -48,7 +48,9 @@ namespace smart3tene.Reaper
             GrassCounter.AddAllGrass();
 
             //cutTimeが増えたら草の形状を判定・変更する
-            _cutTime.Subscribe(x => ReshapeGrass(x));
+            _cutTime
+                .Subscribe(x => ReshapeGrass(x))
+                .AddTo(this); ;
 
             //カットされた時の挙動
             _isCut.Skip(1).Subscribe(iscut =>
@@ -62,7 +64,7 @@ namespace smart3tene.Reaper
                 {
                     GrassCounter.MinusCutGrass();
                 }
-            });
+            }).AddTo(this); ;
 
             ReaperEventManager.ResetEvent += ResetGrass;           
         }

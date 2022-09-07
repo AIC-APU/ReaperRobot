@@ -41,7 +41,7 @@ namespace smart3tene.Reaper
                     default:
                         break;
                 }
-            });
+            }).AddTo(this);
         }     
     }
 }
