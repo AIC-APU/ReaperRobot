@@ -68,7 +68,7 @@ namespace smart3tene.Reaper
 
         private void ChangeReaperAndPerson(InputAction.CallbackContext obj)
         {
-            if (!_PERSON_TPV) return;
+            if (!_PERSON_TPV && !_REAPER_FromPERSON) return;
 
             if ((ViewMode.NowViewMode.Value != ViewMode.ViewModeCategory.PERSON_TPV)
                 && (ViewMode.NowViewMode.Value != ViewMode.ViewModeCategory.REAPER_FromPERSON))

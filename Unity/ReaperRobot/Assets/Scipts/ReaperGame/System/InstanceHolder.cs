@@ -9,15 +9,20 @@ namespace smart3tene.Reaper
     {
         #region public Fields
         public static InstanceHolder Instance = null;
+        public GameObject ReaperInstance => _reaperInstance;
+        public GameObject PersonInstance => _personInstance;
         #endregion
 
         #region Serialized private Fields
-        public GameObject ReaperInstance => _reaperInstance;
+        [Header("Reaper")]
         [SerializeField, Tooltip("マルチプレイの時はnullにしておいてください")] private GameObject _reaperInstance = null;
+        [SerializeField] private bool _useReaper = true;
 
-        public GameObject PersonInstance => _personInstance;
+        [Header("Person")]
         [SerializeField, Tooltip("マルチプレイの時はnullにしておいてください")] private GameObject _personInstance = null;
+        [SerializeField] private bool _usePerson = true;
 
+        [Header("Instantiate Positions")]
         [SerializeField] private List<Transform> _instantiatePos = new List<Transform>();
         #endregion
 
@@ -42,14 +47,13 @@ namespace smart3tene.Reaper
 
             var posId = GameData.PlayerId - 1; 
             //草刈り機の生成
-            if (_reaperInstance == null)
+            if (_useReaper && _reaperInstance == null)
             {
                 _reaperInstance = PhotonNetwork.Instantiate("ReaperCrawlerResource", _instantiatePos[posId].position, _instantiatePos[posId].rotation, 0);
             }
 
             //人モデルの生成
-            //VRモードの時は人出さなくていい？
-            if(ViewMode.NowViewMode.Value != ViewMode.ViewModeCategory.REAPER_VR &&　_personInstance == null)
+            if(_usePerson &&　_personInstance == null)
             {
                 var playerBackDistance = 3f;
                 _personInstance = PhotonNetwork.Instantiate("RingoResource", _instantiatePos[posId].position + (-1 * _instantiatePos[posId].forward * playerBackDistance), _instantiatePos[posId].rotation, 0);

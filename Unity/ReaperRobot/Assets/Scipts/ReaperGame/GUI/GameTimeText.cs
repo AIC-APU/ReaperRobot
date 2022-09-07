@@ -18,6 +18,8 @@ namespace smart3tene.Reaper
             this.UpdateAsObservable()
                 .Subscribe(_ => _timeNum.text = GameTimer.GetCurrentTimeSpan.ToString(@"hh\:mm\:ss"))
                 .AddTo(this);
+
+            GameTimer.Start();
         }
 
         private void OnDestroy()

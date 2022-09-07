@@ -57,7 +57,7 @@ namespace smart3tene.Reaper
             if (_playerInput.currentActionMap.name != "Reaper") return;
 
             var move = _reaperActionMap["Move"].ReadValue<Vector2>();
-            _reaperManager.AsyncMove(move.x, move.y);
+            _reaperManager.Move(move.x, move.y);
         }
         #endregion
 
@@ -65,7 +65,7 @@ namespace smart3tene.Reaper
         #region private method
         private void StopMove(InputAction.CallbackContext obj)
         {
-            _reaperManager.AsyncMove(0,0);
+            _reaperManager.Move(0,0);
         }
         private void Brake(InputAction.CallbackContext obj)
         {

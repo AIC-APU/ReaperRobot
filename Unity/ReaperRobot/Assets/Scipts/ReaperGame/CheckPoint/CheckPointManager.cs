@@ -1,8 +1,10 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
 using UniRx;
 using UnityEngine;
-using Cysharp.Threading.Tasks;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 namespace smart3tene.Reaper
 {
@@ -44,12 +46,6 @@ namespace smart3tene.Reaper
             for(int i = 0; i < _checkPointList.Count; i++)
             {
                 _checkPointList[i].SetUp();
-
-                //introがあれば表示
-                if(_checkPointList[i].Introduction != "")
-                {
-                    ReaperEventManager.InvokeTextPopupEvent(_checkPointList[i].Introduction);
-                } 
 
                 await UniTask.WaitUntil(() => _checkPointList[i].IsChecked.Value, PlayerLoopTiming.Update, ct);
 

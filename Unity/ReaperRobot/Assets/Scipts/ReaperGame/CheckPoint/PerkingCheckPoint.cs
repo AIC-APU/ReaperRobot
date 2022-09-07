@@ -2,17 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.Localization.Settings;
+
 
 namespace smart3tene.Reaper
 {
     public class PerkingCheckPoint : BaseCheckPoint
     {
         #region Public Fields
-        public override string Introduction => _intro;
+        public override string Introduction => _introduction;
         #endregion
 
         #region Serialized Private Fields
-        [SerializeField] private string _intro = "Place the robot to overlap the shadow.";
+        [Header("Introduction")]
+        [SerializeField, TextArea(1, 4)] private string _ja = "日本語の説明";
+        [SerializeField, TextArea(1, 4)] private string _en = "Explanation in ENG";
+
+        [Header("Robot Object")]
         [SerializeField] private GameObject _robot;
         [SerializeField] private GameObject _goal;
         #endregion
@@ -20,6 +26,7 @@ namespace smart3tene.Reaper
         #region Private Fields
         private bool _isActive = false;
         private TimeSpan CheckTime { get; set; }
+        private string _introduction = "haven't set introduction";
         #endregion
 
         #region Readonly Fields
@@ -52,8 +59,22 @@ namespace smart3tene.Reaper
         {
             _goal.SetActive(true);
             _isActive = true;
+
+            //テキスト表示
+            switch (LocalizationSettings.SelectedLocale.Identifier.Code)
+            {
+                case "ja":
+                    _introduction = _ja;
+                    break;
+                case "en":
+                    _introduction = _en;
+                    break;
+                default:
+                    break;
+            }
+            ReaperEventManager.InvokeTextPopupEvent(_introduction);
         }
-        public override void OnChecked()
+        protected override void OnChecked()
         {
             _goal.SetActive(false);
             _isActive = false;
