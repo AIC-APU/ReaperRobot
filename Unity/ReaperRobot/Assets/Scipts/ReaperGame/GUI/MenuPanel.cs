@@ -27,7 +27,14 @@ namespace smart3tene.Reaper
 
         public void EndGameButtonClick()
         {
-            SceneTransitionManager.Instance.EndGame();
+            if(SceneTransitionManager.Instance != null)
+            {
+                SceneTransitionManager.Instance.EndGame();
+            }
+            else
+            {
+                Debug.LogWarning("SceneTransitionManager がありません。");
+            }
         }
     }
 

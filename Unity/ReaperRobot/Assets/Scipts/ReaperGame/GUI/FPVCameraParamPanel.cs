@@ -25,14 +25,14 @@ namespace smart3tene.Reaper
                 _positonXNum.text = vec.x.ToString("F1");
                 _positonYNum.text = vec.y.ToString("F1");
                 _positonZNum.text = vec.z.ToString("F1");
-            });
+            }).AddTo(this);
 
             _fpvCameraManager.CameraOffsetRot.Subscribe(vec =>
             {
                 _rotationXNum.text = ((int)vec.x).ToString();
                 _rotationYNum.text = ((int)vec.y).ToString();
                 _rotationZNum.text = ((int)vec.z).ToString();
-            });
+            }).AddTo(this);
 
             ViewMode.NowViewMode.Subscribe(mode =>
             {
@@ -44,7 +44,7 @@ namespace smart3tene.Reaper
                 {
                     _reaperFPVCameraPanel.SetActive(false);
                 }
-            });
+            }).AddTo(this);
         }
     }
 

@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using System;
+using UnityEngine.Localization.Settings;
 
 namespace smart3tene.Reaper
 {
     public class TouchCheckPoint : BaseCheckPoint
     {
-        #region Public Property
         public override string Introduction => _introduction;
-        [SerializeField] private string _introduction = "Go to Red Pole!";
+
+        #region Serialized Private Fields
+        [Header("Introduction")]
+        [SerializeField, TextArea(1, 4)] private string _ja = "日本語の説明";
+        [SerializeField, TextArea(1, 4)] private string _en = "Explanation in ENG";
+
+        [Header("Reaper or Person Mode")]
         [SerializeField] private Mode _mode = Mode.Reaper;
         #endregion
 
@@ -24,21 +30,13 @@ namespace smart3tene.Reaper
 
         #region private Fields
         private TimeSpan CheckTime { get; set; }
+        private string _introduction = "haven't set introduction.";
         #endregion
 
 
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            if(_mode == Mode.Reaper)
-            {
-                GetComponent<Renderer>().material.color = new Color32(250, 50, 50, 70);
-            }
-            else if(_mode == Mode.Person)
-            {
-                GetComponent<Renderer>().material.color = new Color32(50, 250, 50, 70);
-            }
-
             gameObject.SetActive(false);
         }
 
@@ -57,10 +55,33 @@ namespace smart3tene.Reaper
 
         public override void SetUp()
         {
+            if (_mode == Mode.Reaper)
+            {
+                GetComponent<Renderer>().material.color = new Color32(250, 50, 50, 70);
+            }
+            else if (_mode == Mode.Person)
+            {
+                GetComponent<Renderer>().material.color = new Color32(50, 250, 50, 70);
+            }
+
             gameObject.SetActive(true);
+
+            //テキスト表示
+            switch (LocalizationSettings.SelectedLocale.Identifier.Code)
+            {
+                case "ja":
+                    _introduction = _ja;
+                    break;
+                case "en":
+                    _introduction = _en;
+                    break;
+                default:
+                    break;
+            }
+            ReaperEventManager.InvokeTextPopupEvent(_introduction);
         }
 
-        public override void OnChecked()
+        protected override void OnChecked()
         {
             CheckTime = GameTimer.GetCurrentTimeSpan;
             Debug.Log($"{name} is checked {CheckTime:hh\\:mm\\:ss}");

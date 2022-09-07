@@ -11,8 +11,11 @@ namespace smart3tene.Reaper
 
     public class ReaperControllerWithPropo : MonoBehaviour
     {
+        #region Serialized private Fields
+        [SerializeField] private ReaperManager _reaperManager;
+        #endregion
+
         #region private Fields
-        private ReaperManager _reaperManager;
         private bool _isUsingPropo = false;
         private bool _isNoVerticalLast = false;
         #endregion
@@ -20,7 +23,10 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            _reaperManager = InstanceHolder.Instance.ReaperInstance.GetComponent<ReaperManager>();
+            if(_reaperManager == null)
+            {
+                _reaperManager = InstanceHolder.Instance.ReaperInstance.GetComponent<ReaperManager>();
+            }
 
             foreach (string controller in Input.GetJoystickNames())
             {
@@ -79,7 +85,7 @@ namespace smart3tene.Reaper
                 _isNoVerticalLast = false;
             }
 
-            _reaperManager.AsyncMove(horizontal * speed, vertical * speed);
+            _reaperManager.Move(horizontal * speed, vertical * speed);
         }
 
         private void OnDisable()

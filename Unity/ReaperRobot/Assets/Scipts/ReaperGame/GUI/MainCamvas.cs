@@ -35,7 +35,7 @@ namespace smart3tene.Reaper
                     default:
                         break;
                 }
-            });
+            }).AddTo(this);
         }
 
         //以下ボタン用のメゾット

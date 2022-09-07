@@ -3,16 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UniRx;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
 
 namespace smart3tene.Reaper
 {
     public class ViewModeText : MonoBehaviour
     {
-        [SerializeField] TMP_Text _viewModeText;
+        [SerializeField] LocalizeStringEvent _localizeStringEvent;
 
-        private void Awake()
+        private void Start()
         {
-            ViewMode.NowViewMode.Subscribe(mode => _viewModeText.text = mode.ToString());
+            ViewMode.NowViewMode.Subscribe(mode => 
+            {
+                _localizeStringEvent.StringReference.TableEntryReference = mode.ToString();
+
+                _localizeStringEvent.RefreshString();
+            }).AddTo(this);
         }
     }
 }

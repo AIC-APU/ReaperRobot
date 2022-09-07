@@ -21,6 +21,15 @@ namespace smart3tene
         private bool isConnectToMasterServer = false;
         #endregion
 
+        #region MonoBehaviour Callbacks
+        private void OnDestroy()
+        {
+            LeaveAndDisconnect();
+        }
+
+        #endregion
+
+
         #region public Method
         public void StartOfflineGame()
         {
@@ -38,6 +47,14 @@ namespace smart3tene
                 PhotonNetwork.AutomaticallySyncScene = true;
                 PhotonNetwork.GameVersion = GameData.GameVersion;
                 PhotonNetwork.NickName = GameData.PlayerName;
+
+                PhotonNetwork.SendRate = 20; // 1秒間にメッセージ送信を行う回数
+                PhotonNetwork.SerializationRate = 10; // 1秒間にオブジェクト同期を行う回数
+
+                PhotonNetwork.NetworkingClient.LoadBalancingPeer.DisconnectTimeout = 30000; // in milliseconds. any high value for debug
+
+                PhotonNetwork.ServerPortOverrides = PhotonPortDefinition.AlternativeUdpPorts;
+
                 isConnectToMasterServer = PhotonNetwork.ConnectUsingSettings(); // -> call "OnConnectedToMaster" or "OnDisconnected"     
             }
             else
@@ -48,9 +65,13 @@ namespace smart3tene
 
         public void LeaveAndDisconnect()
         {
-            if (PhotonNetwork.IsConnected)
+            if (PhotonNetwork.InRoom)
             {
                 PhotonNetwork.LeaveRoom();
+            }
+
+            if (PhotonNetwork.IsConnected)
+            {        
                 PhotonNetwork.Disconnect();
             }
         }
@@ -113,10 +134,6 @@ namespace smart3tene
                     break;
                 default:
                     Debug.LogWarning(cause);
-                    if(SceneManager.GetActiveScene().name != "StartMenu")
-                    {
-                        EndGame();
-                    }
                     break;
             }
         }

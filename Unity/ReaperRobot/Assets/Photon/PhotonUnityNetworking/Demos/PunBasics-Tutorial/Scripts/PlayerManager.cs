@@ -121,6 +121,7 @@ namespace Photon.Pun.Demo.PunBasics
 			#endif
 		}
 
+        private bool leavingRoom;
 
         /// <summary>
         /// MonoBehaviour method called on GameObject by Unity on every frame.
@@ -135,9 +136,9 @@ namespace Photon.Pun.Demo.PunBasics
             {
                 this.ProcessInputs();
 
-                if (this.Health <= 0f)
+                if (this.Health <= 0f && !this.leavingRoom)
                 {
-                    GameManager.Instance.LeaveRoom();
+                    this.leavingRoom = GameManager.Instance.LeaveRoom();
                 }
             }
 
@@ -145,6 +146,11 @@ namespace Photon.Pun.Demo.PunBasics
             {
                 this.beams.SetActive(this.IsFiring);
             }
+        }
+
+        public override void OnLeftRoom()
+        {
+            this.leavingRoom = false;
         }
 
         /// <summary>

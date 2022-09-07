@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,7 +14,7 @@ namespace smart3tene.Reaper
         private PlayerInput _playerInput;
         #endregion
 
-        private void Awake()
+        private void Start()
         {
             _playerInput = GetComponent<PlayerInput>();
 
@@ -36,7 +37,7 @@ namespace smart3tene.Reaper
                     default:
                         break;
                 }
-            });
+            }).AddTo(this);
         }
     }
 

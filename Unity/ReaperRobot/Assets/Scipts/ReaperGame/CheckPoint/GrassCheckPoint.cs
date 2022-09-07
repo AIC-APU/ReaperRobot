@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UniRx;
+using UnityEngine.Localization.Settings;
 
 namespace smart3tene.Reaper
 {
@@ -10,16 +11,21 @@ namespace smart3tene.Reaper
     {
         #region Public Property
         public override string Introduction => _introduction;
-        [SerializeField] private string _introduction = "Cut Grasses!";
         #endregion
 
         #region Serialized Private Fields
+        [Header("Introduction")]
+        [SerializeField, TextArea(1, 4)] private string _ja = "日本語の説明";
+        [SerializeField, TextArea(1, 4)] private string _en = "Explanation in ENG";
+
+        [Header("GoalRate")]
         [SerializeField] private int goalRate = 100;
         #endregion
 
         #region Private Fields
         private TimeSpan CheckTime{ get; set; }
         private IDisposable _disposable;
+        private string _introduction = "haven't set introduction";
         #endregion
 
         #region Public method
@@ -40,8 +46,23 @@ namespace smart3tene.Reaper
                     OnChecked();
                 }
             });
+
+            //テキスト表示
+            switch (LocalizationSettings.SelectedLocale.Identifier.Code)
+            {
+                case "ja":
+                    _introduction = _ja;
+                    break;
+                case "en":
+                    _introduction = _en;
+                    break;
+                default:
+                    break;
+            }
+            ReaperEventManager.InvokeTextPopupEvent(_introduction);
         }
-        public override void OnChecked()
+
+        protected override void OnChecked()
         {
             CheckTime = GameTimer.GetCurrentTimeSpan;
             Debug.Log($"{name} is checked {CheckTime:hh\\:mm\\:ss}");
