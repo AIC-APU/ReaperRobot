@@ -48,7 +48,7 @@ namespace smart3tene.Reaper
                 {
                     CCamera.ResetCamera();
                 }
-            });
+            }).AddTo(this);
         }
 
         private void Update()

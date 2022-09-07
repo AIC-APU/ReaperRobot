@@ -29,7 +29,7 @@ namespace smart3tene.Reaper
                 {
                     _grassIcon.GetComponent<SpriteRenderer>().color = Color.green;
                 }
-            });
+            }).AddTo(this);
         }
     }
 }

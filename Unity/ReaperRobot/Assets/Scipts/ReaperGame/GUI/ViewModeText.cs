@@ -19,7 +19,7 @@ namespace smart3tene.Reaper
                 _localizeStringEvent.StringReference.TableEntryReference = mode.ToString();
 
                 _localizeStringEvent.RefreshString();
-            });
+            }).AddTo(this);
         }
     }
 }

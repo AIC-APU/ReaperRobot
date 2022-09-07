@@ -34,7 +34,7 @@ namespace smart3tene.Reaper
             ReaperEventManager.TextPopupEvent += ShowPanel;
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             _cancellationTokenSource.Cancel();
 
@@ -67,7 +67,7 @@ namespace smart3tene.Reaper
             //ここで、テキストを一文字ずつ出すTaskをawaitしていいかも。
 
             //数秒待つ
-            await UniTask.Delay(TimeSpan.FromSeconds(_popupTime));
+            await UniTask.Delay(TimeSpan.FromSeconds(_popupTime), false ,PlayerLoopTiming.Update, ct);
 
             //フェードで非表示
             while (_canvasGroup.alpha > 0)

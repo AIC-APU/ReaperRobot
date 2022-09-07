@@ -31,7 +31,7 @@ namespace smart3tene.Reaper
                 {
                     _liftLamp.color = new Color32(196, 196, 196, 255);
                 }
-            });
+            }).AddTo(this);
 
 
             //Cutterのランプ
@@ -45,7 +45,7 @@ namespace smart3tene.Reaper
                 {
                     _cutterLamp.color = new Color32(196, 196, 196, 255);
                 }
-            });
+            }).AddTo(this);
         }
         #endregion
 
