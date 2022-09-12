@@ -7,7 +7,7 @@ using System;
 
 namespace smart3tene.Reaper
 {
-    public class ReaperManager : MonoBehaviourPun
+    public class ReaperManager : MonoBehaviourPun, IPunObservable
     {
         #region Serialized Private Field
         [Header("Reaper")]
@@ -92,14 +92,14 @@ namespace smart3tene.Reaper
                 }
             }).AddTo(this); ;
 
-            //に数秒毎に位置を同期
-            if (PhotonNetwork.IsConnected && photonView.IsMine)
+            //数秒毎に位置を同期
+            /*if (PhotonNetwork.IsConnected && photonView.IsMine)
             {
                 Observable
                     .Interval(TimeSpan.FromSeconds(1))
                     .Subscribe(_ => photonView.RPC(nameof(RPCSyncTransform), RpcTarget.Others, transform.position, transform.rotation))
                     .AddTo(this);
-            }
+            }*/
         }
 
         private void Update()
@@ -125,6 +125,11 @@ namespace smart3tene.Reaper
         /// <param name="vertical">垂直方向の入力。-1~+1の範囲</param>
         public void Move(float horizontal, float vertical, bool useRPC = true)
         {
+            if(horizontal == 0 && vertical == 0 && _wheelColliderL2.motorTorque == 0 && _wheelColliderR2.motorTorque == 0)
+            {
+                return;
+            }
+
             //入力値の範囲を制限
             horizontal = Mathf.Clamp(horizontal, -1, 1);
             vertical = Mathf.Clamp(vertical, -1, 1);
@@ -150,10 +155,16 @@ namespace smart3tene.Reaper
             //モーター音
 
 
+
             //入力値を同期させる
-            if (PhotonNetwork.IsConnected && useRPC)
+            if (useRPC && PhotonNetwork.IsConnected)
             {
-                photonView.RPC(nameof(RPCMove), RpcTarget.Others, horizontal, vertical);
+                //float値をint値に変換して通信する
+                //入力時のfloat値が小数点以下7桁まである数なので、千万で割る
+                int horizontalInt = (int)(horizontal * 10000000f);
+                int verticalInt = (int)(vertical * 10000000f);
+
+                photonView.RPC(nameof(RPCMove), RpcTarget.Others, horizontalInt, verticalInt);
             }
         }
 
@@ -261,10 +272,14 @@ namespace smart3tene.Reaper
 
         #region RPC Methods
         [PunRPC]
-        private void RPCMove(float horizontal, float vertical)
+        private void RPCMove(int horizontalInt, int verticalInt)
         {
+            float horizontal = (float)horizontalInt / 10000000f;
+            float vertical = (float)verticalInt / 10000000f;
+
             Move(horizontal, vertical, false);
         }
+
         [PunRPC]
         private void RPCMoveLift(bool isLiftDown)
         {
@@ -282,6 +297,22 @@ namespace smart3tene.Reaper
         {
             transform.position = pos;
             transform.rotation = rot;
+        }
+
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                stream.SendNext(transform.position);
+                stream.SendNext(transform.eulerAngles);
+                Debug.Log("Send");
+            }
+            else
+            {
+                transform.position = (Vector3)stream.ReceiveNext();
+                transform.eulerAngles = (Vector3)stream.ReceiveNext();
+                Debug.Log("Receive");
+            }
         }
         #endregion
     }
