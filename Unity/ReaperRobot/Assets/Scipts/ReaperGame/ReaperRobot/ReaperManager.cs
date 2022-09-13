@@ -31,8 +31,11 @@ namespace smart3tene.Reaper
         [SerializeField] private Vector3 _centerOfGravity = new(0, 0, -0.2f);
         #endregion
 
+        #region Public Field
+        public Vector2 NowInput { get; private set; }
+        #endregion
 
-        #region private & readonly Field
+        #region Private
         //カッター&リフト関連
         public IReadOnlyReactiveProperty<bool> IsCutting => _isCutting;
         private ReactiveProperty<bool> _isCutting = new(true);
@@ -46,7 +49,9 @@ namespace smart3tene.Reaper
         //タイヤのアニメーション関連
         private ReactiveProperty<int> _leftRpm = new(0);
         private ReactiveProperty<int> _rightRpm = new(0);
+        #endregion
 
+        #region Readonly Field
         //Wheel Collider関連
         readonly float rotateTorqueMultiplier = 100f;
         readonly float moveTorqueMultiplier = 300f;
@@ -133,6 +138,8 @@ namespace smart3tene.Reaper
             //入力値の範囲を制限
             horizontal = Mathf.Clamp(horizontal, -1, 1);
             vertical = Mathf.Clamp(vertical, -1, 1);
+
+            NowInput = new Vector2(horizontal, vertical);
 
             //左右車輪のトルクを計算
             var torqueL = moveTorqueMultiplier * vertical;

@@ -10,6 +10,7 @@ namespace smart3tene.Reaper
     public class GameTimeText : MonoBehaviour
     {
         [SerializeField] private TMP_Text _timeNum;
+        [SerializeField] private bool _startTimerOnAwake = true;
 
         private void Awake()
         {
@@ -19,7 +20,10 @@ namespace smart3tene.Reaper
                 .Subscribe(_ => _timeNum.text = GameTimer.GetCurrentTimeSpan.ToString(@"hh\:mm\:ss"))
                 .AddTo(this);
 
-            GameTimer.Start();
+            if (_startTimerOnAwake)
+            {
+                GameTimer.Start();
+            }
         }
 
         private void OnDestroy()

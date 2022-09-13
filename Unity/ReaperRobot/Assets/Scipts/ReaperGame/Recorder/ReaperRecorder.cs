@@ -1,0 +1,139 @@
+using smart3tene.Reaper;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using Cysharp.Threading.Tasks;
+using TMPro.EditorUtilities;
+using UnityEngine.Localization.Settings;
+using Newtonsoft.Json.Schema;
+using smart3tene;
+using System;
+using System.IO;
+
+public class ReaperRecorder : MonoBehaviour
+{
+    #region Serialized Private Fields
+    [SerializeField] private ReaperManager _reaperManager;
+    [SerializeField] private Transform _reaperTransform;
+    [SerializeField] private string _fileName = "InputLog";
+
+    [Header("Popup Text")]
+    [SerializeField, TextArea(1, 4)] private string _ja = "を保存しました";
+    [SerializeField, TextArea(1, 4)] private string _en = "was saved.";
+    #endregion
+
+    #region Private Fields
+    private bool _isRecording = false;
+    private string _csvData = "";
+    private Vector3 _startPos;
+    #endregion
+
+    #region Readonly Field
+    readonly string saveDirectory = Application.streamingAssetsPath + "/../../../InputLog";
+    #endregion
+
+    #region MonoBehaviour Callbacks
+    private void Awake()
+    {
+        //名前が無ければ付ける
+        if (_fileName == "") _fileName = "InputLog";
+
+        //拡張子は外しておく（Export時に付ける）
+        if (_fileName.EndsWith(".csv")) _fileName = _fileName.Remove(_fileName.Length - 4, 4);
+
+        //csvDataの1行目にラベルを設定
+        _csvData += "inputX,inputY,PosX,PosY,PosZ,AngleY" + "\n";
+    }
+
+    private void Update()
+    {
+        if (!_isRecording) return;
+
+        //データを揃える
+        //必要あればここで桁数やら形式やら指定する
+        var inputX = _reaperManager.NowInput.x;
+        var inputY = _reaperManager.NowInput.y;
+
+        var posX   = RoundF(_reaperTransform.position.x - _startPos.x, 5);
+        var posY   = RoundF(_reaperTransform.position.y - _startPos.y, 5);
+        var posZ   = RoundF(_reaperTransform.position.z - _startPos.z, 5);
+
+        var angleY = _reaperTransform.eulerAngles.y < 180 ? _reaperTransform.eulerAngles.y : _reaperTransform.transform.eulerAngles.y - 360f;
+            angleY = RoundF(angleY, 3);
+
+        // input.x, input.y, pos.x, pos.y, pos.z, angle.y のような形式でstringを保存
+        _csvData += $"{inputX},{inputY},{posX},{posY},{posZ},{angleY}\n";
+    }
+    #endregion
+
+    #region Public method for button
+    public void StartRecording()
+    {
+        GameTimer.Restart();
+
+        //開始位置を基準として記録
+        _startPos = _reaperTransform.position;
+
+        _isRecording = true;
+    }
+
+    public void StopRecording()
+    {
+        GameTimer.Stop();
+        _isRecording = false;
+
+        ExportCSV();
+    }
+    #endregion
+
+    #region Private method
+    private void ExportCSV()
+    {
+        //その他欲しい情報（平均偏差とか最大値とか？）もあればcsvDataに追加
+
+
+
+        //ファイル名作成
+        var now = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+        var filePath = $"{saveDirectory}/{_fileName}_{now}.csv";
+
+        //csvファイルに書き出し
+        CSVUtility.Write(filePath, _csvData);
+
+        //UIの表示
+        var popupText = GetText(LocalizationSettings.SelectedLocale.Identifier.Code, Path.GetFileName(filePath));
+        ReaperEventManager.InvokeTextPopupEvent(popupText);
+    }
+
+    private string GetText(string localeCode, string fileName)
+    {
+        var text = fileName + " ";
+        switch (localeCode)
+        {
+            case "ja":
+                text += _ja;
+                break;
+
+            case "en":
+                text += _en;
+                break;
+
+            default:
+                break;
+        }
+        return text;
+    }
+
+    /// <summary>
+    /// 指定した小数点以下桁数で四捨五入
+    /// </summary>
+    /// <param name="num">四捨五入したい数</param>
+    /// <param name="digits">小数点以下の桁数</param>
+    private float RoundF(float num, int digits)
+    {
+        var multipile = (float)Math.Pow(10, digits);
+        return Mathf.Round(num * multipile) / multipile;
+    }
+    #endregion
+}
