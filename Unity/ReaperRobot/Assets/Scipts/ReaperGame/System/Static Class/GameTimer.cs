@@ -12,15 +12,7 @@ namespace smart3tene.Reaper
 
         public static void Start()
         {
-            if (_stopWatch.IsRunning)
-            {
-                Restart();
-            }
-            else
-            {
-                _stopWatch.Start();
-            }
-            
+            _stopWatch.Start();
         }
 
         public static float Stop()
@@ -34,7 +26,7 @@ namespace smart3tene.Reaper
             _stopWatch.Reset();
         }
 
-        public static void Restart()
+        public static void Restart() 
         {
             _stopWatch.Restart();
         }
