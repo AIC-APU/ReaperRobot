@@ -13,6 +13,8 @@ namespace smart3tene.Reaper
         [SerializeField] private Slider _delaySlider;
         [SerializeField] private TMP_Text _delayNumText;
 
+        private float _lastDelay = 0f;
+
         readonly int maxDelay = 3;
 
         private void Awake()
@@ -28,13 +30,15 @@ namespace smart3tene.Reaper
             {
                 switch (mode)
                 {
-                    case ViewMode.ViewModeCategory.REAPER_FPV:
-                    case ViewMode.ViewModeCategory.REAPER_AROUND:
-                    case ViewMode.ViewModeCategory.REAPER_BIRDVIEW:
+                    case ViewMode.ViewModeCategory.PERSON_TPV:
+                    case ViewMode.ViewModeCategory.REAPER_FromPERSON:
+                        _delaySlider.interactable = false;
+                        SetDelay(0f);
                         break;
 
                     default:
-                        _delaySlider.value = 0f;
+                        _delaySlider.interactable = true;
+                        SetDelay(_delaySlider.value);
                         break;
                 }
             }).AddTo(this);
@@ -43,8 +47,7 @@ namespace smart3tene.Reaper
         //スライダーに設定する用の関数
         public void DelaySliderOnValueChaged()
         {
-            _projector.delay = _delaySlider.value;
-            _delayNumText.text = _delaySlider.value.ToString("F1");
+            SetDelay(_delaySlider.value);
         }
 
         private void InitializeDelaySlider()
@@ -52,14 +55,15 @@ namespace smart3tene.Reaper
             _delaySlider.maxValue = maxDelay;
             _delaySlider.minValue = 0;
 
-            _projector.delay = Mathf.Clamp(_projector.delay, 0, maxDelay);
-
-            _delaySlider.value = _projector.delay;
-
-            _delayNumText.text = _delaySlider.value.ToString("F1");
+            var defaultDelay = Mathf.Clamp(_projector.delay, 0, maxDelay);
+            SetDelay(defaultDelay);
+            _delaySlider.value = defaultDelay;
         }
 
+        private void SetDelay(float delay)
+        {
+            _projector.delay = delay;
+            _delayNumText.text = delay.ToString("F1");
+        }
     }
-
-
 }
