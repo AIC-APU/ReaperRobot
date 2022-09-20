@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace smart3tene
 {
-    public class TrainingButtonForDebug : MonoBehaviour
+    public class OnlySoloButtonForDebug : MonoBehaviour
     {
         [SerializeReference] private Button _trainingButton;
 

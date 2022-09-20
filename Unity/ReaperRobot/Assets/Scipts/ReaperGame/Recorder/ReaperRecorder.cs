@@ -26,7 +26,6 @@ public class ReaperRecorder : MonoBehaviour
     #region Private Fields
     private bool _isRecording = false;
     private string _csvData = "";
-    private Vector3 _startPos;
     #endregion
 
     #region Readonly Field
@@ -43,27 +42,32 @@ public class ReaperRecorder : MonoBehaviour
         if (_fileName.EndsWith(".csv")) _fileName = _fileName.Remove(_fileName.Length - 4, 4);
 
         //csvDataの1行目にラベルを設定
-        _csvData += "inputX,inputY,PosX,PosY,PosZ,AngleY" + "\n";
+        _csvData += "Time,input_horizontal,input_vertical,PosX,PosY,PosZ,AngleY,Lift,Cutter" + "\n";
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!_isRecording) return;
 
         //データを揃える
         //必要あればここで桁数やら形式やら指定する
+        var time   = GameTimer.GetCurrentTimeSpan.ToString(@"hh\.mm\.ss\.ff");
+
         var inputX = _reaperManager.NowInput.x;
         var inputY = _reaperManager.NowInput.y;
 
-        var posX   = RoundF(_reaperTransform.position.x - _startPos.x, 5);
-        var posY   = RoundF(_reaperTransform.position.y - _startPos.y, 5);
-        var posZ   = RoundF(_reaperTransform.position.z - _startPos.z, 5);
+        var posX   = RoundF(_reaperTransform.position.x, 5);
+        var posY   = RoundF(_reaperTransform.position.y, 5);
+        var posZ   = RoundF(_reaperTransform.position.z, 5);
 
         var angleY = _reaperTransform.eulerAngles.y < 180 ? _reaperTransform.eulerAngles.y : _reaperTransform.transform.eulerAngles.y - 360f;
-            angleY = RoundF(angleY, 3);
+            angleY = RoundF(angleY, 5);
+
+        var lift   = _reaperManager.IsLiftDown.Value ? 1 : 0;
+        var cutter = _reaperManager.IsCutting.Value ? 1 : 0;
 
         // input.x, input.y, pos.x, pos.y, pos.z, angle.y のような形式でstringを保存
-        _csvData += $"{inputX},{inputY},{posX},{posY},{posZ},{angleY}\n";
+        _csvData += $"{time},{inputX},{inputY},{posX},{posY},{posZ},{angleY},{lift},{cutter}\n";
     }
     #endregion
 
@@ -71,9 +75,6 @@ public class ReaperRecorder : MonoBehaviour
     public void StartRecording()
     {
         GameTimer.Restart();
-
-        //開始位置を基準として記録
-        _startPos = _reaperTransform.position;
 
         _isRecording = true;
     }
@@ -90,10 +91,6 @@ public class ReaperRecorder : MonoBehaviour
     #region Private method
     private void ExportCSV()
     {
-        //その他欲しい情報（平均偏差とか最大値とか？）もあればcsvDataに追加
-
-
-
         //ファイル名作成
         var now = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
         var filePath = $"{saveDirectory}/{_fileName}_{now}.csv";
