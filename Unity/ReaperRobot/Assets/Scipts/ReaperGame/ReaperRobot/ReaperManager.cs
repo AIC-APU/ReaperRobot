@@ -95,16 +95,8 @@ namespace smart3tene.Reaper
                 {
                     _reaper.tag = "Untagged";
                 }
-            }).AddTo(this); ;
+            }).AddTo(this);
 
-            //数秒毎に位置を同期
-            /*if (PhotonNetwork.IsConnected && photonView.IsMine)
-            {
-                Observable
-                    .Interval(TimeSpan.FromSeconds(1))
-                    .Subscribe(_ => photonView.RPC(nameof(RPCSyncTransform), RpcTarget.Others, transform.position, transform.rotation))
-                    .AddTo(this);
-            }*/
         }
 
         private void Update()

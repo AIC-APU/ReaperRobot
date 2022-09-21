@@ -1,14 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UniRx;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using UnityEditor;
-using UnityEngine.Rendering;
 
-namespace smart3tene.Reaper 
+namespace smart3tene.Reaper
 {
     public class RecorderAndPlayerUI : MonoBehaviour
     {
@@ -55,7 +52,7 @@ namespace smart3tene.Reaper
 
         #region Readonly Field
         readonly string defaultFileDirectory = Path.GetFullPath(Application.streamingAssetsPath + "/../../../InputLog");
-        readonly string defaultFileNameText = "select scv file";
+        readonly string defaultFileNameText = "select csv file";
         #endregion
 
 
@@ -96,7 +93,7 @@ namespace smart3tene.Reaper
         {
             if(_csvPlayer != null)
             {
-                _timerText.text = FloatTimeToString(_csvPlayer.PlayTime);
+                _timerText.text = ConvertSecondsToString(_csvPlayer.PlayTime);
             }
         }
 
@@ -250,7 +247,7 @@ namespace smart3tene.Reaper
             _rotateCutterButton.interactable = interactable;
         }
 
-        private string FloatTimeToString(float seconds)
+        private string ConvertSecondsToString(float seconds)
         {
             var hour = Mathf.FloorToInt(seconds / 3600f);
             var min = Mathf.FloorToInt((seconds - hour * 3600f) / 60f);

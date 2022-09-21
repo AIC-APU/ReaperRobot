@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,26 +11,25 @@ namespace smart3tene.Reaper
 
         #region Private Fields
         private GameObject _shadowInstance;
+        private ShadowReaperManager _shadowManager;
         #endregion
 
         #region MonoBehaviour Callbacks
-        private void FixedUpdate()
+        private void Update ()
         {
             if (!_isPlaying) return;
-            if (_csvIndex >= _csvData.Count) return;
+            if (PlayTime > ExtractSeconds(_csvData, _csvData.Count - 1)) return;
 
-            OneFlameMove(_csvData, _csvIndex);
+            PlayTime += Time.deltaTime;
 
-            PlayTime += Time.fixedDeltaTime;
+            OneFlameMove(_csvData, PlayTime);
 
-            if (_csvIndex == _csvData.Count - 1)
+            if(PlayTime > ExtractSeconds(_csvData, _csvData.Count - 1))
             {
                 //再生が終わった処理
                 Pause();
                 EndCSVEvent?.Invoke();
             }
-
-            _csvIndex++;
         }
         #endregion
 
@@ -43,13 +41,13 @@ namespace smart3tene.Reaper
                 return;
             }
 
-            _csvIndex = 1;
-            PlayTime = 0;
+            PlayTime = 0f;
 
-            var pos = ExtractPosition(_csvData, _csvIndex);
-            var angle = Quaternion.Euler(0, ExtractAngleY(_csvData, _csvIndex), 0);
+            var pos = ExtractPosition(_csvData, PlayTime);
+            var angle = ExtractQuaternion(_csvData, PlayTime);
 
             _shadowInstance = Instantiate(_shadowPrefab, pos, angle);
+            _shadowManager = _shadowInstance.GetComponent<ShadowReaperManager>();
         }
 
         public override void Play()
@@ -69,11 +67,12 @@ namespace smart3tene.Reaper
         public override void Stop()
         {
             _isPlaying = false;
+
             if(_shadowInstance != null) Destroy(_shadowInstance);
 
-            PlayTime = 0;
+            PlayTime = 0f;
+
             _csvData.Clear();
-            _csvIndex = 1;
 
             StopEvent?.Invoke();
         }
@@ -85,23 +84,24 @@ namespace smart3tene.Reaper
                 return;
             }
 
-            _csvIndex = 1;
-            PlayTime = 0;
+            PlayTime = 0f;
 
-            _shadowInstance.transform.position = ExtractPosition(_csvData, _csvIndex);
-            _shadowInstance.transform.rotation = Quaternion.Euler(0, ExtractAngleY(_csvData, _csvIndex), 0);
+            _shadowInstance.transform.position = ExtractPosition(_csvData, PlayTime);
+            _shadowInstance.transform.rotation = ExtractQuaternion(_csvData, PlayTime);
+            _shadowManager.MoveLift(ExtractLift(_csvData, PlayTime));
+            _shadowManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
 
             _isPlaying = false;
         }
         #endregion
 
         #region Private and Protected method
-        protected override void OneFlameMove(List<string[]> data, int index)
+        protected override void OneFlameMove(List<string[]> data, float seconds)
         {
-            //得たデータを使い影の位置を毎フレーム更新
-            //線形補正とか考えるならここ
-            _shadowInstance.transform.position = ExtractPosition(data, index);
-            _shadowInstance.transform.rotation = Quaternion.Euler(0, ExtractAngleY(data, index), 0);
+            _shadowInstance.transform.position = ExtractPosition(data, seconds);
+            _shadowInstance.transform.rotation = ExtractQuaternion(data, seconds);
+            _shadowManager.MoveLift(ExtractLift(data, seconds));
+            _shadowManager.RotateCutter(ExtractCutter(data, seconds));
         }
         #endregion
     }
