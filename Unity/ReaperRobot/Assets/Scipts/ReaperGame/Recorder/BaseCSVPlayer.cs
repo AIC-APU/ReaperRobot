@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.Rendering;
 
-namespace smart3tene.Reaper 
+namespace smart3tene.Reaper
 {
     public abstract class BaseCSVPlayer : MonoBehaviour
     {
@@ -23,10 +20,7 @@ namespace smart3tene.Reaper
 
         #region Protected fields
         protected bool _isPlaying = false;
-
         protected List<string[]> _csvData = new List<string[]>();
-
-        protected int _csvIndex = 1;
         #endregion
 
         #region Abstract Method
@@ -35,7 +29,7 @@ namespace smart3tene.Reaper
         public abstract void Stop();
         public abstract void Play();
         public abstract void Back();
-        protected abstract void OneFlameMove(List<string[]> data, int index);
+        protected abstract void OneFlameMove(List<string[]> data, float seconds);
         #endregion
 
         //以下のPublicクラスはoverrideせずに使ってほしいです。
@@ -54,10 +48,10 @@ namespace smart3tene.Reaper
             var stringTime = data[index][0];
             var timeArray = stringTime.Split(".");
 
-            var hour = int.Parse(timeArray[0].Substring(0, 1)) * 10 + int.Parse(timeArray[0].Substring(1, 1));
-            var min  = int.Parse(timeArray[1].Substring(0, 1)) * 10 + int.Parse(timeArray[1].Substring(1, 1));
-            var sec  = int.Parse(timeArray[2].Substring(0, 1)) * 10 + int.Parse(timeArray[2].Substring(1, 1));
-            var msec = int.Parse(timeArray[3].Substring(0, 1)) * 10 + int.Parse(timeArray[3].Substring(1, 1));
+            var hour = int.Parse(timeArray[0]);
+            var min  = int.Parse(timeArray[1]);
+            var sec  = int.Parse(timeArray[2]);
+            var msec = int.Parse(timeArray[3]) * 10; //小数点以下2桁しかないので、10倍して3桁にしている
 
             return new TimeSpan(0, hour, min, sec, msec);
         }
@@ -93,7 +87,6 @@ namespace smart3tene.Reaper
 
         protected Vector3　ExtractPosition(List<string[]> data, float seconds)
         {
-            //秒数を使い、線形補完をしながらポジションを返す
             var index = FindIndexFromSeconds(data, seconds);
 
             //indexが最大なら、最後のポジションを返す
@@ -117,7 +110,6 @@ namespace smart3tene.Reaper
 
         protected float ExtractAngleY(List<string[]> data, float seconds)
         {
-            //秒数を使い、線形補完をしながらポジションを返す
             var index = FindIndexFromSeconds(data, seconds);
 
             //indexが最大なら、最後のポジションを返す
@@ -182,12 +174,13 @@ namespace smart3tene.Reaper
             if (seconds >= ExtractSeconds(data, data.Count - 1)) return data.Count - 1;
 
             //秒数が小さすぎる場合、最小のindexを返す
-            if (seconds == 0 || seconds <= ExtractSeconds(data, 0)) return 0;
+            if (seconds == 0 || seconds <= ExtractSeconds(data, 1)) return 1;
 
             //上記以外の場合、secondsの秒数を超えない最大のindexを返す
-            int min = 0;
+            int min = 1;
             int max = data.Count - 1;
 
+            //二分探索を参考にしたアルゴリズム
             while (max - min > 1)
             {
                 int mid = (max + min) / 2;
@@ -198,7 +191,6 @@ namespace smart3tene.Reaper
                 else if (seconds == ExtractSeconds(data, mid))
                     return mid;
             }
-
             return min;
         }
         #endregion

@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cysharp.Threading.Tasks;
-using Cysharp.Threading.Tasks.Triggers;
 
 namespace smart3tene.Reaper
 {
@@ -15,24 +12,21 @@ namespace smart3tene.Reaper
         #endregion
 
         #region MonoBehaviour Callbacks
-        private void FixedUpdate()
+        private void Update()
         {
             if (!_isPlaying) return;
-            if (_csvIndex >= _csvData.Count) return;
+            if (PlayTime > ExtractSeconds(_csvData, _csvData.Count - 1)) return;
 
-            OneFlameMove(_csvData, _csvIndex);
+            PlayTime += Time.deltaTime;
 
-            PlayTime += Time.fixedDeltaTime;
+            OneFlameMove(_csvData, PlayTime);
 
-            if (_csvIndex == _csvData.Count - 1)
+            if (PlayTime > ExtractSeconds(_csvData, _csvData.Count - 1))
             {
                 //再生が終わった処理
                 Pause();
                 EndCSVEvent?.Invoke();
             }
-
-            _csvIndex++;
-
         }
         #endregion
 
@@ -47,12 +41,10 @@ namespace smart3tene.Reaper
             _reaperManager.Move(0, 0);
             PlayTime = 0;
 
-            _csvIndex = 1;
-
-            _reaperTransform.position = ExtractPosition(_csvData, _csvIndex);
-            _reaperTransform.rotation = ExtractQuaternion(_csvData, _csvIndex);
-            _reaperManager.MoveLift(ExtractLift(_csvData, _csvIndex));
-            _reaperManager.RotateCutter(ExtractCutter(_csvData, _csvIndex));
+            _reaperTransform.position = ExtractPosition(_csvData, PlayTime);
+            _reaperTransform.rotation = ExtractQuaternion(_csvData, PlayTime);
+            _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
+            _reaperManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
 
             _controller.enabled = false;
         }
@@ -69,10 +61,10 @@ namespace smart3tene.Reaper
             _isPlaying = false;
             _reaperManager.Move(0, 0);
 
-            _reaperTransform.position = ExtractPosition(_csvData, _csvIndex);
-            _reaperTransform.rotation = ExtractQuaternion(_csvData,_csvIndex);
-            _reaperManager.MoveLift(ExtractLift(_csvData, _csvIndex));
-            _reaperManager.RotateCutter(ExtractCutter(_csvData, _csvIndex));
+            _reaperTransform.position = ExtractPosition(_csvData, PlayTime);
+            _reaperTransform.rotation = ExtractQuaternion(_csvData, PlayTime);
+            _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
+            _reaperManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
 
             PausePlayEvent?.Invoke();
         }
@@ -85,7 +77,6 @@ namespace smart3tene.Reaper
 
             PlayTime = 0;
             _csvData.Clear();
-            _csvIndex = 1;
 
             StopEvent?.Invoke();
         }
@@ -98,16 +89,16 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Private method
-        protected override void OneFlameMove(List<string[]> data, int index)
+        protected override void OneFlameMove(List<string[]> data, float seconds)
         {
-            var input = ExtractInput(data, index);
+            var input = ExtractInput(data, seconds);
             _reaperManager.Move(input.x, input.y);
 
             //リフトの上下
-            _reaperManager.MoveLift(ExtractLift(data, index));
+            _reaperManager.MoveLift(ExtractLift(data, seconds));
 
             //カッターの静動
-            _reaperManager.RotateCutter(ExtractCutter(data, index));
+            _reaperManager.RotateCutter(ExtractCutter(data, seconds));
         }
         #endregion
     }
