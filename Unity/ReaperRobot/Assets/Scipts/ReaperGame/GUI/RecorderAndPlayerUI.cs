@@ -27,12 +27,14 @@ namespace smart3tene.Reaper
         [SerializeField] private Button _playButton;
         [SerializeField] private Button _pauseButton;
         [SerializeField] private Button _stopButton;
+        [SerializeField] private Button _fastForwardButton;
 
         [Header("Reaper Button")]
         [SerializeField] private Button _downLiftButton;
         [SerializeField] private Button _upLiftButton;
         [SerializeField] private Button _rotateCutterButton;
         [SerializeField] private Button _stopCutterButton;
+
         
         #endregion
 
@@ -67,6 +69,7 @@ namespace smart3tene.Reaper
             _backButton.interactable = false;
             _playButton.interactable = false;
             _pauseButton.interactable = false;
+            _fastForwardButton.interactable = false;
 
             //プレイモードが変わった時の挙動
             _playMode.Subscribe(mode => 
@@ -120,6 +123,7 @@ namespace smart3tene.Reaper
                 _playButton.interactable = true;
                 _backButton.interactable = false;
                 _pauseButton.interactable = false;
+                _fastForwardButton.interactable = false;
 
                 //フラグの管理
                 _isPlayerActive = true;
@@ -137,6 +141,14 @@ namespace smart3tene.Reaper
             _backButton.interactable = false;
             _playButton.interactable = false;
             _pauseButton.interactable = true;
+            if(_csvPlayer == _shadowReaperPlayer)
+            {
+                _fastForwardButton.interactable = true;
+            }
+            else
+            {
+                _fastForwardButton.interactable = false;
+            }
 
             _csvPlayer.Play();
         }
@@ -148,6 +160,7 @@ namespace smart3tene.Reaper
             _backButton.interactable = true;
             _playButton.interactable = true;
             _pauseButton.interactable = false;
+            _fastForwardButton.interactable = false;
 
             _csvPlayer.Pause();
         }
@@ -162,6 +175,7 @@ namespace smart3tene.Reaper
             _backButton.interactable = false;
             _playButton.interactable = false;
             _pauseButton.interactable = false;
+            _fastForwardButton.interactable = false;
 
             LiftAndCutterButton(true);
 
@@ -178,9 +192,21 @@ namespace smart3tene.Reaper
             _backButton.interactable = false;
             _playButton.interactable = true;
             _pauseButton.interactable = false;
+            _fastForwardButton.interactable = false;
 
             _csvPlayer.Back();
         }
+
+        public void FastForwardButtonDown()
+        {
+            _csvPlayer.FastForward(true);
+        }
+
+        public void FastForwardButtonUp()
+        {
+            _csvPlayer.FastForward(false);
+        }
+
         public void SelectRobotModeClick()
         {
             if(_playMode.Value == PlayMode.Robot)
@@ -228,7 +254,6 @@ namespace smart3tene.Reaper
         {
             _RecordingPanel.SetActive(!_RecordingPanel.activeSelf);
         }
-
         #endregion
 
         #region Private method
@@ -237,6 +262,7 @@ namespace smart3tene.Reaper
             _backButton.interactable = true;
             _playButton.interactable = false;
             _pauseButton.interactable = false;
+            _fastForwardButton.interactable = false;
         }
 
         private void LiftAndCutterButton(bool interactable)

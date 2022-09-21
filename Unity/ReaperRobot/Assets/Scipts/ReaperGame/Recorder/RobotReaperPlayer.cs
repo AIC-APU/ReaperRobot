@@ -19,6 +19,12 @@ namespace smart3tene.Reaper
 
             PlayTime += Time.deltaTime;
 
+            if (_isFastForward) 
+            {
+                //早送りモードなら時間を倍進める
+                PlayTime += Time.deltaTime;
+            } 
+
             OneFlameMove(_csvData, PlayTime);
 
             if (PlayTime > ExtractSeconds(_csvData, _csvData.Count - 1))
@@ -41,8 +47,11 @@ namespace smart3tene.Reaper
             _reaperManager.Move(0, 0);
             PlayTime = 0;
 
+            //Position,Rotationにはcsvを使わない方がいいかも
+            //実機の操作量を使用する時に参照できないから
             _reaperTransform.position = ExtractPosition(_csvData, PlayTime);
             _reaperTransform.rotation = ExtractQuaternion(_csvData, PlayTime);
+
             _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
             _reaperManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
 
@@ -61,8 +70,11 @@ namespace smart3tene.Reaper
             _isPlaying = false;
             _reaperManager.Move(0, 0);
 
+            //Position,Rotationにはcsvを使わない方がいいかも
+            //実機の操作量を使用する時に参照できないから
             _reaperTransform.position = ExtractPosition(_csvData, PlayTime);
             _reaperTransform.rotation = ExtractQuaternion(_csvData, PlayTime);
+
             _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
             _reaperManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
 
@@ -85,6 +97,11 @@ namespace smart3tene.Reaper
         {
             _isPlaying = false;
             SetUp();   
+        }
+
+        public override void FastForward(bool isFast)
+        {
+            _isFastForward = isFast;
         }
         #endregion
 
