@@ -20,6 +20,7 @@ namespace smart3tene.Reaper
 
         #region Protected fields
         protected bool _isPlaying = false;
+        protected bool _isFastForward = false;
         protected List<string[]> _csvData = new List<string[]>();
         #endregion
 
@@ -29,6 +30,7 @@ namespace smart3tene.Reaper
         public abstract void Stop();
         public abstract void Play();
         public abstract void Back();
+        public abstract void FastForward(bool isFast); 
         protected abstract void OneFlameMove(List<string[]> data, float seconds);
         #endregion
 

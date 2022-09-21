@@ -22,6 +22,12 @@ namespace smart3tene.Reaper
 
             PlayTime += Time.deltaTime;
 
+            if (_isFastForward)
+            {
+                //早送りモードなら時間を倍進める
+                PlayTime += Time.deltaTime;
+            }
+
             OneFlameMove(_csvData, PlayTime);
 
             if(PlayTime > ExtractSeconds(_csvData, _csvData.Count - 1))
@@ -92,6 +98,11 @@ namespace smart3tene.Reaper
             _shadowManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
 
             _isPlaying = false;
+        }
+
+        public override void FastForward(bool isFast)
+        {
+            _isFastForward = isFast;
         }
         #endregion
 
