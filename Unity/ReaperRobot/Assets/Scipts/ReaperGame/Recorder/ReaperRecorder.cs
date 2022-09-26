@@ -24,7 +24,12 @@ public class ReaperRecorder : MonoBehaviour
     #endregion
 
     #region Private Fields
+    public bool IsRecording => _isRecording;
     private bool _isRecording = false;
+
+    public float RecordingTime => _RecordingTime;
+    private float _RecordingTime = 0f;
+
     private string _csvData = "";
     #endregion
 
@@ -51,7 +56,7 @@ public class ReaperRecorder : MonoBehaviour
 
         //データを揃える
         //必要あればここで桁数やら形式やら指定する
-        var time   = GameTimer.GetCurrentTimeSpan.ToString(@"hh\.mm\.ss\.ff");
+        var time   = GameTimer.ConvertSecondsToString(_RecordingTime);
 
         var inputX = _reaperManager.NowInput.x;
         var inputY = _reaperManager.NowInput.y;
@@ -68,20 +73,21 @@ public class ReaperRecorder : MonoBehaviour
 
         // input.x, input.y, pos.x, pos.y, pos.z, angle.y のような形式でstringを保存
         _csvData += $"{time},{inputX},{inputY},{posX},{posY},{posZ},{angleY},{lift},{cutter}\n";
+
+        _RecordingTime += Time.fixedDeltaTime;
     }
     #endregion
 
     #region Public method for button
     public void StartRecording()
     {
-        GameTimer.Restart();
+        _RecordingTime = 0f;
 
         _isRecording = true;
     }
 
     public void StopRecording()
     {
-        GameTimer.Stop();
         _isRecording = false;
 
         ExportCSV();

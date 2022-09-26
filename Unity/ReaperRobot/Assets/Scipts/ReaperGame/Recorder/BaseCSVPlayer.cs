@@ -20,40 +20,34 @@ namespace smart3tene.Reaper
 
         #region Protected fields
         protected bool _isPlaying = false;
-        protected bool _isFastForward = false;
-        protected List<string[]> _csvData = new List<string[]>();
+        protected List<string[]> _csvData = new();
         #endregion
 
         #region Abstract Method
-        public abstract void SetUp();
+        public abstract void SetUp(string filePath);
         public abstract void Pause();
         public abstract void Stop();
         public abstract void Play();
         public abstract void Back();
-        public abstract void FastForward(bool isFast); 
         protected abstract void OneFlameMove(List<string[]> data, float seconds);
-        #endregion
-
-        //以下のPublicクラスはoverrideせずに使ってほしいです。
-        #region Public Method 
-        public void SetCSVData(string filePath)
-        {
-            _csvData.Clear();
-            _csvData.AddRange(CSVUtility.Read(filePath));
-        }
         #endregion
 
         //以下のProtectedクラスはoverrideせずに使ってほしいです。
         #region Protected Method
+        protected List<string[]> GetCSVData(string filePath)
+        {
+            return CSVUtility.Read(filePath);
+        }
+
         protected TimeSpan ExtractTimeSpan(List<string[]> data, int index)
         {
             var stringTime = data[index][0];
-            var timeArray = stringTime.Split(".");
+            var timeArray = stringTime.Split(":");
 
             var hour = int.Parse(timeArray[0]);
             var min  = int.Parse(timeArray[1]);
             var sec  = int.Parse(timeArray[2]);
-            var msec = int.Parse(timeArray[3]) * 10; //小数点以下2桁しかないので、10倍して3桁にしている
+            var msec = int.Parse(timeArray[3]); //小数点以下2桁しかないので、10倍して3桁にしている
 
             return new TimeSpan(0, hour, min, sec, msec);
         }
