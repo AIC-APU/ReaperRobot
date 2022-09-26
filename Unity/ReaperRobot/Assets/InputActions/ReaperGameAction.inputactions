@@ -103,6 +103,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "CSVPlay",
+                    "type": "Button",
+                    "id": "8b42e179-6c4c-42dc-96bb-ac58557fce91",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CSVStop",
+                    "type": "Button",
+                    "id": "214409b6-805e-4fd5-9bdf-56557af8159e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -512,6 +530,28 @@
                     "action": "ChangeReaperAndPerson",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d614ebd6-2cae-4863-ba56-703c9496c03d",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "CSVPlay",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "40258bd9-adec-48d9-8cb5-80310b5d465a",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CSVStop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -568,6 +608,24 @@
                     "name": "Menu",
                     "type": "Button",
                     "id": "87c4cc2f-e957-4c2f-adf5-f277807ac15f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CSVPlay",
+                    "type": "Button",
+                    "id": "95d2d09b-a2e7-4910-ba4f-6eb2aea893a2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CSVStop",
+                    "type": "Button",
+                    "id": "a17afa4f-d626-47b2-a886-c9dfad98236b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -792,6 +850,28 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "ChangeReaperAndPerson",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a5b5b870-c9eb-4b71-a32c-310b70dfdd3b",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "CSVPlay",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5b6f631c-f02f-48c6-9caa-2f825a6c5ed2",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "CSVStop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

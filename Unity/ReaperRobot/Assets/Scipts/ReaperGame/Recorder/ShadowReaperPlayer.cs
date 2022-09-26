@@ -12,6 +12,9 @@ namespace smart3tene.Reaper
         #region Private Fields
         private GameObject _shadowInstance;
         private ShadowReaperManager _shadowManager;
+
+        private bool _isFastForward = false;
+        private bool _isRewind = false;
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -20,11 +23,18 @@ namespace smart3tene.Reaper
             if (!_isPlaying) return;
             if (PlayTime > ExtractSeconds(_csvData, _csvData.Count - 1)) return;
 
-            PlayTime += Time.deltaTime;
-
             if (_isFastForward)
             {
                 //早送りモードなら時間を倍進める
+                PlayTime += Time.deltaTime * 2f;
+            }
+            else if (_isRewind)
+            {
+                PlayTime -= Time.deltaTime;
+                if(PlayTime < 0) PlayTime = 0f;
+            }
+            else
+            {
                 PlayTime += Time.deltaTime;
             }
 
@@ -40,8 +50,11 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Public Method
-        public override void SetUp()
+        public override void SetUp(string filePath)
         {
+            _csvData.Clear();
+            _csvData.AddRange(GetCSVData(filePath));
+
             if(_csvData.Count == 0)
             {
                 return;
@@ -100,9 +113,14 @@ namespace smart3tene.Reaper
             _isPlaying = false;
         }
 
-        public override void FastForward(bool isFast)
+        public void FastForward(bool isFast)
         {
             _isFastForward = isFast;
+        }
+
+        public void Rewind(bool isRewind)
+        {
+            _isRewind = isRewind;
         }
         #endregion
 

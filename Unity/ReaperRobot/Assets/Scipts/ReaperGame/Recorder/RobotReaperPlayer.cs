@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace smart3tene.Reaper
@@ -11,6 +12,11 @@ namespace smart3tene.Reaper
         [SerializeField] private ReaperController _controller;
         #endregion
 
+        #region Readonly Fields
+        readonly Vector3 _defaultPos = new Vector3(0, 0, -10);
+        readonly Vector3 _defaultRot = new Vector3(0, 0, 0);
+        #endregion
+
         #region MonoBehaviour Callbacks
         private void Update()
         {
@@ -18,12 +24,6 @@ namespace smart3tene.Reaper
             if (PlayTime > ExtractSeconds(_csvData, _csvData.Count - 1)) return;
 
             PlayTime += Time.deltaTime;
-
-            if (_isFastForward) 
-            {
-                //早送りモードなら時間を倍進める
-                PlayTime += Time.deltaTime;
-            } 
 
             OneFlameMove(_csvData, PlayTime);
 
@@ -37,24 +37,29 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Public method
-        public override void SetUp()
+        public override void SetUp(string filePath)
         {
+            _csvData.Clear();
+            _csvData.AddRange(GetCSVData(filePath));
+
             if (_csvData.Count == 0)
             {
                 return;
             }
 
-            _reaperManager.Move(0, 0);
+            //プレイタイムの初期化
             PlayTime = 0;
 
-            //Position,Rotationにはcsvを使わない方がいいかも
-            //実機の操作量を使用する時に参照できないから
-            _reaperTransform.position = ExtractPosition(_csvData, PlayTime);
-            _reaperTransform.rotation = ExtractQuaternion(_csvData, PlayTime);
+            //初期位置の設定
+            _reaperManager.Move(0, 0);
+            _reaperTransform.position =  _defaultPos;
+            _reaperTransform.rotation = Quaternion.Euler(_defaultRot);
 
+            //リフト・カッターの初期設定
             _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
             _reaperManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
 
+            //コントローラ操作を無効化
             _controller.enabled = false;
         }
 
@@ -69,14 +74,6 @@ namespace smart3tene.Reaper
         {
             _isPlaying = false;
             _reaperManager.Move(0, 0);
-
-            //Position,Rotationにはcsvを使わない方がいいかも
-            //実機の操作量を使用する時に参照できないから
-            _reaperTransform.position = ExtractPosition(_csvData, PlayTime);
-            _reaperTransform.rotation = ExtractQuaternion(_csvData, PlayTime);
-
-            _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
-            _reaperManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
 
             PausePlayEvent?.Invoke();
         }
@@ -96,12 +93,17 @@ namespace smart3tene.Reaper
         public override void Back()
         {
             _isPlaying = false;
-            SetUp();   
-        }
 
-        public override void FastForward(bool isFast)
-        {
-            _isFastForward = isFast;
+            PlayTime = 0;
+
+            //初期位置の設定
+            _reaperManager.Move(0, 0);
+            _reaperTransform.position = _defaultPos;
+            _reaperTransform.rotation = Quaternion.Euler(_defaultRot);
+
+            //リフト・カッターの初期設定
+            _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
+            _reaperManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
         }
         #endregion
 

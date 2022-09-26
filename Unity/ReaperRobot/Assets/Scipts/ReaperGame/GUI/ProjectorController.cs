@@ -13,8 +13,6 @@ namespace smart3tene.Reaper
         [SerializeField] private Slider _delaySlider;
         [SerializeField] private TMP_Text _delayNumText;
 
-        private float _lastDelay = 0f;
-
         readonly int maxDelay = 3;
 
         private void Awake()
