@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
@@ -10,6 +11,12 @@ namespace smart3tene.Reaper
         [SerializeField] private ReaperManager _reaperManager;
         [SerializeField] private Transform _reaperTransform;
         [SerializeField] private ReaperController _controller;
+        [SerializeField] private Material _pathMaterial;
+        #endregion
+
+        #region Private Fields
+        private int _flameCount = 0;
+        private List<GameObject> _pathObjects = new();
         #endregion
 
         #region Readonly Fields
@@ -26,6 +33,13 @@ namespace smart3tene.Reaper
             PlayTime += Time.deltaTime;
 
             OneFlameMove(_csvData, PlayTime);
+
+            if (_flameCount % 10 == 0)
+            {
+                var obj = MeshCreator.CreateCubeMesh(_reaperTransform.position, _pathMaterial, 0.05f);
+                _pathObjects.Add(obj);
+            }
+            _flameCount++;
 
             if (PlayTime > ExtractSeconds(_csvData, _csvData.Count - 1))
             {
@@ -49,6 +63,9 @@ namespace smart3tene.Reaper
 
             //プレイタイムの初期化
             PlayTime = 0;
+
+            //フレームカウントの初期化
+            _flameCount = 0;
 
             //初期位置の設定
             _reaperManager.Move(0, 0);
@@ -87,6 +104,14 @@ namespace smart3tene.Reaper
             PlayTime = 0;
             _csvData.Clear();
 
+            //pathの初期化
+            foreach (var obj in _pathObjects)
+            {
+                Destroy(obj);
+            }
+            _pathObjects.Clear();
+            _flameCount = 0;
+
             StopEvent?.Invoke();
         }
 
@@ -104,6 +129,14 @@ namespace smart3tene.Reaper
             //リフト・カッターの初期設定
             _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
             _reaperManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
+
+            //pathの初期化
+            foreach (var obj in _pathObjects)
+            {
+                Destroy(obj);
+            }
+            _pathObjects.Clear();
+            _flameCount = 0;
         }
         #endregion
 

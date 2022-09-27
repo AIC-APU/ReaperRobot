@@ -7,14 +7,19 @@ namespace smart3tene.Reaper
     {
         #region Serialized Private Fields
         [SerializeField] private GameObject _shadowPrefab;
+        [SerializeField] private Material _pathMaterial;
         #endregion
 
         #region Private Fields
         private GameObject _shadowInstance;
+        private Transform _shadowTransform;
         private ShadowReaperManager _shadowManager;
 
         private bool _isFastForward = false;
         private bool _isRewind = false;
+
+        private List<GameObject> _pathObjects = new();
+        private int _flameCount = 0;
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -40,7 +45,15 @@ namespace smart3tene.Reaper
 
             OneFlameMove(_csvData, PlayTime);
 
-            if(PlayTime > ExtractSeconds(_csvData, _csvData.Count - 1))
+            if(_flameCount % 10 == 0)
+            {
+                var obj = MeshCreator.CreateCubeMesh(_shadowTransform.position, _pathMaterial, 0.05f);
+                _pathObjects.Add(obj);
+            }
+            _flameCount++;
+            
+
+            if (PlayTime > ExtractSeconds(_csvData, _csvData.Count - 1))
             {
                 //再生が終わった処理
                 Pause();
@@ -61,11 +74,13 @@ namespace smart3tene.Reaper
             }
 
             PlayTime = 0f;
+            _flameCount = 0;
 
             var pos = ExtractPosition(_csvData, PlayTime);
             var angle = ExtractQuaternion(_csvData, PlayTime);
 
             _shadowInstance = Instantiate(_shadowPrefab, pos, angle);
+            _shadowTransform = _shadowInstance.transform;
             _shadowManager = _shadowInstance.GetComponent<ShadowReaperManager>();
         }
 
@@ -88,10 +103,18 @@ namespace smart3tene.Reaper
             _isPlaying = false;
 
             if(_shadowInstance != null) Destroy(_shadowInstance);
+            _shadowTransform = null;
 
             PlayTime = 0f;
 
             _csvData.Clear();
+
+            foreach (var obj in _pathObjects)
+            {
+                Destroy(obj);
+            }
+            _pathObjects.Clear();
+            _flameCount = 0;
 
             StopEvent?.Invoke();
         }
@@ -105,12 +128,18 @@ namespace smart3tene.Reaper
 
             PlayTime = 0f;
 
-            _shadowInstance.transform.position = ExtractPosition(_csvData, PlayTime);
-            _shadowInstance.transform.rotation = ExtractQuaternion(_csvData, PlayTime);
+            _shadowTransform.SetPositionAndRotation(ExtractPosition(_csvData, PlayTime), ExtractQuaternion(_csvData, PlayTime));
             _shadowManager.MoveLift(ExtractLift(_csvData, PlayTime));
             _shadowManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
 
             _isPlaying = false;
+
+            foreach(var obj in _pathObjects)
+            {
+                Destroy(obj);
+            }
+            _pathObjects.Clear();
+            _flameCount = 0;
         }
 
         public void FastForward(bool isFast)
@@ -127,8 +156,7 @@ namespace smart3tene.Reaper
         #region Private and Protected method
         protected override void OneFlameMove(List<string[]> data, float seconds)
         {
-            _shadowInstance.transform.position = ExtractPosition(data, seconds);
-            _shadowInstance.transform.rotation = ExtractQuaternion(data, seconds);
+            _shadowTransform.SetPositionAndRotation(ExtractPosition(data, seconds), ExtractQuaternion(data, seconds));
             _shadowManager.MoveLift(ExtractLift(data, seconds));
             _shadowManager.RotateCutter(ExtractCutter(data, seconds));
         }

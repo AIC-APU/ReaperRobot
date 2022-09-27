@@ -583,8 +583,8 @@ RectTransform:
   - {fileID: 1078872414}
   - {fileID: 326153025}
   - {fileID: 338461106}
-  - {fileID: 709611184}
   - {fileID: 688339029}
+  - {fileID: 709611184}
   - {fileID: 554519291}
   m_Father: {fileID: 0}
   m_RootOrder: 9
@@ -1030,6 +1030,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TrafficConeRedWhite
       objectReference: {fileID: 0}
+    - target: {fileID: 113322, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 468682, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -1340,6 +1344,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TrafficConeRedWhite (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 113322, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 468682, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -1436,6 +1444,7 @@ MonoBehaviour:
   _reaperManager: {fileID: 691473189}
   _reaperTransform: {fileID: 691473187}
   _controller: {fileID: 1943855788}
+  _pathMaterial: {fileID: 2100000, guid: fe19eca1867b4554784a254a6fe516fb, type: 2}
 --- !u!114 &298449272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1449,6 +1458,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shadowPrefab: {fileID: 6569828215229620751, guid: 867756d26096d35419251b8ca2f51d6e, type: 3}
+  _pathMaterial: {fileID: 2100000, guid: 6a418f7d67c7d79429f0ff49c4235a05, type: 2}
 --- !u!4 &298449273
 Transform:
   m_ObjectHideFlags: 0
@@ -1474,6 +1484,10 @@ PrefabInstance:
     - target: {fileID: 113322, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
       propertyPath: m_Name
       value: TrafficConeRedWhite (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 113322, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 468682, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
       propertyPath: m_RootOrder
@@ -1555,7 +1569,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &313196792
 Transform:
@@ -2364,6 +2378,10 @@ PrefabInstance:
     - target: {fileID: 113322, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
       propertyPath: m_Name
       value: TrafficConeRedWhite (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 113322, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 468682, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
       propertyPath: m_RootOrder
@@ -3196,7 +3214,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &618328520
 Transform:
@@ -4017,11 +4035,11 @@ RectTransform:
   - {fileID: 1162137686}
   - {fileID: 119321367}
   m_Father: {fileID: 151585347}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 200, y: -285}
+  m_AnchoredPosition: {x: 200, y: -175}
   m_SizeDelta: {x: 400, y: 110}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &688339030
@@ -4184,11 +4202,11 @@ RectTransform:
   - {fileID: 995570956}
   - {fileID: 741036402}
   m_Father: {fileID: 151585347}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 200, y: -175}
+  m_AnchoredPosition: {x: 200, y: -285}
   m_SizeDelta: {x: 400, y: 110}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &709611185
@@ -4498,6 +4516,10 @@ PrefabInstance:
     - target: {fileID: 113322, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
       propertyPath: m_Name
       value: TrafficConeRedWhite (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 113322, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 468682, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
       propertyPath: m_RootOrder
@@ -6129,6 +6151,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TrafficConeRedWhite (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 113322, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 468682, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -6304,7 +6330,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1046633718
 Transform:
@@ -6650,6 +6676,10 @@ PrefabInstance:
     - target: {fileID: 113322, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
       propertyPath: m_Name
       value: TrafficConeRedWhite (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 113322, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 468682, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
       propertyPath: m_RootOrder
@@ -7365,6 +7395,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TrafficConeRedWhite (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 113322, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 468682, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -7639,7 +7673,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1517595103
 Transform:
@@ -7869,7 +7903,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1636598217
 Transform:
@@ -8778,6 +8812,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TrafficConeRedWhite (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 113322, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 468682, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
       propertyPath: m_RootOrder
       value: 11
@@ -9622,7 +9660,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!64 &2000313016
 MeshCollider:
