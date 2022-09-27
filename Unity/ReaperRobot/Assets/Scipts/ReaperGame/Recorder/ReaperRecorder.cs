@@ -50,7 +50,7 @@ public class ReaperRecorder : MonoBehaviour
         _csvData += "Time,input_horizontal,input_vertical,PosX,PosY,PosZ,AngleY,Lift,Cutter" + "\n";
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (!_isRecording) return;
 
@@ -61,12 +61,12 @@ public class ReaperRecorder : MonoBehaviour
         var inputX = _reaperManager.NowInput.x;
         var inputY = _reaperManager.NowInput.y;
 
-        var posX   = RoundF(_reaperTransform.position.x, 5);
-        var posY   = RoundF(_reaperTransform.position.y, 5);
-        var posZ   = RoundF(_reaperTransform.position.z, 5);
+        var posX   = RoundF(_reaperTransform.position.x, 8);
+        var posY   = RoundF(_reaperTransform.position.y, 8);
+        var posZ   = RoundF(_reaperTransform.position.z, 8);
 
         var angleY = _reaperTransform.eulerAngles.y < 180 ? _reaperTransform.eulerAngles.y : _reaperTransform.transform.eulerAngles.y - 360f;
-            angleY = RoundF(angleY, 5);
+            angleY = RoundF(angleY, 8);
 
         var lift   = _reaperManager.IsLiftDown.Value ? 1 : 0;
         var cutter = _reaperManager.IsCutting.Value ? 1 : 0;
@@ -74,7 +74,7 @@ public class ReaperRecorder : MonoBehaviour
         // input.x, input.y, pos.x, pos.y, pos.z, angle.y のような形式でstringを保存
         _csvData += $"{time},{inputX},{inputY},{posX},{posY},{posZ},{angleY},{lift},{cutter}\n";
 
-        _RecordingTime += Time.fixedDeltaTime;
+        _RecordingTime += Time.deltaTime;
     }
     #endregion
 
