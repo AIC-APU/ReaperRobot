@@ -20,7 +20,7 @@ namespace smart3tene.Reaper
 
         static GrassCounter()
         {
-            SceneManager.sceneUnloaded += Reset;
+            SceneManager.sceneUnloaded += UnloadReset;
         }       
 
         public static void AddAllGrass()
@@ -48,7 +48,7 @@ namespace smart3tene.Reaper
             _remainingGrass.Value  = _allGrassCount.Value - _cutGrassCount.Value;
         }
 
-        private static void Reset(Scene thisScene)
+        private static void UnloadReset(Scene thisScene)
         {
             _allGrassCount.Value = 0;
             _cutGrassCount.Value = 0;
