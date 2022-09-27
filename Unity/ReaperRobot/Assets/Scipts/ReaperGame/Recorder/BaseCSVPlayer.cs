@@ -74,9 +74,9 @@ namespace smart3tene.Reaper
 
         protected Vector3 ExtractPosition(List<string[]> data, int index)
         {
-            var posX = float.Parse(data[index][3]);
-            var posY = float.Parse(data[index][4]);
-            var posZ = float.Parse(data[index][5]);
+            var posX = float.Parse(data[index][5]);
+            var posY = float.Parse(data[index][6]);
+            var posZ = float.Parse(data[index][7]);
 
             return new Vector3(posX, posY, posZ);
         }
@@ -101,7 +101,7 @@ namespace smart3tene.Reaper
 
         protected float ExtractAngleY(List<string[]> data, int index)
         {
-            return float.Parse(data[index][6]);
+            return float.Parse(data[index][8]);
         }
 
         protected float ExtractAngleY(List<string[]> data, float seconds)
@@ -134,7 +134,7 @@ namespace smart3tene.Reaper
 
         protected bool ExtractLift(List<string[]> data, int index)
         {
-            var isDown = int.Parse(data[index][7]) == 1;
+            var isDown = int.Parse(data[index][3]) == 1;
             return isDown;
         }
 
@@ -146,7 +146,7 @@ namespace smart3tene.Reaper
 
         protected bool ExtractCutter(List<string[]> data, int index)
         {
-            var isRotate = int.Parse(data[index][8]) == 1;
+            var isRotate = int.Parse(data[index][4]) == 1;
             return isRotate;
         }
 

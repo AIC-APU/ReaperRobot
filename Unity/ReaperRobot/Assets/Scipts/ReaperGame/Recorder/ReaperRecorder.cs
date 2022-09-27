@@ -47,7 +47,7 @@ public class ReaperRecorder : MonoBehaviour
         if (_fileName.EndsWith(".csv")) _fileName = _fileName.Remove(_fileName.Length - 4, 4);
 
         //csvDataの1行目にラベルを設定
-        _csvData += "Time,input_horizontal,input_vertical,PosX,PosY,PosZ,AngleY,Lift,Cutter" + "\n";
+        _csvData += "Time,input_horizontal,input_vertical,Lift,Cutter,PosX,PosY,PosZ,AngleY" + "\n";
     }
 
     private void Update()
@@ -72,7 +72,7 @@ public class ReaperRecorder : MonoBehaviour
         var cutter = _reaperManager.IsCutting.Value ? 1 : 0;
 
         // input.x, input.y, pos.x, pos.y, pos.z, angle.y のような形式でstringを保存
-        _csvData += $"{time},{inputX},{inputY},{posX},{posY},{posZ},{angleY},{lift},{cutter}\n";
+        _csvData += $"{time},{inputX},{inputY},{lift},{cutter},{posX},{posY},{posZ},{angleY}\n";
 
         _RecordingTime += Time.deltaTime;
     }
