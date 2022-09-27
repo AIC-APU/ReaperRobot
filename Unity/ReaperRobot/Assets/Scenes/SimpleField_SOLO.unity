@@ -2405,6 +2405,7 @@ GameObject:
   - component: {fileID: 439129845}
   - component: {fileID: 439129846}
   - component: {fileID: 439129847}
+  - component: {fileID: 439129848}
   m_Layer: 0
   m_Name: GameSystem
   m_TagString: Untagged
@@ -2470,6 +2471,18 @@ MonoBehaviour:
   _reaperBirdView: {fileID: 1733106938}
   _reaperAround: {fileID: 81614028}
   _reaperGaze: {fileID: 2024924641}
+--- !u!114 &439129848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439129843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54b00ee4b766108469a7def3cbf13cbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &446572424
 GameObject:
   m_ObjectHideFlags: 0
@@ -8670,9 +8683,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1392477803}
-        m_TargetAssemblyTypeName: smart3tene.Reaper.GUIManager, Assembly-CSharp
-        m_MethodName: ResetButtonClick
+      - m_Target: {fileID: 1392477810}
+        m_TargetAssemblyTypeName: smart3tene.Reaper.ResetButton, Assembly-CSharp
+        m_MethodName: OnClickResetButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9129,6 +9142,7 @@ GameObject:
   - component: {fileID: 1392477807}
   - component: {fileID: 1392477808}
   - component: {fileID: 1392477809}
+  - component: {fileID: 1392477810}
   m_Layer: 5
   m_Name: MainCanvas
   m_TagString: Untagged
@@ -9250,7 +9264,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _timeNum: {fileID: 163859721}
-  _startTimerOnAwake: 1
 --- !u!114 &1392477805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9314,6 +9327,18 @@ MonoBehaviour:
   _projector: {fileID: 1936104703}
   _delaySlider: {fileID: 1277739193}
   _delayNumText: {fileID: 664984229}
+--- !u!114 &1392477810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1392477798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45523f5bdc66f6347a96f2497c999ffc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1394927294
 GameObject:
   m_ObjectHideFlags: 0

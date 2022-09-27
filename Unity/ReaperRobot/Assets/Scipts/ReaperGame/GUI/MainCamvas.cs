@@ -37,12 +37,5 @@ namespace smart3tene.Reaper
                 }
             }).AddTo(this);
         }
-
-        //以下ボタン用のメゾット
-        public void ResetButtonClick()
-        {
-            ReaperEventManager.InvokeResetEvent();
-        }
-
     }
 }
