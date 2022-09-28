@@ -11,6 +11,10 @@ namespace smart3tene.Reaper
 {
     public class RobotPlayerUI : MonoBehaviour
     {
+        #region Public Fields
+        public bool ControllableRobot { get; private set; } = true;
+        #endregion
+
         #region Serialized Private Fields
         [Header("CSV Player")]
         [SerializeField] private RobotReaperPlayer _robotReaperPlayer;
@@ -23,12 +27,6 @@ namespace smart3tene.Reaper
         [SerializeField] private Button _playButton;
         [SerializeField] private Button _pauseButton;
         [SerializeField] private Button _stopButton;
-
-        [Header("Reaper Button")]
-        [SerializeField] private Button _downLiftButton;
-        [SerializeField] private Button _upLiftButton;
-        [SerializeField] private Button _rotateCutterButton;
-        [SerializeField] private Button _stopCutterButton;
         #endregion
 
         #region Readonly Field
@@ -71,6 +69,9 @@ namespace smart3tene.Reaper
                 //csvDataの取得
                 _robotReaperPlayer.SetUp(path);
 
+                //初期位置の設定
+                ReaperEventManager.InvokeResetEvent();
+
                 //FileNameTextの設定
                 _fileNameText.text = Path.GetFileName(path);
 
@@ -79,9 +80,6 @@ namespace smart3tene.Reaper
                 _playButton.interactable = true;
                 _pauseButton.interactable = false;
                 _stopButton.interactable = true;
-
-                //リフト・カッターのボタン
-                LiftAndCutterButton(false);
             }
             else
             {
@@ -139,7 +137,10 @@ namespace smart3tene.Reaper
             //パネルの初期化
             _RobotPlayerPanel.SetActive(false);
             _fileNameText.text = defaultFileNameText;
-            LiftAndCutterButton(true);
+
+
+            //コントローラの使用の許可
+            ControllableRobot = true;
         }
 
         public void OnClickSelectRobotMode()
@@ -151,6 +152,10 @@ namespace smart3tene.Reaper
             else
             {
                 _RobotPlayerPanel.SetActive(true);
+                ReaperEventManager.InvokeResetEvent();
+
+                //コントローラの使用の禁止
+                ControllableRobot = false;
             }
         }
         #endregion
@@ -162,14 +167,6 @@ namespace smart3tene.Reaper
             _playButton.interactable = false;
             _pauseButton.interactable = false;
             _stopButton.interactable = true;
-        }
-
-        private void LiftAndCutterButton(bool interactable)
-        {
-            _downLiftButton.interactable = interactable;
-            _upLiftButton.interactable = interactable;
-            _stopCutterButton.interactable = interactable;
-            _rotateCutterButton.interactable = interactable;
         }
         #endregion
     }

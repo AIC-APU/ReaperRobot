@@ -1,17 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using TMPro;
-using UniRx;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
 
 namespace smart3tene.Reaper
 {
     public class CSVRecorderUI : MonoBehaviour
     {
+        #region Public Fields
+        public bool ControllableRobot { get; private set; } = true;
+        #endregion
+
         #region Serialized Private Fields
         [SerializeField] private ReaperRecorder _reaperRecorder;
         [SerializeField] private GameObject _recorderPanel;
@@ -41,6 +39,9 @@ namespace smart3tene.Reaper
 
             _recordingButton.interactable = false;
             _stopButton.interactable = true;
+
+            //コントローラの使用の許可
+            ControllableRobot = true;
         }
 
         public void OnClickStop()
@@ -66,6 +67,9 @@ namespace smart3tene.Reaper
 
                 _recordingButton.interactable = false;
                 _stopButton.interactable = false;
+
+                //コントローラの使用の許可
+                ControllableRobot = true;
             }
             else
             {
@@ -73,6 +77,11 @@ namespace smart3tene.Reaper
                 _stopButton.interactable = false;
 
                 _recorderPanel.SetActive(true);
+
+                ReaperEventManager.InvokeResetEvent();
+
+                //コントローラの使用の禁止
+                ControllableRobot = false;
             }
         }
         #endregion

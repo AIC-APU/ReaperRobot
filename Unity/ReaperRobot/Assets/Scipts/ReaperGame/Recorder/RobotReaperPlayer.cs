@@ -6,22 +6,18 @@ using UnityEngine;
 namespace smart3tene.Reaper
 {
     public class RobotReaperPlayer : BaseCSVPlayer
-    {
+    { 
         #region Serialized Private Fields
         [SerializeField] private ReaperManager _reaperManager;
         [SerializeField] private Transform _reaperTransform;
-        [SerializeField] private ReaperController _controller;
         [SerializeField] private Material _pathMaterial;
         #endregion
 
         #region Private Fields
         private int _flameCount = 0;
         private List<GameObject> _pathObjects = new();
-        #endregion
 
-        #region Readonly Fields
-        readonly Vector3 _defaultPos = new Vector3(0, 0, -10);
-        readonly Vector3 _defaultRot = new Vector3(0, 0, 0);
+        private bool _controlableRobot = true;
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -67,17 +63,9 @@ namespace smart3tene.Reaper
             //フレームカウントの初期化
             _flameCount = 0;
 
-            //初期位置の設定
-            _reaperManager.Move(0, 0);
-            _reaperTransform.position =  _defaultPos;
-            _reaperTransform.rotation = Quaternion.Euler(_defaultRot);
-
             //リフト・カッターの初期設定
             _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
             _reaperManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
-
-            //コントローラ操作を無効化
-            _controller.enabled = false;
         }
 
         public override void Play()
@@ -98,7 +86,6 @@ namespace smart3tene.Reaper
         public override void Stop()
         {
             _isPlaying = false;
-            _controller.enabled = true;
             _reaperManager.Move(0, 0);
 
             PlayTime = 0;
@@ -122,9 +109,7 @@ namespace smart3tene.Reaper
             PlayTime = 0;
 
             //初期位置の設定
-            _reaperManager.Move(0, 0);
-            _reaperTransform.position = _defaultPos;
-            _reaperTransform.rotation = Quaternion.Euler(_defaultRot);
+            ReaperEventManager.InvokeResetEvent();
 
             //リフト・カッターの初期設定
             _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
