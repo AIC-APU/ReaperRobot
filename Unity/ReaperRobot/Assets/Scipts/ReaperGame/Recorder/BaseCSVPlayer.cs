@@ -19,7 +19,9 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Protected fields
+        public bool IsPlaying => _isPlaying;
         protected bool _isPlaying = false;
+
         protected List<string[]> _csvData = new();
         #endregion
 

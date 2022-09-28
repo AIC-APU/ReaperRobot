@@ -78,7 +78,7 @@ public class ReaperRecorder : MonoBehaviour
     }
     #endregion
 
-    #region Public method for button
+    #region Public method
     public void StartRecording()
     {
         _RecordingTime = 0f;

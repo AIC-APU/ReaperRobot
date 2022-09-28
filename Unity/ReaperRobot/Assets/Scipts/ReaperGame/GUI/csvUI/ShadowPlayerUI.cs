@@ -71,6 +71,9 @@ namespace smart3tene.Reaper
                 //csvDataの取得
                 _shadowPlayer.SetUp(path);
 
+                //ロボットの位置の設定
+                ReaperEventManager.InvokeResetEvent();
+
                 //FileNameTextの設定
                 _fileNameText.text = Path.GetFileName(path);
 
@@ -168,11 +171,14 @@ namespace smart3tene.Reaper
         {
             if (_shadowPlayerPanel.activeSelf)
             {
-                OnClickStop();
+                OnClickStop();               
             }
             else
             {
                 _shadowPlayerPanel.SetActive(true);
+
+                //ロボットの位置の設定
+                ReaperEventManager.InvokeResetEvent();
             }
         }
 
