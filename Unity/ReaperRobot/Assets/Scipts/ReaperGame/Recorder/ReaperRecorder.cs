@@ -1,15 +1,9 @@
-using smart3tene.Reaper;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using Cysharp.Threading.Tasks;
-using TMPro.EditorUtilities;
-using UnityEngine.Localization.Settings;
-using Newtonsoft.Json.Schema;
 using smart3tene;
+using smart3tene.Reaper;
 using System;
 using System.IO;
+using UnityEngine;
+using UnityEngine.Localization.Settings;
 
 public class ReaperRecorder : MonoBehaviour
 {

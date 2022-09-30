@@ -14,9 +14,9 @@ namespace smart3tene.Reaper
         #region Serialized Private Fields
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private TMP_Text _text;
-        [SerializeField, Range(1, 100)] private int _fadeInSpeed = 5;
+        [SerializeField, Range(1, 10)] private int _fadeInTime = 1;
         [SerializeField, Range(1, 10)] private int _popupTime = 3;
-        [SerializeField, Range(1, 100)] private int _fadeOutSpeed = 5;
+        [SerializeField, Range(1, 10)] private int _fadeOutTime = 1;
         #endregion
 
         #region Private Fields
@@ -57,9 +57,12 @@ namespace smart3tene.Reaper
             _text.text = text;
 
             //フェードで表示
+            var time = 0f;
             while (_canvasGroup.alpha < 1)
             {
-                _canvasGroup.alpha += (float)_fadeInSpeed / 1000f;
+                time += Time.deltaTime;
+                time = Mathf.Clamp(time, 0, _fadeInTime);
+                _canvasGroup.alpha = time / _fadeInTime;
                 await UniTask.Yield(PlayerLoopTiming.Update, ct);
             }
 
@@ -70,9 +73,12 @@ namespace smart3tene.Reaper
             await UniTask.Delay(TimeSpan.FromSeconds(_popupTime), false ,PlayerLoopTiming.Update, ct);
 
             //フェードで非表示
+            time = _fadeOutTime;
             while (_canvasGroup.alpha > 0)
             {
-                _canvasGroup.alpha -= (float)_fadeOutSpeed / 1000f;
+                time -= Time.deltaTime;
+                time = Mathf.Clamp(time, 0, _fadeOutTime);
+                _canvasGroup.alpha = time / _fadeOutTime;
                 await UniTask.Yield(PlayerLoopTiming.Update, ct);
             }
         }

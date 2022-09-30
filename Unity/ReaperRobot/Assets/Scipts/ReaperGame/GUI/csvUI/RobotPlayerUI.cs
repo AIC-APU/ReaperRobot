@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System.IO;
 using TMPro;
-using UniRx;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace smart3tene.Reaper
@@ -62,7 +59,7 @@ namespace smart3tene.Reaper
         #region Public method
         public void SelectCSVFile()
         {
-            var path = EditorUtility.OpenFilePanel("CSV ファイルの選択", defaultFileDirectory, "csv");
+            var path = OpenDialogUtility.OpenCSVFile("select csv file", defaultFileDirectory);
 
             if (path != "")
             {

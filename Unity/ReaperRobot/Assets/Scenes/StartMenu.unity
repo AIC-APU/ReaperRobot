@@ -1237,7 +1237,7 @@ GameObject:
   - component: {fileID: 626858148}
   - component: {fileID: 626858147}
   m_Layer: 5
-  m_Name: Training
+  m_Name: TrainingButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2880,6 +2880,7 @@ GameObject:
   - component: {fileID: 1393782066}
   - component: {fileID: 1393782068}
   - component: {fileID: 1393782067}
+  - component: {fileID: 1393782069}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -2927,7 +2928,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: another course
+  m_text: UserStudy
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3004,6 +3005,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1393782065}
   m_CullTransparentMesh: 1
+--- !u!114 &1393782069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1393782065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:a99e44ca0e0c2cd45a5c185acaaf3fe2
+    m_TableEntryReference:
+      m_KeyId: 12699094804025344
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1393782067}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1406311558
 GameObject:
   m_ObjectHideFlags: 0
@@ -3924,6 +3965,7 @@ GameObject:
   - component: {fileID: 1744564607}
   - component: {fileID: 1744564611}
   - component: {fileID: 1744564612}
+  - component: {fileID: 1744564613}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -4050,6 +4092,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _trainingButton: {fileID: 626858147}
+--- !u!114 &1744564613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1744564606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0dbcc2a395e51a419317b71b52ddaa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _trainingButton: {fileID: 1822466963}
 --- !u!1 &1764157774
 GameObject:
   m_ObjectHideFlags: 0
@@ -4239,7 +4294,7 @@ GameObject:
   - component: {fileID: 1822466964}
   - component: {fileID: 1822466963}
   m_Layer: 5
-  m_Name: CourseButton (2)
+  m_Name: UserStudyButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4305,11 +4360,23 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 1822466964}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1744564611}
+        m_TargetAssemblyTypeName: smart3tene.StartMenuGUIManager, Assembly-CSharp
+        m_MethodName: FieldButtonClick_UserStudy
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1822466964
 MonoBehaviour:
   m_ObjectHideFlags: 0

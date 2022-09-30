@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
-using UnityEngine;
 using UniRx;
+using UnityEngine;
 
-namespace smart3tene.Reaper 
+namespace smart3tene.Reaper
 {
     public class TimerStarterWhenCut : MonoBehaviour
     {
