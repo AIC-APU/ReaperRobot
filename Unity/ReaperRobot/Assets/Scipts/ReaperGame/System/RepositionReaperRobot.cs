@@ -26,7 +26,7 @@ namespace smart3tene.Reaper
         }
         #endregion
 
-        #region Private method
+         #region Private method
         private void Reposition()
         {
             _reaperManager.Move(0, 0);

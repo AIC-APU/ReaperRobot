@@ -29,6 +29,7 @@ namespace smart3tene
         {
             SimpleField,
             Training,
+            UserStudy,
         }
         public static GameCourse NowGameCourse { get; set; } = GameCourse.SimpleField;
         #endregion

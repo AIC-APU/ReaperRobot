@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Drawing.Text;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace smart3tene.Reaper
@@ -16,8 +14,6 @@ namespace smart3tene.Reaper
         #region Private Fields
         private int _flameCount = 0;
         private List<GameObject> _pathObjects = new();
-
-        private bool _controlableRobot = true;
         #endregion
 
         #region MonoBehaviour Callbacks

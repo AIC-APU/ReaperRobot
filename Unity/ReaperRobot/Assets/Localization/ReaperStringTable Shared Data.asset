@@ -167,6 +167,10 @@ MonoBehaviour:
     m_Key: ENDGAME
     m_Metadata:
       m_Items: []
+  - m_Id: 12699094804025344
+    m_Key: USERSTUDY
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

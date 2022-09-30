@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using Photon.Pun;
 using TMPro;
 using UniRx;
+using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
 
 namespace smart3tene
 {
@@ -90,6 +88,12 @@ namespace smart3tene
         public void FieldButtonClick_Training()
         {
             GameData.NowGameCourse = GameData.GameCourse.Training;
+
+            SceneTransitionManager.Instance.RoadScene();
+        }
+        public void FieldButtonClick_UserStudy()
+        {
+            GameData.NowGameCourse = GameData.GameCourse.UserStudy;
 
             SceneTransitionManager.Instance.RoadScene();
         }
