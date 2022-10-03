@@ -73,15 +73,21 @@ namespace smart3tene.Reaper
                 return;
             }
 
+            _isPlaying = false;
             PlayTime = 0f;
             _flameCount = 0;
 
-            var pos = ExtractPosition(_csvData, PlayTime);
-            var angle = ExtractQuaternion(_csvData, PlayTime);
+            //インスタンス生成
+            _shadowInstance = Instantiate(_shadowPrefab);
 
-            _shadowInstance = Instantiate(_shadowPrefab, pos, angle);
+            //位置の設定・初期化
             _shadowTransform = _shadowInstance.transform;
+            _shadowTransform.SetPositionAndRotation(ExtractPosition(_csvData, PlayTime), ExtractQuaternion(_csvData, PlayTime));
+
+            //マネージャーの設定・初期化
             _shadowManager = _shadowInstance.GetComponent<ShadowReaperManager>();
+            _shadowManager.MoveLift(ExtractLift(_csvData, PlayTime));
+            _shadowManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
         }
 
         public override void Play()
@@ -126,20 +132,21 @@ namespace smart3tene.Reaper
                 return;
             }
 
+            _isPlaying = false;
             PlayTime = 0f;
+            _flameCount = 0;
 
+            //位置とカッターとリフトの初期化
             _shadowTransform.SetPositionAndRotation(ExtractPosition(_csvData, PlayTime), ExtractQuaternion(_csvData, PlayTime));
             _shadowManager.MoveLift(ExtractLift(_csvData, PlayTime));
             _shadowManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
 
-            _isPlaying = false;
-
+            //軌跡の削除
             foreach(var obj in _pathObjects)
             {
                 Destroy(obj);
             }
             _pathObjects.Clear();
-            _flameCount = 0;
         }
 
         public void FastForward(bool isFast)

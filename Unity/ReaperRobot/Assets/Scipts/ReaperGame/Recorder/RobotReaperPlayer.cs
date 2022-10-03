@@ -55,10 +55,9 @@ namespace smart3tene.Reaper
                 return;
             }
 
-            //プレイタイムの初期化
+            //値の初期化
+            _isPlaying = false;
             PlayTime = 0;
-
-            //フレームカウントの初期化
             _flameCount = 0;
 
             //リフト・カッターの初期設定
@@ -102,12 +101,10 @@ namespace smart3tene.Reaper
 
         public override void Back()
         {
+            //値の初期化
             _isPlaying = false;
-
             PlayTime = 0;
-
-            //初期位置の設定
-            ReaperEventManager.InvokeResetEvent();
+            _flameCount = 0;
 
             //リフト・カッターの初期設定
             _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
@@ -119,7 +116,6 @@ namespace smart3tene.Reaper
                 Destroy(obj);
             }
             _pathObjects.Clear();
-            _flameCount = 0;
         }
         #endregion
 
