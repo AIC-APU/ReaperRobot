@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace smart3tene.Reaper
 {
@@ -10,8 +11,8 @@ namespace smart3tene.Reaper
         [SerializeField] private ReaperManager _reaperManager;
         [SerializeField] private Transform _reaperTransform;
 
-        [SerializeField] private Vector3 _defaultPos = new(0, 0, 0);
-        [SerializeField] private Vector3 _defaultRot = new(0, 0, 0);
+        readonly Vector3 _defaultPos = new(0f, 0f, 0f);
+        readonly private Vector3 _defaultRot = new(0f, 0f, 0f);
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -27,11 +28,14 @@ namespace smart3tene.Reaper
         #endregion
 
          #region Private method
-        private void Reposition()
+        private async void Reposition()
         {
             _reaperManager.Move(0, 0);
-            _reaperTransform.position = _defaultPos;
-            _reaperTransform.rotation = Quaternion.Euler(_defaultRot);
+
+            await UniTask.Yield();
+
+            _reaperTransform.SetPositionAndRotation(_defaultPos, Quaternion.Euler(_defaultRot));
+
             _reaperManager.MoveLift(true);
             _reaperManager.RotateCutter(true);
         }

@@ -63,24 +63,24 @@ namespace smart3tene.Reaper
 
             if (path != "")
             {
-                //csvDataの取得
-                _robotReaperPlayer.SetUp(path);
-
-                //初期位置の設定
-                ReaperEventManager.InvokeResetEvent();
-
-                //FileNameTextの設定
-                _fileNameText.text = Path.GetFileName(path);
-
                 //ボタンの設定
                 _backButton.interactable = false;
                 _playButton.interactable = true;
                 _pauseButton.interactable = false;
                 _stopButton.interactable = true;
+
+                //初期位置の設定
+                ReaperEventManager.InvokeResetEvent();
+
+                //csvDataの取得
+                _robotReaperPlayer.SetUp(path);
+
+                //FileNameTextの設定
+                _fileNameText.text = Path.GetFileName(path);
             }
             else
             {
-                Debug.Log("パスが指定されませんでした");
+                Debug.LogWarning("パスが指定されませんでした");
             }
         }
 
@@ -103,6 +103,9 @@ namespace smart3tene.Reaper
             _playButton.interactable = true;
             _pauseButton.interactable = false;
             _stopButton.interactable = true;
+
+            //初期位置の設定
+            ReaperEventManager.InvokeResetEvent();
 
             //プレイヤーの設定
             _robotReaperPlayer.Back();
@@ -149,7 +152,6 @@ namespace smart3tene.Reaper
             else
             {
                 _RobotPlayerPanel.SetActive(true);
-                ReaperEventManager.InvokeResetEvent();
 
                 //コントローラの使用の禁止
                 ControllableRobot = false;
