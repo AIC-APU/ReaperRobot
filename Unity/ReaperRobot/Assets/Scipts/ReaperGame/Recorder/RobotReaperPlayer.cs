@@ -17,15 +17,16 @@ namespace smart3tene.Reaper
         #endregion
 
         #region MonoBehaviour Callbacks
-        private void Update()
+        private void FixedUpdate()
         {
             if (!_isPlaying) return;
             if (PlayTime > ExtractSeconds(_csvData, _csvData.Count - 1)) return;
 
-            PlayTime += Time.deltaTime;
+            PlayTime += Time.fixedDeltaTime;
 
             OneFlameMove(_csvData, PlayTime);
 
+            //メッシュを使った軌跡の記録
             if (_flameCount % 10 == 0)
             {
                 var obj = MeshCreator.CreateCubeMesh(_reaperTransform.position, _pathMaterial, 0.05f);
@@ -33,6 +34,7 @@ namespace smart3tene.Reaper
             }
             _flameCount++;
 
+            //プレイタイムがcsvデータの最後の時間を過ぎていないか確認
             if (PlayTime > ExtractSeconds(_csvData, _csvData.Count - 1))
             {
                 //再生が終わった処理
