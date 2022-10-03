@@ -29,16 +29,18 @@ namespace smart3tene.Reaper
             _reaperManager      = _targetRobot.GetComponent<ReaperManager>();
             _playerInput        = GetComponent<PlayerInput>();
 
-
             _reaperActionMap       = _playerInput.actions.FindActionMap("Reaper");
+        }
 
-            _reaperActionMap["Brake"].started                  += Brake;
-            _reaperActionMap["Brake"].canceled                 += OffBrake;
-            _reaperActionMap["Lift"].started                   += MoveLift;
-            _reaperActionMap["Cutter"].started                 += RotateCutter;
+        private void OnEnable()
+        {
+            _reaperActionMap["Brake"].started += Brake;
+            _reaperActionMap["Brake"].canceled += OffBrake;
+            _reaperActionMap["Lift"].started += MoveLift;
+            _reaperActionMap["Cutter"].started += RotateCutter;
 
-            _reaperActionMap["ChangeMode"].started             += StopMove;
-            _reaperActionMap["ChangeReaperAndPerson"].started  += StopMove;
+            _reaperActionMap["ChangeMode"].started += StopMove;
+            _reaperActionMap["ChangeReaperAndPerson"].started += StopMove;
         }
 
         private void OnDisable()

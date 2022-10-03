@@ -21,8 +21,8 @@ public class ReaperRecorder : MonoBehaviour
     public bool IsRecording => _isRecording;
     private bool _isRecording = false;
 
-    public float RecordingTime => _RecordingTime;
-    private float _RecordingTime = 0f;
+    public float RecordingTime => _recordingTime;
+    private float _recordingTime = 0f;
 
     private string _csvData = "";
     #endregion
@@ -39,9 +39,6 @@ public class ReaperRecorder : MonoBehaviour
 
         //拡張子は外しておく（Export時に付ける）
         if (_fileName.EndsWith(".csv")) _fileName = _fileName.Remove(_fileName.Length - 4, 4);
-
-        //csvDataの1行目にラベルを設定
-        _csvData += "Time,input_horizontal,input_vertical,Lift,Cutter,PosX,PosY,PosZ,AngleY" + "\n";
     }
 
     private void Update()
@@ -50,7 +47,7 @@ public class ReaperRecorder : MonoBehaviour
 
         //データを揃える
         //必要あればここで桁数やら形式やら指定する
-        var time   = GameTimer.ConvertSecondsToString(_RecordingTime);
+        var time   = GameTimer.ConvertSecondsToString(_recordingTime);
 
         var inputX = _reaperManager.NowInput.x;
         var inputY = _reaperManager.NowInput.y;
@@ -68,14 +65,17 @@ public class ReaperRecorder : MonoBehaviour
         // input.x, input.y, pos.x, pos.y, pos.z, angle.y のような形式でstringを保存
         _csvData += $"{time},{inputX},{inputY},{lift},{cutter},{posX},{posY},{posZ},{angleY}\n";
 
-        _RecordingTime += Time.deltaTime;
+        _recordingTime += Time.deltaTime;
     }
     #endregion
 
     #region Public method
     public void StartRecording()
     {
-        _RecordingTime = 0f;
+        _recordingTime = 0f;
+
+        //csvDataの1行目にラベルを設定
+        _csvData = "Time,input_horizontal,input_vertical,Lift,Cutter,PosX,PosY,PosZ,AngleY" + "\n";
 
         _isRecording = true;
     }
@@ -101,6 +101,9 @@ public class ReaperRecorder : MonoBehaviour
         //UIの表示
         var popupText = GetText(LocalizationSettings.SelectedLocale.Identifier.Code, Path.GetFileName(filePath));
         ReaperEventManager.InvokeTextPopupEvent(popupText);
+
+        //csvDataの初期化
+        _csvData = "";
     }
 
     private string GetText(string localeCode, string fileName)
