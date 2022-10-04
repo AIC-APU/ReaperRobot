@@ -47,18 +47,26 @@ namespace smart3tene.Reaper
         #region Public method
         public override void SetUp(string filePath)
         {
+            _reaperManager.Move(0, 0);
+
             _csvData.Clear();
             _csvData.AddRange(GetCSVData(filePath));
-
             if (_csvData.Count == 0)
             {
                 return;
-            }
+            }   
 
             //値の初期化
             _isPlaying = false;
             PlayTime = 0;
             _flameCount = 0;
+
+            //pathの初期化
+            foreach (var obj in _pathObjects)
+            {
+                Destroy(obj);
+            }
+            _pathObjects.Clear();
 
             //リフト・カッターの初期設定
             _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
@@ -82,11 +90,14 @@ namespace smart3tene.Reaper
 
         public override void Stop()
         {
-            _isPlaying = false;
             _reaperManager.Move(0, 0);
 
-            PlayTime = 0;
             _csvData.Clear();
+
+            //値の初期化
+            PlayTime = 0;
+            _isPlaying = false;
+            _flameCount = 0;
 
             //pathの初期化
             foreach (var obj in _pathObjects)
@@ -94,7 +105,6 @@ namespace smart3tene.Reaper
                 Destroy(obj);
             }
             _pathObjects.Clear();
-            _flameCount = 0;
 
             StopEvent?.Invoke();
         }
