@@ -78,7 +78,18 @@ namespace smart3tene.Reaper
             _flameCount = 0;
 
             //インスタンス生成
+            if(_shadowInstance != null)
+            {
+                Destroy(_shadowInstance);
+            }
             _shadowInstance = Instantiate(_shadowPrefab);
+
+            //pathの初期化
+            foreach (var obj in _pathObjects)
+            {
+                Destroy(obj);
+            }
+            _pathObjects.Clear();
 
             //位置の設定・初期化
             _shadowTransform = _shadowInstance.transform;
@@ -106,21 +117,20 @@ namespace smart3tene.Reaper
 
         public override void Stop()
         {
-            _isPlaying = false;
-
-            if(_shadowInstance != null) Destroy(_shadowInstance);
-            _shadowTransform = null;
-
-            PlayTime = 0f;
-
             _csvData.Clear();
+
+            _isPlaying = false;
+            PlayTime = 0f;
+            _flameCount = 0;
+
+            if (_shadowInstance != null) Destroy(_shadowInstance);
+            _shadowTransform = null;           
 
             foreach (var obj in _pathObjects)
             {
                 Destroy(obj);
             }
             _pathObjects.Clear();
-            _flameCount = 0;
 
             StopEvent?.Invoke();
         }

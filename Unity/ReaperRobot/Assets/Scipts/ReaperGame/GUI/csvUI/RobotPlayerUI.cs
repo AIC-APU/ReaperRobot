@@ -59,6 +59,8 @@ namespace smart3tene.Reaper
         #region Public method
         public void SelectCSVFile()
         {
+            if (_robotReaperPlayer.IsPlaying) _robotReaperPlayer.Pause();
+
             var path = OpenDialogUtility.OpenCSVFile("select csv file", defaultFileDirectory);
 
             if (path != "")
@@ -69,11 +71,11 @@ namespace smart3tene.Reaper
                 _pauseButton.interactable = false;
                 _stopButton.interactable = true;
 
-                //初期位置の設定
-                ReaperEventManager.InvokeResetEvent();
-
                 //csvDataの取得
                 _robotReaperPlayer.SetUp(path);
+
+                //初期位置の設定
+                ReaperEventManager.InvokeResetEvent();
 
                 //FileNameTextの設定
                 _fileNameText.text = Path.GetFileName(path);
