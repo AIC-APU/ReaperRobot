@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
+using UniRx;
 
 public class ReaperRecorder : MonoBehaviour
 {
@@ -18,11 +19,35 @@ public class ReaperRecorder : MonoBehaviour
     #endregion
 
     #region Private Fields
-    public bool IsRecording => _isRecording;
-    private bool _isRecording = false;
+    public IReadOnlyReactiveProperty<bool> IsRecording => _isRecording;
+    private ReactiveProperty<bool> _isRecording = new(false);
 
-    public float RecordingTime => _recordingTime;
-    private float _recordingTime = 0f;
+    public IReadOnlyReactiveProperty<float> RecordingTime => _recordingTime;
+    private ReactiveProperty<float> _recordingTime = new(0f);
+
+    public IReadOnlyReactiveProperty<float> InputH => _inputH;
+    private ReactiveProperty<float> _inputH = new(0);
+
+    public IReadOnlyReactiveProperty<float> InputV => _inputV;
+    private ReactiveProperty<float> _inputV = new(0);
+
+    public IReadOnlyReactiveProperty<int> LiftInt => _liftInt;
+    private ReactiveProperty<int> _liftInt = new(1);
+
+    public IReadOnlyReactiveProperty<int> CutterInt => _cutterInt;
+    private ReactiveProperty<int> _cutterInt = new(1);
+
+    public IReadOnlyReactiveProperty<float> PosX => _posX;
+    private ReactiveProperty<float> _posX = new(0);
+
+    public IReadOnlyReactiveProperty<float> PosY => _posY;
+    private ReactiveProperty<float> _posY = new(0);
+
+    public IReadOnlyReactiveProperty<float> PosZ => _posZ;
+    private ReactiveProperty<float> _posZ = new(0);
+
+    public IReadOnlyReactiveProperty<float> Angle => _angleY;
+    private ReactiveProperty<float> _angleY = new(0);
 
     private string _csvData = "";
     #endregion
@@ -43,46 +68,46 @@ public class ReaperRecorder : MonoBehaviour
 
     private void Update()
     {
-        if (!_isRecording) return;
+        if (!_isRecording.Value) return;
 
         //データを揃える
         //必要あればここで桁数やら形式やら指定する
-        var time   = GameTimer.ConvertSecondsToString(_recordingTime);
+        var time   = GameTimer.ConvertSecondsToString(_recordingTime.Value);
 
-        var inputX = _reaperManager.NowInput.x;
-        var inputY = _reaperManager.NowInput.y;
+        _inputH.Value = _reaperManager.NowInput.x;
+        _inputV.Value = _reaperManager.NowInput.y;
 
-        var posX   = RoundF(_reaperTransform.position.x, 8);
-        var posY   = RoundF(_reaperTransform.position.y, 8);
-        var posZ   = RoundF(_reaperTransform.position.z, 8);
+        _liftInt.Value   = _reaperManager.IsLiftDown.Value ? 1 : 0;
+        _cutterInt.Value = _reaperManager.IsCutting.Value ? 1 : 0;
 
-        var angleY = _reaperTransform.eulerAngles.y < 180 ? _reaperTransform.eulerAngles.y : _reaperTransform.transform.eulerAngles.y - 360f;
-            angleY = RoundF(angleY, 8);
+        _posX.Value   = RoundF(_reaperTransform.position.x, 8);
+        _posY.Value   = RoundF(_reaperTransform.position.y, 8);
+        _posZ.Value   = RoundF(_reaperTransform.position.z, 8);
 
-        var lift   = _reaperManager.IsLiftDown.Value ? 1 : 0;
-        var cutter = _reaperManager.IsCutting.Value ? 1 : 0;
+        var angleY    = _reaperTransform.eulerAngles.y < 180 ? _reaperTransform.eulerAngles.y : _reaperTransform.transform.eulerAngles.y - 360f;
+        _angleY.Value = RoundF(angleY, 8);
 
         // input.x, input.y, pos.x, pos.y, pos.z, angle.y のような形式でstringを保存
-        _csvData += $"{time},{inputX},{inputY},{lift},{cutter},{posX},{posY},{posZ},{angleY}\n";
+        _csvData += $"{time},{_inputH.Value},{_inputV.Value},{_liftInt.Value},{_cutterInt.Value},{_posX.Value},{_posY.Value},{_posZ.Value},{_angleY.Value}\n";
 
-        _recordingTime += Time.deltaTime;
+        _recordingTime.Value += Time.deltaTime;
     }
     #endregion
 
     #region Public method
     public void StartRecording()
     {
-        _recordingTime = 0f;
+        _recordingTime.Value = 0f;
 
         //csvDataの1行目にラベルを設定
         _csvData = "Time,input_horizontal,input_vertical,Lift,Cutter,PosX,PosY,PosZ,AngleY" + "\n";
 
-        _isRecording = true;
+        _isRecording.Value = true;
     }
 
     public void StopRecording()
     {
-        _isRecording = false;
+        _isRecording.Value = false;
 
         ExportCSV();
     }

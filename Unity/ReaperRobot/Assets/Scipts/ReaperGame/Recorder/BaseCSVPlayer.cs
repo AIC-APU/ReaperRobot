@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 namespace smart3tene.Reaper
 {
@@ -19,8 +20,8 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Protected fields
-        public bool IsPlaying => _isPlaying;
-        protected bool _isPlaying = false;
+        public IReadOnlyReactiveProperty< bool> IsPlaying => _isPlaying;
+        protected ReactiveProperty <bool> _isPlaying = new(false);
 
         protected List<string[]> _csvData = new();
         #endregion

@@ -32,7 +32,13 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Public Field
+        //入力された値を次の入力まで保持（記録のため）
         public Vector2 NowInput { get; private set; }
+
+        //トルク関連の値
+        public float rotateTorque = 100f;
+        public float moveTorque = 300f;
+        public float torqueRateAtCutting = 0.5f;
         #endregion
 
         #region Private
@@ -52,9 +58,6 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Readonly Field
-        //Wheel Collider関連
-        readonly float rotateTorqueMultiplier = 100f;
-        readonly float moveTorqueMultiplier = 300f;
         readonly float brakeTorque = 500f;
         #endregion
 
@@ -68,35 +71,43 @@ namespace smart3tene.Reaper
             //rpmの購読
             //crawlerアニメーションの処理
             //素のrpmは値が大きすぎるので、直進時の最大rpm = 70f（計測値）で除算している
-            _leftRpm.Subscribe(x => _crawlerL.SetFloat("WheelTorque", (float)x / 70f)).AddTo(this);
-            _rightRpm.Subscribe(x => _crawlerR.SetFloat("WheelTorque", (float)x / 70f)).AddTo(this);
+            _leftRpm
+                .Subscribe(x => _crawlerL.SetFloat("WheelTorque", (float)x / 70f))
+                .AddTo(this);
+
+            _rightRpm
+                .Subscribe(x => _crawlerR.SetFloat("WheelTorque", (float)x / 70f))
+                .AddTo(this);
 
             //isLiftDownの購読
-            _isLiftDown.Subscribe(isDown =>
-            {
-                _liftCancellationTokenSource?.Cancel();
-                _liftCancellationTokenSource = new();
-                AsyncMoveLift(isDown, _liftCancellationTokenSource.Token).Forget();
-            }).AddTo(this);
+            _isLiftDown.
+                Subscribe(isDown =>
+                {
+                    _liftCancellationTokenSource?.Cancel();
+                    _liftCancellationTokenSource = new();
+                    AsyncMoveLift(isDown, _liftCancellationTokenSource.Token).Forget();
+                })
+                .AddTo(this);
 
             //isCuttingの購読
-            _isCutting.Subscribe(isRotate =>
-            {
-                _cutterCancellationTokenSource?.Cancel();
-                _cutterCancellationTokenSource = new();
-                AsyncRotateCutter(isRotate, _cutterCancellationTokenSource.Token).Forget();
-
-                //タグの変更
-                if (isRotate)
+            _isCutting
+                .Subscribe(isRotate =>
                 {
-                    _reaper.tag = "Cutting";
-                }
-                else
-                {
-                    _reaper.tag = "Untagged";
-                }
-            }).AddTo(this);
+                    _cutterCancellationTokenSource?.Cancel();
+                    _cutterCancellationTokenSource = new();
+                    AsyncRotateCutter(isRotate, _cutterCancellationTokenSource.Token).Forget();
 
+                    //タグの変更
+                    if (isRotate)
+                    {
+                        _reaper.tag = "Cutting";
+                    }
+                    else
+                    {
+                        _reaper.tag = "Untagged";
+                    }
+                })
+                .AddTo(this);
         }
 
         private void Update()
@@ -134,16 +145,16 @@ namespace smart3tene.Reaper
             NowInput = new Vector2(horizontal, vertical);
 
             //左右車輪のトルクを計算
-            var torqueL = moveTorqueMultiplier * vertical;
-            var torqueR = moveTorqueMultiplier * vertical;
+            var torqueL = moveTorque * vertical;
+            var torqueR = moveTorque * vertical;
 
-            torqueL += rotateTorqueMultiplier * horizontal;
-            torqueR -= rotateTorqueMultiplier * horizontal;
+            torqueL += rotateTorque * horizontal;
+            torqueR -= rotateTorque * horizontal;
 
             if (_isCutting.Value)
             {
-                torqueL /= 2f;
-                torqueR /= 2f;
+                torqueL *= torqueRateAtCutting;
+                torqueR *= torqueRateAtCutting;
             }
 
             _wheelColliderL2.motorTorque = torqueL;

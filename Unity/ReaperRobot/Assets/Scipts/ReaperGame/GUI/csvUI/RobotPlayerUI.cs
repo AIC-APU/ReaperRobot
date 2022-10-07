@@ -57,9 +57,9 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Public method
-        public void SelectCSVFile()
+        public void OnClickSelectFile()
         {
-            if (_robotReaperPlayer.IsPlaying) _robotReaperPlayer.Pause();
+            if (_robotReaperPlayer.IsPlaying.Value) _robotReaperPlayer.Pause();
 
             var path = OpenDialogUtility.OpenCSVFile("select csv file", defaultFileDirectory);
 

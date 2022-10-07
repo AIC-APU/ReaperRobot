@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using TMPro;
+using UniRx;
 using UnityEngine;
 
 namespace smart3tene.Reaper
@@ -20,12 +22,38 @@ namespace smart3tene.Reaper
 
         private List<GameObject> _pathObjects = new();
         private int _flameCount = 0;
+
+        //UIに表示するためのパラメータ
+        public IReadOnlyReactiveProperty<float> InputH => _inputH;
+        private ReactiveProperty<float> _inputH = new(0);
+
+        public IReadOnlyReactiveProperty<float> InputV => _inputV;
+        private ReactiveProperty<float> _inputV = new(0);
+
+        public IReadOnlyReactiveProperty<bool> Lift => _lift;
+        private ReactiveProperty<bool> _lift = new(true);
+
+        public IReadOnlyReactiveProperty<bool> Cutter => _cutter;
+        private ReactiveProperty<bool> _cutter = new(true);
+
+        public IReadOnlyReactiveProperty<float> PosX => _posX;
+        private ReactiveProperty<float> _posX = new(0);
+
+        public IReadOnlyReactiveProperty<float> PosY => _posY;
+        private ReactiveProperty<float> _posY = new(0);
+
+        public IReadOnlyReactiveProperty<float> PosZ => _posZ;
+        private ReactiveProperty<float> _posZ = new(0);
+
+        public IReadOnlyReactiveProperty<float> Angle => _angleY;
+        private ReactiveProperty<float> _angleY = new(0);
+
         #endregion
 
         #region MonoBehaviour Callbacks
         private void Update ()
         {
-            if (!_isPlaying) return;
+            if (!_isPlaying.Value) return;
             if (PlayTime > ExtractSeconds(_csvData, _csvData.Count - 1)) return;
 
             if (_isFastForward)
@@ -73,7 +101,7 @@ namespace smart3tene.Reaper
                 return;
             }
 
-            _isPlaying = false;
+            _isPlaying.Value = false;
             PlayTime = 0f;
             _flameCount = 0;
 
@@ -103,14 +131,14 @@ namespace smart3tene.Reaper
 
         public override void Play()
         {
-            _isPlaying = true;
+            _isPlaying.Value = true;
 
             StartPlayEvent?.Invoke();
         }
 
         public override void Pause()
         {
-            _isPlaying = false;
+            _isPlaying.Value = false;
 
             PausePlayEvent?.Invoke();
         }
@@ -119,7 +147,7 @@ namespace smart3tene.Reaper
         {
             _csvData.Clear();
 
-            _isPlaying = false;
+            _isPlaying.Value = false;
             PlayTime = 0f;
             _flameCount = 0;
 
@@ -142,7 +170,7 @@ namespace smart3tene.Reaper
                 return;
             }
 
-            _isPlaying = false;
+            _isPlaying.Value = false;
             PlayTime = 0f;
             _flameCount = 0;
 
@@ -173,9 +201,24 @@ namespace smart3tene.Reaper
         #region Private and Protected method
         protected override void OneFlameMove(List<string[]> data, float seconds)
         {
-            _shadowTransform.SetPositionAndRotation(ExtractPosition(data, seconds), ExtractQuaternion(data, seconds));
-            _shadowManager.MoveLift(ExtractLift(data, seconds));
-            _shadowManager.RotateCutter(ExtractCutter(data, seconds));
+            //UIに表示するために値を取得
+            var input = ExtractInput(data, seconds);
+            _inputH.Value = input.x;
+            _inputV.Value = input.y;
+
+            var pos = ExtractPosition(data, seconds);
+            _posX.Value = pos.x;
+            _posY.Value = pos.y;
+            _posZ.Value = pos.z;
+
+            _angleY.Value = ExtractAngleY(data, seconds);
+            _lift.Value   = ExtractLift(data, seconds);
+            _cutter.Value = ExtractCutter(data, seconds);
+
+            //影にデータ反映させる
+            _shadowTransform.SetPositionAndRotation(pos, ExtractQuaternion(data, seconds));
+            _shadowManager.MoveLift(_lift.Value);
+            _shadowManager.RotateCutter(_cutter.Value);
         }
         #endregion
     }

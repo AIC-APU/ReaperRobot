@@ -1,6 +1,9 @@
+using Cysharp.Threading.Tasks;
 using TMPro;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
 
 namespace smart3tene.Reaper
 {
@@ -25,10 +28,11 @@ namespace smart3tene.Reaper
 
             _recordingButton.interactable = false;
             _stopButton.interactable = false;
-        }
-        private void Update()
-        {
-            _recordingTimeText.text = GameTimer.ConvertSecondsToString(_reaperRecorder.RecordingTime, false);
+
+            //TimeTextの更新
+            _reaperRecorder.RecordingTime
+                .Subscribe(x => _recordingTimeText.text = GameTimer.ConvertSecondsToString(x, false))
+                .AddTo(this);
         }
         #endregion
 
@@ -58,7 +62,7 @@ namespace smart3tene.Reaper
         {
             if (_recorderPanel.activeSelf)
             {
-                if (_reaperRecorder.IsRecording)
+                if (_reaperRecorder.IsRecording.Value)
                 {
                     _reaperRecorder.StopRecording();
                 }
