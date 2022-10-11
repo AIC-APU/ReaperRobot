@@ -1205,9 +1205,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 897640263}
-        m_TargetAssemblyTypeName: smart3tene.Reaper.LiftAndCutterUI, Assembly-CSharp
-        m_MethodName: UpButtonClick
+      - m_Target: {fileID: 945164205}
+        m_TargetAssemblyTypeName: smart3tene.Reaper.LiftUI, Assembly-CSharp
+        m_MethodName: OnClickUp
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3260,6 +3260,7 @@ GameObject:
   - component: {fileID: 621111541}
   - component: {fileID: 621111543}
   - component: {fileID: 621111542}
+  - component: {fileID: 621111544}
   m_Layer: 5
   m_Name: PassCheckPointPanel
   m_TagString: Untagged
@@ -3281,7 +3282,7 @@ RectTransform:
   m_Children:
   - {fileID: 2023438370}
   m_Father: {fileID: 897640260}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -3326,6 +3327,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 621111540}
   m_CullTransparentMesh: 1
+--- !u!114 &621111544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621111540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2115a70e4dc0f4b469430418dbdf07ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _passCheckPointPanel: {fileID: 621111540}
 --- !u!4 &623760791 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8996102183553057519, guid: a58b104885dc57d418a9062019e6939c, type: 3}
@@ -4318,6 +4332,7 @@ GameObject:
   - component: {fileID: 880790575}
   - component: {fileID: 880790577}
   - component: {fileID: 880790576}
+  - component: {fileID: 880790578}
   m_Layer: 5
   m_Name: ViewModePanel
   m_TagString: Untagged
@@ -4339,7 +4354,7 @@ RectTransform:
   m_Children:
   - {fileID: 160962384}
   m_Father: {fileID: 897640260}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -4384,6 +4399,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 880790574}
   m_CullTransparentMesh: 1
+--- !u!114 &880790578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 880790574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75057593aabcf16439d80350ae4de846, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _localizeStringEvent: {fileID: 160962385}
 --- !u!1 &890526952
 GameObject:
   m_ObjectHideFlags: 0
@@ -4395,6 +4423,7 @@ GameObject:
   - component: {fileID: 890526953}
   - component: {fileID: 890526955}
   - component: {fileID: 890526954}
+  - component: {fileID: 890526956}
   m_Layer: 5
   m_Name: DelaySliderPanel
   m_TagString: Untagged
@@ -4418,7 +4447,7 @@ RectTransform:
   - {fileID: 1410516191}
   - {fileID: 856537148}
   m_Father: {fileID: 897640260}
-  m_RootOrder: 8
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -4463,6 +4492,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 890526952}
   m_CullTransparentMesh: 1
+--- !u!114 &890526956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890526952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6975a27ce72ab844bbc0f48d662073dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _projector: {fileID: 375148181}
+  _delaySlider: {fileID: 2081402079}
+  _delayNumText: {fileID: 856537146}
 --- !u!4 &891221243 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5541683488892601461, guid: af10df3aae263734c819e36471800404, type: 3}
@@ -4480,13 +4524,6 @@ GameObject:
   - component: {fileID: 897640259}
   - component: {fileID: 897640258}
   - component: {fileID: 897640257}
-  - component: {fileID: 897640256}
-  - component: {fileID: 897640261}
-  - component: {fileID: 897640262}
-  - component: {fileID: 897640263}
-  - component: {fileID: 897640265}
-  - component: {fileID: 897640266}
-  - component: {fileID: 897640267}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -4494,19 +4531,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &897640256
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897640255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f714f8438ce2d8419363cfdf62aaca3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _timeNum: {fileID: 985854772}
 --- !u!114 &897640257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4581,6 +4605,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 375148184}
+  - {fileID: 890526953}
   - {fileID: 621111541}
   - {fileID: 1819197909}
   - {fileID: 880790575}
@@ -4588,7 +4613,6 @@ RectTransform:
   - {fileID: 1257549069}
   - {fileID: 1350701317}
   - {fileID: 1787549112}
-  - {fileID: 890526953}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4597,93 +4621,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &897640261
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897640255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7e0addbe7fb7a848a3ae67e366996b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _clearPanel: {fileID: 1787549111}
-  _clearTimeNum: {fileID: 255779027}
---- !u!114 &897640262
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897640255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75057593aabcf16439d80350ae4de846, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _localizeStringEvent: {fileID: 160962385}
---- !u!114 &897640263
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897640255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6e643ec083614a418710b19ce87c83c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _reaperManager: {fileID: 1736775214}
-  _liftLamp: {fileID: 247635330}
-  _cutterLamp: {fileID: 1204658611}
---- !u!114 &897640265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897640255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2115a70e4dc0f4b469430418dbdf07ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _passCheckPointPanel: {fileID: 621111540}
---- !u!114 &897640266
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897640255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 113a776a7fb56934990a602e52d9e4d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _canvasGroup: {fileID: 1350701320}
-  _text: {fileID: 1517596997}
-  _fadeInTime: 1
-  _popupTime: 7
-  _fadeOutTime: 1
---- !u!114 &897640267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897640255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6975a27ce72ab844bbc0f48d662073dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _projector: {fileID: 375148181}
-  _delaySlider: {fileID: 2081402079}
-  _delayNumText: {fileID: 856537146}
 --- !u!1 &901376351
 GameObject:
   m_ObjectHideFlags: 0
@@ -5147,6 +5084,7 @@ GameObject:
   - component: {fileID: 945164202}
   - component: {fileID: 945164204}
   - component: {fileID: 945164203}
+  - component: {fileID: 945164205}
   m_Layer: 5
   m_Name: LiftPanel
   m_TagString: Untagged
@@ -5171,7 +5109,7 @@ RectTransform:
   - {fileID: 216246315}
   - {fileID: 2032426770}
   m_Father: {fileID: 897640260}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -5216,6 +5154,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 945164201}
   m_CullTransparentMesh: 1
+--- !u!114 &945164205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945164201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44f97792c0b93ce4d93901383ec39af7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _reaperManager: {fileID: 1736775214}
+  _liftLamp: {fileID: 247635330}
 --- !u!1 &975158022
 GameObject:
   m_ObjectHideFlags: 0
@@ -5783,9 +5735,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 897640263}
-        m_TargetAssemblyTypeName: smart3tene.Reaper.LiftAndCutterUI, Assembly-CSharp
-        m_MethodName: RotateButtonClick
+      - m_Target: {fileID: 1257549072}
+        m_TargetAssemblyTypeName: smart3tene.Reaper.CutterUI, Assembly-CSharp
+        m_MethodName: OnClickRotate
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7213,6 +7165,7 @@ GameObject:
   - component: {fileID: 1257549069}
   - component: {fileID: 1257549071}
   - component: {fileID: 1257549070}
+  - component: {fileID: 1257549072}
   m_Layer: 5
   m_Name: CutterPanel
   m_TagString: Untagged
@@ -7237,7 +7190,7 @@ RectTransform:
   - {fileID: 1044441103}
   - {fileID: 2128437703}
   m_Father: {fileID: 897640260}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -7282,6 +7235,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1257549068}
   m_CullTransparentMesh: 1
+--- !u!114 &1257549072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1257549068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c57765202cf219e45846f57db46814dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _reaperManager: {fileID: 1736775214}
+  _cutterLamp: {fileID: 1204658611}
 --- !u!1001 &1262032961
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7790,6 +7757,7 @@ GameObject:
   - component: {fileID: 1350701319}
   - component: {fileID: 1350701318}
   - component: {fileID: 1350701320}
+  - component: {fileID: 1350701321}
   m_Layer: 5
   m_Name: TextPopUpPanle
   m_TagString: Untagged
@@ -7811,7 +7779,7 @@ RectTransform:
   m_Children:
   - {fileID: 1517596996}
   m_Father: {fileID: 897640260}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -7868,6 +7836,23 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1350701321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1350701316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 113a776a7fb56934990a602e52d9e4d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _canvasGroup: {fileID: 1350701320}
+  _text: {fileID: 1517596997}
+  _fadeInTime: 1
+  _popupTime: 7
+  _fadeOutTime: 1
 --- !u!1 &1365807173
 GameObject:
   m_ObjectHideFlags: 0
@@ -10413,13 +10398,14 @@ GameObject:
   - component: {fileID: 1787549112}
   - component: {fileID: 1787549114}
   - component: {fileID: 1787549113}
+  - component: {fileID: 1787549115}
   m_Layer: 5
   m_Name: ClearPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1787549112
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10437,7 +10423,7 @@ RectTransform:
   - {fileID: 982070853}
   - {fileID: 1191435924}
   m_Father: {fileID: 897640260}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -10482,6 +10468,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1787549111}
   m_CullTransparentMesh: 1
+--- !u!114 &1787549115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787549111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7e0addbe7fb7a848a3ae67e366996b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _clearPanel: {fileID: 1787549111}
+  _clearTimeNum: {fileID: 255779027}
 --- !u!1 &1797062400
 GameObject:
   m_ObjectHideFlags: 0
@@ -10642,6 +10642,7 @@ GameObject:
   - component: {fileID: 1819197909}
   - component: {fileID: 1819197911}
   - component: {fileID: 1819197910}
+  - component: {fileID: 1819197912}
   m_Layer: 5
   m_Name: TimePanel
   m_TagString: Untagged
@@ -10664,7 +10665,7 @@ RectTransform:
   - {fileID: 1448543745}
   - {fileID: 985854774}
   m_Father: {fileID: 897640260}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -10709,6 +10710,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1819197908}
   m_CullTransparentMesh: 1
+--- !u!114 &1819197912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1819197908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f714f8438ce2d8419363cfdf62aaca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _timeNum: {fileID: 985854772}
 --- !u!1001 &1820401935
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11283,9 +11297,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 897640263}
-        m_TargetAssemblyTypeName: smart3tene.Reaper.LiftAndCutterUI, Assembly-CSharp
-        m_MethodName: DownButtonClick
+      - m_Target: {fileID: 945164205}
+        m_TargetAssemblyTypeName: smart3tene.Reaper.LiftUI, Assembly-CSharp
+        m_MethodName: OnClickDown
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11429,7 +11443,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 897640267}
+      - m_Target: {fileID: 890526956}
         m_TargetAssemblyTypeName: smart3tene.Reaper.ProjectorController, Assembly-CSharp
         m_MethodName: DelaySliderOnValueChaged
         m_Mode: 1
@@ -11635,9 +11649,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 897640263}
-        m_TargetAssemblyTypeName: smart3tene.Reaper.LiftAndCutterUI, Assembly-CSharp
-        m_MethodName: StopButtonClick
+      - m_Target: {fileID: 1257549072}
+        m_TargetAssemblyTypeName: smart3tene.Reaper.CutterUI, Assembly-CSharp
+        m_MethodName: OnClickStop
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
