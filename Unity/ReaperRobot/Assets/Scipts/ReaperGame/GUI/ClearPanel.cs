@@ -13,8 +13,9 @@ namespace smart3tene.Reaper
 
         private void Awake()
         {
-            _clearPanel.SetActive(false);
             ReaperEventManager.AllCheckPointPassEvent += SetClearTime;
+
+            _clearPanel.SetActive(false);
         }
 
         private void OnDisable()
