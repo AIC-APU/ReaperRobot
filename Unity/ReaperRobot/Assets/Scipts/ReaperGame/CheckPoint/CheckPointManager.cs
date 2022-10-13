@@ -61,6 +61,11 @@ namespace smart3tene.Reaper
             GameTimer.Stop();
             Debug.Log("clear!");
         }
+
+        private void ResetCheckPoint()
+        {
+
+        }
         #endregion
     }
 
