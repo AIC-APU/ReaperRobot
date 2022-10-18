@@ -59,24 +59,22 @@ namespace smart3tene.Reaper
         private void OnOpenMenuEvent()
         {
             _isMenuOpen = true;
+            _playerInput.enabled = false;
 
             _wasUseTimer = GameTimer.IsTimerRunning;
             if (GameTimer.IsTimerRunning) GameTimer.Stop();
 
             Time.timeScale = 0;
-
-            _playerInput.enabled = false;
         }
 
         private void OnCloseMenuEvent()
         {
             _isMenuOpen = false;
+            _playerInput.enabled = true;
 
-            if(_wasUseTimer) GameTimer.Start();
+            if (_wasUseTimer) GameTimer.Start();
 
             Time.timeScale = 1;
-
-            _playerInput.enabled = true;
         }
         #endregion
     }
