@@ -9,23 +9,28 @@ namespace smart3tene.Reaper
 
         void Awake()
         {
-            GrassCounter.CutGrassCount.Subscribe(x =>
-            {
-                if (_lastCutCount == 0 && x == 1)
+            //草が1つカットされた時にタイマースタート
+            GrassCounter.CutGrassCount
+                .Subscribe(x =>
                 {
-                    GameTimer.Start();
-                }
+                    if (_lastCutCount == 0 && x == 1)
+                    {
+                        GameTimer.Start();
+                    }
 
-                _lastCutCount = x;
+                    _lastCutCount = x;
 
-            }).AddTo(this);
+                })
+                .AddTo(this);
 
             ReaperEventManager.ResetEvent += ResetTimer;
+            ResetTimer();
         }
 
         private void OnDestroy()
         {
             ReaperEventManager.ResetEvent -= ResetTimer;
+            ResetTimer();
         }
 
         private void ResetTimer()

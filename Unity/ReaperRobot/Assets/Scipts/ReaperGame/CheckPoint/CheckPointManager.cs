@@ -37,6 +37,9 @@ namespace smart3tene.Reaper
         {
             _cancellationTokenSource.Cancel();
             ReaperEventManager.AllCheckPointPassEvent -= AllCheckPointPass;
+
+            GameTimer.Stop();
+            GameTimer.Reset();
         }
         #endregion
 

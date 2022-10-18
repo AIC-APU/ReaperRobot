@@ -53,7 +53,7 @@ namespace smart3tene.Reaper
 
         private void LateUpdate()
         {
-            if (_playerInput.currentActionMap.name != "Reaper") return;
+            if (!_playerInput.enabled || _playerInput.currentActionMap.name != "Reaper") return;
             if (_controllableCamera == null) return;
 
             _controllableCamera.FollowTarget();

@@ -41,7 +41,7 @@ namespace smart3tene.Reaper
 
         private void FixedUpdate()
         {
-            if (_playerInput.currentActionMap.name != "Person") return;
+            if (!_playerInput.enabled || _playerInput.currentActionMap.name != "Person") return;
 
             //移動
             var move = _personActionMap["Move"].ReadValue<Vector2>();

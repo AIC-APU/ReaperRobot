@@ -7,8 +7,11 @@ namespace smart3tene.Reaper
         public static event Action GameOverEvent;
         public static  void InvokeGameOverEvent() => GameOverEvent?.Invoke();
 
-        public static event Action MenuEvent;
-        public static void InvokeMenuEvent() => MenuEvent?.Invoke();
+        public static event Action OpenMenuEvent;
+        public static void InvokeOpenMenuEvent() => OpenMenuEvent?.Invoke();
+
+        public static event Action CloseMenuEvent;
+        public static void InvokeCloseMenuEvent() => CloseMenuEvent?.Invoke();
 
         public static event Action ResetEvent;
         public static void InvokeResetEvent() => ResetEvent?.Invoke();
