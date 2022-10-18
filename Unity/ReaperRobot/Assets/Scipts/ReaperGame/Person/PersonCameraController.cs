@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UniRx;
+using UniRx.Triggers;
 
 namespace smart3tene.Reaper
 {
@@ -26,7 +27,7 @@ namespace smart3tene.Reaper
         #region Private Fields
         private PlayerInput _playerInput;
         private InputActionMap _personActionMap;
-        private ReactiveProperty<bool> _isPersonMap = new(false);
+        private ReactiveProperty<bool> _isMapPerson = new(false);
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -42,23 +43,28 @@ namespace smart3tene.Reaper
                 _controllableCamera.ResetCamera();
             }
 
-            _isPersonMap.Subscribe(x =>
-            {
-                if (x && CCamera != null)
+            //ActionMapが切り替わったタイミングでカメラをリセットしたい
+            _isMapPerson
+                .Subscribe(x =>
                 {
-                    CCamera.ResetCamera();
-                }
-            }).AddTo(this);
+                    if (x && CCamera != null)
+                    {
+                        CCamera.ResetCamera();
+                    }
+                })
+                .AddTo(this);
         }
 
         private void Update()
         {
-            _isPersonMap.Value = _playerInput.currentActionMap.name == "Person";
+            if (!_playerInput.enabled) return;
+
+            _isMapPerson.Value = _playerInput.currentActionMap.name == "Person";
         }
 
         private void LateUpdate()
         {
-            if (_playerInput.currentActionMap.name != "Person") return;
+            if (!_playerInput.enabled || _playerInput.currentActionMap.name != "Person") return;
 
             //カメラの回転
             _controllableCamera.FollowTarget();

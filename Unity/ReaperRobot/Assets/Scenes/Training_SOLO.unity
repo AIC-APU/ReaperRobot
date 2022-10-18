@@ -2064,7 +2064,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 319251534}
         m_TargetAssemblyTypeName: smart3tene.Reaper.MenuPanel, Assembly-CSharp
-        m_MethodName: ShowAndHideMenu
+        m_MethodName: OnClickCloseMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3270,6 +3270,7 @@ GameObject:
   - component: {fileID: 621111541}
   - component: {fileID: 621111543}
   - component: {fileID: 621111542}
+  - component: {fileID: 621111545}
   - component: {fileID: 621111544}
   m_Layer: 5
   m_Name: PassCheckPointPanel
@@ -3349,7 +3350,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2115a70e4dc0f4b469430418dbdf07ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _passCheckPointPanel: {fileID: 621111540}
+--- !u!225 &621111545
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621111540}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!4 &623760791 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8996102183553057519, guid: a58b104885dc57d418a9062019e6939c, type: 3}
@@ -7116,7 +7128,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 319251534}
         m_TargetAssemblyTypeName: smart3tene.Reaper.MenuPanel, Assembly-CSharp
-        m_MethodName: EndGameButtonClick
+        m_MethodName: OnClickEndGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

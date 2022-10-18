@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace smart3tene.Reaper
 {
@@ -10,42 +11,29 @@ namespace smart3tene.Reaper
         [SerializeField] private GameObject _menuPanel;
         [SerializeField] private GameObject _menuTopButton;
 
+        #region MonoBehaviour Callbacks
         private void Awake()
         {
-            _menuPanel.SetActive(false);
+            ReaperEventManager.OpenMenuEvent += ShowMenu;
+            ReaperEventManager.CloseMenuEvent += HideMenu;
 
-            ReaperEventManager.MenuEvent += ShowAndHideMenu;
+            _menuPanel.SetActive(false);
         }
 
         private void OnDestroy()
         {
-            ReaperEventManager.MenuEvent -= ShowAndHideMenu;
+            ReaperEventManager.OpenMenuEvent -= ShowMenu;
+            ReaperEventManager.CloseMenuEvent -= HideMenu;
         }
+        #endregion
 
-        public void ShowAndHideMenu()
+        #region Public Methods for Button
+        public void OnClickCloseMenu()
         {
-            if (_menuPanel.activeSelf)
-            {
-                //メニューを閉じる時の挙動
-                _menuPanel.SetActive(false);
-
-                EventSystem.current.SetSelectedGameObject(null);
-
-                Time.timeScale = 1f;
-
-            }
-            else
-            {
-                //メニューを開く時の挙動
-                _menuPanel.SetActive(true);
-
-                EventSystem.current.SetSelectedGameObject(_menuTopButton);
-
-                Time.timeScale = 0f;
-            }
+            ReaperEventManager.InvokeCloseMenuEvent();
         }
 
-        public void EndGameButtonClick()
+        public void OnClickEndGame()
         {
             if(SceneTransitionManager.Instance != null)
             {
@@ -62,6 +50,27 @@ namespace smart3tene.Reaper
                 #endif
             }
         }
+        #endregion
+
+        #region Private Methods
+        private void ShowMenu()
+        {
+            if (!_menuPanel.activeSelf)
+            {
+                _menuPanel.SetActive(true);
+                EventSystem.current.SetSelectedGameObject(_menuTopButton);
+            }
+        }
+
+        private void HideMenu()
+        {
+            if (_menuPanel.activeSelf)
+            {
+                _menuPanel.SetActive(false);
+                EventSystem.current.SetSelectedGameObject(null);
+            }
+        }
+        #endregion
     }
 
 }

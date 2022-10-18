@@ -55,7 +55,7 @@ namespace smart3tene
             }
 
             //位置情報の更新
-            _cameraOffsetPos = (_camera.transform.position - _target.transform.position);
+            _cameraOffsetPos = _camera.transform.position - _target.transform.position;
         }
 
         public void RotateCamera(float horizontal, float vertical)
@@ -77,7 +77,7 @@ namespace smart3tene
             }
 
             //位置情報の更新
-            _cameraOffsetPos = (_camera.transform.position - _target.transform.position);
+            _cameraOffsetPos = _camera.transform.position - _target.transform.position;
         }
         #endregion
 

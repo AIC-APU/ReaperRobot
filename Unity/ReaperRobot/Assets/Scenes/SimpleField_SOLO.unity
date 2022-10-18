@@ -10084,7 +10084,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1869938160}
         m_TargetAssemblyTypeName: smart3tene.Reaper.MenuPanel, Assembly-CSharp
-        m_MethodName: EndGameButtonClick
+        m_MethodName: OnClickEndGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10414,7 +10414,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1869938160}
         m_TargetAssemblyTypeName: smart3tene.Reaper.MenuPanel, Assembly-CSharp
-        m_MethodName: ShowAndHideMenu
+        m_MethodName: OnClickCloseMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10970,6 +10970,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _menuPanel: {fileID: 418793495}
   _menuTopButton: {fileID: 1770658976}
+  _playerInput: {fileID: 653367590}
 --- !u!1 &1887750958
 GameObject:
   m_ObjectHideFlags: 0

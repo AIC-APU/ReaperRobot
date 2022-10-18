@@ -92,6 +92,16 @@ public class ReaperRecorder : MonoBehaviour
 
         _recordingTime.Value += Time.deltaTime;
     }
+
+    private void OnDestroy()
+    {
+        //記録の途中でゲームが終わったならそこでExportする
+        if (_isRecording.Value)
+        {
+            _isRecording.Value = false;
+            ExportCSV();
+        }
+    }
     #endregion
 
     #region Public method
