@@ -53,6 +53,8 @@ namespace smart3tene.Reaper
                     }
                 })
                 .AddTo(this);
+
+            ReaperEventManager.ResetEvent += ResetCamera;
         }
 
         private void Update()
@@ -71,6 +73,20 @@ namespace smart3tene.Reaper
 
             var move = _personActionMap["Look"].ReadValue<Vector2>();
             _controllableCamera.RotateCamera(move.x, move.y);
+        }
+
+        private void OnDestroy()
+        {
+            ReaperEventManager.ResetEvent -= ResetCamera;
+        }
+        #endregion
+
+        #region Private Method
+        private void ResetCamera()
+        {
+            if (!_isMapPerson.Value) return;
+
+            CCamera.ResetCamera();
         }
         #endregion
     }

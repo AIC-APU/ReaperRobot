@@ -43,6 +43,8 @@ namespace smart3tene.Reaper
 
             _reaperActionMap["MoveCamera"].performed += MoveCamera;
             _reaperActionMap["ResetCamera"].started += ResetCamera;
+
+            ReaperEventManager.ResetEvent += ResetCamera;
         }
 
         private void OnDisable()
@@ -61,6 +63,11 @@ namespace smart3tene.Reaper
             var vec = _reaperActionMap["RotateCamera"].ReadValue<Vector2>();
             _controllableCamera.RotateCamera(vec.x, vec.y);
         }
+
+        private void OnDestroy()
+        {
+            ReaperEventManager.ResetEvent -= ResetCamera;
+        }
         #endregion
 
         #region Private method
@@ -71,6 +78,13 @@ namespace smart3tene.Reaper
         }
         private void ResetCamera(InputAction.CallbackContext obj)
         {
+            _controllableCamera.ResetCamera();
+        }
+
+        private void ResetCamera()
+        {
+            if (_playerInput.defaultActionMap != "Reaper") return;
+
             _controllableCamera.ResetCamera();
         }
         #endregion

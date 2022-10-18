@@ -26,6 +26,13 @@ namespace smart3tene.Reaper
         [SerializeField] private List<Transform> _instantiatePos = new List<Transform>();
         #endregion
 
+        #region Private Fields
+        private Vector3 _defaultReaperPos;
+        private Quaternion _defaultReaperRot;
+        private Vector3 _defaultPersonPos;
+        private Quaternion _defaultPersonRot;
+        #endregion
+
         #region MonoBehaviour Callbacks
         void Awake()
         {
@@ -49,16 +56,58 @@ namespace smart3tene.Reaper
             //草刈り機の生成
             if (_useReaper && _reaperInstance == null)
             {
-                _reaperInstance = PhotonNetwork.Instantiate("ReaperCrawlerResource", _instantiatePos[posId].position, _instantiatePos[posId].rotation, 0);
+                _defaultReaperPos = _instantiatePos[posId].position;
+                _defaultReaperRot = _instantiatePos[posId].rotation;
+
+                _reaperInstance = PhotonNetwork.Instantiate("ReaperCrawlerResource", _defaultReaperPos, _defaultReaperRot, 0);
+            }
+            else if(_useReaper)
+            {
+                _defaultReaperPos = _reaperInstance.transform.position;
+                _defaultReaperRot = _reaperInstance.transform.rotation;
             }
 
             //人モデルの生成
             if(_usePerson &&　_personInstance == null)
             {
                 var playerBackDistance = 3f;
-                _personInstance = PhotonNetwork.Instantiate("RingoResource", _instantiatePos[posId].position + (-1 * _instantiatePos[posId].forward * playerBackDistance), _instantiatePos[posId].rotation, 0);
+
+                _defaultPersonPos = _instantiatePos[posId].position + (-1 * _instantiatePos[posId].forward * playerBackDistance);
+                _defaultPersonRot = _instantiatePos[posId].rotation;
+
+                _personInstance = PhotonNetwork.Instantiate("RingoResource", _defaultPersonPos, _defaultPersonRot, 0);
+            }
+            else if(_usePerson)
+            {
+                _defaultPersonPos = _personInstance.transform.position;
+                _defaultPersonRot = _personInstance.transform.rotation;
+            }
+
+            ReaperEventManager.ResetEvent += ResetReaperAndPerson;
+        }
+
+        private void OnDestroy()
+        {
+            ReaperEventManager.ResetEvent -= ResetReaperAndPerson;
+        }
+        #endregion
+
+        #region Private Method
+        private void ResetReaperAndPerson()
+        {
+            if (_useReaper)
+            {
+                _reaperInstance.transform.position = _defaultReaperPos;
+                _reaperInstance.transform.rotation = _defaultReaperRot;
+            }
+
+            if (_usePerson)
+            {
+                _personInstance.transform.position = _defaultPersonPos;
+                _personInstance.transform.rotation = _defaultPersonRot;
             }
         }
+
         #endregion
     }
 }
