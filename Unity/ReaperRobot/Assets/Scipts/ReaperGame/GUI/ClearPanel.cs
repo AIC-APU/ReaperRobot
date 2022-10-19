@@ -18,7 +18,7 @@ namespace smart3tene.Reaper
             _clearPanel.SetActive(false);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             ReaperEventManager.AllCheckPointPassEvent -= SetClearTime;
         }

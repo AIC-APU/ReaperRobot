@@ -1244,7 +1244,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 70916555}
-    m_SelectOnDown: {fileID: 1822466963}
+    m_SelectOnDown: {fileID: 1066016478}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -1377,7 +1377,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 5523195}
+    m_SelectOnUp: {fileID: 1406311560}
     m_SelectOnDown: {fileID: 1406311560}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
@@ -2143,7 +2143,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 1822466963}
+    m_SelectOnUp: {fileID: 626858147}
     m_SelectOnDown: {fileID: 70916555}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
@@ -2775,7 +2775,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1278705320}
   m_OnClick:
     m_PersistentCalls:
@@ -3159,7 +3159,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 669922958}
-    m_SelectOnDown: {fileID: 1278705319}
+    m_SelectOnDown: {fileID: 669922958}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -3250,7 +3250,6 @@ GameObject:
   - component: {fileID: 1455982231}
   - component: {fileID: 1455982233}
   - component: {fileID: 1455982235}
-  - component: {fileID: 1455982234}
   m_Layer: 5
   m_Name: CourseSelectPanel
   m_TagString: Untagged
@@ -3338,19 +3337,6 @@ MonoBehaviour:
   _nowLoadingPanel: {fileID: 910906044}
   _simpleFieldButton: {fileID: 70916553}
   _backButton: {fileID: 1066016476}
---- !u!114 &1455982234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1455982229}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0dbcc2a395e51a419317b71b52ddaa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _trainingButton: {fileID: 1822466963}
 --- !u!114 &1455982235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4434,7 +4420,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1822466964}
   m_OnClick:
     m_PersistentCalls:
@@ -4920,7 +4906,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1836727040}
   m_OnClick:
     m_PersistentCalls:
