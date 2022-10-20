@@ -36,9 +36,9 @@ namespace smart3tene.Reaper
         public Vector2 NowInput { get; private set; }
 
         //トルク関連の値
-        public float rotateTorque = 100f;
-        public float moveTorque = 300f;
-        public float torqueRateAtCutting = 0.5f;
+        [NonSerialized] public float rotateTorque = 400f;
+        [NonSerialized] public float moveTorque = 300f;
+        [NonSerialized] public float torqueRateAtCutting = 0.5f;
         #endregion
 
         #region Private
