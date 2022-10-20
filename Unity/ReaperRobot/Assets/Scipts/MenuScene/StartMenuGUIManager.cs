@@ -1,22 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using Photon.Pun;
 using TMPro;
 using UniRx;
+using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
 
 namespace smart3tene
 {
     public class StartMenuGUIManager : MonoBehaviour
     {
         #region Serialized Private Fields
-        [Header("SceneTransitionManager")]
-        [SerializeField] private SceneTransitionManager _sceneTransitionManager;
-
         [Header("Panels")]
         [SerializeField] private GameObject _tiltePanel;
         [SerializeField] private GameObject _courseselectPanel;
+        [SerializeField] private GameObject _nowLoadingPanel;
         [SerializeField] private GameObject _waitingPanel;
         [SerializeField] private GameObject _multiFailedPanel;
 
@@ -25,10 +21,11 @@ namespace smart3tene
 
         [Header("Button")]
         [SerializeField] private Button _cancelButton;
+        [SerializeField] private GameObject _backButton;
         #endregion
 
         #region Private Fields
-
+        private SceneTransitionManager _sceneTransitionManager;
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -40,71 +37,107 @@ namespace smart3tene
             _waitingPanel.SetActive(false);
             _multiFailedPanel.SetActive(false);
 
-            GameData.CountOfPlayersInRooms.Subscribe(x => _roomPlayerNum.text = $"{x}/{GameData.MaxPlayers}");
+            GameData.CountOfPlayersInRooms
+                .Subscribe(x => _roomPlayerNum.text = $"{x}/{GameData.MaxPlayers}")
+                .AddTo(this);
 
-            _sceneTransitionManager.MultiStartEvent += ShowWaitingPanel;
+            //↓この呼び方にしないとイベントの解除が失敗する
+            _sceneTransitionManager = SceneTransitionManager.Instance;
+            _sceneTransitionManager.RoomFilledEvent += ShowCourseSelectPanelForMaster;
         }
 
+        
         private void Update()
         {
-            _cancelButton.interactable = PhotonNetwork.InRoom;
+            _cancelButton.interactable = PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerCount < GameData.MaxPlayers;
         }
 
         private void OnDestroy()
         {
-            _sceneTransitionManager.MultiStartEvent -= ShowWaitingPanel;
+            _sceneTransitionManager.RoomFilledEvent -= ShowCourseSelectPanelForMaster;
         }
         #endregion
 
         #region public method
-        public void SetSoloMode()
+        public void SoloButtonClick()
         {
             GameData.NowGameMode = GameData.GameMode.SOLO;
+            SceneTransitionManager.Instance.StartOfflineGame();
         }
 
-        public void SetVRMode()
+        public void VRButtonClick()
         {
             GameData.NowGameMode = GameData.GameMode.VR;
+            SceneTransitionManager.Instance.StartOfflineGame();
         }
-        public void SetMultiMode()
+        public void MultiButtonClick()
         {
             GameData.NowGameMode = GameData.GameMode.MULTI;
+            SceneTransitionManager.Instance.StartMultiGame();
         }
-        public void SetSimpleField()
+        public void ExitButtonClick()
+        {
+            SceneTransitionManager.Instance.CloseApp();
+        }
+        public void FieldButtonClick_SimpleField()
         {
             GameData.NowGameCourse = GameData.GameCourse.SimpleField;
 
-            StartGame();
+            SceneTransitionManager.Instance.RoadScene();
         }
-        public void CanselMulti()
+        public void FieldButtonClick_Training()
         {
-            _sceneTransitionManager.LeaveRoom();
+            GameData.NowGameCourse = GameData.GameCourse.Training;
+
+            SceneTransitionManager.Instance.RoadScene();
+        }
+        public void FieldButtonClick_UserStudy()
+        {
+            GameData.NowGameCourse = GameData.GameCourse.UserStudy;
+
+            SceneTransitionManager.Instance.RoadScene();
+        }
+        public void CancelButtonClick()
+        {
+            SceneTransitionManager.Instance.LeaveAndDisconnect();
+        }
+        public void BackButtonClick()
+        {
+            SceneTransitionManager.Instance.LeaveAndDisconnect();
         }
         #endregion
 
         #region private method
-        private void StartGame()
+        private void ShowCourseSelectPanelForMaster()
         {
-            switch (GameData.NowGameMode)
+            //MasterClientのみがコースを決めることができる
+            if (PhotonNetwork.IsMasterClient)
             {
-                case GameData.GameMode.SOLO:
-                case GameData.GameMode.VR:
-                    SceneTransitionManager.Instance.StartOfflineGame();
-                    break;
-                case GameData.GameMode.MULTI:
-                    SceneTransitionManager.Instance.StartMultiGame();
-                    break;
-                default:
-                    break;
-            }
-        }
+                _courseselectPanel.SetActive(true);
 
-        private void ShowWaitingPanel()
-        {
-            _tiltePanel.SetActive(false);
-            _courseselectPanel.SetActive(false);
-            _waitingPanel.SetActive(true);
-            _multiFailedPanel.SetActive(false);
+                _tiltePanel.SetActive(false);
+                _nowLoadingPanel.SetActive(false);
+                _waitingPanel.SetActive(false);
+                _multiFailedPanel.SetActive(false);
+
+                if (PhotonNetwork.OfflineMode)
+                {
+                    _backButton.SetActive(true);
+                }
+                else
+                {
+                    _backButton.SetActive(false);
+                }
+            }
+            else
+            {
+                _nowLoadingPanel.SetActive(true);
+                
+                _tiltePanel.SetActive(false);
+                _courseselectPanel.SetActive(false);
+                _waitingPanel.SetActive(false);
+                _multiFailedPanel.SetActive(false);
+            }
         }
         #endregion
     }

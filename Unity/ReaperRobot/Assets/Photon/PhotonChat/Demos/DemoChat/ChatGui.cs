@@ -53,6 +53,11 @@ namespace Photon.Chat.Demo
         public ChatClient chatClient;
 
         #if !PHOTON_UNITY_NETWORKING
+        public ChatAppSettings ChatAppSettings
+        {
+            get { return this.chatAppSettings; }
+        }
+
         [SerializeField]
         #endif
         protected internal ChatAppSettings chatAppSettings;
@@ -324,6 +329,16 @@ namespace Photon.Chat.Demo
                         this.chatClient.Subscribe(new string[] { subtokens[0] });
                     }
                 }
+                #if CHAT_EXTENDED
+                else if ((tokens[0].Equals("\\nickname") || tokens[0].Equals("\\nick") ||tokens[0].Equals("\\n")) && !string.IsNullOrEmpty(tokens[1]))
+                {
+                    if (!doingPrivateChat)
+                    {
+                        this.chatClient.SetCustomUserProperties(this.selectedChannelName, this.chatClient.UserId, new Dictionary<string, object> {{"Nickname", tokens[1]}});
+                    }
+
+                }
+                #endif
                 else
                 {
                     Debug.Log("The command '" + tokens[0] + "' is invalid.");
@@ -403,6 +418,7 @@ namespace Photon.Chat.Demo
 
         public void OnDisconnected()
         {
+            Debug.Log("OnDisconnected()");
             this.ConnectingLabel.SetActive(false);
         }
 

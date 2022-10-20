@@ -78,9 +78,45 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "ChangeReaperAndPerson",
+                    "type": "Button",
+                    "id": "596cb0d8-4cff-4b32-90a1-5c4665203984",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "CloseApp",
                     "type": "Button",
                     "id": "78caee75-863f-4425-8dc1-f7eda8296814",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Menu",
+                    "type": "Button",
+                    "id": "e747b382-8c15-44dc-9b22-86ba98d67899",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CSVPlay",
+                    "type": "Button",
+                    "id": "8b42e179-6c4c-42dc-96bb-ac58557fce91",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CSVStop",
+                    "type": "Button",
+                    "id": "214409b6-805e-4fd5-9bdf-56557af8159e",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -190,7 +226,7 @@
                 {
                     "name": "",
                     "id": "70494f2f-23b6-4d62-951a-9dfc1cf955c6",
-                    "path": "<Keyboard>/k",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -223,7 +259,7 @@
                 {
                     "name": "",
                     "id": "295ff081-be35-44f3-a6b6-034cb8725cbf",
-                    "path": "<Keyboard>/l",
+                    "path": "<Keyboard>/t",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -322,7 +358,7 @@
                 {
                     "name": "",
                     "id": "ccdf2f0f-85da-4355-8582-3c4dbac08e84",
-                    "path": "<Keyboard>/numpad0",
+                    "path": "<Keyboard>/o",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -343,17 +379,6 @@
                 },
                 {
                     "name": "",
-                    "id": "5db3df0d-67e8-4467-8b68-3cd793090e10",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "ChangeMode",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "143c476b-9063-4aaa-a93f-cda899b14b32",
                     "path": "<Gamepad>/select",
                     "interactions": "",
@@ -364,7 +389,18 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "2468",
+                    "name": "",
+                    "id": "5db3df0d-67e8-4467-8b68-3cd793090e10",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ChangeMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "IJKL",
                     "id": "2ad5be67-51c1-4f1f-843a-5519037d8875",
                     "path": "2DVector",
                     "interactions": "",
@@ -377,7 +413,7 @@
                 {
                     "name": "up",
                     "id": "813fd94f-5346-40d2-a33a-4a2ab37a08f7",
-                    "path": "<Keyboard>/numpad8",
+                    "path": "<Keyboard>/i",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -388,7 +424,7 @@
                 {
                     "name": "down",
                     "id": "6b54a844-256d-4176-88c4-32898d5f2ce1",
-                    "path": "<Keyboard>/numpad2",
+                    "path": "<Keyboard>/k",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -399,7 +435,7 @@
                 {
                     "name": "left",
                     "id": "7c32076d-b815-4499-9d98-1832b8886716",
-                    "path": "<Keyboard>/numpad4",
+                    "path": "<Keyboard>/j",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -410,7 +446,7 @@
                 {
                     "name": "right",
                     "id": "c9443218-ef64-44a9-8aac-71f922c688fa",
-                    "path": "<Keyboard>/numpad6",
+                    "path": "<Keyboard>/l",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -437,6 +473,83 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "CloseApp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5f946226-f53e-4b42-9d19-e7b204b21a2d",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fd00cb70-5eb7-475a-a346-1a1a43cacd59",
+                    "path": "<Keyboard>/m",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f30e9eb7-a864-4c9f-ad8e-e8002793fc83",
+                    "path": "<OculusTouchController>/menu",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "00a66461-cd2c-49dc-8ffa-d618c9efef31",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ChangeReaperAndPerson",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "50d62b22-c78a-4ee0-a2af-62895c1c0a83",
+                    "path": "<Keyboard>/n",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ChangeReaperAndPerson",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d614ebd6-2cae-4863-ba56-703c9496c03d",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "CSVPlay",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "40258bd9-adec-48d9-8cb5-80310b5d465a",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CSVStop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -474,9 +587,45 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "ChangeReaperAndPerson",
+                    "type": "Button",
+                    "id": "8daae8ef-1e94-4838-8c36-daea6b7fa9c9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "CloseApp",
                     "type": "Button",
                     "id": "d08caa25-02d7-434b-b4eb-a6ce47395dbd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Menu",
+                    "type": "Button",
+                    "id": "87c4cc2f-e957-4c2f-adf5-f277807ac15f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CSVPlay",
+                    "type": "Button",
+                    "id": "95d2d09b-a2e7-4910-ba4f-6eb2aea893a2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CSVStop",
+                    "type": "Button",
+                    "id": "a17afa4f-d626-47b2-a886-c9dfad98236b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -496,7 +645,7 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "WASD",
+                    "name": "Arrows",
                     "id": "27f23813-cd62-4030-a5f3-bcbbb02d8773",
                     "path": "2DVector",
                     "interactions": "",
@@ -646,6 +795,83 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "CloseApp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "57eb6591-c828-4e2c-9dd1-e2a34e79b6f1",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "013daffd-6582-4faa-b41b-970f318c74d1",
+                    "path": "<Keyboard>/m",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d2a5dd6a-ac41-4726-b89c-8e1b9658e610",
+                    "path": "<OculusTouchController>/menu",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e1990b03-b619-47a0-89d3-7f5ba3b46c1e",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ChangeReaperAndPerson",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "02403d3d-1e1b-4892-b178-b458abc85e0b",
+                    "path": "<Keyboard>/n",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ChangeReaperAndPerson",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a5b5b870-c9eb-4b71-a32c-310b70dfdd3b",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "CSVPlay",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5b6f631c-f02f-48c6-9caa-2f825a6c5ed2",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "CSVStop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

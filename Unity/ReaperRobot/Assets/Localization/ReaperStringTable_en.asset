@@ -1,0 +1,179 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: ReaperStringTable_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: a99e44ca0e0c2cd45a5c185acaaf3fe2, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 175720583168
+    m_Localized: Clear!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 886604779520
+    m_Localized: 'Time:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1447634882560
+    m_Localized: Lift
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1782742994944
+    m_Localized: Cutter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7753657700352
+    m_Localized: mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18455919284224
+    m_Localized: REAPER_FPV
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29451895394304
+    m_Localized: REAPER_BIRDVIEW
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29457540927488
+    m_Localized: REAPER_VR
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29459319312384
+    m_Localized: REAPER_FromPERSON
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29460128813056
+    m_Localized: REAPER_AROUND
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29460799901696
+    m_Localized: PERSON_TPV
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30511091372032
+    m_Localized: UP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30571518709760
+    m_Localized: DOWN
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30631782469632
+    m_Localized: ROTATE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30687013064704
+    m_Localized: STOP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1428425269268480
+    m_Localized: 'Delay:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1437574426218496
+    m_Localized: Reap rate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438246555045888
+    m_Localized: Reaper Camera
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438503212896256
+    m_Localized: 'Position:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438711049048064
+    m_Localized: 'Rotation: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438954700361728
+    m_Localized: Reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1452772142829568
+    m_Localized: Reaper Trainign
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1458260205064192
+    m_Localized: Solo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1458475691626496
+    m_Localized: Multi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1458652389265408
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1458774699364352
+    m_Localized: Exit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1459066320932864
+    m_Localized: Select Course
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1459272575832064
+    m_Localized: Simple Field
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1459446190657536
+    m_Localized: Trainning
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1459547088834560
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1459709353873408
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1460062317137920
+    m_Localized: "\rWaiting for other users to join..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1460335617986560
+    m_Localized: Now Loading...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1460572982038528
+    m_Localized: Sorry, failed to join the game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1460743740542976
+    m_Localized: Restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1461105960636416
+    m_Localized: Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1461219844378624
+    m_Localized: Close Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1461471099965440
+    m_Localized: End Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12699094804025344
+    m_Localized: UserStudy
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

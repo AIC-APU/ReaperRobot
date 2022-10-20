@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,66 +7,52 @@ namespace smart3tene.Reaper
     [RequireComponent(typeof(PlayerInput))]
     public class PersonController : MonoBehaviour
     {
+        #region Serialized Private Fields
+        public GameObject Person;
+        #endregion
+
         #region private Fields
-        [SerializeField, Tooltip("マルチプレイの時はnullにしておいてください")] private PersonManager _personManager;
-        private InputActionMap _personAction;
+        private PersonManager   _personManager;
+        private PlayerInput     _playerInput;
+        private InputActionMap  _personActionMap;
         #endregion
 
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            if(_personManager == null)
+            if(Person == null)
             {
-                _personManager = GameSystem.Instance.PersonInstance.GetComponent<PersonManager>();
+                Person = InstanceHolder.Instance.PersonInstance;
             }
-            _personAction = GetComponent<PlayerInput>().actions.FindActionMap("Person");
+            
+            _personManager = Person.GetComponent<PersonManager>();
+            _playerInput = GetComponent<PlayerInput>();
 
-            _personAction["ChangeMode"].started += ChangeViewMode;
-            _personAction["CloseApp"].started += CloseApp;
+            _personActionMap = _playerInput.actions.FindActionMap("Person");
+            _personActionMap["ChangeMode"].started += StopMove;
+            _personActionMap["ChangeReaperAndPerson"].started += StopMove;
         }
 
         private void OnDisable()
         {
-            _personAction["ChangeMode"].started -= ChangeViewMode;
-            _personAction["CloseApp"].started -= CloseApp;
-        }
-
-        private void LateUpdate()
-        {
-            var move = _personAction["Look"].ReadValue<Vector2>();
-            _personManager.RotateCamera(move.x, move.y);
+            _personActionMap["ChangeMode"].started -= StopMove;
+            _personActionMap["ChangeReaperAndPerson"].started -= StopMove;
         }
 
         private void FixedUpdate()
         {
-            var move = _personAction["Move"].ReadValue<Vector2>();
-            _personManager.Move(move.x, move.y);
+            if (!_playerInput.enabled || _playerInput.currentActionMap.name != "Person") return;
+
+            //移動
+            var move = _personActionMap["Move"].ReadValue<Vector2>();
+            _personManager.Move(move.x, move.y, Camera.main.transform);
         }
         #endregion
 
-        #region Private Fields
-        private void ChangeViewMode(InputAction.CallbackContext obj)
+        #region Private Method
+        private void StopMove(InputAction.CallbackContext obj)
         {
-            if (GameSystem.Instance != null)
-            {
-                GameSystem.Instance.ChangeViewMode();
-
-                if (GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.REAPER ||
-                    GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.TPV)
-                {
-                    GetComponent<PlayerInput>().SwitchCurrentActionMap("Reaper");
-                }
-            }
-        }
-
-
-        private void CloseApp(InputAction.CallbackContext obj)
-        {
-            //SceneTransitionManagerがシーンにないとCloseAppできません
-            if (SceneTransitionManager.Instantiated)
-            {
-                SceneTransitionManager.Instance.CloseApp();
-            }
+            _personManager.StopMove();
         }
         #endregion
     }

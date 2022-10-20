@@ -7,8 +7,22 @@
       "dependencies": {},
       "hash": "78db78c7bd5c1c75902dabb1496c85bd2316fca5"
     },
+    "com.unity.addressables": {
+      "version": "1.19.19",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.scriptablebuildpipeline": "1.19.6",
+        "com.unity.modules.assetbundle": "1.0.0",
+        "com.unity.modules.imageconversion": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.modules.unitywebrequestassetbundle": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.collab-proxy": {
-      "version": "1.17.1",
+      "version": "1.17.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -78,15 +92,49 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.localization": {
+      "version": "1.0.5",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.addressables": "1.19.9",
+        "com.unity.nuget.newtonsoft-json": "2.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.nuget.newtonsoft-json": {
       "version": "3.0.2",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.performance.profile-analyzer": {
       "version": "1.1.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.render-pipelines.core": {
+      "version": "12.1.6",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.modules.physics": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0"
+      }
+    },
+    "com.unity.scriptablebuildpipeline": {
+      "version": "1.19.6",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.searcher": {
+      "version": "4.9.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
@@ -110,6 +158,15 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.shadergraph": {
+      "version": "12.1.6",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.render-pipelines.core": "12.1.6",
+        "com.unity.searcher": "4.9.1"
+      }
+    },
     "com.unity.subsystemregistration": {
       "version": "1.1.0",
       "depth": 1,
@@ -120,7 +177,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
-      "version": "1.1.31",
+      "version": "1.1.33",
       "depth": 0,
       "source": "registry",
       "dependencies": {
