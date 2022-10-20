@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Photon.Pun;
 
 namespace smart3tene.Reaper
 {
@@ -58,22 +59,38 @@ namespace smart3tene.Reaper
 
         private void OnOpenMenuEvent()
         {
+            //メニューを開いたというフラグを立てる
             _isMenuOpen = true;
+
+            //コントローラ操作をできないようにする
             _playerInput.enabled = false;
 
+            //マルチモードなら以下の操作はしない
+            if (PhotonNetwork.IsConnected　&& !PhotonNetwork.OfflineMode) return;
+
+            //タイマーが動いていたらタイマーを止める
             _wasUseTimer = GameTimer.IsTimerRunning;
             if (GameTimer.IsTimerRunning) GameTimer.Stop();
 
+            //ゲームを停止
             Time.timeScale = 0;
         }
 
         private void OnCloseMenuEvent()
         {
+            //メニューを開いたというフラグを立てる
             _isMenuOpen = false;
+
+            //コントローラ操作を可能に
             _playerInput.enabled = true;
 
+            //マルチモードなら以下の操作はしない
+            if (PhotonNetwork.IsConnected && !PhotonNetwork.OfflineMode) return;
+
+            //タイマーを再び起動
             if (_wasUseTimer) GameTimer.Start();
 
+            //ゲームを停止
             Time.timeScale = 1;
         }
         #endregion

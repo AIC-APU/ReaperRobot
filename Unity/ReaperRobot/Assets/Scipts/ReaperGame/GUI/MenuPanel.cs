@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using Photon.Pun;
 
 namespace smart3tene.Reaper
 {
@@ -38,6 +39,8 @@ namespace smart3tene.Reaper
             if(SceneTransitionManager.Instance != null)
             {
                 SceneTransitionManager.Instance.EndGame();
+
+                //PUnrpcで全員のゲームを終了させる
             }
             else
             {
@@ -70,6 +73,10 @@ namespace smart3tene.Reaper
                 EventSystem.current.SetSelectedGameObject(null);
             }
         }
+        #endregion
+
+        #region RPC Methods
+
         #endregion
     }
 
