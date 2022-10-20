@@ -3518,6 +3518,7 @@ GameObject:
   - component: {fileID: 653367592}
   - component: {fileID: 653367595}
   - component: {fileID: 653367593}
+  - component: {fileID: 653367597}
   m_Layer: 0
   m_Name: PlayerInput
   m_TagString: Untagged
@@ -3639,6 +3640,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _controllableCameraObject: {fileID: 0}
+--- !u!114 &653367597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653367586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a553690be5ddf644b390cb940cfc3c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &664984227
 GameObject:
   m_ObjectHideFlags: 0
