@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 namespace smart3tene
 {
@@ -23,10 +23,12 @@ namespace smart3tene
         #endregion
 
         #region MonoBehaviour Callbacks
-        private void Awake()
+        private async void Awake()
         {
             _rawImage = GetComponent<RawImage>();
             _textureSize = Vector2Int.RoundToInt(_rawImage.rectTransform.rect.size);
+
+            await UniTask.WaitUntil(() => recordingCamera != null);
             _rawImage.texture = RecordTexture(recordingCamera, _textureSize);
         }
 

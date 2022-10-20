@@ -1,78 +1,73 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace smart3tene.Reaper
 {
     [RequireComponent(typeof(PlayerInput))]
-    public class ReaperController : MonoBehaviour
+    public class ReaperController : MonoBehaviour, IRobotController
     {
+        #region Public Fields    
+        public GameObject TargetRobot { get => _targetRobot; set => _targetRobot = value; }
+        [SerializeField] private GameObject _targetRobot = null;
+        #endregion
+
         #region private Fields
-        [SerializeField, Tooltip("マルチプレイの時はnullにしておいてください")] private ReaperManager _reaperManager;
-        private InputActionMap _reaperAction;
+        private ReaperManager _reaperManager;
+        private PlayerInput _playerInput;
+        private InputActionMap _reaperActionMap;
         #endregion
 
         #region MonoBehaviour Callbacks
 
-        void Awake()
+        private void Awake()
         {
-            if(_reaperManager == null)
+            if(TargetRobot == null)
             {
-                _reaperManager = GameSystem.Instance.ReaperInstance.GetComponent<ReaperManager>();
+                TargetRobot = InstanceHolder.Instance.ReaperInstance;
             }
-            _reaperAction = GetComponent<PlayerInput>().actions.FindActionMap("Reaper");
 
-            _reaperAction["Move"].performed += Move;
-            _reaperAction["Move"].canceled += Stop;
-            _reaperAction["Brake"].started += Brake;
-            _reaperAction["Brake"].canceled += OffBrake;
-            _reaperAction["Lift"].started += MoveLift;
-            _reaperAction["Cutter"].started += RotateCutter;
-            _reaperAction["MoveCamera"].performed += MoveCamera;
-            _reaperAction["ResetCamera"].started += ResetCamera;
-            _reaperAction["ChangeMode"].started += ChangeMode;
-            _reaperAction["CloseApp"].started += CloseApp;
-            
+            _reaperManager      = _targetRobot.GetComponent<ReaperManager>();
+            _playerInput        = GetComponent<PlayerInput>();
+
+            _reaperActionMap       = _playerInput.actions.FindActionMap("Reaper");
+        }
+
+        private void OnEnable()
+        {
+            _reaperActionMap["Brake"].started += Brake;
+            _reaperActionMap["Brake"].canceled += OffBrake;
+            _reaperActionMap["Lift"].started += MoveLift;
+            _reaperActionMap["Cutter"].started += RotateCutter;
+
+            _reaperActionMap["ChangeMode"].started += StopMove;
+            _reaperActionMap["ChangeReaperAndPerson"].started += StopMove;
         }
 
         private void OnDisable()
         {
-            _reaperAction["Move"].performed -= Move;
-            _reaperAction["Move"].canceled -= Stop;
-            _reaperAction["Brake"].started -= Brake;
-            _reaperAction["Brake"].canceled -= OffBrake;
-            _reaperAction["Lift"].started -= MoveLift;
-            _reaperAction["Cutter"].started -= RotateCutter;
-            _reaperAction["MoveCamera"].performed -= MoveCamera;
-            _reaperAction["ResetCamera"].started -= ResetCamera;
-            _reaperAction["ChangeMode"].started -= ChangeMode;
-            _reaperAction["CloseApp"].started -= CloseApp;
+            _reaperActionMap["Brake"].started                  -= Brake;
+            _reaperActionMap["Brake"].canceled                 -= OffBrake;
+            _reaperActionMap["Lift"].started                   -= MoveLift;
+            _reaperActionMap["Cutter"].started                 -= RotateCutter;
+            
+            _reaperActionMap["ChangeMode"].started             -= StopMove;
+            _reaperActionMap["ChangeReaperAndPerson"].started  -= StopMove;
         }
 
-        private void LateUpdate()
+        private void FixedUpdate()
         {
-            var move = _reaperAction["RotateCamera"].ReadValue<Vector2>();
-            var rotateSpeed = 0.5f;
-            _reaperManager.RotateCamera(-1 * move.y * rotateSpeed, move.x * rotateSpeed, 0);
+            if (!_playerInput.enabled || _playerInput.currentActionMap.name != "Reaper") return;
+
+            var move = _reaperActionMap["Move"].ReadValue<Vector2>();
+            _reaperManager.Move(move.x, move.y);
         }
         #endregion
 
 
         #region private method
-        private void Move(InputAction.CallbackContext obj)
+        private void StopMove(InputAction.CallbackContext obj)
         {
-            var move = _reaperAction["Move"].ReadValue<Vector2>();
-            _ = _reaperManager.AsyncMove(move.x, move.y);
-        }
-
-        private void Stop(InputAction.CallbackContext obj)
-        {
-            //Oculusコントローラでの操作時は以下の停止処理をさせない
-            //この分岐がないと、なぜかOculusコントローラでは毎フレームこの停止処理をしてしまう
-            if (obj.control.name == "thumbstick") return;
-
-            _ = _reaperManager.AsyncMove(0, 0);
+            _reaperManager.Move(0,0);
         }
         private void Brake(InputAction.CallbackContext obj)
         {
@@ -89,36 +84,6 @@ namespace smart3tene.Reaper
         private void RotateCutter(InputAction.CallbackContext obj)
         {
             _reaperManager.RotateCutter(!_reaperManager.IsCutting.Value);
-        }
-        private void MoveCamera(InputAction.CallbackContext obj)
-        {
-            var move = obj.ReadValue<Vector2>();
-            var cameraSpeed = 0.1f;
-            _reaperManager.MoveCamera(move.x * cameraSpeed, move.y * cameraSpeed, 0);
-        }
-        private void ResetCamera(InputAction.CallbackContext obj)
-        {
-            _reaperManager.ResetCameraPos();
-        }
-        private void ChangeMode(InputAction.CallbackContext obj)
-        {
-            if(GameSystem.Instance != null)
-            {
-                GameSystem.Instance.ChangeViewMode();
-
-                if(GameSystem.Instance.NowViewMode.Value == GameSystem.ViewMode.TPV)
-                {
-                    GetComponent<PlayerInput>().SwitchCurrentActionMap("Person");
-                }
-            }
-        }
-        private void CloseApp(InputAction.CallbackContext obj)
-        {
-            //SceneTransitionManagerがシーンにないとCloseAppできません
-            if (SceneTransitionManager.Instantiated)
-            {
-                SceneTransitionManager.Instance.CloseApp();
-            }
         }
         #endregion
     }

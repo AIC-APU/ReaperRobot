@@ -8,15 +8,13 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: grass3
-  m_Shader: {fileID: 4800000, guid: a75fa3fef91c68842b29c4f277f993d3, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 30bda7e40f86f9041a9cc472ebbee1f5, type: 3}
   m_ValidKeywords: []
-  m_InvalidKeywords:
-  - _METALLICSPECGLOSSMAP
-  - _NORMALMAP
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses:
   - SHADOWCASTER
@@ -78,6 +76,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaClip: 0
+    - _BUILTIN_QueueControl: 0
+    - _BUILTIN_QueueOffset: 0
     - _Blend: 0
     - _BumpScale: 1
     - _Cull: 0
@@ -88,6 +88,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _Height: 1
     - _Id: 5
     - _Metallic: 0
     - _Mode: 0
@@ -102,6 +103,7 @@ Material:
     - _SrcBlend: 5
     - _Surface: 1
     - _UVSec: 0
+    - _WindForce: 1
     - _WorkflowMode: 1
     - _ZWrite: 0
     m_Colors:
@@ -110,3 +112,16 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
+--- !u!114 &8275260650909116276
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 639247ca83abc874e893eb93af2b5e44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 0
