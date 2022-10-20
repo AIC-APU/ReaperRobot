@@ -1483,9 +1483,6 @@ MonoBehaviour:
   _crawlerL: {fileID: 852624867254926367}
   _crawlerR: {fileID: 216392403894340294}
   _centerOfGravity: {x: 0, y: 0, z: -0.2}
-  rotateTorque: 100
-  moveTorque: 300
-  torqueRateAtCutting: 0.5
 --- !u!114 &7195942872361190858
 MonoBehaviour:
   m_ObjectHideFlags: 0
