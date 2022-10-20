@@ -900,9 +900,9 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 1321233124229425086}
   m_AABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  m_DirtyAABB: 1
+    m_Center: {x: -0.1956039, y: 1.4052335, z: -0.0023155212}
+    m_Extent: {x: 0.32086068, y: 0.29139864, z: 0.13827729}
+  m_DirtyAABB: 0
 --- !u!1 &1389163636847642947
 GameObject:
   m_ObjectHideFlags: 0
@@ -2285,9 +2285,9 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 1321233124229425086}
   m_AABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  m_DirtyAABB: 1
+    m_Center: {x: 0.00040635467, y: 1.529393, z: 0.035590038}
+    m_Extent: {x: 0.104304045, y: 0.1167016, z: 0.072332576}
+  m_DirtyAABB: 0
 --- !u!1 &3637387256051733698
 GameObject:
   m_ObjectHideFlags: 0
@@ -3177,11 +3177,11 @@ GameObject:
   - component: {fileID: 1649339677856229765}
   - component: {fileID: 3011460361170613543}
   - component: {fileID: 3556627591586100636}
-  - component: {fileID: 2106419995388266526}
   - component: {fileID: 4052609938266651274}
   - component: {fileID: 2805138606802486088}
   - component: {fileID: 739589149147163137}
   - component: {fileID: 7698345716064727733}
+  - component: {fileID: 2106419995388266526}
   m_Layer: 0
   m_Name: vrm_ringo
   m_TagString: Untagged
@@ -3236,26 +3236,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Avatar: {fileID: 9000000, guid: f362e9fb50f3c104c8c353db165bad77, type: 2}
   Description: {fileID: 11400000, guid: 72b284547f1c3f0459873118791169f9, type: 2}
---- !u!95 &2106419995388266526
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5333923590217972860}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: f362e9fb50f3c104c8c353db165bad77, type: 2}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &4052609938266651274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3467,6 +3447,26 @@ MonoBehaviour:
       m_RotationOrder: 4
     CurveXRangeDegree: 90
     CurveYRangeDegree: 10
+--- !u!95 &2106419995388266526
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5333923590217972860}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: f362e9fb50f3c104c8c353db165bad77, type: 2}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5455418141201288282
 GameObject:
   m_ObjectHideFlags: 0
@@ -3769,9 +3769,9 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 1321233124229425086}
   m_AABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  m_DirtyAABB: 1
+    m_Center: {x: 0.00040787458, y: 0.8285819, z: -0.004712321}
+    m_Extent: {x: 0.6973216, y: 0.8287071, z: 0.21950802}
+  m_DirtyAABB: 0
 --- !u!1 &5624937907865730905
 GameObject:
   m_ObjectHideFlags: 0
