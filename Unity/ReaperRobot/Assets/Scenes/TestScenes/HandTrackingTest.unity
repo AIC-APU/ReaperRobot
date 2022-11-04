@@ -480,6 +480,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hand: {fileID: 914381520}
+  _skeleton: {fileID: 1634060576}
   isTracked: 0
   confidence: 0
   isThumbPinch: 0
@@ -492,6 +493,11 @@ MonoBehaviour:
   RingPinchStrength: 0
   isPinkyPinch: 0
   PinkyPinchStrength: 0
+  isThumbBend: 0
+  isIndexBend: 0
+  isMiddleBend: 0
+  isRingBend: 0
+  isPinkyBend: 0
   handPos: {x: 0, y: 0, z: 0}
   handAngle: {x: 0, y: 0, z: 0}
 --- !u!1 &997664587
@@ -554,7 +560,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.055
+  m_Radius: 0.04
   m_Center: {x: 0, y: -0.05, z: 0}
 --- !u!54 &1029793890
 Rigidbody:
@@ -954,6 +960,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 482130, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
   m_PrefabInstance: {fileID: 1629970167}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1634060576 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114567484643301796, guid: 835e735ca71bf78459fb2cababd74112, type: 3}
+  m_PrefabInstance: {fileID: 894980398}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2609c54f376cffc4da1ab9401cc1a36f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1777677561
 GameObject:
   m_ObjectHideFlags: 0
