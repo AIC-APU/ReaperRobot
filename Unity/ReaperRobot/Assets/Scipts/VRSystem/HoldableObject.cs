@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using OculusSampleFramework;
 using UniRx;
 using UniRx.Triggers;
+using UnityEngine;
+using OculusSampleFramework;
+using Oculus.Interaction.Input;
 
 namespace smart3tene
 {
@@ -28,15 +27,20 @@ namespace smart3tene
 
         private bool _isTouchLeft = false;
         private bool _isTouchRight = false;
-        private bool _isHold = false;
+
+        private ReactiveProperty<bool> _isHoldRight = new(false);
+        private ReactiveProperty<bool> _isHoldLeft = new(false);
 
         private Vector3 _defaultPos;
         private Vector3 _defaultAng;
+        private Vector3 _localPos = Vector3.zero;
+        private Vector3 _localAng = Vector3.zero;
         #endregion
 
         #region MonoBehaviour Callbacks
         void Start()
         {
+            //色々値を取得
             _leftOVRHandPrefab  = GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/OVRHandPrefab");
             _rightOVRHandPrefab = GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor/OVRHandPrefab");
 
@@ -44,8 +48,8 @@ namespace smart3tene
             _rightHand      = _rightOVRHandPrefab.GetComponent<OVRHand>();
             _leftSkeleton   = _leftOVRHandPrefab.GetComponent<OVRSkeleton>();
             _rightSkeleton  = _rightOVRHandPrefab.GetComponent<OVRSkeleton>();
-            _leftTransform  = _leftOVRHandPrefab.transform;
-            _rightTransform = _rightOVRHandPrefab.transform;
+            _leftTransform  = _leftOVRHandPrefab.transform;     //ちなみにこのtransformのPositionは常に原点。位置取得ではなく親子関係の判定のみに使用。
+            _rightTransform = _rightOVRHandPrefab.transform;    //これもPositionは常に原点
 
             _rigidbody = GetComponent<Rigidbody>();
             _rigidbody.useGravity = _useGravityDefault;
@@ -53,45 +57,87 @@ namespace smart3tene
             _defaultPos = transform.position;
             _defaultAng = transform.eulerAngles;
 
-            //初めてオブジェクトを触れるまで、オブジェクトは動かない
-            if (_useGravityDefault) return;
-            this.UpdateAsObservable()
-                .TakeUntil(this.UpdateAsObservable().Where(_ => _isHold))
-                .Subscribe(_ =>
+
+            //各ハンドのトラッキングが外れた場合、タッチフラグをfalseにする
+            _leftHand
+                .ObserveEveryValueChanged(x => x.IsTracked)
+                .Where(x => x == false)
+                .Subscribe(_ => _isTouchLeft = false)
+                .AddTo(this);
+
+            _rightHand
+                .ObserveEveryValueChanged(x => x.IsTracked)
+                .Where(x => x == false)
+                .Subscribe(_ => _isTouchRight = false)
+                .AddTo(this);
+
+
+            //初めてこのオブジェクトを触れるまで、このオブジェクトは動かない
+            if (!_useGravityDefault)
+            {
+                this.UpdateAsObservable()
+                    .TakeUntil(this.UpdateAsObservable().Where(_ => _isHoldRight.Value || _isHoldLeft.Value))
+                    .Subscribe(_ =>
+                    {
+                        transform.position = _defaultPos;
+                        transform.eulerAngles = _defaultAng;
+                        _rigidbody.velocity = Vector3.zero;
+                        _rigidbody.angularVelocity = Vector3.zero;
+                    })
+                    .AddTo(this);
+            }
+
+
+            //isHoldフラグがtrueなら物を掴む、falseなら離す
+            _isHoldLeft
+                .Subscribe(x =>
                 {
-                    transform.position = _defaultPos;
-                    transform.eulerAngles = _defaultAng;
-                    _rigidbody.velocity = Vector3.zero;
-                    _rigidbody.angularVelocity = Vector3.zero;
+                    if (x)
+                    {
+                        HoldThisObject(_leftOVRHandPrefab);
+                    }
+                    else
+                    {
+                        ReleaseThisObject();
+                    }
+                })
+                .AddTo(this);
+
+            _isHoldRight
+                .Subscribe(x =>
+                {
+                    if (x)
+                    {
+                        HoldThisObject(_rightOVRHandPrefab);
+                    }
+                    else
+                    {
+                        ReleaseThisObject();
+                    }
                 })
                 .AddTo(this);
         }
 
         private void Update()
         {
-            if(_leftHand.IsTracked && _isTouchLeft && isGrab(_leftHand, _leftSkeleton))
+            //4つの条件が満たされた時のみ,このオブジェクトは掴まれる
+            //条件1: 手がこのオブジェクトに触れている
+            //条件2: このオブジェクトが手の平側にある（手の甲で触れていない）
+            //条件3: 手が物を掴むジェスチャをしている
+            //条件4: もう片方の手によって,このオブジェクトが掴まれていない
+            _isHoldLeft.Value = _isTouchLeft && HandTrackingUtility.IsObjectInPalm(_leftHand, _leftSkeleton, gameObject) && HandTrackingUtility.IsGrab(_leftHand, _leftSkeleton) && !_isHoldRight.Value;
+            _isHoldRight.Value = _isTouchRight && HandTrackingUtility.IsObjectInPalm(_rightHand, _rightSkeleton, gameObject) && HandTrackingUtility.IsGrab(_rightHand, _rightSkeleton) && !_isHoldLeft.Value;
+
+            //物を掴んでいる状態の時、ローカル座標の反映
+            if (_localPos != Vector3.zero || _localAng != Vector3.zero)
             {
-                //左手でオブジェクトを持つ
-                HoldThisObject(_leftOVRHandPrefab);
-            }
-            else if(_rightHand.IsTracked && _isTouchRight && isGrab(_rightHand, _rightSkeleton))
-            {
-                //右手でオブジェクトを持つ
-                HoldThisObject(_rightOVRHandPrefab);
-            }
-            else if(_isHold)
-            {
-                //オブジェクトが離れる
-                ReleaseThisObject();
+                gameObject.transform.localPosition = _localPos;
+                gameObject.transform.localEulerAngles = _localAng;
             }
         }
 
         private void OnCollisionEnter(Collision collision)
         {
-            //個々の条件、手じゃなくて、指にしたい
-
-            if (collision.gameObject.name != "Hand_WristRoot_CapsuleRigidbody") return;
-
             if (collision.transform.IsChildOf(_leftTransform))
             {
                 _isTouchLeft = true;
@@ -104,8 +150,6 @@ namespace smart3tene
 
         private void OnCollisionStay(Collision collision)
         {
-            if (collision.gameObject.name != "Hand_WristRoot_CapsuleRigidbody") return;
-
             if (collision.transform.IsChildOf(_leftTransform))
             {
                 _isTouchLeft = true;
@@ -118,8 +162,6 @@ namespace smart3tene
 
         private void OnCollisionExit(Collision collision)
         {
-            if (collision.gameObject.name != "Hand_WristRoot_CapsuleRigidbody") return;
-
             if (collision.transform.IsChildOf(_leftTransform))
             {
                 _isTouchLeft = false;
@@ -140,11 +182,12 @@ namespace smart3tene
             _rigidbody.velocity = Vector3.zero;
             _rigidbody.angularVelocity = Vector3.zero;
 
-            //このオブジェクトを手の子にする
+            //このオブジェクトの親に、手を設定する
             gameObject.transform.parent = handPrefab.transform;
 
-            //フラグの書き換え
-            _isHold = true;
+            //ローカル位置・ローカル回転を取得
+            _localPos = gameObject.transform.localPosition;
+            _localAng = gameObject.transform.localEulerAngles;
         }
 
         private void ReleaseThisObject()
@@ -158,42 +201,9 @@ namespace smart3tene
             //親子関係を初期化
             gameObject.transform.parent = null;
 
-            //フラグの書き換え
-            _isHold = false;
-        }
-
-        private bool isGrab(OVRHand hand, OVRSkeleton skelton)
-        {
-            //各指の曲がり具合を調べる
-            var isThumBend = isBending(hand, skelton, 0.95f, OVRSkeleton.BoneId.Hand_Thumb2, OVRSkeleton.BoneId.Hand_Thumb3, OVRSkeleton.BoneId.Hand_ThumbTip);
-            var isIndexBend = isBending(hand, skelton, 0.9f, OVRSkeleton.BoneId.Hand_Index1, OVRSkeleton.BoneId.Hand_Index2, OVRSkeleton.BoneId.Hand_Index3, OVRSkeleton.BoneId.Hand_IndexTip);
-            var isMiddleBend = isBending(hand, skelton, 0.9f, OVRSkeleton.BoneId.Hand_Middle1, OVRSkeleton.BoneId.Hand_Middle2, OVRSkeleton.BoneId.Hand_Middle3, OVRSkeleton.BoneId.Hand_MiddleTip);
-            var isRingBend = isBending(hand, skelton, 0.9f, OVRSkeleton.BoneId.Hand_Ring1, OVRSkeleton.BoneId.Hand_Ring2, OVRSkeleton.BoneId.Hand_Ring3, OVRSkeleton.BoneId.Hand_RingTip);
-            var isPinkyend = isBending(hand, skelton, 0.9f, OVRSkeleton.BoneId.Hand_Pinky0, OVRSkeleton.BoneId.Hand_Pinky1, OVRSkeleton.BoneId.Hand_Pinky2, OVRSkeleton.BoneId.Hand_Pinky3, OVRSkeleton.BoneId.Hand_PinkyTip);
-
-            //親指といずれかの指が曲がっていたらtrue
-            return isThumBend && (isIndexBend || isMiddleBend || isRingBend || isPinkyend);
-
-            #region Local Method
-            bool isBending(OVRHand hand, OVRSkeleton skelton, float threshold, params OVRSkeleton.BoneId[] boneids)
-                {
-                    if (!hand.IsTracked) return false;
-                    if (boneids.Length < 3) return false; //調べようがない
-
-                    Vector3? oldVec = null;
-                    var dot = 1.0f;
-                    for (var index = 0; index < boneids.Length - 1; index++)
-                    {
-                        var v = (skelton.Bones[(int)boneids[index + 1]].Transform.position - skelton.Bones[(int)boneids[index]].Transform.position).normalized;
-                        if (oldVec.HasValue)
-                        {
-                            dot *= Vector3.Dot(v, oldVec.Value); //内積の値を総乗していく
-                        }
-                        oldVec = v;//ひとつ前の指ベクトル
-                    }
-                    return dot < threshold;
-                }
-            #endregion
+            //ローカル位置・ローカル回転を初期化
+            _localPos = Vector3.zero;
+            _localAng = Vector3.zero;
         }
         #endregion
     }
