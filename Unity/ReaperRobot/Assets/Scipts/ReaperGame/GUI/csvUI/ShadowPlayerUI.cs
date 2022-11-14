@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using System;
 using System.IO;
 using TMPro;
 using UnityEditor;
@@ -8,6 +10,10 @@ namespace smart3tene.Reaper
 {
     public class ShadowPlayerUI : MonoBehaviour
     {
+        #region Public Fields
+        public bool ControllableRobot { get; private set; } = true;
+        #endregion
+
         #region Serialized Private Fields
         [Header("CSV Player")]
         [SerializeField] private ShadowReaperPlayer _shadowPlayer;
@@ -58,12 +64,19 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Public method
-        public void OnClickSelectFile()
+        public async void OnClickSelectFile()
         {
             if (_shadowPlayer.IsPlaying.Value) _shadowPlayer.Pause();
 
-            var path = OpenDialogUtility.OpenCSVFile("select csv file", defaultFileDirectory);
+            //ロボットのポジションリセット
+            _shadowPlayer.RepositionRobot();
 
+            //コントローラ操作を禁止
+            ControllableRobot = false;
+
+            await UniTask.Delay(TimeSpan.FromSeconds(0.5));
+
+            var path = OpenDialogUtility.OpenCSVFile("select csv file", defaultFileDirectory);
 
             if (path != "")
             {
@@ -80,6 +93,9 @@ namespace smart3tene.Reaper
                 _fastforwardButton.interactable = false;
                 _pauseButton.interactable = false;
                 _stopButton.interactable = true;
+
+                //ロボット操作を許可
+                ControllableRobot = true;
             }
             else
             {
@@ -142,6 +158,9 @@ namespace smart3tene.Reaper
             //パネルの初期化
             _shadowPlayerPanel.SetActive(false);
             _fileNameText.text = defaultFileNameText;
+
+            //コントローラ操作を許可
+            ControllableRobot = true;
         }
         public void FastForwardButtonDown()
         {
@@ -171,6 +190,7 @@ namespace smart3tene.Reaper
             }
             else
             {
+                //パネル表示
                 _shadowPlayerPanel.SetActive(true);
             }
         }
