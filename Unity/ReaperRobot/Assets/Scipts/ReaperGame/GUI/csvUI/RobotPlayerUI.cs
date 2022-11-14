@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using System;
 using System.IO;
 using TMPro;
 using UnityEditor;
@@ -57,9 +59,17 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Public method
-        public void OnClickSelectFile()
+        public async void OnClickSelectFile()
         {
             if (_robotReaperPlayer.IsPlaying.Value) _robotReaperPlayer.Pause();
+
+            //初期位置に配置
+            _robotReaperPlayer.Reposition();
+
+            //コントローラの使用の禁止
+            ControllableRobot = false;
+
+            await UniTask.Delay(TimeSpan.FromSeconds(0.5));
 
             var path = OpenDialogUtility.OpenCSVFile("select csv file", defaultFileDirectory);
 
@@ -73,9 +83,6 @@ namespace smart3tene.Reaper
 
                 //csvDataの取得
                 _robotReaperPlayer.SetUp(path);
-
-                //初期位置の設定
-                ReaperEventManager.InvokeResetEvent();
 
                 //FileNameTextの設定
                 _fileNameText.text = Path.GetFileName(path);
@@ -105,9 +112,6 @@ namespace smart3tene.Reaper
             _playButton.interactable = true;
             _pauseButton.interactable = false;
             _stopButton.interactable = true;
-
-            //初期位置の設定
-            ReaperEventManager.InvokeResetEvent();
 
             //プレイヤーの設定
             _robotReaperPlayer.Back();
@@ -154,9 +158,6 @@ namespace smart3tene.Reaper
             else
             {
                 _RobotPlayerPanel.SetActive(true);
-
-                //コントローラの使用の禁止
-                ControllableRobot = false;
             }
         }
         #endregion
