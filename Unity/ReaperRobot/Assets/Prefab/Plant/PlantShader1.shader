@@ -2,7 +2,6 @@
 {
     Properties
     {
-        _Id("Index", Range (0, 255)) = 0
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _MetalicTex ("Metalic/Smoothness", 2D) = "black" {}
@@ -15,8 +14,7 @@
     {
         Tags {
             "Queue"      = "AlphaTest"
-			"RenderType" = "TransparentCutout"
-            "AnnotationID"="ID"}
+			"RenderType" = "TransparentCutout"}
 
         AlphaToMask On
         LOD 200
@@ -27,7 +25,6 @@
         #pragma surface surf Standard fullforwardshadows alphatest:_Cutoff
         #pragma target 3.0
 
-        float _Id;
         sampler2D _MainTex;
         sampler2D _MetalicTex;
         sampler2D _NormalMap;
