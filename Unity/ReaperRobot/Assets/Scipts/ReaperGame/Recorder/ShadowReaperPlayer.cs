@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using TMPro;
 using UniRx;
@@ -9,6 +10,8 @@ namespace smart3tene.Reaper
     {
         #region Serialized Private Fields
         [SerializeField] private GameObject _shadowPrefab;
+        [SerializeField] private ReaperManager _reaperManager;
+        [SerializeField] private Transform _reaperTransform;
         [SerializeField] private Material _pathMaterial;
         #endregion
 
@@ -22,6 +25,11 @@ namespace smart3tene.Reaper
 
         private List<GameObject> _pathObjects = new();
         private int _flameCount = 0;
+
+        private Vector3 _startPos = Vector3.zero;
+        private Vector3 _startAng = Vector3.zero;
+        private Vector3 _offsetPos = Vector3.zero;
+        private Vector3 _offsetAng = Vector3.zero;
 
         //UIに表示するためのパラメータ
         public IReadOnlyReactiveProperty<float> InputH => _inputH;
@@ -47,7 +55,11 @@ namespace smart3tene.Reaper
 
         public IReadOnlyReactiveProperty<float> Angle => _angleY;
         private ReactiveProperty<float> _angleY = new(0);
+        #endregion
 
+        #region Readonly Fields
+        readonly Vector3 _repositionPos = new(0f, 0f, 0f);
+        readonly Vector3 _repositionAng = new(0f, 0f, 0f);
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -111,6 +123,7 @@ namespace smart3tene.Reaper
                 Destroy(_shadowInstance);
             }
             _shadowInstance = Instantiate(_shadowPrefab);
+            _shadowTransform = _shadowInstance.transform;
 
             //pathの初期化
             foreach (var obj in _pathObjects)
@@ -120,8 +133,13 @@ namespace smart3tene.Reaper
             _pathObjects.Clear();
 
             //位置の設定・初期化
-            _shadowTransform = _shadowInstance.transform;
-            _shadowTransform.SetPositionAndRotation(ExtractPosition(_csvData, PlayTime), ExtractQuaternion(_csvData, PlayTime));
+            _startPos = _reaperTransform.position;
+            _startAng = _reaperTransform.eulerAngles;
+
+            _offsetPos = _startPos - ExtractPosition(_csvData, 0f);
+            _offsetAng = _startAng - new Vector3(0, ExtractAngleY(_csvData, 0f), 0);
+
+            _shadowTransform.SetPositionAndRotation(_startPos, Quaternion.Euler(_startAng));
 
             //マネージャーの設定・初期化
             _shadowManager = _shadowInstance.GetComponent<ShadowReaperManager>();
@@ -152,7 +170,12 @@ namespace smart3tene.Reaper
             _flameCount = 0;
 
             if (_shadowInstance != null) Destroy(_shadowInstance);
-            _shadowTransform = null;           
+            _shadowTransform = null;
+
+            _startPos = Vector3.zero;
+            _startAng = Vector3.zero;
+            _offsetPos= Vector3.zero;
+            _offsetAng = Vector3.zero;
 
             foreach (var obj in _pathObjects)
             {
@@ -175,7 +198,7 @@ namespace smart3tene.Reaper
             _flameCount = 0;
 
             //位置とカッターとリフトの初期化
-            _shadowTransform.SetPositionAndRotation(ExtractPosition(_csvData, PlayTime), ExtractQuaternion(_csvData, PlayTime));
+            _shadowTransform.SetPositionAndRotation(_startPos, Quaternion.Euler(_startAng));
             _shadowManager.MoveLift(ExtractLift(_csvData, PlayTime));
             _shadowManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
 
@@ -196,6 +219,17 @@ namespace smart3tene.Reaper
         {
             _isRewind = isRewind;
         }
+
+        public async void RepositionRobot()
+        {
+            _reaperManager.Move(0, 0);
+
+            await UniTask.Yield();
+
+            _reaperTransform.SetPositionAndRotation(_repositionPos, Quaternion.Euler(_repositionAng));
+            _reaperManager.MoveLift(true);
+            _reaperManager.RotateCutter(true);
+        }
         #endregion
 
         #region Private and Protected method
@@ -206,21 +240,25 @@ namespace smart3tene.Reaper
             _inputH.Value = input.x;
             _inputV.Value = input.y;
 
-            var pos = ExtractPosition(data, seconds);
-            _posX.Value = pos.x;
-            _posY.Value = pos.y;
-            _posZ.Value = pos.z;
+            var rawpos = ExtractPosition(data, seconds);
+            _posX.Value = rawpos.x + _offsetPos.x;
+            _posY.Value = rawpos.y + _offsetPos.y;
+            _posZ.Value = rawpos.z + _offsetPos.z;
+            var pos = new Vector3(_posX.Value, _posY.Value, _posZ.Value);
 
-            _angleY.Value = ExtractAngleY(data, seconds);
+            var rawAngleY = ExtractAngleY(data, seconds);
+            _angleY.Value = rawAngleY + _offsetAng.y;
+            var rot = Quaternion.Euler(0, _angleY.Value, 0);
+            
             _lift.Value   = ExtractLift(data, seconds);
             _cutter.Value = ExtractCutter(data, seconds);
 
             //影にデータ反映させる
-            _shadowTransform.SetPositionAndRotation(pos, ExtractQuaternion(data, seconds));
+            _shadowTransform.SetPositionAndRotation(pos, rot);
             _shadowManager.MoveLift(_lift.Value);
             _shadowManager.RotateCutter(_cutter.Value);
         }
         #endregion
     }
-
+     
 }

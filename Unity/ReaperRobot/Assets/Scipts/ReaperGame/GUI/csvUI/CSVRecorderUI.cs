@@ -81,7 +81,8 @@ namespace smart3tene.Reaper
 
                 _recorderPanel.SetActive(true);
 
-                ReaperEventManager.InvokeResetEvent();
+                //初期位置の設定
+                _reaperRecorder.Reposition();
 
                 //コントローラの使用の禁止
                 ControllableRobot = false;

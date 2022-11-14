@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
@@ -28,6 +29,14 @@ namespace smart3tene.Reaper
 
         public IReadOnlyReactiveProperty<bool> Cutter => _cutter;
         private ReactiveProperty<bool> _cutter = new(true);
+
+        private Vector3 _startPos = Vector3.zero;
+        private Vector3 _startAng = Vector3.zero;
+        #endregion
+
+        #region Readonly Fields
+        readonly Vector3 _repositionPos = new(0f, 0f, 0f);
+        readonly Vector3 _repositionAng = new(0f, 0f, 0f);
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -90,6 +99,10 @@ namespace smart3tene.Reaper
             //リフト・カッターの初期設定
             _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
             _reaperManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
+
+            //ロボットの初期位置の保存
+            _startPos = _reaperTransform.position;
+            _startAng = _reaperTransform.eulerAngles;
         }
 
         public override void Play()
@@ -118,6 +131,10 @@ namespace smart3tene.Reaper
             _isPlaying.Value = false;
             _flameCount = 0;
 
+            //startPos,Angの初期化
+            _startPos = Vector3.zero;
+            _startAng = Vector3.zero;
+
             //pathの初期化
             foreach (var obj in _pathObjects)
             {
@@ -135,6 +152,9 @@ namespace smart3tene.Reaper
             PlayTime = 0;
             _flameCount = 0;
 
+            //保存していた位置に移動
+            _reaperTransform.SetPositionAndRotation(_startPos, Quaternion.Euler(_startAng));
+
             //リフト・カッターの初期設定
             _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
             _reaperManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
@@ -145,6 +165,17 @@ namespace smart3tene.Reaper
                 Destroy(obj);
             }
             _pathObjects.Clear();
+        }
+
+        public async void Reposition()
+        {
+            _reaperManager.Move(0, 0);
+
+            await UniTask.Yield();
+
+            _reaperTransform.SetPositionAndRotation(_repositionPos, Quaternion.Euler(_repositionAng));
+            _reaperManager.MoveLift(true);
+            _reaperManager.RotateCutter(true);
         }
         #endregion
 

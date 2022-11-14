@@ -1609,6 +1609,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _robotPlayerUI: {fileID: 688339032}
   _csvRecorderUI: {fileID: 554519294}
+  _shadowPlayerUI: {fileID: 709611187}
   _controller: {fileID: 1943855788}
   _downLiftButton: {fileID: 917874368}
   _upLiftButton: {fileID: 1268335666}
@@ -3047,6 +3048,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shadowPrefab: {fileID: 6569828215229620751, guid: 867756d26096d35419251b8ca2f51d6e, type: 3}
+  _reaperManager: {fileID: 691473189}
+  _reaperTransform: {fileID: 691473187}
   _pathMaterial: {fileID: 2100000, guid: 6a418f7d67c7d79429f0ff49c4235a05, type: 2}
 --- !u!4 &298449273
 Transform:
