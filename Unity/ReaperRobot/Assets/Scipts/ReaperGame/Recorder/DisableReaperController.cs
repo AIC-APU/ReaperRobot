@@ -10,6 +10,7 @@ namespace smart3tene.Reaper
         #region Serilaized Private Fields
         [SerializeField] private RobotPlayerUI _robotPlayerUI;
         [SerializeField] private CSVRecorderUI _csvRecorderUI;
+        [SerializeField] private ShadowPlayerUI _shadowPlayerUI;
 
         [Header("Controller")]
         [SerializeField] private ReaperController _controller;
@@ -28,7 +29,7 @@ namespace smart3tene.Reaper
         #region Monobehaviour Callbacks
         private void Update()
         {
-            var controllable = _robotPlayerUI.ControllableRobot && _csvRecorderUI.ControllableRobot;
+            var controllable = _robotPlayerUI.ControllableRobot && _csvRecorderUI.ControllableRobot && _shadowPlayerUI.ControllableRobot;
 
             _controller.enabled = controllable;
             LiftAndCutterButton(controllable);

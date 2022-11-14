@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UniRx;
+using Cysharp.Threading.Tasks;
 
 public class ReaperRecorder : MonoBehaviour
 {
@@ -54,6 +55,8 @@ public class ReaperRecorder : MonoBehaviour
 
     #region Readonly Field
     readonly string saveDirectory = Application.streamingAssetsPath + "/../../../InputLog";
+    readonly Vector3 _repositionPos = new(0f, 0f, 0f);
+    readonly Vector3 _repositionAng = new(0f, 0f, 0f);
     #endregion
 
     #region MonoBehaviour Callbacks
@@ -120,6 +123,18 @@ public class ReaperRecorder : MonoBehaviour
         _isRecording.Value = false;
 
         ExportCSV();
+    }
+
+    public async void Reposition()
+    {
+        _reaperManager.Move(0, 0);
+
+        await UniTask.Yield();
+
+        _reaperTransform.SetPositionAndRotation(_repositionPos, Quaternion.Euler(_repositionAng));
+
+        _reaperManager.MoveLift(true);
+        _reaperManager.RotateCutter(true);
     }
     #endregion
 

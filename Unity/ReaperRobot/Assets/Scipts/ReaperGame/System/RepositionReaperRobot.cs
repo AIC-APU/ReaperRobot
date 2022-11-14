@@ -12,7 +12,7 @@ namespace smart3tene.Reaper
         [SerializeField] private Transform _reaperTransform;
 
         readonly Vector3 _defaultPos = new(0f, 0f, 0f);
-        readonly private Vector3 _defaultRot = new(0f, 0f, 0f);
+        readonly private Vector3 _defaultAng = new(0f, 0f, 0f);
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -34,7 +34,7 @@ namespace smart3tene.Reaper
 
             await UniTask.Yield();
 
-            _reaperTransform.SetPositionAndRotation(_defaultPos, Quaternion.Euler(_defaultRot));
+            _reaperTransform.SetPositionAndRotation(_defaultPos, Quaternion.Euler(_defaultAng));
 
             _reaperManager.MoveLift(true);
             _reaperManager.RotateCutter(true);
