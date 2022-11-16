@@ -12,11 +12,6 @@ namespace smart3tene
         [SerializeField] private Camera _tagCamera;
         #endregion
 
-        #region Readonly Fields
-        readonly int imageWidth = 224;
-        readonly int imageHeigth = 224;
-        #endregion
-
         #region MonoBehaviour Callbacks
         private void Awake()
         {
@@ -29,14 +24,15 @@ namespace smart3tene
         #endregion
 
         #region Public method
-        public async UniTask<string> TakeColorPicture(Camera camera, string fileName = "" , string directory = "")
+        public async UniTask<string> TakeColorPicture(Camera camera, int imageWidth, int imageHeigth, string fileName = "" , int fileNum = 0, string directory = "")
         {
             if (fileName == "") fileName = "picture";
             if (directory == "") directory = Application.streamingAssetsPath + "/../../../AnnotationImages/images";
+            var fileNumString = fileNum.ToString("D4");
 
             if (fileName.EndsWith(".png")) fileName = fileName.Remove(fileName.Length - 4, 4);
 
-            var filePath = Path.GetFullPath($"{directory}/{fileName}_color_0000.png");
+            var filePath = Path.GetFullPath($"{directory}/{fileName}_color_{fileNumString}.png");
             filePath = NumberingFilePath(filePath);
 
             //指定されたカメラと同じ位置に撮影用カメラを移動させる
@@ -51,14 +47,15 @@ namespace smart3tene
             return filePath;
         }
 
-        public async UniTask<string> TakeTagPicture(Camera camera, string fileName = "" , string directory = "")
+        public async UniTask<string> TakeTagPicture(Camera camera, int imageWidth, int imageHeigth, string fileName = "" , int fileNum = 0, string directory = "")
         {
             if (fileName == "") fileName = "picture";
             if (directory == "") directory = Application.streamingAssetsPath + "/../../../AnnotationImages/tags";
+            var fileNumString = fileNum.ToString("D4");
 
             if (fileName.EndsWith(".png")) fileName = fileName.Remove(fileName.Length - 4, 4);
 
-            var filePath = Path.GetFullPath($"{directory}/{fileName}_tag_0000.png");
+            var filePath = Path.GetFullPath($"{directory}/{fileName}_tag_{fileNumString}.png");
             filePath = NumberingFilePath(filePath);
 
             //指定されたカメラと同じ位置に撮影用カメラを移動させる
