@@ -42,8 +42,6 @@ namespace smart3tene
             //撮影
             await CaptureFromCamera.Capture(imageWidth, imageHeigth, _colorCamera, TextureFormat.RGB24, filePath);
 
-            Debug.Log($"{filePath} にファイルを保存しました。");
-
             return filePath;
         }
 
@@ -64,8 +62,6 @@ namespace smart3tene
 
             //撮影
             await CaptureFromCamera.Capture(imageWidth, imageHeigth, _tagCamera, TextureFormat.R8, filePath);
-
-            Debug.Log($"{filePath} にファイルを保存しました。");
 
             return filePath;
         }

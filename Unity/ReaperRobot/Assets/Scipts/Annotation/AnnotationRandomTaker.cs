@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine.SocialPlatforms;
 
 namespace smart3tene
 {
@@ -16,6 +17,7 @@ namespace smart3tene
         [SerializeField] private Camera _camera;
 
         //デバック用
+        [Header("For Debug")]
         [SerializeField] private List<Transform> _rangeBoxes = new List<Transform>();
         [SerializeField] private Transform _light;
         #endregion
@@ -25,7 +27,8 @@ namespace smart3tene
         #endregion
 
         #region Readonly Fields
-        readonly string defaultDirectory = UnityEngine.Application.streamingAssetsPath + "/../../../AnnotationImages";
+        readonly string DefaultDirectory = UnityEngine.Application.streamingAssetsPath + "/../../../AnnotationImages";
+        readonly float LightRangeRadius = 10f;
         #endregion
 
         #region private struct
@@ -61,7 +64,7 @@ namespace smart3tene
             //デバック用
             if (Keyboard.current.bKey.wasPressedThisFrame)
             {
-                await RandomTake(224, 224, 0, 10, _rangeBoxes, _light);
+                //await RandomTake(224, 224, 0, 10, _rangeBoxes, _light);
             }
         }
         #endregion
@@ -76,24 +79,24 @@ namespace smart3tene
                 return;
             }
 
-
             var now = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
             for (int i = startNum; i <= EndNum; i++)
             {
                 //ランダムにカメラを配置
-                var PosAng = GetRandomPosAndAngle(_rangeBoxes);
-                _camera.transform.SetPositionAndRotation(PosAng.pos, Quaternion.Euler(PosAng.angle));
+                var (pos, angle) = GetRandomPosAndAngle(_rangeBoxes);
+                _camera.transform.SetPositionAndRotation(pos, Quaternion.Euler(angle));
 
-                //ランダムに太陽を配置
-
+                //ランダムに光源を配置
+                light.transform.position = GetRandomLightPos(LightRangeRadius);
 
                 //撮影
-                var colorFilePath = await _pictureTaker.TakeColorPicture(Camera.main, width, height, _fileName, startNum, defaultDirectory + $"/{now}/Images");
-                var tagFilePath = await _pictureTaker.TakeTagPicture(Camera.main, width, height, _fileName, startNum, defaultDirectory + $"/{now}/tags");       
+                _ = await _pictureTaker.TakeColorPicture(Camera.main, width, height, _fileName, startNum, DefaultDirectory + $"/{now}/Images");
+                _ = await _pictureTaker.TakeTagPicture(Camera.main, width, height, _fileName, startNum, DefaultDirectory + $"/{now}/tags");       
             }
 
             //撮影完了の表示
-            Debug.Log("撮影が完了しました" + "\n" + $"保存先:{defaultDirectory}/{now}");
+            var filePath = Path.GetFullPath($"{DefaultDirectory}/{now}");
+            Debug.Log("撮影が完了しました" + "\n" + $"保存先:{filePath}");
         }
         #endregion
 
@@ -137,6 +140,19 @@ namespace smart3tene
                 - rangeBox.forward * rangeBox.localScale.z / 2f;
 
             return new Range(maxPos.x, minPos.x, maxPos.y, minPos.y, maxPos.z, minPos.z);
+        }
+
+        private Vector3 GetRandomLightPos(float radius)
+        {
+            //原点を中心とする半径radiusの天球上の座標を返す
+            var posX = UnityEngine.Random.Range(-radius, radius);
+
+            var rangeZ = Mathf.Sqrt(-posX * posX + radius * radius);
+            var posZ = UnityEngine.Random.Range(-rangeZ, rangeZ);
+
+            var posY = Mathf.Sqrt(-posX * posX - posZ * posZ + radius * radius);
+
+            return new Vector3(posX, posY, posZ);
         }
         #endregion
     }
