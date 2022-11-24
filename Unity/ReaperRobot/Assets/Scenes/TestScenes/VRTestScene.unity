@@ -1396,6 +1396,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
+--- !u!1 &1098922059 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8958998419709330552, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
+  m_PrefabInstance: {fileID: 1098922058}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1460618793
 GameObject:
   m_ObjectHideFlags: 0
@@ -1618,7 +1623,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23501ee1b329e244786f05cac95b8491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetRobot: {fileID: 0}
+  TargetRobot: {fileID: 1098922059}
 --- !u!114 &2062567304
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1447,7 +1447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1429092d3103c4043968c25f3c63d3bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetRobot: {fileID: 497014801}
+  TargetRobot: {fileID: 497014801}
 --- !u!114 &653367593
 MonoBehaviour:
   m_ObjectHideFlags: 0

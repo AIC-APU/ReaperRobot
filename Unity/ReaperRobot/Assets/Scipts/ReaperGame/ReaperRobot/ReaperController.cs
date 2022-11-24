@@ -4,11 +4,10 @@ using UnityEngine.InputSystem;
 namespace smart3tene.Reaper
 {
     [RequireComponent(typeof(PlayerInput))]
-    public class ReaperController : MonoBehaviour, IRobotController
+    public class ReaperController : MonoBehaviour
     {
-        #region Public Fields    
-        public GameObject TargetRobot { get => _targetRobot; set => _targetRobot = value; }
-        [SerializeField] private GameObject _targetRobot = null;
+        #region Serialized Private Fields    
+        [SerializeField] private GameObject TargetRobot;
         #endregion
 
         #region private Fields
@@ -26,7 +25,7 @@ namespace smart3tene.Reaper
                 TargetRobot = InstanceHolder.Instance.ReaperInstance;
             }
 
-            _reaperManager      = _targetRobot.GetComponent<ReaperManager>();
+            _reaperManager      = TargetRobot.GetComponent<ReaperManager>();
             _playerInput        = GetComponent<PlayerInput>();
 
             _reaperActionMap       = _playerInput.actions.FindActionMap("Reaper");
