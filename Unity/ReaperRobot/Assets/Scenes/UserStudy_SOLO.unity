@@ -20682,7 +20682,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23501ee1b329e244786f05cac95b8491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetRobot: {fileID: 691473188}
+  TargetRobot: {fileID: 691473188}
 --- !u!114 &1943855789
 MonoBehaviour:
   m_ObjectHideFlags: 0
