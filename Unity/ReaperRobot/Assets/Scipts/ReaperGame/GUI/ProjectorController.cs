@@ -29,7 +29,7 @@ namespace smart3tene.Reaper
                 switch (mode)
                 {
                     case ViewMode.ViewModeCategory.PERSON_TPV:
-                    case ViewMode.ViewModeCategory.REAPER_FromPERSON:
+                    case ViewMode.ViewModeCategory.REAPER_GAZE:
                         _delaySlider.interactable = false;
                         SetDelay(0f);
                         break;

@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 36669564}
   - component: {fileID: 36669563}
   - component: {fileID: 36669562}
+  - component: {fileID: 36669565}
   m_Layer: 0
   m_Name: PlayerInput
   m_TagString: Untagged
@@ -153,8 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23501ee1b329e244786f05cac95b8491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _reaperRobot: {fileID: 1691356474}
-  _controllableCameraObj: {fileID: 155185650}
+  _targetRobot: {fileID: 1691356474}
 --- !u!114 &36669563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,6 +200,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &36669565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36669561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1525089d0da5c3242a268398d0ce00cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _robotCameras:
+  - {fileID: 622848816}
 --- !u!1 &155185650
 GameObject:
   m_ObjectHideFlags: 0
@@ -284,8 +298,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 622848815}
+  - component: {fileID: 622848816}
   m_Layer: 0
-  m_Name: GazeCameraPos
+  m_Name: CameraSettings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -306,6 +321,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &622848816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622848814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75aa0ba04d10ff544a5a243ac0e46814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 1691356475}
+  Camera: {fileID: 155185652}
+  _cameraDefaultOffsetPos: {x: 0, y: 1.2, z: -0.5}
+  _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _viewMode: 0
 --- !u!1001 &1287725175
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -518,7 +550,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bfc1dabf45016eb46b99df1a78054924, type: 2}
+  - {fileID: 2100000, guid: 59081d0662a957142b43fb9f01b9b2b3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -566,5 +598,10 @@ Transform:
 --- !u!1 &1691356474 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8958998419709330552, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
+  m_PrefabInstance: {fileID: 1287725175}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1691356475 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5832357075693654913, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
   m_PrefabInstance: {fileID: 1287725175}
   m_PrefabAsset: {fileID: 0}

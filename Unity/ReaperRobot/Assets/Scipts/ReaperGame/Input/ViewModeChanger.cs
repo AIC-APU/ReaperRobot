@@ -71,11 +71,11 @@ namespace smart3tene.Reaper
             if (!_PERSON_TPV && !_REAPER_FromPERSON) return;
 
             if ((ViewMode.NowViewMode.Value != ViewMode.ViewModeCategory.PERSON_TPV)
-                && (ViewMode.NowViewMode.Value != ViewMode.ViewModeCategory.REAPER_FromPERSON))
+                && (ViewMode.NowViewMode.Value != ViewMode.ViewModeCategory.REAPER_GAZE))
             {
                 _lastViewMode = ViewMode.NowViewMode.Value;
 
-                var nextView = NextViewMode(ViewMode.ViewModeCategory.REAPER_FromPERSON);
+                var nextView = NextViewMode(ViewMode.ViewModeCategory.REAPER_GAZE);
                 ViewMode.ChangeViewMode(nextView);
             }
             else
@@ -123,7 +123,7 @@ namespace smart3tene.Reaper
                     break;
 
 
-                case ViewMode.ViewModeCategory.REAPER_FromPERSON:
+                case ViewMode.ViewModeCategory.REAPER_GAZE:
                     if (_PERSON_TPV)
                     {
                         nextView = ViewMode.ViewModeCategory.PERSON_TPV;
@@ -136,11 +136,11 @@ namespace smart3tene.Reaper
                 case ViewMode.ViewModeCategory.PERSON_TPV:
                     if (_REAPER_FromPERSON)
                     {
-                        nextView = ViewMode.ViewModeCategory.REAPER_FromPERSON;
+                        nextView = ViewMode.ViewModeCategory.REAPER_GAZE;
                     }
                     else
                     {
-                        nextView = NextViewMode(ViewMode.ViewModeCategory.REAPER_FromPERSON);
+                        nextView = NextViewMode(ViewMode.ViewModeCategory.REAPER_GAZE);
                     }
                     break;
                 default:
@@ -169,7 +169,7 @@ namespace smart3tene.Reaper
                 case ViewMode.ViewModeCategory.REAPER_BIRDVIEW:
                     _REAPER_BIRDVIEW = true;
                     break;
-                case ViewMode.ViewModeCategory.REAPER_FromPERSON:
+                case ViewMode.ViewModeCategory.REAPER_GAZE:
                     _REAPER_FromPERSON = true;
                     break;
                 case ViewMode.ViewModeCategory.PERSON_TPV:

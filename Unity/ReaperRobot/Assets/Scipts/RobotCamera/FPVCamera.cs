@@ -1,29 +1,16 @@
+using smart3tene.Reaper;
 using UniRx;
 using UnityEngine;
 
 namespace smart3tene
 {
-    public class FPVCamera : MonoBehaviour, IControllableCamera
+    [System.Serializable]
+    public class FPVCamera : BaseCamera
     {
-        #region Public Fields
-        public Camera Camera { get => _camera; set => _camera = value; }
-        [SerializeField] private Camera _camera;
-
-        public Transform Target { get => _target; set => _target = value; }
-        [SerializeField] private Transform _target;
-        #endregion
-
-        #region Serialized Private Field
-        [SerializeField] private Vector3 _cameraDefaultOffsetPos = new(0f, 1.2f, -0.5f);
-        [SerializeField] private Vector3 _cameraDefaultOffsetRot = new(30f, 0f, 0f);
-        #endregion
-
         #region Private Fields
         public IReadOnlyReactiveProperty<Vector3> CameraOffsetPos => _cameraOffsetPos;
         private ReactiveProperty<Vector3> _cameraOffsetPos = new();
-
         public IReadOnlyReactiveProperty<Vector3> CameraOffsetRot => _cameraOffsetRot;
-
         private ReactiveProperty<Vector3> _cameraOffsetRot = new();
         #endregion
 
@@ -31,25 +18,24 @@ namespace smart3tene
         readonly float defaultFOV = 60f;
         #endregion
 
-
         #region Public method
         /// <summary>
         /// LateUpdateなどで毎回呼ぶことで、カメラが追従する
         /// </summary>
-        public void FollowTarget()
+        public override void FollowTarget()
         {
-            _camera.transform.position = _target.transform.TransformPoint(_cameraOffsetPos.Value);
-            _camera.transform.eulerAngles = _target.transform.eulerAngles + _cameraOffsetRot.Value;
+            Camera.transform.position = Target.transform.TransformPoint(_cameraOffsetPos.Value);
+            Camera.transform.eulerAngles = Target.transform.eulerAngles + _cameraOffsetRot.Value;
         }
 
-        public void ResetCamera()
+        public override void ResetCamera()
         {
             _cameraOffsetPos.Value = _cameraDefaultOffsetPos;
             _cameraOffsetRot.Value = _cameraDefaultOffsetRot;
-            _camera.fieldOfView = defaultFOV;
+            Camera.fieldOfView = defaultFOV;
         }
 
-        public void MoveCamera(float horizontal, float vertical)
+        public override void MoveCamera(float horizontal, float vertical)
         {
             var cameraSpeed = 0.1f;
             _cameraOffsetPos.Value += new Vector3(horizontal * cameraSpeed, vertical * cameraSpeed, 0);
@@ -63,7 +49,7 @@ namespace smart3tene
             _cameraOffsetPos.Value = clampedVec;
         }
 
-        public void RotateCamera(float horizontal, float vertical)
+        public override void RotateCamera(float horizontal, float vertical)
         {
             var rotateSpeed = 0.5f;
             _cameraOffsetRot.Value += new Vector3(-1 * vertical * rotateSpeed, horizontal * rotateSpeed, 0);

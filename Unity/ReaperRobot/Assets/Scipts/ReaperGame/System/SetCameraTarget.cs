@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace smart3tene.Reaper
 {
-    //マルチプレイなどでIControllableCameraのTargetをインスペクタビューから設定できない時に使ってください
+    //マルチプレイなどでBaseCameraのTargetをインスペクタビューから設定できない時に使ってください
     [DefaultExecutionOrder(-1)]
-    [RequireComponent(typeof(IControllableCamera))]
+    [RequireComponent(typeof(BaseCamera))]
     public class SetCameraTarget : MonoBehaviour
     {
         private enum TargetMode
@@ -16,20 +16,19 @@ namespace smart3tene.Reaper
         }
         [SerializeField] private TargetMode _target = TargetMode.Reaper;
 
-
-        private IControllableCamera _CCamera;
+        private BaseCamera _baseCamera;
 
         private void Awake()
         {
-            _CCamera = GetComponent<IControllableCamera>();
+            _baseCamera = GetComponent<BaseCamera>();
 
             if(_target == TargetMode.Reaper)
             {
-                _CCamera.Target = InstanceHolder.Instance.ReaperInstance.transform;
+                _baseCamera.Target = InstanceHolder.Instance.ReaperInstance.transform;
             }
             else if(_target == TargetMode.Person)
             {
-                _CCamera.Target = InstanceHolder.Instance.PersonInstance.transform;
+                _baseCamera.Target = InstanceHolder.Instance.PersonInstance.transform;
             }
         }
     }

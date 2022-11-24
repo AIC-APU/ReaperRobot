@@ -7,39 +7,36 @@ using UniRx;
 namespace smart3tene.Reaper
 {
     [RequireComponent(typeof(PlayerInput))]
-    public class ReaperCameraController : MonoBehaviour, ICameraController
+    public class ReaperCameraController : MonoBehaviour
     {
-        public IControllableCamera CCamera 
-        { 
-            get => _controllableCamera; 
-            set
-            {
-                _controllableCamera = value;
-                _controllableCamera.ResetCamera();
-            }
-        }
-        private IControllableCamera _controllableCamera;
-
         #region Serialized Private Fields
-        [SerializeField, Tooltip("ここからIControllableCameraを設定することもできます（デバッグ用）")] private GameObject _controllableCameraObject;
+        [SerializeField] private List<BaseCamera> _robotCameras = new List<BaseCamera>();
         #endregion
 
         #region Private Fields
         private PlayerInput _playerInput;
         private InputActionMap _reaperActionMap;
+        private BaseCamera _controllableCamera;
         #endregion
 
         #region MonoBehaviour Callbacks
         private void Awake()
         {
+            foreach(BaseCamera camera in _robotCameras)
+            {
+                //ViewModeによる呼び出しの設定
+                ViewMode.NowViewMode
+                    .Where(x => x == camera.ViewMode)
+                    .Subscribe(_ =>
+                    {
+                        _controllableCamera = camera;
+                        _controllableCamera.ResetCamera();
+                    })
+                    .AddTo(this);
+            }
+
             _playerInput = GetComponent<PlayerInput>();
             _reaperActionMap = _playerInput.actions.FindActionMap("Reaper");
-
-            if(_controllableCamera == null && _controllableCameraObject != null)
-            {
-                _controllableCamera = _controllableCameraObject.GetComponent<IControllableCamera>();
-                _controllableCamera.ResetCamera();
-            }
 
             _reaperActionMap["MoveCamera"].performed += MoveCamera;
             _reaperActionMap["ResetCamera"].started += ResetCamera;

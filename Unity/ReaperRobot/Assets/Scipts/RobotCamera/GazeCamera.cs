@@ -2,14 +2,8 @@ using UnityEngine;
 
 namespace smart3tene.Reaper
 {
-    public class GazeCamera : MonoBehaviour, IControllableCamera
+    public class GazeCamera : BaseCamera
     {
-        public Camera Camera { get => _camera; set => _camera = value; }
-        [SerializeField] private Camera _camera;
-
-        public Transform Target { get => _target; set => _target = value; }
-        [SerializeField] private Transform _target;
-
         public Transform Gazer;
 
         #region Private Fields
@@ -35,44 +29,44 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Public Method
-        public void FollowTarget()
+        public override void FollowTarget()
         {
             //カメラが徐々にtarget + _targetOffsetの方を向く
-            _camera.transform.LookAt(_target.transform.position + _targetOffset); //offset追加
+            Camera.transform.LookAt(Target.transform.position + _targetOffset); //offset追加
 
             if (_rotateGazerY)
             {
-                var pos = _target.transform.position + _targetOffset;
+                var pos = Target.transform.position + _targetOffset;
                 pos.y = Gazer.position.y;
                 Gazer.transform.LookAt(pos, Vector3.up);
             }
         }
 
-        public void MoveCamera(float horizontal, float vertical)
+        public override void MoveCamera(float horizontal, float vertical)
         {
-            var fov = _camera.fieldOfView;
+            var fov = Camera.fieldOfView;
 
             fov += -vertical * zoomSpeed;
 
             fov = Mathf.Clamp(fov, minFoV, maxFoV);
 
-            _camera.fieldOfView = fov;
+            Camera.fieldOfView = fov;
         }
 
-        public void ResetCamera()
+        public override void ResetCamera()
         {
-            _camera.transform.position = Gazer.position + gazerPosOffset;
-            _camera.transform.LookAt(_target.transform.position);
-            _camera.fieldOfView = defaultFoV;
+            Camera.transform.position = Gazer.position + gazerPosOffset;
+            Camera.transform.LookAt(Target.transform.position);
+            Camera.fieldOfView = defaultFoV;
 
             _heigthOffset = 0;
             _sideOffset = 0;
             _targetOffset = Vector3.zero;
         }
 
-        public void RotateCamera(float horizontal, float vertical)
+        public override void RotateCamera(float horizontal, float vertical)
         {
-            var distance = Vector3.Distance(_camera.transform.position, _target.position);
+            var distance = Vector3.Distance(Camera.transform.position, Target.position);
 
             _heigthOffset += vertical * rotateSpeed * Time.deltaTime;
             _heigthOffset = Mathf.Clamp(_heigthOffset, -maxOffsetBase * distance, maxOffsetBase * distance);
@@ -80,7 +74,7 @@ namespace smart3tene.Reaper
             _sideOffset += horizontal * rotateSpeed * Time.deltaTime;
             _sideOffset = Mathf.Clamp(_sideOffset, -maxOffsetBase * distance, maxOffsetBase * distance);
 
-            _targetOffset = new Vector3(0, _heigthOffset, 0) + _camera.transform.right * _sideOffset;
+            _targetOffset = new Vector3(0, _heigthOffset, 0) + Camera.transform.right * _sideOffset;
         }
         #endregion
     }
