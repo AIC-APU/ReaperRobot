@@ -9,7 +9,7 @@ namespace smart3tene.Reaper
             REAPER_FPV,
             REAPER_BIRDVIEW,
             REAPER_VR,
-            REAPER_FromPERSON,
+            REAPER_GAZE,
             REAPER_AROUND,
             PERSON_TPV,
         }

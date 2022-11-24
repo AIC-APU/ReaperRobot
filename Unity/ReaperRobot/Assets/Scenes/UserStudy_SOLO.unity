@@ -3791,10 +3791,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dd960977ad916642b4469ebf92431e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 601594927}
-  _target: {fileID: 1983556702}
+  Target: {fileID: 1983556702}
+  Camera: {fileID: 601594927}
   _cameraDefaultOffsetPos: {x: 0, y: 1.5, z: -1}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _viewMode: 5
 --- !u!4 &378533437
 Transform:
   m_ObjectHideFlags: 0
@@ -3859,11 +3860,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1177760760e1c844ba65d3611954009d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _reaperCameraController: {fileID: 1943855787}
-  _reaperFPV: {fileID: 1373811445}
-  _reaperBirdView: {fileID: 951432690}
-  _reaperAround: {fileID: 753447684}
-  _reaperGaze: {fileID: 871273602}
 --- !u!1 &385375164
 GameObject:
   m_ObjectHideFlags: 0
@@ -8537,10 +8533,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dd960977ad916642b4469ebf92431e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 601594927}
-  _target: {fileID: 691473187}
+  Target: {fileID: 691473187}
+  Camera: {fileID: 601594927}
   _cameraDefaultOffsetPos: {x: 0, y: 1, z: -1.5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _viewMode: 4
 --- !u!1 &773756229
 GameObject:
   m_ObjectHideFlags: 0
@@ -10576,8 +10573,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c580c2b372a15a74b8d8479cd1be1cb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 601594927}
-  _target: {fileID: 691473187}
+  Target: {fileID: 691473187}
+  Camera: {fileID: 601594927}
+  _cameraDefaultOffsetPos: {x: 0, y: 1.2, z: -0.5}
+  _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _viewMode: 3
   Gazer: {fileID: 1983556702}
   _rotateGazerY: 1
 --- !u!1 &873525599
@@ -11470,10 +11470,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a030d73ea6444442b9d79b914d392c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 601594927}
-  _target: {fileID: 691473187}
+  Target: {fileID: 691473187}
+  Camera: {fileID: 601594927}
   _cameraDefaultOffsetPos: {x: 0, y: 3, z: -5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _viewMode: 1
 --- !u!1 &962558053
 GameObject:
   m_ObjectHideFlags: 0
@@ -14754,10 +14755,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75aa0ba04d10ff544a5a243ac0e46814, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 601594927}
-  _target: {fileID: 691473187}
+  Target: {fileID: 691473187}
+  Camera: {fileID: 601594927}
   _cameraDefaultOffsetPos: {x: 0, y: 1.2, z: -0.5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _viewMode: 0
 --- !u!1 &1392785701
 GameObject:
   m_ObjectHideFlags: 0
@@ -20637,7 +20639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41cdcddce3c380a4cb5a9c335ffe6ceb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _controllableCameraObject: {fileID: 378533435}
+  _personCamera: {fileID: 378533436}
 --- !u!114 &1943855786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20663,7 +20665,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1525089d0da5c3242a268398d0ce00cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _controllableCameraObject: {fileID: 0}
+  _robotCameras:
+  - {fileID: 1373811445}
+  - {fileID: 951432690}
+  - {fileID: 753447684}
+  - {fileID: 871273602}
 --- !u!114 &1943855788
 MonoBehaviour:
   m_ObjectHideFlags: 0

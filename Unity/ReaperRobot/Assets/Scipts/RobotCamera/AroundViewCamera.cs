@@ -3,21 +3,8 @@ using UnityEngine;
 
 namespace smart3tene
 {
-    public class AroundViewCamera : MonoBehaviour, IControllableCamera
+    public class AroundViewCamera : BaseCamera
     {
-        #region Public Fields
-        public Camera Camera { get => _camera; set => _camera = value;}
-        [SerializeField] private Camera _camera;
-
-        public Transform Target { get => _target; set => _target = value; }
-        [SerializeField] private Transform _target;
-        #endregion
-
-        #region Serialized Private Fields
-        [SerializeField] private Vector3 _cameraDefaultOffsetPos = new(0f, 1f, -1.5f);
-        [SerializeField] private Vector3 _cameraDefaultOffsetRot = new(30f, 0f, 0f);
-        #endregion
-
         #region Private Fields
         private Vector3 _cameraOffsetPos;
         private Vector3 _cameraOffsetRot;
@@ -32,52 +19,52 @@ namespace smart3tene
         #endregion
 
         #region Public method
-        public void FollowTarget()
+        public override void FollowTarget()
         {
-            _camera.transform.position = _target.transform.position + _cameraOffsetPos;
+            Camera.transform.position = Target.transform.position + _cameraOffsetPos;
         }
 
-        public void ResetCamera()
+        public override void ResetCamera()
         {
-            _cameraOffsetPos = _target.TransformDirection(_cameraDefaultOffsetPos);
+            _cameraOffsetPos = Target.TransformDirection(_cameraDefaultOffsetPos);
             _cameraOffsetRot = _cameraDefaultOffsetRot;
-            _camera.transform.eulerAngles = _target.transform.eulerAngles + _cameraOffsetRot;
-            _camera.fieldOfView = defaultFOV;
+            Camera.transform.eulerAngles = Target.transform.eulerAngles + _cameraOffsetRot;
+            Camera.fieldOfView = defaultFOV;
         }
 
-        public void MoveCamera(float horizontal, float vertical)
+        public override void MoveCamera(float horizontal, float vertical)
         {
             //vertical...ロボットに近づく
-            var distance = Vector3.Distance(_target.transform.position, _camera.transform.position);
+            var distance = Vector3.Distance(Target.transform.position, Camera.transform.position);
             if ((distance > zoomSpeed * 2f && vertical > 0) || (distance < zoomSpeed * 4f && vertical < 0))
             {
-                _camera.transform.position += zoomSpeed * vertical * _camera.transform.forward;
+                Camera.transform.position += zoomSpeed * vertical * Camera.transform.forward;
             }
 
             //位置情報の更新
-            _cameraOffsetPos = _camera.transform.position - _target.transform.position;
+            _cameraOffsetPos = Camera.transform.position - Target.transform.position;
         }
 
-        public void RotateCamera(float horizontal, float vertical)
+        public override void RotateCamera(float horizontal, float vertical)
         {
             //位置情報の変更
-            _camera.transform.position = _target.transform.position + _cameraOffsetPos;
+            Camera.transform.position = Target.transform.position + _cameraOffsetPos;
 
             //horizontal...
             var horizontalAngle = horizontal * rotateSpeed;
-            var center = new Vector3(_target.transform.position.x, _camera.transform.position.y, _target.transform.position.z);
-            _camera.transform.RotateAround(center, Vector3.up, horizontalAngle);
+            var center = new Vector3(Target.transform.position.x, Camera.transform.position.y, Target.transform.position.z);
+            Camera.transform.RotateAround(center, Vector3.up, horizontalAngle);
 
             //vertical...
             var verticalAngle = vertical * rotateSpeed;
-            if ((verticalAngle > 0 && _camera.transform.eulerAngles.x < maxAngleX)
-                || (verticalAngle < 0 && _camera.transform.eulerAngles.x > minAngleX))
+            if ((verticalAngle > 0 && Camera.transform.eulerAngles.x < maxAngleX)
+                || (verticalAngle < 0 && Camera.transform.eulerAngles.x > minAngleX))
             {
-                _camera.transform.RotateAround(_target.transform.position, _camera.transform.right, verticalAngle);
+                Camera.transform.RotateAround(Target.transform.position, Camera.transform.right, verticalAngle);
             }
 
             //位置情報の更新
-            _cameraOffsetPos = _camera.transform.position - _target.transform.position;
+            _cameraOffsetPos = Camera.transform.position - Target.transform.position;
         }
         #endregion
 

@@ -30,7 +30,7 @@ namespace smart3tene.Reaper
                         case ViewMode.ViewModeCategory.REAPER_FPV:
                         case ViewMode.ViewModeCategory.REAPER_BIRDVIEW:
                         case ViewMode.ViewModeCategory.REAPER_AROUND:
-                        case ViewMode.ViewModeCategory.REAPER_FromPERSON:
+                        case ViewMode.ViewModeCategory.REAPER_GAZE:
                         case ViewMode.ViewModeCategory.REAPER_VR:
                             if (_playerInput.currentActionMap.name != "Reaper") _playerInput.SwitchCurrentActionMap("Reaper");
                             break;

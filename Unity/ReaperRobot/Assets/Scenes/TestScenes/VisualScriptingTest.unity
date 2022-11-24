@@ -1237,10 +1237,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a030d73ea6444442b9d79b914d392c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 1439526043}
-  _target: {fileID: 1629049292}
+  Target: {fileID: 1629049292}
+  Camera: {fileID: 1439526043}
   _cameraDefaultOffsetPos: {x: 0, y: 3, z: -5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _viewMode: 0
 --- !u!1 &1786696009
 GameObject:
   m_ObjectHideFlags: 0
@@ -1271,7 +1272,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1525089d0da5c3242a268398d0ce00cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _controllableCameraObject: {fileID: 1696425270}
+  _robotCameras:
+  - {fileID: 1696425273}
 --- !u!114 &1786696012
 MonoBehaviour:
   m_ObjectHideFlags: 0

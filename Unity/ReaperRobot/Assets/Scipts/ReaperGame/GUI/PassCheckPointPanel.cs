@@ -40,11 +40,7 @@ namespace smart3tene.Reaper
         {
             _passPanelCanvasGroup.alpha = 1;
 
-            Debug.Log("before");
-
             await UniTask.Delay(TimeSpan.FromSeconds(1), true, PlayerLoopTiming.Update, ct);
-
-            Debug.Log("after");
 
             _passPanelCanvasGroup.alpha = 0;
         }

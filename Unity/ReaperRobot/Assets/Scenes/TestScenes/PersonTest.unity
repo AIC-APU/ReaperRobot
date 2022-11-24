@@ -211,10 +211,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dd960977ad916642b4469ebf92431e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 310630881}
-  _target: {fileID: 1239660741}
-  cameraDefaultOffsetPos: {x: 0, y: 1.5, z: -1}
-  cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  Target: {fileID: 0}
+  Camera: {fileID: 0}
+  _cameraDefaultOffsetPos: {x: 0, y: 1.2, z: -0.5}
+  _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _viewMode: 0
 --- !u!1 &387580713
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,6 +227,8 @@ GameObject:
   - component: {fileID: 387580717}
   - component: {fileID: 387580716}
   - component: {fileID: 387580715}
+  - component: {fileID: 387580719}
+  - component: {fileID: 387580718}
   m_Layer: 0
   m_Name: PlayerInput
   m_TagString: Untagged
@@ -245,8 +248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa6bd478413e2e1428151496494862d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _charactor: {fileID: 1239660740}
-  _controllableCameraObj: {fileID: 310630879}
+  Person: {fileID: 1239660740}
 --- !u!114 &387580716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,6 +293,86 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &387580718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387580713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b89879ae3eb41a34597a91f3911b3926, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _defaultViewMode: 5
+  _REAPER_FPV: 0
+  _REAPER_AROUND: 0
+  _REAPER_BIRDVIEW: 0
+  _REAPER_FromPERSON: 0
+  _PERSON_TPV: 1
+--- !u!114 &387580719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387580713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41cdcddce3c380a4cb5a9c335ffe6ceb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _personCamera: {fileID: 1044414271}
+--- !u!1 &1044414270
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1044414272}
+  - component: {fileID: 1044414271}
+  m_Layer: 0
+  m_Name: CameraSettings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1044414271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044414270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dd960977ad916642b4469ebf92431e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 1239660741}
+  Camera: {fileID: 310630881}
+  _cameraDefaultOffsetPos: {x: 0, y: 1.5, z: -1}
+  _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _viewMode: 5
+--- !u!4 &1044414272
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044414270}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1239660740 stripped
 GameObject:
@@ -501,6 +583,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5124013553298204065, guid: 1c1c0a51e4ed0e140bdc347be2343327, type: 3}
+      propertyPath: sceneViewId
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 384662605969435491, guid: 1c1c0a51e4ed0e140bdc347be2343327, type: 3}
       propertyPath: m_Name
       value: RingoResource

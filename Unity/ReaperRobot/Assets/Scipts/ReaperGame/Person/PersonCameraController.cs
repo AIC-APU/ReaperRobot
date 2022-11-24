@@ -7,21 +7,10 @@ using UniRx.Triggers;
 
 namespace smart3tene.Reaper
 {
-    public class PersonCameraController : MonoBehaviour, ICameraController
+    public class PersonCameraController : MonoBehaviour
     {
-        public IControllableCamera CCamera 
-        {
-            get => _controllableCamera;
-            set
-            {
-                _controllableCamera = value;
-                _controllableCamera.ResetCamera();
-            }
-        }
-        private IControllableCamera _controllableCamera;
-
         #region Serialized Private Fields
-        [SerializeField, Tooltip("ここからIControllableCameraを設定することもできます（デバッグ用）")] private GameObject _controllableCameraObject;
+        [SerializeField] private BaseCamera _personCamera;
         #endregion
 
         #region Private Fields
@@ -36,20 +25,13 @@ namespace smart3tene.Reaper
             _playerInput = GetComponent<PlayerInput>();
             _personActionMap = _playerInput.actions.FindActionMap("Person");
 
-            //インターフェースの取得
-            if (_controllableCameraObject != null)
-            {
-                _controllableCamera = _controllableCameraObject.GetComponent<IControllableCamera>();
-                _controllableCamera.ResetCamera();
-            }
-
             //ActionMapが切り替わったタイミングでカメラをリセットしたい
             _isMapPerson
                 .Subscribe(x =>
                 {
-                    if (x && CCamera != null)
+                    if (x && _personCamera != null)
                     {
-                        CCamera.ResetCamera();
+                        _personCamera.ResetCamera();
                     }
                 })
                 .AddTo(this);
@@ -69,10 +51,10 @@ namespace smart3tene.Reaper
             if (!_playerInput.enabled || _playerInput.currentActionMap.name != "Person") return;
 
             //カメラの回転
-            _controllableCamera.FollowTarget();
+            _personCamera.FollowTarget();
 
             var move = _personActionMap["Look"].ReadValue<Vector2>();
-            _controllableCamera.RotateCamera(move.x, move.y);
+            _personCamera.RotateCamera(move.x, move.y);
         }
 
         private void OnDestroy()
@@ -86,7 +68,7 @@ namespace smart3tene.Reaper
         {
             if (!_isMapPerson.Value) return;
 
-            CCamera.ResetCamera();
+            _personCamera.ResetCamera();
         }
         #endregion
     }

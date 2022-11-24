@@ -27,7 +27,7 @@ namespace smart3tene.Reaper
                         _mainCanvas.enabled = true;
                         break;
 
-                    case ViewMode.ViewModeCategory.REAPER_FromPERSON:
+                    case ViewMode.ViewModeCategory.REAPER_GAZE:
                     case ViewMode.ViewModeCategory.PERSON_TPV:
                         _mainCanvas.enabled = false;
                         break;
