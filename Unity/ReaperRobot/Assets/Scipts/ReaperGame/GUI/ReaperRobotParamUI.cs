@@ -1,13 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using UniRx;
-using static UnityEngine.Rendering.DebugUI;
-using System.Drawing.Printing;
 
-namespace smart3tene.Reaper 
+namespace smart3tene.Reaper
 {
     public class ReaperRobotParamUI : MonoBehaviour
     {
