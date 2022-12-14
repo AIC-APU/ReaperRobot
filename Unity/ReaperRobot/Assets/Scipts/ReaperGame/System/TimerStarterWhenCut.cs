@@ -23,6 +23,15 @@ namespace smart3tene.Reaper
                 })
                 .AddTo(this);
 
+            //全ての草が刈られたらタイマーストップ
+            GrassCounter.CutGrassPercent
+                .Where(x => x == 100)
+                .Subscribe(_ =>
+                {
+                    GameTimer.Stop();
+                })
+                .AddTo(this);
+
             ReaperEventManager.ResetEvent += ResetTimer;
             ResetTimer();
         }

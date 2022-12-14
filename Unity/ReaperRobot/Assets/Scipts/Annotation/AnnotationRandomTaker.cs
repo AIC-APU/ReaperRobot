@@ -1,11 +1,8 @@
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 using System;
-using UnityEngine.InputSystem;
-using System.Windows.Forms;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine.SocialPlatforms;
+using UnityEngine;
 
 namespace smart3tene
 {
@@ -57,15 +54,6 @@ namespace smart3tene
         private void Start()
         {
             _pictureTaker= GetComponent<PictureTaker>();
-        }
-
-        private async void Update()
-        {
-            //デバック用
-            if (Keyboard.current.bKey.wasPressedThisFrame)
-            {
-                //await RandomTake(224, 224, 0, 10, _rangeBoxes, _light);
-            }
         }
         #endregion
 

@@ -93,6 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2078108526235181639}
   - component: {fileID: 7231188066501304081}
+  - component: {fileID: 2027235911161540074}
   m_Layer: 0
   m_Name: apple_tree_00_01_01
   m_TagString: Untagged
@@ -132,6 +133,22 @@ CapsuleCollider:
   m_Height: 3
   m_Direction: 1
   m_Center: {x: 0, y: 1.53, z: 0}
+--- !u!208 &2027235911161540074
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066306385250848852}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.2, y: 3, z: 0.2}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &7239461945219151978
 GameObject:
   m_ObjectHideFlags: 0
