@@ -58,6 +58,10 @@ namespace smart3tene.Reaper
             return time;
         }
 
+        /// <summary>
+        /// {hours}:{miniutes}:{seconds}(:{milliseconds})の文字列を返す
+        /// </summary>
+        /// <returns></returns>
         public static string ConvertTimeSpanToString(TimeSpan timeSpan, bool includeMilliSec = true)
         {
             string time;

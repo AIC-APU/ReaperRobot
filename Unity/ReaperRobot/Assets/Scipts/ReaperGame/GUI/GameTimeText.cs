@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
-using UniRx;
-using UniRx.Triggers;
+using UnityEngine;
 
 namespace smart3tene.Reaper
 {
@@ -11,11 +7,16 @@ namespace smart3tene.Reaper
     {
         [SerializeField] private TMP_Text _timeNum;
 
-        private void Awake()
+        private void Update()
         {
-            this.UpdateAsObservable()
-                .Subscribe(_ => _timeNum.text = GameTimer.GetCurrentTimeSpan.ToString(@"hh\:mm\:ss"))
-                .AddTo(this);
+            if(!GameTimer.IsTimerRunning && GameTimer.GetCurrentSeconds == 0)
+            {
+                _timeNum.text = "";
+            }
+            else
+            {
+                _timeNum.text = GameTimer.GetCurrentTimeSpan.ToString(@"hh\:mm\:ss");
+            }
         }
     }
 }

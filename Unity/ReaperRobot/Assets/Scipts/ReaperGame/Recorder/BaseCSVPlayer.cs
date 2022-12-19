@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using System.Text.RegularExpressions;
 
 namespace smart3tene.Reaper
 {
@@ -44,15 +45,35 @@ namespace smart3tene.Reaper
 
         protected TimeSpan ExtractTimeSpan(List<string[]> data, int index)
         {
-            var stringTime = data[index][0];
-            var timeArray = stringTime.Split(":");
+            TimeSpan result = new TimeSpan();
+            if (Regex.IsMatch(data[index][0], "[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{3}"))
+            {
+                //00:00:00:000 の時
 
-            var hour = int.Parse(timeArray[0]);
-            var min  = int.Parse(timeArray[1]);
-            var sec  = int.Parse(timeArray[2]);
-            var msec = int.Parse(timeArray[3]); //小数点以下2桁しかないので、10倍して3桁にしている
+                var stringTime = data[index][0];
+                var timeArray = stringTime.Split(":");
 
-            return new TimeSpan(0, hour, min, sec, msec);
+                var hour = int.Parse(timeArray[0]);
+                var min = int.Parse(timeArray[1]);
+                var sec = int.Parse(timeArray[2]);
+                var msec = int.Parse(timeArray[3]); //小数点以下2桁しかないので、10倍して3桁にしている
+
+                result = new TimeSpan(0, hour, min, sec, msec);
+            }
+            else if (Regex.IsMatch(data[index][0], "^[0-9]*\\.?[0-9]+$"))
+            {
+                //0.000... の時
+
+                var seconds = float.Parse(data[index][0]);
+                result = TimeSpan.FromSeconds(seconds);
+            }
+            else
+            {
+                //エラー
+                throw new System.ArgumentException();
+            }
+
+            return result;
         }
 
         protected float ExtractSeconds(List<string[]> data, int index)
