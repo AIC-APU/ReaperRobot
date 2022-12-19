@@ -31,5 +31,8 @@ namespace smart3tene.Reaper
         public static event Action<string> TextPopupEvent;
         public static void InvokeTextPopupEvent(string text) => TextPopupEvent?.Invoke(text);
 
+        public static event Action PenaltyEvent;
+        public static void InvokePenaltyEvent() => PenaltyEvent?.Invoke();
+
     }
 }
