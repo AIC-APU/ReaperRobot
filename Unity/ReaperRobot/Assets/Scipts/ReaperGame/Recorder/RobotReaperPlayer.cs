@@ -6,7 +6,12 @@ using UnityEngine;
 namespace smart3tene.Reaper
 {
     public class RobotReaperPlayer : BaseCSVPlayer
-    { 
+    {
+        #region Public Fields
+        public Vector3 RepositionPos = new(0f, 0f, 0f);
+        public Vector3 RepositionAng = new(0f, 0f, 0f);
+        #endregion
+
         #region Serialized Private Fields
         [SerializeField] private ReaperManager _reaperManager;
         [SerializeField] private Transform _reaperTransform;
@@ -32,11 +37,6 @@ namespace smart3tene.Reaper
 
         private Vector3 _startPos = Vector3.zero;
         private Vector3 _startAng = Vector3.zero;
-        #endregion
-
-        #region Readonly Fields
-        readonly Vector3 _repositionPos = new(0f, 0f, 0f);
-        readonly Vector3 _repositionAng = new(0f, 0f, 0f);
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -173,7 +173,7 @@ namespace smart3tene.Reaper
 
             await UniTask.Yield();
 
-            _reaperTransform.SetPositionAndRotation(_repositionPos, Quaternion.Euler(_repositionAng));
+            _reaperTransform.SetPositionAndRotation(RepositionPos, Quaternion.Euler(RepositionAng));
             _reaperManager.MoveLift(true);
             _reaperManager.RotateCutter(true);
         }

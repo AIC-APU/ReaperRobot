@@ -8,6 +8,11 @@ namespace smart3tene.Reaper
 {
     public class ShadowReaperPlayer : BaseCSVPlayer
     {
+        #region Public Fields
+        public Vector3 RepositionPos = new(0f, 0f, 0f);
+        public Vector3 RepositionAng = new(0f, 0f, 0f);
+        #endregion
+
         #region Serialized Private Fields
         [SerializeField] private GameObject _shadowPrefab;
         [SerializeField] private ReaperManager _reaperManager;
@@ -55,11 +60,6 @@ namespace smart3tene.Reaper
 
         public IReadOnlyReactiveProperty<float> Angle => _angleY;
         private ReactiveProperty<float> _angleY = new(0);
-        #endregion
-
-        #region Readonly Fields
-        readonly Vector3 _repositionPos = new(0f, 0f, 0f);
-        readonly Vector3 _repositionAng = new(0f, 0f, 0f);
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -132,7 +132,7 @@ namespace smart3tene.Reaper
             }
             _pathObjects.Clear();
 
-            //位置の設定・初期化
+            //ロボットの初期位置の保存
             _startPos = _reaperTransform.position;
             _startAng = _reaperTransform.eulerAngles;
 
@@ -226,7 +226,7 @@ namespace smart3tene.Reaper
 
             await UniTask.Yield();
 
-            _reaperTransform.SetPositionAndRotation(_repositionPos, Quaternion.Euler(_repositionAng));
+            _reaperTransform.SetPositionAndRotation(RepositionPos, Quaternion.Euler(RepositionAng));
             _reaperManager.MoveLift(true);
             _reaperManager.RotateCutter(true);
         }
