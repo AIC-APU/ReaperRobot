@@ -136,14 +136,16 @@ namespace smart3tene.Reaper
             if (index == data.Count - 1) return ExtractAngleY(data, data.Count - 1);
 
             //index, index+1 の値を使って線形補完
-            var lowAngle = ExtractAngleY(data, index);
-            var highAngle = ExtractAngleY(data, index + 1);
+            var lowRot = Quaternion.Euler(0, ExtractAngleY(data, index), 0);
+            var highRot = Quaternion.Euler(0, ExtractAngleY(data, index + 1), 0);
 
             var lowSec = ExtractSeconds(data, index);
             var highSec = ExtractSeconds(data, index + 1);
             var rate = (seconds - lowSec) / (highSec - lowSec);
 
-            return Mathf.Lerp(lowAngle, highAngle, rate);
+            var lerpQuaternion = Quaternion.Lerp(lowRot, highRot, rate);
+
+            return lerpQuaternion.eulerAngles.y;
         }
 
         protected Quaternion ExtractQuaternion(List<string[]> data, int index)

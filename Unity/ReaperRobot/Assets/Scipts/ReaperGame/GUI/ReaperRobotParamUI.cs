@@ -7,6 +7,7 @@ namespace smart3tene.Reaper
     {
         #region Serialized Private Fields
         [SerializeField] private ReaperManager _reaperManager;
+        
 
         [Header("UIs")]
         [SerializeField] private GameObject _robotParameterPanel;
@@ -21,18 +22,19 @@ namespace smart3tene.Reaper
         [Header("Move Torque")]
         [SerializeField] private TMP_InputField _moveTorqueInputField;
 
-        [Header("Roate Torque")]
-        [SerializeField] private TMP_InputField _rotateTorqueInputField;
-
         [Header("Torque Rate at Cutting")]
         [SerializeField] private TMP_InputField _torqueRateInputField;
+
+        [Header("Mass")]
+        [SerializeField] private TMP_InputField _robotMassInputField;
+        [SerializeField] private Rigidbody _robotBody;
         #endregion
 
         #region Private Fields
         private float _defaultDampingRate;
         private float _defaultMoveTorque;
-        private float _defaultRotateTorque;
         private float _defaultTorqueRate;
+        private float _defaultMass;
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -41,14 +43,14 @@ namespace smart3tene.Reaper
             //テキストの更新
             _dampingInputField.text = _wheelColliderL2.wheelDampingRate.ToString();
             _moveTorqueInputField.text = _reaperManager.moveTorque.ToString();
-            _rotateTorqueInputField.text = _reaperManager.rotateTorque.ToString();
             _torqueRateInputField.text = _reaperManager.torqueRateAtCutting.ToString();
+            _robotMassInputField.text = _robotBody.mass.ToString();
 
             //デフォルト値の設定
             _defaultDampingRate = _wheelColliderL2.wheelDampingRate;
             _defaultMoveTorque = _reaperManager.moveTorque;
-            _defaultRotateTorque = _reaperManager.rotateTorque;
             _defaultTorqueRate = _reaperManager.torqueRateAtCutting;
+            _defaultMass = _robotBody.mass;
         }
         #endregion
 
@@ -85,18 +87,6 @@ namespace smart3tene.Reaper
             _moveTorqueInputField.text = value.ToString();
 
         }
-        public void OnEndEditRotateTorque()
-        {
-            if (_rotateTorqueInputField.text == "" || _rotateTorqueInputField.text == "-")
-            {
-                _rotateTorqueInputField.text = _reaperManager.rotateTorque.ToString();
-                return;
-            }
-
-            var value = Mathf.Abs(float.Parse(_rotateTorqueInputField.text));
-            _reaperManager.rotateTorque = value;
-            _rotateTorqueInputField.text = value.ToString();
-        }
         public void OnEndEditTorqueRate()
         {
             if(_torqueRateInputField.text == "" || _torqueRateInputField.text == "-")
@@ -111,7 +101,19 @@ namespace smart3tene.Reaper
             _reaperManager.torqueRateAtCutting = value;
             _torqueRateInputField.text = value.ToString();
         }
+        public void OnEndEditRobotMass()
+        {
+            if (_robotMassInputField.text == "" || _robotMassInputField.text == "-")
+            {
+                _robotMassInputField.text = _robotBody.mass.ToString();
+                return;
+            }
 
+            var value = Mathf.Abs(float.Parse(_robotMassInputField.text));
+
+            _robotBody.mass = value;
+            _robotMassInputField.text = value.ToString();
+        }
         public void OnClickReset()
         {
             _wheelColliderL2.wheelDampingRate = _defaultDampingRate;
@@ -123,11 +125,11 @@ namespace smart3tene.Reaper
             _reaperManager.moveTorque = _defaultMoveTorque;
             _moveTorqueInputField.text = _defaultMoveTorque.ToString();
 
-            _reaperManager.rotateTorque = _defaultRotateTorque;
-            _rotateTorqueInputField.text = _defaultRotateTorque.ToString();
-
             _reaperManager.torqueRateAtCutting = _defaultTorqueRate;
             _torqueRateInputField.text = _defaultTorqueRate.ToString();
+
+            _robotBody.mass = _defaultMass;
+            _robotMassInputField.text = _defaultMass.ToString();
         }
         #endregion
     }
