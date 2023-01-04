@@ -19,11 +19,9 @@ namespace smart3tene.Reaper
         [SerializeField] private TMP_InputField _angXField;
         [SerializeField] private TMP_InputField _angYField;
         [SerializeField] private TMP_InputField _angZField;
-        #endregion
 
-        #region Readonly Fields
-        readonly Vector3 _defaultPos = Vector3.zero;
-        readonly Vector3 _defaultAng = Vector3.zero;
+        [SerializeField] private Vector3 _defaultPos = Vector3.zero;
+        [SerializeField] private Vector3 _defaultAng = Vector3.zero;
         #endregion
 
         #region MonoBehaviour Callbacks
