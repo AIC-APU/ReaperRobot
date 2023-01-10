@@ -21,7 +21,7 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Protected fields
-        public IReadOnlyReactiveProperty< bool> IsPlaying => _isPlaying;
+        public IReadOnlyReactiveProperty<bool> IsPlaying => _isPlaying;
         protected ReactiveProperty <bool> _isPlaying = new(false);
 
         protected List<string[]> _csvData = new();
