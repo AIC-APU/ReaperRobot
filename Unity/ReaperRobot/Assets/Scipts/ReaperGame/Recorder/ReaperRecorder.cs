@@ -9,6 +9,10 @@ using Cysharp.Threading.Tasks;
 
 public class ReaperRecorder : MonoBehaviour
 {
+    #region 
+    public bool ControllableRobot { get; private set; } = true;
+    #endregion
+
     #region Serialized Private Fields
     [SerializeField] private ReaperManager _reaperManager;
     [SerializeField] private Transform _reaperTransform;
@@ -116,13 +120,21 @@ public class ReaperRecorder : MonoBehaviour
         _csvData = "Time,input_horizontal,input_vertical,Lift,Cutter,PosX,PosY,PosZ,AngleY" + "\n";
 
         _isRecording.Value = true;
+
+        //コントローラの使用の許可
+        ControllableRobot = true;
     }
 
     public void StopRecording()
     {
-        _isRecording.Value = false;
+        if (_isRecording.Value)
+        {
+            _isRecording.Value = false;
+            ExportCSV();
+        }
 
-        ExportCSV();
+        //コントローラの使用の許可
+        ControllableRobot = true;
     }
 
     public async void Reposition()
@@ -135,6 +147,9 @@ public class ReaperRecorder : MonoBehaviour
 
         _reaperManager.MoveLift(true);
         _reaperManager.RotateCutter(true);
+
+        //コントローラの使用の禁止
+        ControllableRobot = false;
     }
     #endregion
 

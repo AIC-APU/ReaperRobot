@@ -8,24 +8,18 @@ using UnityEngine.UI;
 
 namespace smart3tene.Reaper
 {
-    public class ShadowPlayerUI : MonoBehaviour
+    public class RobotPlayerUI : MonoBehaviour
     {
-        #region Public Fields
-        public bool ControllableRobot { get; private set; } = true;
-        #endregion
-
         #region Serialized Private Fields
         [Header("CSV Player")]
-        [SerializeField] private ShadowReaperPlayer _shadowPlayer;
+        [SerializeField] private RobotReaperPlayer _robotReaperPlayer;
 
         [Header("UIs")]
-        [SerializeField] private GameObject _shadowPlayerPanel;
+        [SerializeField] private GameObject _RobotPlayerPanel;
         [SerializeField] private TMP_Text _fileNameText;
         [SerializeField] private TMP_Text _timeText;
         [SerializeField] private Button _backButton;
-        [SerializeField] private Button _rewindButton;
         [SerializeField] private Button _playButton;
-        [SerializeField] private Button _fastforwardButton;
         [SerializeField] private Button _pauseButton;
         [SerializeField] private Button _stopButton;
         #endregion
@@ -38,41 +32,35 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         void Awake()
         {
-            _shadowPlayerPanel.SetActive(false);
+            _RobotPlayerPanel.SetActive(false);
             _fileNameText.text = defaultFileNameText;
 
             _backButton.interactable = false;
-            _rewindButton.interactable = false;
             _playButton.interactable = false;
-            _fastforwardButton.interactable = false;
             _pauseButton.interactable = false;
             _stopButton.interactable = false;
 
-            _shadowPlayer.EndCSVEvent += OnEndCSVEvent;
+            _robotReaperPlayer.EndCSVEvent += OnEndCSVEvent;
         }
 
-        private void Update()
+        void Update()
         {
-            var time = _shadowPlayer.PlayTime;
-            _timeText.text = GameTimer.ConvertSecondsToString(time, false);
+            _timeText.text = GameTimer.ConvertSecondsToString(_robotReaperPlayer.PlayTime, false);
         }
 
         private void OnDestroy()
         {
-            _shadowPlayer.EndCSVEvent -= OnEndCSVEvent;
+            _robotReaperPlayer.EndCSVEvent -= OnEndCSVEvent;
         }
         #endregion
 
         #region Public method
         public async void OnClickSelectFile()
         {
-            if (_shadowPlayer.IsPlaying.Value) _shadowPlayer.Pause();
+            if (_robotReaperPlayer.IsPlaying.Value) _robotReaperPlayer.Pause();
 
-            //ロボットのポジションリセット
-            _shadowPlayer.RepositionRobot();
-
-            //コントローラ操作を禁止
-            ControllableRobot = false;
+            //初期位置に配置
+            _robotReaperPlayer.Reposition();
 
             await UniTask.Delay(TimeSpan.FromSeconds(0.5));
 
@@ -80,133 +68,98 @@ namespace smart3tene.Reaper
 
             if (path != "")
             {
-                //csvDataの取得
-                _shadowPlayer.SetUp(path);
-
-                //FileNameTextの設定
-                _fileNameText.text = Path.GetFileName(path);
-
                 //ボタンの設定
                 _backButton.interactable = false;
-                _rewindButton.interactable = false;
                 _playButton.interactable = true;
-                _fastforwardButton.interactable = false;
                 _pauseButton.interactable = false;
                 _stopButton.interactable = true;
 
-                //ロボット操作を許可
-                ControllableRobot = true;
+                //csvDataの取得
+                _robotReaperPlayer.SetUp(path);
+
+                //FileNameTextの設定
+                _fileNameText.text = Path.GetFileName(path);
             }
             else
             {
                 Debug.LogWarning("パスが指定されませんでした");
             }
         }
+
         public void OnClickPlay()
         {
             //ボタンの設定
             _backButton.interactable = false;
-            _rewindButton.interactable = true;
             _playButton.interactable = false;
-            _fastforwardButton.interactable = true;
             _pauseButton.interactable = true;
             _stopButton.interactable = true;
 
             //プレイヤーの設定
-            _shadowPlayer.Play();
+            _robotReaperPlayer.Play();
         }
 
         public void OnClickBack()
         {
             //ボタンの設定
             _backButton.interactable = false;
-            _rewindButton.interactable = false;
             _playButton.interactable = true;
-            _fastforwardButton.interactable = false;
             _pauseButton.interactable = false;
             _stopButton.interactable = true;
 
             //プレイヤーの設定
-            _shadowPlayer.Back();
+            _robotReaperPlayer.Back();
         }
+
         public void OnClickPause()
         {
             //ボタンの設定
             _backButton.interactable = true;
-            _rewindButton.interactable = false;
             _playButton.interactable = true;
-            _fastforwardButton.interactable = false;
             _pauseButton.interactable = false;
             _stopButton.interactable = true;
 
             //プレイヤーの設定
-            _shadowPlayer.Pause();
+            _robotReaperPlayer.Pause();
         }
+
         public void OnClickStop()
         {
             //ボタンの設定
             _backButton.interactable = false;
-            _rewindButton.interactable = false;
             _playButton.interactable = false;
-            _fastforwardButton.interactable = false;
             _pauseButton.interactable = false;
             _stopButton.interactable = false;
 
             //プレイヤーの設定
-            _shadowPlayer.Stop();
+            _robotReaperPlayer.Stop();
 
             //パネルの初期化
-            _shadowPlayerPanel.SetActive(false);
+            _RobotPlayerPanel.SetActive(false);
             _fileNameText.text = defaultFileNameText;
-
-            //コントローラ操作を許可
-            ControllableRobot = true;
-        }
-        public void FastForwardButtonDown()
-        {
-            _shadowPlayer.FastForward(true);
         }
 
-        public void FastForwardButtonUp()
+        public void OnClickSelectRobotMode()
         {
-            _shadowPlayer.FastForward(false);
-        }
-
-        public void RewindButtonDown()
-        {
-            _shadowPlayer.Rewind(true);
-        }
-
-        public void RewindButtonUp()
-        {
-            _shadowPlayer.Rewind(false);
-        }
-
-        public void OnClickSelectShadowMode()
-        {
-            if (_shadowPlayerPanel.activeSelf)
+            if (_RobotPlayerPanel.activeSelf)
             {
-                OnClickStop();               
+                OnClickStop();
             }
             else
             {
-                //パネル表示
-                _shadowPlayerPanel.SetActive(true);
+                _RobotPlayerPanel.SetActive(true);
             }
         }
-
         #endregion
 
         #region Private method
         private void OnEndCSVEvent()
         {
             _backButton.interactable = true;
-            _rewindButton.interactable = false;
             _playButton.interactable = false;
-            _fastforwardButton.interactable = false;
             _pauseButton.interactable = false;
             _stopButton.interactable = true;
         }
         #endregion
     }
+
 }

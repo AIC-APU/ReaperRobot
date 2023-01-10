@@ -10,6 +10,10 @@ namespace smart3tene.Reaper
         #region Public Fields
         public Vector3 RepositionPos = new(0f, 0f, 0f);
         public Vector3 RepositionAng = new(0f, 0f, 0f);
+
+        public Transform ReaperTransform => _reaperTransform;
+
+        public bool ControllableRobot { get; private set; } = true;
         #endregion
 
         #region Serialized Private Fields
@@ -143,6 +147,9 @@ namespace smart3tene.Reaper
             _pathObjects.Clear();
 
             StopEvent?.Invoke();
+
+            //コントローラ使用の許可
+            ControllableRobot = true;
         }
 
         public override void Back()
@@ -174,8 +181,9 @@ namespace smart3tene.Reaper
             await UniTask.Yield();
 
             _reaperTransform.SetPositionAndRotation(RepositionPos, Quaternion.Euler(RepositionAng));
-            _reaperManager.MoveLift(true);
-            _reaperManager.RotateCutter(true);
+
+            //コントローラ使用の禁止
+            ControllableRobot = false;
         }
         #endregion
 

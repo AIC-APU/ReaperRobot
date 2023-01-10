@@ -14,6 +14,7 @@ namespace smart3tene.Reaper
         [Header("UI")]
         [SerializeField] private GameObject _shadowPlayerPanel;
         [SerializeField] private GameObject _csvDataPanel;
+        [SerializeField] private GameObject _distancePanel;
         [SerializeField] private TMP_Text _timeText;
         [SerializeField] private TMP_Text _inputHText;
         [SerializeField] private TMP_Text _inputVText;
@@ -31,7 +32,11 @@ namespace smart3tene.Reaper
             //パネルの表示・非表示
             _shadowPlayerPanel
                 .ObserveEveryValueChanged(x => x.activeSelf)
-                .Subscribe(x => _csvDataPanel.SetActive(x))
+                .Subscribe(x => 
+                {
+                    _csvDataPanel.SetActive(x);
+                    _distancePanel.SetActive(x);
+                })
                 .AddTo(this);
 
             //以下テキストの更新
