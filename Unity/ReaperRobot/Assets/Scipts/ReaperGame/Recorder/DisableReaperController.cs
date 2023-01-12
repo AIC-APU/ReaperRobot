@@ -8,9 +8,9 @@ namespace smart3tene.Reaper
     public class DisableReaperController : MonoBehaviour
     {
         #region Serilaized Private Fields
-        [SerializeField] private RobotPlayerUI _robotPlayerUI;
-        [SerializeField] private CSVRecorderUI _csvRecorderUI;
-        [SerializeField] private ShadowPlayerUI _shadowPlayerUI;
+        [SerializeField] private ReaperRecorder _reaperRecorder;
+        [SerializeField] private ShadowReaperPlayer _shadowReaperPlayer;
+        [SerializeField] private RobotReaperPlayer _robotPlayer;
 
         [Header("Controller")]
         [SerializeField] private ReaperController _controller;
@@ -29,7 +29,7 @@ namespace smart3tene.Reaper
         #region Monobehaviour Callbacks
         private void Update()
         {
-            var controllable = _robotPlayerUI.ControllableRobot && _csvRecorderUI.ControllableRobot && _shadowPlayerUI.ControllableRobot;
+            var controllable = _reaperRecorder.ControllableRobot && _shadowReaperPlayer.ControllableRobot && _robotPlayer.ControllableRobot;
 
             _controller.enabled = controllable;
             LiftAndCutterButton(controllable);

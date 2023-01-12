@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UniRx;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UniRx.Triggers;
 
 namespace smart3tene.Reaper

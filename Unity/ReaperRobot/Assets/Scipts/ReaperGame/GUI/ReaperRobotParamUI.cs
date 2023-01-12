@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -8,47 +9,57 @@ namespace smart3tene.Reaper
         #region Serialized Private Fields
         [SerializeField] private ReaperManager _reaperManager;
 
+        [Header("Wheels")]
+        [SerializeField] private List<WheelCollider> _wheelColliders = new List<WheelCollider>();
+
         [Header("UIs")]
         [SerializeField] private GameObject _robotParameterPanel;
 
         [Header("Damping Rate")]
         [SerializeField] private TMP_InputField _dampingInputField;
-        [SerializeField] private WheelCollider _wheelColliderL2;
-        [SerializeField] private WheelCollider _wheelColliderL3;
-        [SerializeField] private WheelCollider _wheelColliderR2;
-        [SerializeField] private WheelCollider _wheelColliderR3;
 
         [Header("Move Torque")]
         [SerializeField] private TMP_InputField _moveTorqueInputField;
 
-        [Header("Roate Torque")]
-        [SerializeField] private TMP_InputField _rotateTorqueInputField;
-
         [Header("Torque Rate at Cutting")]
         [SerializeField] private TMP_InputField _torqueRateInputField;
+
+        [Header("Mass")]
+        [SerializeField] private TMP_InputField _robotMassInputField;
+        [SerializeField] private Rigidbody _robotBody;
+
+        [Header("Friction")]
+        [SerializeField] private TMP_InputField _forwardFrictionField;
+        [SerializeField] private TMP_InputField _sidewaysFrictionField;
         #endregion
 
         #region Private Fields
         private float _defaultDampingRate;
         private float _defaultMoveTorque;
-        private float _defaultRotateTorque;
         private float _defaultTorqueRate;
+        private float _defaultMass;
+        private float _defaultForwardFriction;
+        private float _defaultSidewaysFriction;
         #endregion
 
         #region MonoBehaviour Callbacks
         private void Awake()
         {
             //テキストの更新
-            _dampingInputField.text = _wheelColliderL2.wheelDampingRate.ToString();
+            _dampingInputField.text = _wheelColliders[0].wheelDampingRate.ToString();
             _moveTorqueInputField.text = _reaperManager.moveTorque.ToString();
-            _rotateTorqueInputField.text = _reaperManager.rotateTorque.ToString();
             _torqueRateInputField.text = _reaperManager.torqueRateAtCutting.ToString();
+            _robotMassInputField.text = _robotBody.mass.ToString();
+            _forwardFrictionField.text = _wheelColliders[0].forwardFriction.stiffness.ToString();
+            _sidewaysFrictionField.text = _wheelColliders[0].sidewaysFriction.stiffness.ToString();
 
             //デフォルト値の設定
-            _defaultDampingRate = _wheelColliderL2.wheelDampingRate;
+            _defaultDampingRate = _wheelColliders[0].wheelDampingRate;
             _defaultMoveTorque = _reaperManager.moveTorque;
-            _defaultRotateTorque = _reaperManager.rotateTorque;
             _defaultTorqueRate = _reaperManager.torqueRateAtCutting;
+            _defaultMass = _robotBody.mass;
+            _defaultForwardFriction = _wheelColliders[0].forwardFriction.stiffness;
+            _defaultSidewaysFriction = _wheelColliders[0].sidewaysFriction.stiffness;
         }
         #endregion
 
@@ -58,16 +69,16 @@ namespace smart3tene.Reaper
         {
             if (_dampingInputField.text == "" || _dampingInputField.text == "-")
             {
-                _dampingInputField.text = _wheelColliderL2.wheelDampingRate.ToString();
+                _dampingInputField.text = _wheelColliders[0].wheelDampingRate.ToString();
                 return;
             }
 
             var value = Mathf.Abs(float.Parse(_dampingInputField.text));
 
-            _wheelColliderL2.wheelDampingRate = value;
-            _wheelColliderL3.wheelDampingRate = value;
-            _wheelColliderR2.wheelDampingRate = value;
-            _wheelColliderR3.wheelDampingRate = value;
+            foreach(WheelCollider wheel in _wheelColliders)
+            {
+                wheel.wheelDampingRate = value;
+            }
 
             _dampingInputField.text = value.ToString();
         }
@@ -85,18 +96,6 @@ namespace smart3tene.Reaper
             _moveTorqueInputField.text = value.ToString();
 
         }
-        public void OnEndEditRotateTorque()
-        {
-            if (_rotateTorqueInputField.text == "" || _rotateTorqueInputField.text == "-")
-            {
-                _rotateTorqueInputField.text = _reaperManager.rotateTorque.ToString();
-                return;
-            }
-
-            var value = Mathf.Abs(float.Parse(_rotateTorqueInputField.text));
-            _reaperManager.rotateTorque = value;
-            _rotateTorqueInputField.text = value.ToString();
-        }
         public void OnEndEditTorqueRate()
         {
             if(_torqueRateInputField.text == "" || _torqueRateInputField.text == "-")
@@ -111,23 +110,91 @@ namespace smart3tene.Reaper
             _reaperManager.torqueRateAtCutting = value;
             _torqueRateInputField.text = value.ToString();
         }
+        public void OnEndEditRobotMass()
+        {
+            if (_robotMassInputField.text == "" || _robotMassInputField.text == "-")
+            {
+                _robotMassInputField.text = _robotBody.mass.ToString();
+                return;
+            }
 
+            var value = Mathf.Abs(float.Parse(_robotMassInputField.text));
+
+            _robotBody.mass = value;
+            _robotMassInputField.text = value.ToString();
+        }
+        public void OnEndEditForwardFriction()
+        {
+            if (_forwardFrictionField.text == "" || _forwardFrictionField.text == "-")
+            {
+                _forwardFrictionField.text = _wheelColliders[0].forwardFriction.stiffness.ToString();
+                return;
+            }
+
+            var value = Mathf.Abs(float.Parse(_forwardFrictionField.text));
+            value = Mathf.Clamp(value, 0, 1);
+
+            foreach (WheelCollider wheel in _wheelColliders)
+            {
+                var ForwardFriction = wheel.forwardFriction;
+                ForwardFriction.stiffness = value;
+                wheel.forwardFriction = ForwardFriction;
+            }
+            _forwardFrictionField.text = value.ToString();
+        }
+        public void OnEndEditSidewaysFriction()
+        {
+            if (_sidewaysFrictionField.text == "" || _sidewaysFrictionField.text == "-")
+            {
+                _sidewaysFrictionField.text = _wheelColliders[0].sidewaysFriction.stiffness.ToString();
+                return;
+            }
+
+            var value = Mathf.Abs(float.Parse(_sidewaysFrictionField.text));
+            value = Mathf.Clamp(value, 0, 1);
+
+            foreach (WheelCollider wheel in _wheelColliders)
+            {
+                var sidewaysFriction = wheel.sidewaysFriction;
+                sidewaysFriction.stiffness = value;
+                wheel.sidewaysFriction = sidewaysFriction;
+            }
+            _sidewaysFrictionField.text = value.ToString();
+        }
         public void OnClickReset()
         {
-            _wheelColliderL2.wheelDampingRate = _defaultDampingRate;
-            _wheelColliderL3.wheelDampingRate = _defaultDampingRate;
-            _wheelColliderR2.wheelDampingRate = _defaultDampingRate;
-            _wheelColliderR3.wheelDampingRate = _defaultDampingRate;
+            //Damping Rate
+            foreach(WheelCollider wheel in _wheelColliders)
+            {
+                wheel.wheelDampingRate = _defaultDampingRate;
+            }
             _dampingInputField.text = _defaultDampingRate.ToString();
 
+            //Move Torque
             _reaperManager.moveTorque = _defaultMoveTorque;
             _moveTorqueInputField.text = _defaultMoveTorque.ToString();
 
-            _reaperManager.rotateTorque = _defaultRotateTorque;
-            _rotateTorqueInputField.text = _defaultRotateTorque.ToString();
-
+            //TorqueRateAtCutting
             _reaperManager.torqueRateAtCutting = _defaultTorqueRate;
             _torqueRateInputField.text = _defaultTorqueRate.ToString();
+
+            //Mass
+            _robotBody.mass = _defaultMass;
+            _robotMassInputField.text = _defaultMass.ToString();
+
+            //Friction Stiffness
+            foreach (WheelCollider wheel in _wheelColliders)
+            {
+                var ForwardFriction = wheel.forwardFriction;
+                ForwardFriction.stiffness = _defaultForwardFriction;
+                wheel.forwardFriction = ForwardFriction;
+
+                var sidewaysFriction = wheel.sidewaysFriction;
+                sidewaysFriction.stiffness = _defaultSidewaysFriction;
+                wheel.sidewaysFriction = sidewaysFriction;
+            }
+            _forwardFrictionField.text = _defaultForwardFriction.ToString();
+            _sidewaysFrictionField.text = _defaultSidewaysFriction.ToString();
         }
         #endregion
     }

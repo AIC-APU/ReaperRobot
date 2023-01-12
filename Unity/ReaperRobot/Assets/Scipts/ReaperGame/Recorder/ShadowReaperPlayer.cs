@@ -8,6 +8,15 @@ namespace smart3tene.Reaper
 {
     public class ShadowReaperPlayer : BaseCSVPlayer
     {
+        #region Public Fields
+        public Vector3 RepositionPos = new(0f, 0f, 0f);
+        public Vector3 RepositionAng = new(0f, 0f, 0f);
+
+        public Transform ShadowTransform => _shadowTransform;
+
+        public bool ControllableRobot { get; private set; } = true;
+        #endregion
+
         #region Serialized Private Fields
         [SerializeField] private GameObject _shadowPrefab;
         [SerializeField] private ReaperManager _reaperManager;
@@ -57,11 +66,6 @@ namespace smart3tene.Reaper
         private ReactiveProperty<float> _angleY = new(0);
         #endregion
 
-        #region Readonly Fields
-        readonly Vector3 _repositionPos = new(0f, 0f, 0f);
-        readonly Vector3 _repositionAng = new(0f, 0f, 0f);
-        #endregion
-
         #region MonoBehaviour Callbacks
         private void Update ()
         {
@@ -85,6 +89,7 @@ namespace smart3tene.Reaper
 
             OneFlameMove(_csvData, PlayTime);
 
+            //10フレーム毎に軌跡をポリゴンで描画
             if(_flameCount % 10 == 0)
             {
                 var obj = MeshCreator.CreateCubeMesh(_shadowTransform.position, _pathMaterial, 0.05f);
@@ -132,7 +137,7 @@ namespace smart3tene.Reaper
             }
             _pathObjects.Clear();
 
-            //位置の設定・初期化
+            //ロボットの初期位置の保存
             _startPos = _reaperTransform.position;
             _startAng = _reaperTransform.eulerAngles;
 
@@ -145,6 +150,10 @@ namespace smart3tene.Reaper
             _shadowManager = _shadowInstance.GetComponent<ShadowReaperManager>();
             _shadowManager.MoveLift(ExtractLift(_csvData, PlayTime));
             _shadowManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
+
+
+            //ロボット操作を許可
+            ControllableRobot = true;
         }
 
         public override void Play()
@@ -184,6 +193,9 @@ namespace smart3tene.Reaper
             _pathObjects.Clear();
 
             StopEvent?.Invoke();
+
+            //コントローラ操作を許可
+            ControllableRobot = true;
         }
 
         public override void Back()
@@ -226,9 +238,17 @@ namespace smart3tene.Reaper
 
             await UniTask.Yield();
 
-            _reaperTransform.SetPositionAndRotation(_repositionPos, Quaternion.Euler(_repositionAng));
-            _reaperManager.MoveLift(true);
-            _reaperManager.RotateCutter(true);
+            _reaperTransform.SetPositionAndRotation(RepositionPos, Quaternion.Euler(RepositionAng));
+
+            //コントローラ操作を禁止
+            ControllableRobot = false;
+        }
+
+        public void MatchRobotPositionToShadow()
+        {
+            _reaperTransform.SetPositionAndRotation(_shadowTransform.position, _shadowTransform.rotation);
+            _reaperManager.MoveLift(_shadowManager.IsLiftDown.Value);
+            _reaperManager.RotateCutter(_shadowManager.IsCutting.Value);
         }
         #endregion
 
