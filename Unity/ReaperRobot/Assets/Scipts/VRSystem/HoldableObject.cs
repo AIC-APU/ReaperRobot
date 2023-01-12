@@ -138,11 +138,11 @@ namespace smart3tene
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.transform.IsChildOf(_leftTransform))
+            if (collision.transform.IsChildOf(_leftTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
             {
                 _isTouchLeft = true;
             }
-            else if(collision.transform.IsChildOf(_rightTransform))
+            else if(collision.transform.IsChildOf(_rightTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
             {
                 _isTouchRight = true;
             }
@@ -150,11 +150,11 @@ namespace smart3tene
 
         private void OnCollisionStay(Collision collision)
         {
-            if (collision.transform.IsChildOf(_leftTransform))
+            if (collision.transform.IsChildOf(_leftTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
             {
                 _isTouchLeft = true;
             }
-            else if (collision.transform.IsChildOf(_rightTransform))
+            else if (collision.transform.IsChildOf(_rightTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
             {
                 _isTouchRight = true;
             }
@@ -162,11 +162,11 @@ namespace smart3tene
 
         private void OnCollisionExit(Collision collision)
         {
-            if (collision.transform.IsChildOf(_leftTransform))
+            if (collision.transform.IsChildOf(_leftTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
             {
                 _isTouchLeft = false;
             }
-            else if (collision.transform.IsChildOf(_rightTransform))
+            else if (collision.transform.IsChildOf(_rightTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
             {
                 _isTouchRight = false;
             }
