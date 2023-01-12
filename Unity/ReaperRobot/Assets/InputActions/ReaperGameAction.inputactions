@@ -592,15 +592,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "CSVPlay",
-                    "type": "Button",
-                    "id": "95d2d09b-a2e7-4910-ba4f-6eb2aea893a2",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -821,17 +812,6 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "ChangeReaperAndPerson",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a5b5b870-c9eb-4b71-a32c-310b70dfdd3b",
-                    "path": "<Keyboard>/p",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "CSVPlay",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

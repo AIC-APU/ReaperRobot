@@ -19,24 +19,20 @@ namespace smart3tene.Reaper
 
         #region Private Fields
         private InputActionMap _reaperActionMap;
-        private InputActionMap _personActionMap;
         #endregion
 
         #region MonoBehaviour Callbacks
         void Awake()
         {
             _reaperActionMap = GetComponent<PlayerInput>().actions.FindActionMap("Reaper");
-            _personActionMap = GetComponent<PlayerInput>().actions.FindActionMap("Person");
 
             //AllPlayの登録
             _reaperActionMap["CSVPlay"].started += AllPlay;
-            _personActionMap["CSVPlay"].started += AllPlay;
         }
         private void OnDisable()
         {
             //AllPlayの登録削除
             _reaperActionMap["CSVPlay"].started -= AllPlay;
-            _personActionMap["CSVPlay"].started -= AllPlay;
         }
         #endregion
 
