@@ -36,8 +36,7 @@ namespace smart3tene.Reaper
         public Vector2 NowInput { get; private set; }
 
         //トルク関連の値
-        [NonSerialized] public float rotateTorque = 400f;
-        [NonSerialized] public float moveTorque = 300f;
+        [NonSerialized] public float moveTorque = 110f;
         [NonSerialized] public float torqueRateAtCutting = 0.5f;
         #endregion
 
@@ -148,8 +147,15 @@ namespace smart3tene.Reaper
             var torqueL = moveTorque * vertical;
             var torqueR = moveTorque * vertical;
 
-            torqueL += rotateTorque * horizontal;
-            torqueR -= rotateTorque * horizontal;
+            if(horizontal > 0)
+            {
+                torqueR *= 1f - 2f * horizontal;
+            }
+            else if(horizontal < 0)
+            {
+                torqueL *= 1f + 2f * horizontal;
+            }
+
 
             if (_isCutting.Value)
             {
@@ -160,7 +166,7 @@ namespace smart3tene.Reaper
             _wheelColliderL2.motorTorque = torqueL;
             _wheelColliderL3.motorTorque = torqueL;
             _wheelColliderR2.motorTorque = torqueR;
-            _wheelColliderR3.motorTorque =  torqueR;
+            _wheelColliderR3.motorTorque = torqueR;
 
             //モーター音
 
