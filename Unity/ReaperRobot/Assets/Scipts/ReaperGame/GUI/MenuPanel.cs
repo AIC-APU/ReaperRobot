@@ -36,16 +36,12 @@ namespace smart3tene.Reaper
 
         public void OnClickEndGame()
         {
-            if(SceneTransitionManager.Instance != null)
+            if(SceneTransitionManager.Instantiated)
             {
                 SceneTransitionManager.Instance.EndGame();
-
-                //PUnrpcで全員のゲームを終了させる
             }
             else
             {
-                Debug.LogWarning("SceneTransitionManager がありません。");
-
                 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
                 #else
