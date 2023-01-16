@@ -24,7 +24,7 @@ namespace smart3tene
         #endregion
 
         #region Public method
-        public async UniTask<string> TakeColorPicture(Camera camera, int imageWidth, int imageHeigth, string fileName = "" , int fileNum = 0, string directory = "")
+        public async UniTask<string> TakeColorPicture(Camera camera, int imageWidth, int imageHeigth, int fieldOfView, string fileName = "" , int fileNum = 0, string directory = "")
         {
             if (fileName == "") fileName = "picture";
             if (directory == "") directory = Application.streamingAssetsPath + "/../../../AnnotationImages/images";
@@ -39,13 +39,16 @@ namespace smart3tene
             _colorCamera.transform.position = camera.transform.position;
             _colorCamera.transform.rotation = camera.transform.rotation;
 
+            //fovの変更
+            _colorCamera.fieldOfView = fieldOfView;
+
             //撮影
             await CaptureFromCamera.Capture(imageWidth, imageHeigth, _colorCamera, TextureFormat.RGB24, filePath);
 
             return filePath;
         }
 
-        public async UniTask<string> TakeTagPicture(Camera camera, int imageWidth, int imageHeigth, string fileName = "" , int fileNum = 0, string directory = "")
+        public async UniTask<string> TakeTagPicture(Camera camera, int imageWidth, int imageHeigth, int fieldOfView, string fileName = "" , int fileNum = 0, string directory = "")
         {
             if (fileName == "") fileName = "picture";
             if (directory == "") directory = Application.streamingAssetsPath + "/../../../AnnotationImages/tags";
@@ -59,6 +62,9 @@ namespace smart3tene
             //指定されたカメラと同じ位置に撮影用カメラを移動させる
             _tagCamera.transform.position = camera.transform.position;
             _tagCamera.transform.rotation = camera.transform.rotation;
+
+            //fovの変更
+            _tagCamera.fieldOfView = fieldOfView;
 
             //撮影
             await CaptureFromCamera.Capture(imageWidth, imageHeigth, _tagCamera, TextureFormat.R8, filePath);
