@@ -4525,10 +4525,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2213118749317948482, guid: c8374479f29986f4f96dc2a4c7f5f22e, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2213118749317948482, guid: c8374479f29986f4f96dc2a4c7f5f22e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -4571,22 +4567,6 @@ PrefabInstance:
     - target: {fileID: 4739271461993652989, guid: c8374479f29986f4f96dc2a4c7f5f22e, type: 3}
       propertyPath: m_Name
       value: GeenHouse_00
-      objectReference: {fileID: 0}
-    - target: {fileID: 4739271461993652989, guid: c8374479f29986f4f96dc2a4c7f5f22e, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7520872250188632139, guid: c8374479f29986f4f96dc2a4c7f5f22e, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7520872250188632139, guid: c8374479f29986f4f96dc2a4c7f5f22e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.11
-      objectReference: {fileID: 0}
-    - target: {fileID: 7520872250188632139, guid: c8374479f29986f4f96dc2a4c7f5f22e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.37
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8374479f29986f4f96dc2a4c7f5f22e, type: 3}
