@@ -17,6 +17,8 @@ namespace smart3tene
         [SerializeField] private TMP_InputField _endField;
         [SerializeField] private TMP_InputField _widthField;
         [SerializeField] private TMP_InputField _heightField;
+        [SerializeField] private TMP_InputField _minFovField;
+        [SerializeField] private TMP_InputField _maxFovField;
         [SerializeField] private Button _startButton;
 
         [Header("Range Boxes")]
@@ -30,7 +32,9 @@ namespace smart3tene
         private int _startNum = 0;
         private int _endNum = 1;
         private int _width = 224;
-        private int _height = 224;
+        private int _height = 224;      
+        private int _minFov = 30;
+        private int _maxFov = 60;
 
         private List<Transform> _rangeBoxes = new List<Transform>();
         #endregion
@@ -49,6 +53,8 @@ namespace smart3tene
             _endField.text = _endNum.ToString();
             _widthField.text = _width.ToString();
             _heightField.text = _height.ToString();
+            _minFovField.text = _minFov.ToString();
+            _maxFovField.text = _maxFov.ToString();
 
             foreach (GameObject rangeBoxObj in _rangeBoxObjects)
             {
@@ -62,7 +68,7 @@ namespace smart3tene
         #region Public method
         public async void OnClickStart()
         {
-            await _randomTaker.RandomTake(_width, _height, _startNum, _endNum, _rangeBoxes, _pointLight.transform);
+            await _randomTaker.RandomTake(_width, _height, _startNum, _endNum, _minFov, _maxFov, _rangeBoxes, _pointLight.transform);
         }
 
         public void OnEndEditStartNum()
@@ -139,6 +145,46 @@ namespace smart3tene
             //反映
             _heightField.text = value.ToString();
             _height = value;
+        }
+
+        public void OnEndEditMinFov()
+        {
+            if (_minFovField.text == "" || _minFovField.text == "-")
+            {
+                _minFovField.text = _minFov.ToString();
+                return;
+            }
+
+            //正の数に変換
+            var value = Math.Abs(int.Parse(_minFovField.text));
+
+            //指定範囲内に納める
+            //Cameraクラスのfovの範囲は0-179まで
+            value = Math.Clamp(value, 0, _maxFov);
+
+            //反映
+            _minFovField.text = value.ToString();
+            _minFov = value;
+        }
+
+        public void OnEndEditMaxFov()
+        {
+            if (_maxFovField.text == "" || _maxFovField.text == "-")
+            {
+                _maxFovField.text = _maxFov.ToString();
+                return;
+            }
+
+            //正の数に変換
+            var value = Math.Abs(int.Parse(_maxFovField.text));
+
+            //指定範囲内に納める
+            //Cameraクラスのfovの範囲は0-179まで
+            value = Math.Clamp(value, _minFov, 179);
+
+            //反映
+            _maxFovField.text = value.ToString();
+            _maxFov = value;
         }
         #endregion　
     }

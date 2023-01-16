@@ -41,8 +41,8 @@ namespace smart3tene.Reaper
         private async UniTaskVoid TakePicture()
         {
             //撮影
-            var colorFilePath = await _pictureTaker.TakeColorPicture(Camera.main, 224, 224, _fileName);
-            var tagFilePath = await _pictureTaker.TakeTagPicture(Camera.main, 224, 224, _fileName);
+            var colorFilePath = await _pictureTaker.TakeColorPicture(Camera.main, 224, 224, 30, _fileName);
+            var tagFilePath = await _pictureTaker.TakeTagPicture(Camera.main, 224, 224, 30, _fileName);
             
 
             //color画像保存のテキスト表示

@@ -1,6 +1,6 @@
 using System;
 
-namespace smart3tene.Reaper
+namespace smart3tene
 {
     public static class ReaperEventManager
     {

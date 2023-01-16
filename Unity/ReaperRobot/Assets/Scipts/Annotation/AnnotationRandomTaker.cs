@@ -12,11 +12,6 @@ namespace smart3tene
         #region Serialized Private Field
         [SerializeField] private string _fileName = "Annotation";
         [SerializeField] private Camera _camera;
-
-        //デバック用
-        [Header("For Debug")]
-        [SerializeField] private List<Transform> _rangeBoxes = new List<Transform>();
-        [SerializeField] private Transform _light;
         #endregion
 
         #region Private Fields
@@ -58,7 +53,7 @@ namespace smart3tene
         #endregion
 
         #region Public method
-        public async UniTask RandomTake(int width, int height, int startNum, int EndNum, List<Transform> rangeBoxes, Transform light)
+        public async UniTask RandomTake(int width, int height, int startNum, int EndNum, int minFov, int maxFov, List<Transform> rangeBoxes, Transform light)
         {
             //後でちゃんと例外処理行う
             if (startNum > EndNum)
@@ -71,20 +66,24 @@ namespace smart3tene
             for (int i = startNum; i <= EndNum; i++)
             {
                 //ランダムにカメラを配置
-                var (pos, angle) = GetRandomPosAndAngle(_rangeBoxes);
+                var (pos, angle) = GetRandomPosAndAngle(rangeBoxes);
                 _camera.transform.SetPositionAndRotation(pos, Quaternion.Euler(angle));
+
+                //カメラのfovを指定
+                var random = new System.Random();
+                var randomFov = random.Next(minFov, maxFov + 1);
 
                 //ランダムに光源を配置
                 light.transform.position = GetRandomLightPos(LightRangeRadius);
 
                 //撮影
-                _ = await _pictureTaker.TakeColorPicture(Camera.main, width, height, _fileName, startNum, DefaultDirectory + $"/{now}/Images");
-                _ = await _pictureTaker.TakeTagPicture(Camera.main, width, height, _fileName, startNum, DefaultDirectory + $"/{now}/tags");       
+                _ = await _pictureTaker.TakeColorPicture(Camera.main, width, height, randomFov, _fileName, startNum, DefaultDirectory + $"/{now}/Images");
+                _ = await _pictureTaker.TakeTagPicture(Camera.main, width, height, randomFov, _fileName, startNum, DefaultDirectory + $"/{now}/tags");       
             }
 
             //撮影完了の表示
             var filePath = Path.GetFullPath($"{DefaultDirectory}/{now}");
-            Debug.Log("撮影が完了しました" + "\n" + $"保存先:{filePath}");
+            ReaperEventManager.InvokeTextPopupEvent("撮影が完了しました\n" + "保存先:\n" + filePath);
         }
         #endregion
 
