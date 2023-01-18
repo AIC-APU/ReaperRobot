@@ -53,6 +53,7 @@ namespace smart3tene
 
             _rigidbody = GetComponent<Rigidbody>();
             _rigidbody.useGravity = _useGravityDefault;
+            if (!_useGravityDefault) _rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
 
             _defaultPos = transform.position;
             _defaultAng = transform.eulerAngles;
@@ -83,6 +84,7 @@ namespace smart3tene
                         transform.eulerAngles = _defaultAng;
                         _rigidbody.velocity = Vector3.zero;
                         _rigidbody.angularVelocity = Vector3.zero;
+                        _rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
                     })
                     .AddTo(this);
             }
@@ -125,8 +127,8 @@ namespace smart3tene
             //条件2: このオブジェクトが手の平側にある（手の甲で触れていない）
             //条件3: 手が物を掴むジェスチャをしている
             //条件4: もう片方の手によって,このオブジェクトが掴まれていない
-            _isHoldLeft.Value = _isTouchLeft && HandTrackingUtility.IsObjectInPalm(_leftHand, _leftSkeleton, gameObject) && HandTrackingUtility.IsGrab(_leftHand, _leftSkeleton) && !_isHoldRight.Value;
-            _isHoldRight.Value = _isTouchRight && HandTrackingUtility.IsObjectInPalm(_rightHand, _rightSkeleton, gameObject) && HandTrackingUtility.IsGrab(_rightHand, _rightSkeleton) && !_isHoldLeft.Value;
+            _isHoldLeft.Value = _isTouchLeft && HandTrackingUtility.IsObjectInPalm(_leftHand, _leftSkeleton, gameObject) && HandTrackingUtility.IsGrab(_leftHand, _leftSkeleton, 0.95f) && !_isHoldRight.Value;
+            _isHoldRight.Value = _isTouchRight && HandTrackingUtility.IsObjectInPalm(_rightHand, _rightSkeleton, gameObject) && HandTrackingUtility.IsGrab(_rightHand, _rightSkeleton, 0.95f) && !_isHoldLeft.Value;
 
             //物を掴んでいる状態の時、ローカル座標の反映
             if (_localPos != Vector3.zero || _localAng != Vector3.zero)
@@ -148,6 +150,7 @@ namespace smart3tene
             }
         }
 
+        //手の一部がExitしても、他の部分が接触しているならフラグをtrueにしたいのでOnCollisionStayを実装
         private void OnCollisionStay(Collision collision)
         {
             if (collision.transform.IsChildOf(_leftTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
