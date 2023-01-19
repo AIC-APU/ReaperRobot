@@ -127,49 +127,50 @@ namespace smart3tene
             //条件2: このオブジェクトが手の平側にある（手の甲で触れていない）
             //条件3: 手が物を掴むジェスチャをしている
             //条件4: もう片方の手によって,このオブジェクトが掴まれていない
-            _isHoldLeft.Value = _isTouchLeft && HandTrackingUtility.IsObjectInPalm(_leftHand, _leftSkeleton, gameObject) && HandTrackingUtility.IsGrab(_leftHand, _leftSkeleton, 0.95f) && !_isHoldRight.Value;
-            _isHoldRight.Value = _isTouchRight && HandTrackingUtility.IsObjectInPalm(_rightHand, _rightSkeleton, gameObject) && HandTrackingUtility.IsGrab(_rightHand, _rightSkeleton, 0.95f) && !_isHoldLeft.Value;
+            _isHoldLeft.Value = _isTouchLeft && HandTrackingUtility.IsObjectInPalm(_leftHand, _leftSkeleton, gameObject) && HandTrackingUtility.IsGrab(_leftHand, _leftSkeleton, 0.95f, 0.4f) && !_isHoldRight.Value;
+            _isHoldRight.Value = _isTouchRight && HandTrackingUtility.IsObjectInPalm(_rightHand, _rightSkeleton, gameObject) && HandTrackingUtility.IsGrab(_rightHand, _rightSkeleton, 0.95f, 0.4f) && !_isHoldLeft.Value;
 
             //物を掴んでいる状態の時、ローカル座標の反映
             if (_localPos != Vector3.zero || _localAng != Vector3.zero)
             {
+                _rigidbody.velocity = Vector3.zero;
+                _rigidbody.angularVelocity = Vector3.zero;
                 gameObject.transform.localPosition = _localPos;
                 gameObject.transform.localEulerAngles = _localAng;
             }
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void OnTriggerEnter(Collider other)
         {
-            if (collision.transform.IsChildOf(_leftTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
+            if (other.transform.IsChildOf(_leftTransform))
             {
                 _isTouchLeft = true;
             }
-            else if(collision.transform.IsChildOf(_rightTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
+            else if(other.transform.IsChildOf(_rightTransform))
             {
                 _isTouchRight = true;
             }
         }
 
-        //手の一部がExitしても、他の部分が接触しているならフラグをtrueにしたいのでOnCollisionStayを実装
-        private void OnCollisionStay(Collision collision)
+        private void OnTriggerStay(Collider other)
         {
-            if (collision.transform.IsChildOf(_leftTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
+            if (other.transform.IsChildOf(_leftTransform))
             {
                 _isTouchLeft = true;
             }
-            else if (collision.transform.IsChildOf(_rightTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
+            else if(other.transform.IsChildOf(_rightTransform))
             {
                 _isTouchRight = true;
             }
         }
 
-        private void OnCollisionExit(Collision collision)
+        private void OnTriggerExit(Collider other)
         {
-            if (collision.transform.IsChildOf(_leftTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
+            if (other.transform.IsChildOf(_leftTransform))
             {
                 _isTouchLeft = false;
             }
-            else if (collision.transform.IsChildOf(_rightTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
+            else if(other.transform.IsChildOf(_rightTransform))
             {
                 _isTouchRight = false;
             }
