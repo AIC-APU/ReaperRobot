@@ -37,6 +37,11 @@ namespace smart3tene
         private Vector3 _localAng = Vector3.zero;
         #endregion
 
+        #region Readonly Fields
+        readonly float _thumbGrabThreshold = 0.95f;
+        readonly float _grabThreshold = 0.4f;
+        #endregion
+
         #region MonoBehaviour Callbacks
         void Start()
         {
@@ -58,21 +63,6 @@ namespace smart3tene
             _defaultPos = transform.position;
             _defaultAng = transform.eulerAngles;
 
-
-            //各ハンドのトラッキングが外れた場合、タッチフラグをfalseにする
-            _leftHand
-                .ObserveEveryValueChanged(x => x.IsTracked)
-                .Where(x => x == false)
-                .Subscribe(_ => _isTouchLeft = false)
-                .AddTo(this);
-
-            _rightHand
-                .ObserveEveryValueChanged(x => x.IsTracked)
-                .Where(x => x == false)
-                .Subscribe(_ => _isTouchRight = false)
-                .AddTo(this);
-
-
             //初めてこのオブジェクトを触れるまで、このオブジェクトは動かない
             if (!_useGravityDefault)
             {
@@ -89,6 +79,18 @@ namespace smart3tene
                     .AddTo(this);
             }
 
+            //各ハンドのトラッキングが外れた場合、タッチフラグをfalseにする
+            _leftHand
+                .ObserveEveryValueChanged(x => x.IsTracked)
+                .Where(x => x == false)
+                .Subscribe(_ => _isTouchLeft = false)
+                .AddTo(this);
+
+            _rightHand
+                .ObserveEveryValueChanged(x => x.IsTracked)
+                .Where(x => x == false)
+                .Subscribe(_ => _isTouchRight = false)
+                .AddTo(this);
 
             //isHoldフラグがtrueなら物を掴む、falseなら離す
             _isHoldLeft
@@ -122,16 +124,12 @@ namespace smart3tene
 
         private void Update()
         {
-            //4つの条件が満たされた時のみ,このオブジェクトは掴まれる
-            //条件1: 手がこのオブジェクトに触れている
-            //条件2: このオブジェクトが手の平側にある（手の甲で触れていない）
-            //条件3: 手が物を掴むジェスチャをしている
-            //条件4: もう片方の手によって,このオブジェクトが掴まれていない
-            _isHoldLeft.Value = _isTouchLeft && HandTrackingUtility.IsObjectInPalm(_leftHand, _leftSkeleton, gameObject) && HandTrackingUtility.IsGrab(_leftHand, _leftSkeleton, 0.95f, 0.4f) && !_isHoldRight.Value;
-            _isHoldRight.Value = _isTouchRight && HandTrackingUtility.IsObjectInPalm(_rightHand, _rightSkeleton, gameObject) && HandTrackingUtility.IsGrab(_rightHand, _rightSkeleton, 0.95f, 0.4f) && !_isHoldLeft.Value;
+            //このオブジェクトに触っている状態でGrabされた時、このオブジェクトは掴まれる
+            _isHoldLeft.Value = _isTouchLeft  && HandTrackingUtility.IsGrab(_leftHand, _leftSkeleton, _thumbGrabThreshold, _grabThreshold) ;
+            _isHoldRight.Value = _isTouchRight && HandTrackingUtility.IsGrab(_rightHand, _rightSkeleton, _thumbGrabThreshold, _grabThreshold) ;
 
             //物を掴んでいる状態の時、ローカル座標の反映
-            if (_localPos != Vector3.zero || _localAng != Vector3.zero)
+            if (_isHoldLeft.Value || _isHoldRight.Value)
             {
                 _rigidbody.velocity = Vector3.zero;
                 _rigidbody.angularVelocity = Vector3.zero;
@@ -142,23 +140,17 @@ namespace smart3tene
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.transform.IsChildOf(_leftTransform))
+            if (other.transform.IsChildOf(_leftTransform) 
+                && !HandTrackingUtility.IsGrab(_leftHand, _leftSkeleton, _thumbGrabThreshold, _grabThreshold) 
+                && HandTrackingUtility.IsObjectInPalm(_leftHand, _leftSkeleton, gameObject)
+                && !_isHoldRight.Value)
             {
                 _isTouchLeft = true;
             }
-            else if(other.transform.IsChildOf(_rightTransform))
-            {
-                _isTouchRight = true;
-            }
-        }
-
-        private void OnTriggerStay(Collider other)
-        {
-            if (other.transform.IsChildOf(_leftTransform))
-            {
-                _isTouchLeft = true;
-            }
-            else if(other.transform.IsChildOf(_rightTransform))
+            else if(other.transform.IsChildOf(_rightTransform) 
+                && !HandTrackingUtility.IsGrab(_rightHand, _rightSkeleton, _thumbGrabThreshold, _grabThreshold) 
+                && HandTrackingUtility.IsObjectInPalm(_rightHand, _rightSkeleton, gameObject)
+                && !_isHoldLeft.Value)
             {
                 _isTouchRight = true;
             }
