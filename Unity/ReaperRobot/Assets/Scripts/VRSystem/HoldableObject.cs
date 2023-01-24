@@ -37,6 +37,11 @@ namespace smart3tene
         private Vector3 _localAng = Vector3.zero;
         #endregion
 
+        #region Readonly Fields
+        readonly float _thumbGrabThreshold = 0.95f;
+        readonly float _grabThreshold = 0.4f;
+        #endregion
+
         #region MonoBehaviour Callbacks
         void Start()
         {
@@ -53,10 +58,26 @@ namespace smart3tene
 
             _rigidbody = GetComponent<Rigidbody>();
             _rigidbody.useGravity = _useGravityDefault;
+            if (!_useGravityDefault) _rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
 
             _defaultPos = transform.position;
             _defaultAng = transform.eulerAngles;
 
+            //初めてこのオブジェクトを触れるまで、このオブジェクトは動かない
+            if (!_useGravityDefault)
+            {
+                this.UpdateAsObservable()
+                    .TakeUntil(this.UpdateAsObservable().Where(_ => _isHoldRight.Value || _isHoldLeft.Value))
+                    .Subscribe(_ =>
+                    {
+                        transform.position = _defaultPos;
+                        transform.eulerAngles = _defaultAng;
+                        _rigidbody.velocity = Vector3.zero;
+                        _rigidbody.angularVelocity = Vector3.zero;
+                        _rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+                    })
+                    .AddTo(this);
+            }
 
             //各ハンドのトラッキングが外れた場合、タッチフラグをfalseにする
             _leftHand
@@ -70,23 +91,6 @@ namespace smart3tene
                 .Where(x => x == false)
                 .Subscribe(_ => _isTouchRight = false)
                 .AddTo(this);
-
-
-            //初めてこのオブジェクトを触れるまで、このオブジェクトは動かない
-            if (!_useGravityDefault)
-            {
-                this.UpdateAsObservable()
-                    .TakeUntil(this.UpdateAsObservable().Where(_ => _isHoldRight.Value || _isHoldLeft.Value))
-                    .Subscribe(_ =>
-                    {
-                        transform.position = _defaultPos;
-                        transform.eulerAngles = _defaultAng;
-                        _rigidbody.velocity = Vector3.zero;
-                        _rigidbody.angularVelocity = Vector3.zero;
-                    })
-                    .AddTo(this);
-            }
-
 
             //isHoldフラグがtrueなら物を掴む、falseなら離す
             _isHoldLeft
@@ -120,53 +124,45 @@ namespace smart3tene
 
         private void Update()
         {
-            //4つの条件が満たされた時のみ,このオブジェクトは掴まれる
-            //条件1: 手がこのオブジェクトに触れている
-            //条件2: このオブジェクトが手の平側にある（手の甲で触れていない）
-            //条件3: 手が物を掴むジェスチャをしている
-            //条件4: もう片方の手によって,このオブジェクトが掴まれていない
-            _isHoldLeft.Value = _isTouchLeft && HandTrackingUtility.IsObjectInPalm(_leftHand, _leftSkeleton, gameObject) && HandTrackingUtility.IsGrab(_leftHand, _leftSkeleton) && !_isHoldRight.Value;
-            _isHoldRight.Value = _isTouchRight && HandTrackingUtility.IsObjectInPalm(_rightHand, _rightSkeleton, gameObject) && HandTrackingUtility.IsGrab(_rightHand, _rightSkeleton) && !_isHoldLeft.Value;
+            //このオブジェクトに触っている状態でGrabされた時、このオブジェクトは掴まれる
+            _isHoldLeft.Value = _isTouchLeft  && HandTrackingUtility.IsGrab(_leftHand, _leftSkeleton, _thumbGrabThreshold, _grabThreshold) ;
+            _isHoldRight.Value = _isTouchRight && HandTrackingUtility.IsGrab(_rightHand, _rightSkeleton, _thumbGrabThreshold, _grabThreshold) ;
 
             //物を掴んでいる状態の時、ローカル座標の反映
-            if (_localPos != Vector3.zero || _localAng != Vector3.zero)
+            if (_isHoldLeft.Value || _isHoldRight.Value)
             {
+                _rigidbody.velocity = Vector3.zero;
+                _rigidbody.angularVelocity = Vector3.zero;
                 gameObject.transform.localPosition = _localPos;
                 gameObject.transform.localEulerAngles = _localAng;
             }
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void OnTriggerEnter(Collider other)
         {
-            if (collision.transform.IsChildOf(_leftTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
+            if (other.transform.IsChildOf(_leftTransform) 
+                && !HandTrackingUtility.IsGrab(_leftHand, _leftSkeleton, _thumbGrabThreshold, _grabThreshold) 
+                && HandTrackingUtility.IsObjectInPalm(_leftHand, _leftSkeleton, gameObject)
+                && !_isHoldRight.Value)
             {
                 _isTouchLeft = true;
             }
-            else if(collision.transform.IsChildOf(_rightTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
+            else if(other.transform.IsChildOf(_rightTransform) 
+                && !HandTrackingUtility.IsGrab(_rightHand, _rightSkeleton, _thumbGrabThreshold, _grabThreshold) 
+                && HandTrackingUtility.IsObjectInPalm(_rightHand, _rightSkeleton, gameObject)
+                && !_isHoldLeft.Value)
             {
                 _isTouchRight = true;
             }
         }
 
-        private void OnCollisionStay(Collision collision)
+        private void OnTriggerExit(Collider other)
         {
-            if (collision.transform.IsChildOf(_leftTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
-            {
-                _isTouchLeft = true;
-            }
-            else if (collision.transform.IsChildOf(_rightTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
-            {
-                _isTouchRight = true;
-            }
-        }
-
-        private void OnCollisionExit(Collision collision)
-        {
-            if (collision.transform.IsChildOf(_leftTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
+            if (other.transform.IsChildOf(_leftTransform))
             {
                 _isTouchLeft = false;
             }
-            else if (collision.transform.IsChildOf(_rightTransform) && collision.rigidbody.name == "Hand_WristRoot_CapsuleRigidbody")
+            else if(other.transform.IsChildOf(_rightTransform))
             {
                 _isTouchRight = false;
             }

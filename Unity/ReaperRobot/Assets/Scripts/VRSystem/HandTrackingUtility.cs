@@ -41,7 +41,7 @@ namespace smart3tene
         /// </summary>
         public static bool IsBending(OVRHand hand, OVRSkeleton skelton, float threshold, params OVRSkeleton.BoneId[] boneids)
         {
-            if (!hand.IsTracked) return false;
+            //if (!hand.IsTracked) return false;
             if (boneids.Length < 3) return false;
 
             Vector3? oldVec = null;
@@ -63,7 +63,7 @@ namespace smart3tene
         /// </summary>
         public static bool IsStraight(OVRHand hand, OVRSkeleton skelton, float threshold, params OVRSkeleton.BoneId[] boneids)
         {
-            if (!hand.IsTracked) return false;
+            //if (!hand.IsTracked) return false;
             if (boneids.Length < 3) return false;
 
             return !IsBending(hand, skelton, threshold, boneids);
@@ -74,7 +74,7 @@ namespace smart3tene
         /// </summary>
         public static bool IsObjectInPalm(OVRHand hand, OVRSkeleton skeleton, GameObject target)
         {
-            if (!hand.IsTracked) return false;
+            //if (!hand.IsTracked) return false;
 
             var handPos = GetHandPosition(skeleton);
             var handToTarget = (target.transform.position - handPos).normalized;
@@ -88,10 +88,12 @@ namespace smart3tene
         /// <summary>
         /// 手の指が掴むジェスチャをしているかどうかを判定
         /// </summary>
-        public static bool IsGrab(OVRHand hand, OVRSkeleton skelton, float threshold = 0.9f)
+        public static bool IsGrab(OVRHand hand, OVRSkeleton skelton, float thumbThreshold = 0.95f, float threshold = 0.4f)
         {
+            //２つの閾値の値は経験測からの数字
+
             //各指の曲がり具合を調べる
-            var isThumBend   = IsBending(hand, skelton, threshold, OVRSkeleton.BoneId.Hand_Thumb2, OVRSkeleton.BoneId.Hand_Thumb3, OVRSkeleton.BoneId.Hand_ThumbTip);
+            var isThumBend   = IsBending(hand, skelton, thumbThreshold, OVRSkeleton.BoneId.Hand_Thumb2, OVRSkeleton.BoneId.Hand_Thumb3, OVRSkeleton.BoneId.Hand_ThumbTip);
             var isIndexBend  = IsBending(hand, skelton, threshold, OVRSkeleton.BoneId.Hand_Index1, OVRSkeleton.BoneId.Hand_Index2, OVRSkeleton.BoneId.Hand_Index3, OVRSkeleton.BoneId.Hand_IndexTip);
             var isMiddleBend = IsBending(hand, skelton, threshold, OVRSkeleton.BoneId.Hand_Middle1, OVRSkeleton.BoneId.Hand_Middle2, OVRSkeleton.BoneId.Hand_Middle3, OVRSkeleton.BoneId.Hand_MiddleTip);
             var isRingBend   = IsBending(hand, skelton, threshold, OVRSkeleton.BoneId.Hand_Ring1, OVRSkeleton.BoneId.Hand_Ring2, OVRSkeleton.BoneId.Hand_Ring3, OVRSkeleton.BoneId.Hand_RingTip);
