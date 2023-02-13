@@ -1,9 +1,9 @@
 {
-    "name": "UnityComponent_OculusIntegration",
+    "name": "UnityComponent_Camera",
     "rootNamespace": "",
     "references": [
-        "GUID:560b04d1a97f54a4e82edc0cbbb69285",
-        "GUID:f64c9ebcd7899c3448a08dc9f9ddbe30"
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:560b04d1a97f54a4e82edc0cbbb69285"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
