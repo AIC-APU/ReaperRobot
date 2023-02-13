@@ -19,7 +19,7 @@ namespace smart3tene.Reaper
 
         [Header("Setting")]
         [SerializeField, Tooltip("View Modeが変更されただけでクリアとする")] private bool _justChange = true;
-        [SerializeField] private ViewMode.ViewModeCategory _goal = ViewMode.ViewModeCategory.REAPER_FPV;
+        // [SerializeField] private ViewMode.ViewModeCategory _goal = ViewMode.ViewModeCategory.REAPER_FPV;
         #endregion
 
         #region Private Fields
@@ -31,14 +31,14 @@ namespace smart3tene.Reaper
         #region Public method
         public override void SetUp()
         {
-            _disposable = ViewMode.NowViewMode.Skip(1).Subscribe(viewmode => 
-            {
-                if(_justChange || viewmode == _goal)
-                {
-                    _isChecked.Value = true;
-                    OnChecked();
-                }
-            }).AddTo(this);
+            // _disposable = ViewMode.NowViewMode.Skip(1).Subscribe(viewmode => 
+            // {
+            //     if(_justChange || viewmode == _goal)
+            //     {
+            //         _isChecked.Value = true;
+            //         OnChecked();
+            //     }
+            // }).AddTo(this);
 
             //テキスト表示
             switch (LocalizationSettings.SelectedLocale.Identifier.Code)

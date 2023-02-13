@@ -23,23 +23,6 @@ namespace smart3tene.Reaper
 
             //robotFPVCameraをprojectorに設定
             _projector.recordingCamera = Camera.main;
-
-            ViewMode.NowViewMode.Subscribe(mode =>
-            {
-                switch (mode)
-                {
-                    case ViewMode.ViewModeCategory.PERSON_TPV:
-                    case ViewMode.ViewModeCategory.REAPER_GAZE:
-                        _delaySlider.interactable = false;
-                        SetDelay(0f);
-                        break;
-
-                    default:
-                        _delaySlider.interactable = true;
-                        SetDelay(_delaySlider.value);
-                        break;
-                }
-            }).AddTo(this);
         }
 
         //スライダーに設定する用の関数
