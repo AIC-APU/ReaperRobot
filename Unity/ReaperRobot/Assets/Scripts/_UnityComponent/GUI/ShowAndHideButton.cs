@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.GUI
 {
     public class ShowAndHideButton : MonoBehaviour
     {
@@ -21,5 +19,4 @@ namespace smart3tene.Reaper
             _targetObject.SetActive(!_targetObject.activeSelf);
         }
     }
-
 }

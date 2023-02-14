@@ -14,7 +14,7 @@ public class ReaperRecorder : MonoBehaviour
     #endregion
 
     #region Serialized Private Fields
-    [SerializeField] private ReaperManager _reaperManager;
+    //[SerializeField] private ReaperManager _reaperManager;
     [SerializeField] private Transform _reaperTransform;
     [SerializeField] private string _fileName = "InputLog";
 
@@ -81,11 +81,11 @@ public class ReaperRecorder : MonoBehaviour
         //必要あればここで桁数やら形式やら指定する
         var time   = GameTimer.ConvertSecondsToString(_recordingTime.Value);
 
-        _inputH.Value = _reaperManager.NowInput.x;
-        _inputV.Value = _reaperManager.NowInput.y;
+        // _inputH.Value = _reaperManager.NowInput.x;
+        // _inputV.Value = _reaperManager.NowInput.y;
 
-        _liftInt.Value   = _reaperManager.IsLiftDown.Value ? 1 : 0;
-        _cutterInt.Value = _reaperManager.IsCutting.Value ? 1 : 0;
+        // _liftInt.Value   = _reaperManager.IsLiftDown.Value ? 1 : 0;
+        // _cutterInt.Value = _reaperManager.IsCutting.Value ? 1 : 0;
 
         _posX.Value   = RoundF(_reaperTransform.position.x, 8);
         _posY.Value   = RoundF(_reaperTransform.position.y, 8);
@@ -139,14 +139,14 @@ public class ReaperRecorder : MonoBehaviour
 
     public async void Reposition()
     {
-        _reaperManager.Move(0, 0);
+        // _reaperManager.Move(0, 0);
 
-        await UniTask.Yield();
+        // await UniTask.Yield();
 
-        _reaperTransform.SetPositionAndRotation(_repositionPos, Quaternion.Euler(_repositionAng));
+        // _reaperTransform.SetPositionAndRotation(_repositionPos, Quaternion.Euler(_repositionAng));
 
-        _reaperManager.MoveLift(true);
-        _reaperManager.RotateCutter(true);
+        // _reaperManager.MoveLift(true);
+        // _reaperManager.RotateCutter(true);
 
         //コントローラの使用の禁止
         ControllableRobot = false;

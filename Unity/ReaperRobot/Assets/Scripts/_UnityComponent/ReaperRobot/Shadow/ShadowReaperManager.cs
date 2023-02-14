@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using UniRx;
 using System.Threading;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.ReaperRobot
 {
     public class ShadowReaperManager : MonoBehaviour
     {

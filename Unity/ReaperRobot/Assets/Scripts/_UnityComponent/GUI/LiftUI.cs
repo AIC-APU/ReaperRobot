@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using ReaperRobot.Scripts.UnityComponent.ReaperRobot;
 
-
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.GUI
 {
     public class LiftUI : MonoBehaviour
     {
@@ -15,11 +13,6 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            if (_reaperManager == null)
-            {
-                _reaperManager = InstanceHolder.Instance.ReaperInstance.GetComponent<ReaperManager>();
-            }
-
             //Liftのランプ
             _reaperManager.IsLiftDown.Subscribe(isDown =>
             {
@@ -32,7 +25,6 @@ namespace smart3tene.Reaper
                     _liftLamp.color = new Color32(196, 196, 196, 255);
                 }
             }).AddTo(this);
-
         }
         #endregion
 

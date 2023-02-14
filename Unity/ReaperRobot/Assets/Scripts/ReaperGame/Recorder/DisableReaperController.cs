@@ -13,7 +13,7 @@ namespace smart3tene.Reaper
         [SerializeField] private RobotReaperPlayer _robotPlayer;
 
         [Header("Controller")]
-        [SerializeField] private ReaperController _controller;
+        //[SerializeField] private ReaperController _controller;
 
         [Header("Reaper Button")]
         [SerializeField] private Button _downLiftButton;
@@ -31,7 +31,7 @@ namespace smart3tene.Reaper
         {
             var controllable = _reaperRecorder.ControllableRobot && _shadowReaperPlayer.ControllableRobot && _robotPlayer.ControllableRobot;
 
-            _controller.enabled = controllable;
+           // _controller.enabled = controllable;
             LiftAndCutterButton(controllable);
         }
         #endregion

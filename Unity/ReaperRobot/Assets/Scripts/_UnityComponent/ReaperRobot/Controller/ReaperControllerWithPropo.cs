@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.ReaperRobot
 {
     //プロポがInputSystem(新型)に対応していないため、InputMangaer(旧型)で実装
     //GamePadとの干渉を避けるため、プロポ使用時は他のコントローラを接続しないでください
@@ -23,16 +21,10 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            if(_reaperManager == null)
-            {
-                _reaperManager = InstanceHolder.Instance.ReaperInstance.GetComponent<ReaperManager>();
-            }
-
             foreach (string controller in Input.GetJoystickNames())
             {
                 Debug.Log(controller);
             }
-
         }
 
         void Update()
@@ -69,7 +61,7 @@ namespace smart3tene.Reaper
 
             //実機の挙動に倣い、直進しないなら回転もしないようにしている
             if (vertical == 0)
-            {   
+            {
                 if (_isNoVerticalLast)
                 {
                     return;

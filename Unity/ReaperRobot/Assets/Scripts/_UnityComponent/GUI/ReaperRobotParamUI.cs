@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using ReaperRobot.Scripts.UnityComponent.ReaperRobot;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.GUI
 {
     public class ReaperRobotParamUI : MonoBehaviour
     {
@@ -75,7 +76,7 @@ namespace smart3tene.Reaper
 
             var value = Mathf.Abs(float.Parse(_dampingInputField.text));
 
-            foreach(WheelCollider wheel in _wheelColliders)
+            foreach (WheelCollider wheel in _wheelColliders)
             {
                 wheel.wheelDampingRate = value;
             }
@@ -98,7 +99,7 @@ namespace smart3tene.Reaper
         }
         public void OnEndEditTorqueRate()
         {
-            if(_torqueRateInputField.text == "" || _torqueRateInputField.text == "-")
+            if (_torqueRateInputField.text == "" || _torqueRateInputField.text == "-")
             {
                 _torqueRateInputField.text = _reaperManager.torqueRateAtCutting.ToString();
                 return;
@@ -164,7 +165,7 @@ namespace smart3tene.Reaper
         public void OnClickReset()
         {
             //Damping Rate
-            foreach(WheelCollider wheel in _wheelColliders)
+            foreach (WheelCollider wheel in _wheelColliders)
             {
                 wheel.wheelDampingRate = _defaultDampingRate;
             }

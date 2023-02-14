@@ -1,13 +1,12 @@
 ﻿using Cysharp.Threading.Tasks;
-using Photon.Pun;
 using System.Threading;
 using UniRx;
 using UnityEngine;
 using System;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.ReaperRobot
 {
-    public class ReaperManager : MonoBehaviourPun, IPunObservable
+    public class ReaperManager : MonoBehaviour
     {
         #region Serialized Private Field
         [Header("Reaper")]
@@ -32,12 +31,13 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Public Field
+        //トルク関連の値
+        [Header("Torque")]
+        public float moveTorque = 110f;
+        public float torqueRateAtCutting = 0.5f;
+
         //入力された値を次の入力まで保持（記録のため）
         public Vector2 NowInput { get; private set; }
-
-        //トルク関連の値
-        [NonSerialized] public float moveTorque = 110f;
-        [NonSerialized] public float torqueRateAtCutting = 0.5f;
         #endregion
 
         #region Private
@@ -170,18 +170,6 @@ namespace smart3tene.Reaper
 
             //モーター音
 
-
-
-            //入力値を同期させる
-            if (useRPC && PhotonNetwork.IsConnected)
-            {
-                //float値をint値に変換して通信する
-                //入力時のfloat値が小数点以下7桁まである数なので、千万で割る
-                int horizontalInt = (int)(horizontal * 10000000f);
-                int verticalInt = (int)(vertical * 10000000f);
-
-                photonView.RPC(nameof(RPCMove), RpcTarget.Others, horizontalInt, verticalInt);
-            }
         }
 
         public void PutOnBrake()
@@ -203,21 +191,11 @@ namespace smart3tene.Reaper
         public void MoveLift(bool isDown)
         {
             _isLiftDown.Value = isDown;
-
-            if (PhotonNetwork.IsConnected)
-            {
-                photonView.RPC(nameof(RPCMoveLift), RpcTarget.Others, isDown);
-            }
         }
         
         public void RotateCutter(bool isRotate)
         {
             _isCutting.Value = isRotate;
-
-            if (PhotonNetwork.IsConnected)
-            {
-                photonView.RPC(nameof(RPCRotateCutter), RpcTarget.Others, isRotate);
-            }
         }
         #endregion
 
@@ -282,52 +260,6 @@ namespace smart3tene.Reaper
 
                 //刃が止まったらループを抜ける
                 if (!isCutting && _nowCutterSpeed == 0) break;
-            }
-        }
-        #endregion
-
-        #region RPC Methods
-        [PunRPC]
-        private void RPCMove(int horizontalInt, int verticalInt)
-        {
-            float horizontal = (float)horizontalInt / 10000000f;
-            float vertical = (float)verticalInt / 10000000f;
-
-            Move(horizontal, vertical, false);
-        }
-
-        [PunRPC]
-        private void RPCMoveLift(bool isLiftDown)
-        {
-            _isLiftDown.Value = isLiftDown;
-        }
-
-        [PunRPC]
-        private void RPCRotateCutter(bool isCutting)
-        {
-            _isCutting.Value = isCutting;
-        }
-
-        [PunRPC]
-        private void RPCSyncTransform(Vector3 pos, Quaternion rot)
-        {
-            transform.position = pos;
-            transform.rotation = rot;
-        }
-
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (stream.IsWriting)
-            {
-                stream.SendNext(transform.position);
-                stream.SendNext(transform.eulerAngles);
-                Debug.Log("Send");
-            }
-            else
-            {
-                transform.position = (Vector3)stream.ReceiveNext();
-                transform.eulerAngles = (Vector3)stream.ReceiveNext();
-                Debug.Log("Receive");
             }
         }
         #endregion

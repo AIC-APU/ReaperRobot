@@ -1,10 +1,9 @@
-﻿using Photon.Pun;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.Person
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class PersonManager : MonoBehaviourPun
+    public class PersonManager : MonoBehaviour
     {
         #region Private Fields
         private Rigidbody _rigidBody;
@@ -18,8 +17,6 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            if (PhotonNetwork.IsConnected && !photonView.IsMine) return;
-
             _rigidBody = GetComponent<Rigidbody>();
             _animator = GetComponent<Animator>();
         }
