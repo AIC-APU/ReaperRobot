@@ -29,8 +29,8 @@ namespace smart3tene.Reaper
         [Header("Setting")]
         [SerializeField] private CutterGoal _goal = CutterGoal.ROTATE;
 
-        [Header("ReaperManager")]
-        [SerializeField] private ReaperManager _reaperManager;
+       // [Header("ReaperManager")]
+        //[SerializeField] private ReaperManager _reaperManager;
         #endregion
 
         #region Private Fields
@@ -42,15 +42,15 @@ namespace smart3tene.Reaper
         #region Public method
         public override void SetUp()
         {
-            _disposable = _reaperManager.IsCutting.Subscribe(x =>
-            {
-                if ((x && _goal == CutterGoal.ROTATE)
-                    || (!x && _goal == CutterGoal.STOP))
-                {
-                    _isChecked.Value = true;
-                    OnChecked();
-                }
-            });
+            // _disposable = _reaperManager.IsCutting.Subscribe(x =>
+            // {
+            //     if ((x && _goal == CutterGoal.ROTATE)
+            //         || (!x && _goal == CutterGoal.STOP))
+            //     {
+            //         _isChecked.Value = true;
+            //         OnChecked();
+            //     }
+            // });
 
             //テキスト表示
             switch (LocalizationSettings.SelectedLocale.Identifier.Code)

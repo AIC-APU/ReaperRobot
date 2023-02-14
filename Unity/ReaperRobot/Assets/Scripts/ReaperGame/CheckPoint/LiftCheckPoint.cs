@@ -29,8 +29,8 @@ namespace smart3tene.Reaper
         [Header("Setting")]
         [SerializeField] private LiftGoal _goal = LiftGoal.UP;
 
-        [Header("ReaperMangaer")]
-        [SerializeField] private ReaperManager _reaperManager;
+        //[Header("ReaperMangaer")]
+        //[SerializeField] private ReaperManager _reaperManager;
         #endregion
 
         #region Private Fields
@@ -42,15 +42,15 @@ namespace smart3tene.Reaper
         #region Public method
         public override void SetUp()
         {
-            _disposable = _reaperManager.IsLiftDown.Subscribe(x =>
-            {
-                if((x && _goal == LiftGoal.DOWN) 
-                    ||(!x && _goal == LiftGoal.UP))
-                {
-                    _isChecked.Value = true;
-                    OnChecked();
-                }
-            });
+            // _disposable = _reaperManager.IsLiftDown.Subscribe(x =>
+            // {
+            //     if((x && _goal == LiftGoal.DOWN) 
+            //         ||(!x && _goal == LiftGoal.UP))
+            //     {
+            //         _isChecked.Value = true;
+            //         OnChecked();
+            //     }
+            // });
 
             //テキスト表示
             switch (LocalizationSettings.SelectedLocale.Identifier.Code)

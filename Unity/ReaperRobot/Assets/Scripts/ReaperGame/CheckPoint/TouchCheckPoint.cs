@@ -45,12 +45,12 @@ namespace smart3tene.Reaper
             if (!gameObject.activeSelf) return;
             if (_isChecked.Value) return;
 
-            if ((_mode == Mode.Reaper && other.GetComponent<ReaperManager>())
-                || (_mode == Mode.Person && other.GetComponent<PersonManager>()))
-            {   
-                _isChecked.Value = true;
-                OnChecked();
-            }
+            // if ((_mode == Mode.Reaper && other.GetComponent<ReaperManager>())
+            //     || (_mode == Mode.Person && other.GetComponent<PersonManager>()))
+            // {   
+            //     _isChecked.Value = true;
+            //     OnChecked();
+            // }
         }
 
         public override void SetUp()

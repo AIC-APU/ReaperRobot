@@ -1,16 +1,12 @@
-﻿using TMPro;
-using UniRx;
-using UniRx.Triggers;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.GUI
 {
     [DefaultExecutionOrder(-1)]
     public class VRGUIManager : MonoBehaviour
     {
         #region Serialized private Fields
-        [Header("Canvas Follow　Parameter")]
+        [Header("Canvas Follow Parameter")]
         [SerializeField] private bool _isImmediateMove;
         [SerializeField] private bool _isLockX;
         [SerializeField] private bool _isLockY;
@@ -32,7 +28,7 @@ namespace smart3tene.Reaper
 
         void Awake()
         {
-            _mainCamera = Camera.main.transform;
+            _mainCamera = UnityEngine.Camera.main.transform;
         }
 
         private void LateUpdate()

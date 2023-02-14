@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.ReaperRobot
 {
     [RequireComponent(typeof(PlayerInput))]
     public class ReaperControllerVR : MonoBehaviour

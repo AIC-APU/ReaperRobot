@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using UniRx;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.ReaperRobot
 {
     [RequireComponent(typeof(PlayerInput))]
     public class ReaperController : MonoBehaviour
     {
         #region Serialized Private Fields    
-        [SerializeField] private GameObject TargetRobot;
+        [SerializeField] private ReaperManager _reaperManager;
         #endregion
 
         #region private Fields
-        private ReaperManager _reaperManager;
         private PlayerInput _playerInput;
         private InputActionMap _reaperActionMap;
         #endregion
@@ -20,15 +20,16 @@ namespace smart3tene.Reaper
 
         private void Awake()
         {
-            if(TargetRobot == null)
-            {
-                TargetRobot = InstanceHolder.Instance.ReaperInstance;
-            }
+            _playerInput = GetComponent<PlayerInput>();
+            _reaperActionMap = _playerInput.actions.FindActionMap("Reaper");
 
-            _reaperManager      = TargetRobot.GetComponent<ReaperManager>();
-            _playerInput        = GetComponent<PlayerInput>();
-
-            _reaperActionMap       = _playerInput.actions.FindActionMap("Reaper");
+            //操作対象がこのロボットでなくなったら止まる
+            _reaperActionMap
+                .ObserveEveryValueChanged(x => x.enabled)
+                .Skip(1)
+                .Where(x => !x)
+                .Subscribe(_ => _reaperManager.Move(0, 0))
+                .AddTo(this);
         }
 
         private void OnEnable()
@@ -37,25 +38,19 @@ namespace smart3tene.Reaper
             _reaperActionMap["Brake"].canceled += OffBrake;
             _reaperActionMap["Lift"].started += MoveLift;
             _reaperActionMap["Cutter"].started += RotateCutter;
-
-            _reaperActionMap["ChangeMode"].started += StopMove;
-            _reaperActionMap["ChangeReaperAndPerson"].started += StopMove;
         }
 
         private void OnDisable()
         {
-            _reaperActionMap["Brake"].started                  -= Brake;
-            _reaperActionMap["Brake"].canceled                 -= OffBrake;
-            _reaperActionMap["Lift"].started                   -= MoveLift;
-            _reaperActionMap["Cutter"].started                 -= RotateCutter;
-            
-            _reaperActionMap["ChangeMode"].started             -= StopMove;
-            _reaperActionMap["ChangeReaperAndPerson"].started  -= StopMove;
+            _reaperActionMap["Brake"].started -= Brake;
+            _reaperActionMap["Brake"].canceled -= OffBrake;
+            _reaperActionMap["Lift"].started -= MoveLift;
+            _reaperActionMap["Cutter"].started -= RotateCutter;
         }
 
         private void FixedUpdate()
         {
-            if (!_playerInput.enabled || _playerInput.currentActionMap.name != "Reaper") return;
+            if (!_playerInput.enabled || !_reaperActionMap.enabled) return;
 
             var move = _reaperActionMap["Move"].ReadValue<Vector2>();
             _reaperManager.Move(move.x, move.y);
@@ -66,7 +61,7 @@ namespace smart3tene.Reaper
         #region private method
         private void StopMove(InputAction.CallbackContext obj)
         {
-            _reaperManager.Move(0,0);
+            _reaperManager.Move(0, 0);
         }
         private void Brake(InputAction.CallbackContext obj)
         {

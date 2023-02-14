@@ -12,14 +12,14 @@ namespace smart3tene.Reaper
         {
             //衝突してきたものがロボットであることを判別
             //
-            if (collision.gameObject.transform.root.GetComponent<ReaperManager>())
-            {
-                //マルチプレイ時、衝突したのが自分以外のロボットだったら何もしない
-                if (PhotonNetwork.IsConnected && !collision.gameObject.transform.root.GetComponent<PhotonView>().IsMine) return;
+            // if (collision.gameObject.transform.root.GetComponent<ReaperManager>())
+            // {
+            //     //マルチプレイ時、衝突したのが自分以外のロボットだったら何もしない
+            //     if (PhotonNetwork.IsConnected && !collision.gameObject.transform.root.GetComponent<PhotonView>().IsMine) return;
 
-                //ペナルティイベント発生
-                ReaperEventManager.InvokePenaltyEvent();
-            }
+            //     //ペナルティイベント発生
+            //     ReaperEventManager.InvokePenaltyEvent();
+            // }
         }
         #endregion
     }

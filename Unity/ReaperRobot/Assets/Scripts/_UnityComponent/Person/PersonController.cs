@@ -2,46 +2,38 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.Person
 {
     [RequireComponent(typeof(PlayerInput))]
     public class PersonController : MonoBehaviour
     {
         #region Serialized Private Fields
-        public GameObject Person;
+        [SerializeField] private PersonManager _personManager;
         #endregion
 
         #region private Fields
-        private PersonManager   _personManager;
         private PlayerInput     _playerInput;
         private InputActionMap  _personActionMap;
         #endregion
 
         #region MonoBehaviour Callbacks
         private void Awake()
-        {
-            if(Person == null)
-            {
-                Person = InstanceHolder.Instance.PersonInstance;
-            }
-            
-            _personManager = Person.GetComponent<PersonManager>();
+        {          
             _playerInput = GetComponent<PlayerInput>();
-
             _personActionMap = _playerInput.actions.FindActionMap("Person");
-            _personActionMap["ChangeMode"].started += StopMove;
-            _personActionMap["ChangeReaperAndPerson"].started += StopMove;
-        }
 
-        private void OnDisable()
-        {
-            _personActionMap["ChangeMode"].started -= StopMove;
-            _personActionMap["ChangeReaperAndPerson"].started -= StopMove;
+             //操作対象がこのロボットでなくなったら止まる
+            _personActionMap
+                .ObserveEveryValueChanged(x => x.enabled)
+                .Skip(1)
+                .Where(x => !x)
+                .Subscribe(_ => _personManager.StopMove())
+                .AddTo(this);
         }
 
         private void FixedUpdate()
         {
-            if (!_playerInput.enabled || _playerInput.currentActionMap.name != "Person") return;
+            if (!_playerInput.enabled || !_personActionMap.enabled) return;
 
             //移動
             var move = _personActionMap["Move"].ReadValue<Vector2>();

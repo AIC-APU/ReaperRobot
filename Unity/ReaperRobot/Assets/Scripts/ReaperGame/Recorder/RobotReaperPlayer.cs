@@ -17,7 +17,7 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Serialized Private Fields
-        [SerializeField] private ReaperManager _reaperManager;
+        //[SerializeField] private ReaperManager _reaperManager;
         [SerializeField] private Transform _reaperTransform;
         [SerializeField] private Material _pathMaterial;
         #endregion
@@ -74,7 +74,7 @@ namespace smart3tene.Reaper
         #region Public method
         public override void SetUp(string filePath)
         {
-            _reaperManager.Move(0, 0);
+            //_reaperManager.Move(0, 0);
 
             _csvData.Clear();
             _csvData.AddRange(GetCSVData(filePath));
@@ -101,8 +101,8 @@ namespace smart3tene.Reaper
             _pathObjects.Clear();
 
             //リフト・カッターの初期設定
-            _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
-            _reaperManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
+            //_reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
+            //_reaperManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
 
             //ロボットの初期位置の保存
             _startPos = _reaperTransform.position;
@@ -119,14 +119,14 @@ namespace smart3tene.Reaper
         public override void Pause()
         {
             _isPlaying.Value = false;
-            _reaperManager.Move(0, 0);
+            //_reaperManager.Move(0, 0);
 
             PausePlayEvent?.Invoke();
         }
 
         public override void Stop()
         {
-            _reaperManager.Move(0, 0);
+            //_reaperManager.Move(0, 0);
 
             _csvData.Clear();
 
@@ -163,8 +163,8 @@ namespace smart3tene.Reaper
             _reaperTransform.SetPositionAndRotation(_startPos, Quaternion.Euler(_startAng));
 
             //リフト・カッターの初期設定
-            _reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
-            _reaperManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
+            //_reaperManager.MoveLift(ExtractLift(_csvData, PlayTime));
+            //_reaperManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
 
             //pathの初期化
             foreach (var obj in _pathObjects)
@@ -176,7 +176,7 @@ namespace smart3tene.Reaper
 
         public async void Reposition()
         {
-            _reaperManager.Move(0, 0);
+            //_reaperManager.Move(0, 0);
 
             await UniTask.Yield();
 
@@ -193,15 +193,15 @@ namespace smart3tene.Reaper
             var input = ExtractInput(data, seconds);
             _inputH.Value = input.x;
             _inputV.Value = input.y;
-            _reaperManager.Move(input.x, input.y);
+            //_reaperManager.Move(input.x, input.y);
 
             //リフトの上下
             _lift.Value = ExtractLift(data, seconds);
-            _reaperManager.MoveLift(_lift.Value);
+            //_reaperManager.MoveLift(_lift.Value);
 
             //カッターの静動
             _cutter.Value = ExtractCutter(data, seconds);
-            _reaperManager.RotateCutter(_cutter.Value);
+            //_reaperManager.RotateCutter(_cutter.Value);
         }
         #endregion
     }

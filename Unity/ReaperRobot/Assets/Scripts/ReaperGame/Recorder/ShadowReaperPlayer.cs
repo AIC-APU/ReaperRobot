@@ -19,7 +19,7 @@ namespace smart3tene.Reaper
 
         #region Serialized Private Fields
         [SerializeField] private GameObject _shadowPrefab;
-        [SerializeField] private ReaperManager _reaperManager;
+        //[SerializeField] private ReaperManager _reaperManager;
         [SerializeField] private Transform _reaperTransform;
         [SerializeField] private Material _pathMaterial;
         #endregion
@@ -27,7 +27,7 @@ namespace smart3tene.Reaper
         #region Private Fields
         private GameObject _shadowInstance;
         private Transform _shadowTransform;
-        private ShadowReaperManager _shadowManager;
+        //private ShadowReaperManager _shadowManager;
 
         private bool _isFastForward = false;
         private bool _isRewind = false;
@@ -147,9 +147,9 @@ namespace smart3tene.Reaper
             _shadowTransform.SetPositionAndRotation(_startPos, Quaternion.Euler(_startAng));
 
             //マネージャーの設定・初期化
-            _shadowManager = _shadowInstance.GetComponent<ShadowReaperManager>();
-            _shadowManager.MoveLift(ExtractLift(_csvData, PlayTime));
-            _shadowManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
+            // _shadowManager = _shadowInstance.GetComponent<ShadowReaperManager>();
+            // _shadowManager.MoveLift(ExtractLift(_csvData, PlayTime));
+            // _shadowManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
 
 
             //ロボット操作を許可
@@ -210,9 +210,9 @@ namespace smart3tene.Reaper
             _flameCount = 0;
 
             //位置とカッターとリフトの初期化
-            _shadowTransform.SetPositionAndRotation(_startPos, Quaternion.Euler(_startAng));
-            _shadowManager.MoveLift(ExtractLift(_csvData, PlayTime));
-            _shadowManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
+            // _shadowTransform.SetPositionAndRotation(_startPos, Quaternion.Euler(_startAng));
+            // _shadowManager.MoveLift(ExtractLift(_csvData, PlayTime));
+            // _shadowManager.RotateCutter(ExtractCutter(_csvData, PlayTime));
 
             //軌跡の削除
             foreach(var obj in _pathObjects)
@@ -234,7 +234,7 @@ namespace smart3tene.Reaper
 
         public async void RepositionRobot()
         {
-            _reaperManager.Move(0, 0);
+            // _reaperManager.Move(0, 0);
 
             await UniTask.Yield();
 
@@ -247,8 +247,8 @@ namespace smart3tene.Reaper
         public void MatchRobotPositionToShadow()
         {
             _reaperTransform.SetPositionAndRotation(_shadowTransform.position, _shadowTransform.rotation);
-            _reaperManager.MoveLift(_shadowManager.IsLiftDown.Value);
-            _reaperManager.RotateCutter(_shadowManager.IsCutting.Value);
+            // _reaperManager.MoveLift(_shadowManager.IsLiftDown.Value);
+            // _reaperManager.RotateCutter(_shadowManager.IsCutting.Value);
         }
         #endregion
 
@@ -275,8 +275,8 @@ namespace smart3tene.Reaper
 
             //影にデータ反映させる
             _shadowTransform.SetPositionAndRotation(pos, rot);
-            _shadowManager.MoveLift(_lift.Value);
-            _shadowManager.RotateCutter(_cutter.Value);
+            // _shadowManager.MoveLift(_lift.Value);
+            // _shadowManager.RotateCutter(_cutter.Value);
         }
         #endregion
     }

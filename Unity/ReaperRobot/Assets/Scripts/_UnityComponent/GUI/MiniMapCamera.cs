@@ -1,23 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.GUI
 {
     public class MiniMapCamera : MonoBehaviour
     {
-        [SerializeField] private Camera _miniMapCamera;
+        [SerializeField] private UnityEngine.Camera _miniMapCamera;
         [SerializeField] private Transform _targetTransform;
 
-        private void Awake()
-        {
-            if(_targetTransform == null)
-            {
-                _targetTransform = InstanceHolder.Instance.ReaperInstance.transform;
-            }
-        }
-
-        private void LateUpdate()
+         private void LateUpdate()
         {
             if (_miniMapCamera == null || _targetTransform == null) return;
 
@@ -25,7 +15,6 @@ namespace smart3tene.Reaper
             _miniMapCamera.transform.eulerAngles = new Vector3(_miniMapCamera.transform.eulerAngles.x, _targetTransform.eulerAngles.y, _miniMapCamera.transform.eulerAngles.z);
         }
     }
-
 }
 
 
