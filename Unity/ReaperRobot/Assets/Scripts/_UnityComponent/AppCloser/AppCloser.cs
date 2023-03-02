@@ -1,31 +1,28 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.CloseApp
 {
     [RequireComponent(typeof(PlayerInput))]
     public class AppCloser : MonoBehaviour
     {
         #region Private Fields
-        private InputActionMap _reaperActionMap;
-        private InputActionMap _personActionMap;
+        private InputActionMap _closeActionMap;
         #endregion
 
         #region MonoBehaviour Callbacks
         void Awake()
         {
-            _reaperActionMap = GetComponent<PlayerInput>().actions.FindActionMap("Reaper");
-            _personActionMap = GetComponent<PlayerInput>().actions.FindActionMap("Person");
+            _closeActionMap = GetComponent<PlayerInput>().actions.FindActionMap("CloseApp");
+            _closeActionMap.Enable();
 
             //closeAppを登録
-            _reaperActionMap["CloseApp"].started += CloseApp;
-            _personActionMap["CloseApp"].started += CloseApp;
+            _closeActionMap["CloseApp"].started += CloseApp;
         }
 
         private void OnDestroy()
         {
-            _reaperActionMap["CloseApp"].started -= CloseApp;
-            _personActionMap["CloseApp"].started -= CloseApp;
+            _closeActionMap["CloseApp"].started -= CloseApp;
         }
         #endregion
 
@@ -40,5 +37,4 @@ namespace smart3tene.Reaper
         }
         #endregion
     }
-
 }
