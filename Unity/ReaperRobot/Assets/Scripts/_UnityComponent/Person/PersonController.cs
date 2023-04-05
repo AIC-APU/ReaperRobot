@@ -22,7 +22,7 @@ namespace ReaperRobot.Scripts.UnityComponent.Person
             _playerInput = GetComponent<PlayerInput>();
             _personActionMap = _playerInput.actions.FindActionMap("Person");
 
-             //操作対象がこのロボットでなくなったら止まる
+             //操作対象がPersonでなくなったら歩くのを止める
             _personActionMap
                 .ObserveEveryValueChanged(x => x.enabled)
                 .Skip(1)

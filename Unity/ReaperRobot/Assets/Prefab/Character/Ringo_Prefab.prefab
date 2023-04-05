@@ -423,7 +423,7 @@ GameObject:
   - component: {fileID: 5938275898994089729}
   - component: {fileID: 7825979989578444759}
   m_Layer: 0
-  m_Name: RingoResource
+  m_Name: Ringo_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
