@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
 namespace ReaperRobot.Scripts.UnityComponent.ReaperRobot
 {
     [RequireComponent(typeof(PlayerInput))]

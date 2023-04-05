@@ -2,7 +2,6 @@
 using System.Threading;
 using UniRx;
 using UnityEngine;
-using System;
 
 namespace ReaperRobot.Scripts.UnityComponent.ReaperRobot
 {
@@ -38,15 +37,14 @@ namespace ReaperRobot.Scripts.UnityComponent.ReaperRobot
 
         //入力された値を次の入力まで保持（記録のため）
         public Vector2 NowInput { get; private set; }
+        public IReadOnlyReactiveProperty<bool> IsCutting => _isCutting;
+        public IReadOnlyReactiveProperty<bool> IsLiftDown => _isLiftDown;
         #endregion
 
         #region Private
         //カッター&リフト関連
-        public IReadOnlyReactiveProperty<bool> IsCutting => _isCutting;
         private ReactiveProperty<bool> _isCutting = new(true);
-        public IReadOnlyReactiveProperty<bool> IsLiftDown => _isLiftDown;
         private ReactiveProperty<bool> _isLiftDown = new(true);
-
         private CancellationTokenSource _liftCancellationTokenSource = new();
         private CancellationTokenSource _cutterCancellationTokenSource = new();
         private float _nowCutterSpeed = 0f;
