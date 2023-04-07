@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 248531469152751529}
   - component: {fileID: -4836901255603251547}
-  - component: {fileID: 8814767190868186830}
-  - component: {fileID: 4202394761216952849}
+  - component: {fileID: -8728359854495185831}
+  - component: {fileID: -4586353143287293832}
   m_Layer: 0
   m_Name: Grass2
   m_TagString: Grass
@@ -51,7 +51,7 @@ CapsuleCollider:
   m_Height: 0.2
   m_Direction: 1
   m_Center: {x: 0, y: 0.1, z: 0}
---- !u!114 &8814767190868186830
+--- !u!114 &-8728359854495185831
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -60,11 +60,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3033467039246159119}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fffee2d5a324264a8b67a315ffb1aa7, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f6dc83d463c8104ba09c7287a04c761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _cutEffectPrefab: {fileID: 3839245975310408970, guid: 7f0326d1dab876d40b76063981bcee3b, type: 3}
---- !u!114 &4202394761216952849
+--- !u!114 &-4586353143287293832
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -76,6 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eccb782f91af214e9a50d3d1cd21fd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _grassIconPrefab: {fileID: 7259347930132316496, guid: 06790af92767a87408ec4d8d20c8b81b, type: 3}
 --- !u!1 &3937585047734852397
 GameObject:
   m_ObjectHideFlags: 0

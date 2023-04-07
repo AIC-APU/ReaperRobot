@@ -25,9 +25,9 @@ namespace smart3tene.Reaper
             _stopButton.interactable = false;
 
             //TimeTextの更新
-            _reaperRecorder.RecordingTime
-                .Subscribe(x => _recordingTimeText.text = GameTimer.ConvertSecondsToString(x, false))
-                .AddTo(this);
+            // _reaperRecorder.RecordingTime
+            //     .Subscribe(x => _recordingTimeText.text = GameTimer.ConvertSecondsToString(x, false))
+            //     .AddTo(this);
         }
         #endregion
 

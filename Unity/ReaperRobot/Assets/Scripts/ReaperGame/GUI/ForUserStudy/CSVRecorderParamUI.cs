@@ -34,9 +34,9 @@ namespace smart3tene.Reaper
                 .AddTo(this);
 
             //以下テキスト更新
-            _reaperRecorder.RecordingTime
-                .Subscribe(x => _timeText.text = GameTimer.ConvertSecondsToString(x))
-                .AddTo(this);
+            // _reaperRecorder.RecordingTime
+            //     .Subscribe(x => _timeText.text = GameTimer.ConvertSecondsToString(x))
+            //     .AddTo(this);
 
             _reaperRecorder.InputH
                 .Subscribe(x => _inputHText.text = x.ToString())

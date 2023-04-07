@@ -75,7 +75,7 @@ namespace smart3tene.Reaper
 
         private void Update()
         {
-            _timeText.text = GameTimer.ConvertSecondsToString(_shadowPlayer.PlayTime);
+            //_timeText.text = GameTimer.ConvertSecondsToString(_shadowPlayer.PlayTime);
         }
         #endregion
     }

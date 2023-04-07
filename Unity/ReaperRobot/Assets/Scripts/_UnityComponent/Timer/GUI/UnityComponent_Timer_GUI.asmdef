@@ -1,11 +1,9 @@
 {
-    "name": "UnityComponent_GUI",
+    "name": "UnityComponent_Timer_GUI",
     "rootNamespace": "",
     "references": [
-        "GUID:f51ebe6a0ceec4240a699833d6309b23",
-        "GUID:560b04d1a97f54a4e82edc0cbbb69285",
-        "GUID:6055be8ebefd69e48b49212b09b47b2f",
-        "GUID:2bafac87e7f4b9b418d9448d219b01ab"
+        "GUID:335d8514495ec704191b66bc5bbb0005",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

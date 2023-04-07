@@ -78,9 +78,6 @@ namespace smart3tene.Reaper
         {
             _goal.SetActive(false);
             _isActive = false;
-
-            CheckTime = GameTimer.GetCurrentTimeSpan;
-            Debug.Log($"{name} is checked {CheckTime:hh\\:mm\\:ss}");
         }
         #endregion
     }

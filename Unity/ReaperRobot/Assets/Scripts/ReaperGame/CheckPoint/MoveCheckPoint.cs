@@ -66,8 +66,6 @@ namespace smart3tene.Reaper
 
         protected override void OnChecked()
         {
-            CheckTime = GameTimer.GetCurrentTimeSpan;
-            Debug.Log($"{name} is checked {CheckTime:hh\\:mm\\:ss}");
             _isActive = false;
         }
         #endregion

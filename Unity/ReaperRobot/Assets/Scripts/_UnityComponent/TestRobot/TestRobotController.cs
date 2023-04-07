@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.Unitycomponent.TestRobot
 {
     [RequireComponent(typeof(PlayerInput))]
     public class TestRobotController : MonoBehaviour
@@ -28,16 +26,12 @@ namespace smart3tene.Reaper
         {
             _actionMap["Brake"].started += Brake;
             _actionMap["Brake"].canceled += OffBrake;
-            _actionMap["ChangeMode"].started += StopMove;
-            _actionMap["ChangeReaperAndPerson"].started += StopMove;
         }
 
         private void OnDisable()
         {
             _actionMap["Brake"].started -= Brake;
             _actionMap["Brake"].canceled -= OffBrake;
-            _actionMap["ChangeMode"].started -= StopMove;
-            _actionMap["ChangeReaperAndPerson"].started -= StopMove;
         }
 
         private void FixedUpdate()

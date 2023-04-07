@@ -26,7 +26,7 @@ namespace smart3tene.Reaper
         private void SetClearTime()
         {
             _clearPanel.SetActive(true);
-            _clearTimeNum.text = GameTimer.GetCurrentTimeSpan.ToString(@"hh\:mm\:ss");
+            //_clearTimeNum.text = GameTimer.GetCurrentTimeSpan.ToString(@"hh\:mm\:ss");
         }
     }
 }

@@ -1,17 +1,16 @@
-﻿using System.Collections;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UniRx;
 using Cysharp.Threading.Tasks;
-using UnityEngine.Events;
-using System;
-using Photon.Pun;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.Grass
 {
-    public class Grass : MonoBehaviourPun
+    public class Grass : MonoBehaviour
     {
-        //これをアタッチしたGameObjectに,Grassの形態を表す子オブジェクトを順に設定してください
+        //これをアタッチしたGameObjectに,Grassの形態を表すオブジェクトを順に子に設定してください
         //子オブジェクトの数は2つ以上であれば大丈夫です
 
         //例:
@@ -25,11 +24,13 @@ namespace smart3tene.Reaper
         [SerializeField] private GameObject _cutEffectPrefab;
         #endregion
 
-        #region private Fields
+        #region public Fields
         public IReadOnlyReactiveProperty<bool> IsCut => _isCut;
-        private ReactiveProperty<bool> _isCut = new(false);
+        #endregion
 
-        private ReactiveProperty<float> _cutTime = new(0);     
+        #region Private Fields
+        private ReactiveProperty<bool> _isCut = new(false);
+        private ReactiveProperty<float> _cutTime = new(0);
         private int _nowStep = 0;
         private int _maxStep;
         private GameObject _cutEffectInstance;
@@ -45,28 +46,17 @@ namespace smart3tene.Reaper
         {
             _maxStep = transform.childCount - 1;
 
-            GrassCounter.AddAllGrass();
-
             //cutTimeが増えたら草の形状を判定・変更する
             _cutTime
                 .Subscribe(x => ReshapeGrass(x))
-                .AddTo(this); ;
+                .AddTo(this);
 
-            //カットされた時の挙動
-            _isCut.Skip(1).Subscribe(iscut =>
-            {
-                if (iscut)
-                {
-                    AfterCutProsses();
-                    GrassCounter.AddCutGrass();
-                }
-                else
-                {
-                    GrassCounter.MinusCutGrass();
-                }
-            }).AddTo(this); ;
-
-            ReaperEventManager.ResetEvent += ResetGrass;           
+            //カットされた時パーティクルを破棄する
+            _isCut
+                .Skip(1)
+                .Where(x => x)
+                .Subscribe(_ => DestroyParticle())
+                .AddTo(this);
         }
 
         private void OnTriggerStay(Collider other)
@@ -77,29 +67,29 @@ namespace smart3tene.Reaper
             {
                 _cutTime.Value += Time.deltaTime;
 
-                //草が切れるエフェクトを出す
+                //切られている時にパーティクルを生成・再生する
                 if (_cutEffectInstance == null)
                 {
                     _cutEffectInstance = Instantiate(_cutEffectPrefab, transform.position, Quaternion.identity);
                     _particleSystem = _cutEffectInstance.GetComponent<ParticleSystem>();
                 }
-                else if(_particleSystem.isStopped)
+                else if (_particleSystem.isStopped)
                 {
                     _particleSystem.Play(true);
                 }
 
                 //cutが完了したかの判定
-                if (_nowStep == _maxStep)
+                if (_cutTime.Value >= _finishCutTime)
                 {
                     //カット完了
                     _isCut.Value = true;
-                }   
+                }
             }
             else
             {
+                //刃が回転していないReaperRobotが接触した時、パーティクルを停止
                 if (_particleSystem != null)
                 {
-                    //パーティクルを停止
                     _particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
                 }
             }
@@ -109,23 +99,15 @@ namespace smart3tene.Reaper
         {
             if (_isCut.Value) return;
 
-            if (other.CompareTag("Cutting"))
+            if (other.CompareTag("Cutting") && _particleSystem != null)
             {
-                if(_particleSystem != null)
-                {
-                    //パーティクルを停止
-                    _particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                }
+                //パーティクルを停止
+                _particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
             }
-        }
-
-        private void OnDestroy()
-        {
-            ReaperEventManager.ResetEvent -= ResetGrass;
         }
         #endregion
 
-        #region Public Method
+        #region Public method
         public void CutThisGrass()
         {
             if (_isCut.Value) return;
@@ -136,17 +118,17 @@ namespace smart3tene.Reaper
         }
         #endregion
 
-        #region private Method
+        #region Private method
         private void ReshapeGrass(float cutTime)
         {
             if (_nowStep >= _maxStep) return;
 
             //cutTimeに応じてStepを変化させます
             //finish cut timeにちょうど最後のStepに変化します
-            for(int i = 0; i < _maxStep; i++)
+            for (int i = 0; i < _maxStep; i++)
             {
-                if(cutTime >= i * _finishCutTime / _maxStep &&
-                    cutTime < (i+1) * _finishCutTime / _maxStep)
+                if (cutTime >= i * _finishCutTime / _maxStep &&
+                    cutTime < (i + 1) * _finishCutTime / _maxStep)
                 {
                     transform.GetChild(i).gameObject.SetActive(true);
                     _nowStep = i;
@@ -157,7 +139,7 @@ namespace smart3tene.Reaper
                 }
             }
 
-            if(cutTime >= _finishCutTime)
+            if (cutTime >= _finishCutTime)
             {
                 transform.GetChild(_maxStep).gameObject.SetActive(true);
                 _nowStep = _maxStep;
@@ -186,10 +168,10 @@ namespace smart3tene.Reaper
             Destroy(_cutEffectInstance);
         }
 
-        private void AfterCutProsses()
+        private void DestroyParticle()
         {
             //isCut = true になった後の挙動
-            if(_cutEffectInstance != null)
+            if (_cutEffectInstance != null)
             {
                 //パーティクルの停止と破棄
                 _particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
@@ -198,7 +180,6 @@ namespace smart3tene.Reaper
             }
         }
 
-
         private async UniTask DelayAsync(float seconds, UnityAction callback)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(seconds));
@@ -206,5 +187,4 @@ namespace smart3tene.Reaper
         }
         #endregion
     }
-
 }
