@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using ReaperRobot.Scripts.UnityComponent.ReaperRobot;
 
-namespace ReaperRobot.Scripts.UnityComponent.GUI
+namespace ReaperRobot.Scripts.UnityComponent.ReaperRobot.GUI
 {
     public class ReaperRobotParamUI : MonoBehaviour
     {

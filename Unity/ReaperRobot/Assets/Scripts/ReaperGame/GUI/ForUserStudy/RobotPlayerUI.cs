@@ -45,7 +45,7 @@ namespace smart3tene.Reaper
 
         void Update()
         {
-            _timeText.text = GameTimer.ConvertSecondsToString(_robotReaperPlayer.PlayTime, false);
+            //_timeText.text = GameTimer.ConvertSecondsToString(_robotReaperPlayer.PlayTime, false);
         }
 
         private void OnDestroy()

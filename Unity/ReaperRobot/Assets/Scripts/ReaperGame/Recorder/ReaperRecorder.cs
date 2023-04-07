@@ -79,7 +79,9 @@ public class ReaperRecorder : MonoBehaviour
 
         //データを揃える
         //必要あればここで桁数やら形式やら指定する
-        var time   = GameTimer.ConvertSecondsToString(_recordingTime.Value);
+
+        //ここ時間を入れる
+        var time   = "00:00:00";
 
         // _inputH.Value = _reaperManager.NowInput.x;
         // _inputV.Value = _reaperManager.NowInput.y;

@@ -625,7 +625,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4101569118334860274}
   - component: {fileID: 4101569118334860275}
-  - component: {fileID: 4101569118334860277}
+  - component: {fileID: -496494607409329856}
   m_Layer: 0
   m_Name: TestRobot
   m_TagString: Untagged
@@ -668,7 +668,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &4101569118334860277
+--- !u!114 &-496494607409329856
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -686,7 +686,7 @@ MonoBehaviour:
   _wheelColliderR2: {fileID: 4101569117672688748}
   _crawlerL: {fileID: 4101569118398828912}
   _crawlerR: {fileID: 4101569119056943802}
-  _centerOfGravity: {x: 0, y: 0, z: 0.11}
+  _centerOfGravity: {x: 0, y: 0, z: -0.5}
 --- !u!1 &4101569119133930393
 GameObject:
   m_ObjectHideFlags: 0

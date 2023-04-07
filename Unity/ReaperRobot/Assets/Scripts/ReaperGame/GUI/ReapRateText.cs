@@ -12,7 +12,7 @@ namespace smart3tene.Reaper
 
         private void Awake()
         {
-            GrassCounter.CutGrassPercent.Subscribe(x => _reapRateNum.text = x.ToString("F1")).AddTo(this);
+            //GrassCounter.CutGrassPercent.Subscribe(x => _reapRateNum.text = x.ToString("F1")).AddTo(this);
         }
     }
 }

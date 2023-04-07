@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.Unitycomponent.TestRobot
 {
-
     public class TestRobotManager : MonoBehaviour
     {
         #region Serialized Private Field

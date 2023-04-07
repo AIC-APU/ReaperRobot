@@ -31,21 +31,21 @@ namespace smart3tene.Reaper
         #region Public method
         public override void SetUp()
         {
-            if(GrassCounter.AllGrassCount.Value == 0)
-            {
-                Debug.LogError("草がありません");
-                _isChecked.Value = true;
-                OnChecked();
-            }
+            // if(GrassCounter.AllGrassCount.Value == 0)
+            // {
+            //     Debug.LogError("草がありません");
+            //     _isChecked.Value = true;
+            //     OnChecked();
+            // }
 
-            _disposable = GrassCounter.CutGrassPercent.Subscribe(x =>
-            {
-                if (x >= goalRate)
-                {
-                    _isChecked.Value = true;
-                    OnChecked();
-                }
-            });
+            // _disposable = GrassCounter.CutGrassPercent.Subscribe(x =>
+            // {
+            //     if (x >= goalRate)
+            //     {
+            //         _isChecked.Value = true;
+            //         OnChecked();
+            //     }
+            // });
 
             //テキスト表示
             switch (LocalizationSettings.SelectedLocale.Identifier.Code)
@@ -64,9 +64,6 @@ namespace smart3tene.Reaper
 
         protected override void OnChecked()
         {
-            CheckTime = GameTimer.GetCurrentTimeSpan;
-            Debug.Log($"{name} is checked {CheckTime:hh\\:mm\\:ss}");
-
             _disposable?.Dispose();
         }
         #endregion

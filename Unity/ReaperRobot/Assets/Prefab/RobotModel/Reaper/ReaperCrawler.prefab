@@ -702,7 +702,7 @@ GameObject:
   - component: {fileID: 4401757396387256823}
   m_Layer: 0
   m_Name: Reaper
-  m_TagString: Untagged
+  m_TagString: Cutting
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1045,6 +1045,8 @@ MonoBehaviour:
   _crawlerL: {fileID: 3946013965446891014}
   _crawlerR: {fileID: 4474019163192602847}
   _centerOfGravity: {x: 0, y: 0, z: -0.2}
+  moveTorque: 110
+  torqueRateAtCutting: 0.5
 --- !u!1 &4928232077862936953
 GameObject:
   m_ObjectHideFlags: 0

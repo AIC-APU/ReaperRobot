@@ -50,7 +50,7 @@ namespace smart3tene.Reaper
 
         private void Update()
         {
-            _timeText.text = GameTimer.ConvertSecondsToString(_robotPlayer.PlayTime);
+            //_timeText.text = GameTimer.ConvertSecondsToString(_robotPlayer.PlayTime);
         }
         #endregion
     }
