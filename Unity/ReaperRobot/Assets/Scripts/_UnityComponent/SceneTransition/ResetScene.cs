@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.SceneTransition
 {
     public class ResetScene : MonoBehaviour
     {

@@ -13,14 +13,14 @@ namespace smart3tene.Reaper
 
         private void Awake()
         {
-            ReaperEventManager.AllCheckPointPassEvent += SetClearTime;
+            //ReaperEventManager.AllCheckPointPassEvent += SetClearTime;
 
             _clearPanel.SetActive(false);
         }
 
         private void OnDestroy()
         {
-            ReaperEventManager.AllCheckPointPassEvent -= SetClearTime;
+            //ReaperEventManager.AllCheckPointPassEvent -= SetClearTime;
         }
 
         private void SetClearTime()

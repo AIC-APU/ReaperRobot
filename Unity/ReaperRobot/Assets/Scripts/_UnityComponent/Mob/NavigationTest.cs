@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UniRx;
 using UniRx.Triggers;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.Mob
 {
     [RequireComponent(typeof(NavMeshAgent))]
     public class NavigationTest : MonoBehaviour

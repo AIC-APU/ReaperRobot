@@ -8,6 +8,8 @@ namespace ReaperRobot.Scripts.UnityComponent.ReaperRobot.GUI
     {
         [SerializeField] private ReaperManager _reaperManager;
         [SerializeField] private Image _liftLamp;
+        [SerializeField] private Color _liftDownColor = new Color32(255, 90, 0, 255);
+        [SerializeField] private Color _liftUpColor = new Color32(196, 196, 196, 255);
 
         #region MonoBehaviour Callbacks
         private void Awake()
@@ -17,11 +19,11 @@ namespace ReaperRobot.Scripts.UnityComponent.ReaperRobot.GUI
             {
                 if (isDown)
                 {
-                    _liftLamp.color = new Color32(255, 90, 0, 255);
+                    _liftLamp.color = _liftDownColor;
                 }
                 else
                 {
-                    _liftLamp.color = new Color32(196, 196, 196, 255);
+                    _liftLamp.color = _liftUpColor;
                 }
             }).AddTo(this);
         }

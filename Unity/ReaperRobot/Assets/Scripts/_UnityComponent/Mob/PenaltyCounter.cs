@@ -1,7 +1,7 @@
 using UniRx;
 using UnityEngine;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.Mob
 {
     public class PenaltyCounter : MonoBehaviour
     {
@@ -11,12 +11,12 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            ReaperEventManager.PenaltyEvent += AddPenalty;
+            //PenaltyEvent += AddPenalty;
         }
 
         private void OnDestroy()
         {
-            ReaperEventManager.PenaltyEvent -= AddPenalty;
+            //PenaltyEvent -= AddPenalty;
         }
         #endregion
 

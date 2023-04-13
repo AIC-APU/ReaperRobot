@@ -2,11 +2,16 @@ using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.Mob
 {
     [RequireComponent(typeof(CanvasGroup))]
     public class PenaltyPanel : MonoBehaviour
     {
+        #region Serialized Private Fields
+        [SerializeField,Range(0,1)] private float _popupTime = 0.1f;
+        [SerializeField,Range(0,1)] private float _fadeOutTime = 0.3f;
+        #endregion
+
         #region Private Fields
         private CanvasGroup _canvasGroup;
         #endregion
@@ -17,12 +22,12 @@ namespace smart3tene.Reaper
             _canvasGroup = GetComponent<CanvasGroup>();
             _canvasGroup.alpha = 0f;
 
-            ReaperEventManager.PenaltyEvent += PopupPenaltyPanel;
+            //ペナルティ発生イベントを取得（未実装）
         }
 
         private void OnDestroy()
         {
-            ReaperEventManager.PenaltyEvent -= PopupPenaltyPanel;
+
         }
         #endregion
 
@@ -33,17 +38,15 @@ namespace smart3tene.Reaper
             _canvasGroup.alpha = 1f;
 
             //数秒待つ
-            var waitTime = 0.1f;
-            await UniTask.Delay(TimeSpan.FromSeconds(waitTime), false, PlayerLoopTiming.Update);
+            await UniTask.Delay(TimeSpan.FromSeconds(_popupTime), false, PlayerLoopTiming.Update);
 
-            //フェードで非表示
-            var fadeOutTime = 0.3f;
-            var time = fadeOutTime;
+            //フェードで非表示にする
+            var time = _fadeOutTime;
             while (_canvasGroup.alpha > 0)
             {
                 time -= Time.deltaTime;
-                time = Mathf.Clamp(time, 0, fadeOutTime);
-                _canvasGroup.alpha = time / fadeOutTime;
+                time = Mathf.Clamp(time, 0, _fadeOutTime);
+                _canvasGroup.alpha = time / _fadeOutTime;
                 await UniTask.Yield(PlayerLoopTiming.Update);
             }
         }

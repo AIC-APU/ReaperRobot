@@ -59,7 +59,7 @@ namespace smart3tene.Reaper
                 default:
                     break;
             }
-            ReaperEventManager.InvokeTextPopupEvent(_introduction);
+            //ReaperEventManager.InvokeTextPopupEvent(_introduction);
         }
 
         protected override void OnChecked()

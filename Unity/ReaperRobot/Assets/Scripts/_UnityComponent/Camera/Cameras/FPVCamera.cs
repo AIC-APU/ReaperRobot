@@ -22,15 +22,15 @@ namespace ReaperRobot.Scripts.UnityComponent.Camera
         /// </summary>
         public override void FollowTarget()
         {
-            Camera.transform.position = _target.transform.TransformPoint(_cameraOffsetPos.Value);
-            Camera.transform.eulerAngles = _target.transform.eulerAngles + _cameraOffsetRot.Value;
+            _camera.transform.position = _target.transform.TransformPoint(_cameraOffsetPos.Value);
+            _camera.transform.eulerAngles = _target.transform.eulerAngles + _cameraOffsetRot.Value;
         }
 
         public override void ResetCamera()
         {
             _cameraOffsetPos.Value = _cameraDefaultOffsetPos;
             _cameraOffsetRot.Value = _cameraDefaultOffsetRot;
-            Camera.fieldOfView = defaultFOV;
+            _camera.fieldOfView = defaultFOV;
         }
 
         public override void MoveCamera(float horizontal, float vertical)

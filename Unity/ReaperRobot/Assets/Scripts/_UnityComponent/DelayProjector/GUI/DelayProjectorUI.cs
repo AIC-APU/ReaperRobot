@@ -5,11 +5,11 @@ using UnityEngine.UI;
 using TMPro;
 using UniRx;
 
-namespace smart3tene.Reaper
+namespace ReaperRobot.Scripts.UnityComponent.DelayProjector.GUI
 {
-    public class ProjectorController : MonoBehaviour
+    public class DelayProjectorUI : MonoBehaviour
     {
-        [SerializeField] private CameraProjector _projector;
+        [SerializeField] private DelayedProjector _projector;
         [SerializeField] private Slider _delaySlider;
         [SerializeField] private TMP_Text _delayNumText;
 
@@ -20,9 +20,6 @@ namespace smart3tene.Reaper
             //sliderの初期化
             //このsliderから遅延を設定する
             InitializeDelaySlider();
-
-            //robotFPVCameraをprojectorに設定
-            _projector.recordingCamera = Camera.main;
         }
 
         //スライダーに設定する用の関数

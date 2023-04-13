@@ -26,7 +26,7 @@ namespace smart3tene.Reaper
         #region MonoBehaviour Callbacks
         private void Start()
         {
-            ReaperEventManager.AllCheckPointPassEvent += AllCheckPointPass;
+            //ReaperEventManager.AllCheckPointPassEvent += AllCheckPointPass;
 
             _ = CheckPointFlow(_cancellationTokenSource.Token);
         }
@@ -34,7 +34,7 @@ namespace smart3tene.Reaper
         private void OnDisable()
         {
             _cancellationTokenSource.Cancel();
-            ReaperEventManager.AllCheckPointPassEvent -= AllCheckPointPass;
+            //ReaperEventManager.AllCheckPointPassEvent -= AllCheckPointPass;
         }
         #endregion
 
@@ -47,11 +47,11 @@ namespace smart3tene.Reaper
 
                 await UniTask.WaitUntil(() => _checkPointList[i].IsChecked.Value, PlayerLoopTiming.Update, ct);
 
-                ReaperEventManager.InvokeCheckPointPassEvent();
+                //ReaperEventManager.InvokeCheckPointPassEvent();
             }
 
             //すべてのチェックポイントを通過したらイベント発生
-            ReaperEventManager.InvokeAllCheckPointPassEvent();
+            //ReaperEventManager.InvokeAllCheckPointPassEvent();
         }
 
         private void AllCheckPointPass()

@@ -18,7 +18,7 @@ namespace ReaperRobot.Scripts.UnityComponent.Timer.GUI
             }
             else
             {
-                _timeNum.text = "";
+                _timeNum.text = "--:--:--";
             }
         }
     }
