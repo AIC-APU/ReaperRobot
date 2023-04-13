@@ -3,17 +3,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 
-namespace smart3tene
+namespace ReaperRobot.Scripts.UnityComponent.DelayProjector
 {
     [RequireComponent(typeof(RawImage))]
-    public class CameraProjector : MonoBehaviour
+    public class DelayedProjector : MonoBehaviour
     {
         //カメラが撮影した映像をRawImageに投影します
         //delayの秒数,表示を遅らせることができます
 
         #region public Fields
-        [System.NonSerialized] public float delay = 0f; //単位: 秒
-        [System.NonSerialized] public Camera recordingCamera;
+        public float delay = 0f; //単位: 秒
+        public Camera recordingCamera;
         #endregion
 
         #region private Fields

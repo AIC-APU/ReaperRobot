@@ -8,6 +8,9 @@ namespace ReaperRobot.Scripts.UnityComponent.ReaperRobot.GUI
     {
         [SerializeField] private ReaperManager _reaperManager;
         [SerializeField] private Image _cutterLamp;
+        [SerializeField] private Color _cuttingColor = new Color32(255, 90, 0, 255);
+        [SerializeField] private Color _notCuttingColor = new Color32(196, 196, 196, 255);
+
 
         #region MonoBehaviour Callbacks
         private void Awake()
@@ -17,11 +20,11 @@ namespace ReaperRobot.Scripts.UnityComponent.ReaperRobot.GUI
             {
                 if (isCutting)
                 {
-                    _cutterLamp.color = new Color32(255, 90, 0, 255);
+                    _cutterLamp.color = _cuttingColor;
                 }
                 else
                 {
-                    _cutterLamp.color = new Color32(196, 196, 196, 255);
+                    _cutterLamp.color = _notCuttingColor;
                 }
             }).AddTo(this);
         }

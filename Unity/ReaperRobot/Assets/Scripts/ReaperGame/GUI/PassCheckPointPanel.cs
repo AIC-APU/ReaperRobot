@@ -18,12 +18,12 @@ namespace smart3tene.Reaper
             _passPanelCanvasGroup = GetComponent<CanvasGroup>();
             _passPanelCanvasGroup.alpha = 0;
 
-            ReaperEventManager.CheckPointPassEvent += ShowPanel;
+            //ReaperEventManager.CheckPointPassEvent += ShowPanel;
         }
 
         private void OnDisable()
         {
-            ReaperEventManager.CheckPointPassEvent -= ShowPanel;
+            //ReaperEventManager.CheckPointPassEvent -= ShowPanel;
 
             _cancellationTokenSource.Cancel();
         }

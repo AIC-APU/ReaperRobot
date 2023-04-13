@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UniRx;
 
@@ -14,7 +15,15 @@ namespace ReaperRobot.Scripts.UnityComponent.Camera
         {
             public List<BaseCamera> Cameras;
         }
+        #endregion
+
+        #region  Serialized Private Fields
         [SerializeField] private List<ViewLoop> _loops = new List<ViewLoop>();
+
+        [Space(10)]
+
+        [Header("Unity Events")]
+        [SerializeField] private UnityEvent OnChangeLoop;
         #endregion
 
         #region  Public Fields
@@ -49,8 +58,13 @@ namespace ReaperRobot.Scripts.UnityComponent.Camera
                 throw new System.NullReferenceException();
             }
 
+            //初期カメラの設定
             _activeCamera.Value = _loops[_loopIndex].Cameras[_cameraIndex];
-            _activeCamera.Value.ResetCamera();
+
+            //カメラが変わる度にカメラのリセット
+            _activeCamera
+                .Subscribe(x =>x.ResetCamera())
+                .AddTo(this);      
         }
 
         void OnDisable()
@@ -92,7 +106,6 @@ namespace ReaperRobot.Scripts.UnityComponent.Camera
             if (_cameraIndex >= _loops[_loopIndex].Cameras.Count) _cameraIndex = 0;
 
             _activeCamera.Value = _loops[_loopIndex].Cameras[_cameraIndex];
-            _activeCamera.Value.ResetCamera();
         }
 
         private void ChangeLoop(InputAction.CallbackContext obj)
@@ -103,7 +116,8 @@ namespace ReaperRobot.Scripts.UnityComponent.Camera
             _cameraIndex = 0;
 
             _activeCamera.Value = _loops[_loopIndex].Cameras[_cameraIndex];
-            _activeCamera.Value.ResetCamera();
+
+            OnChangeLoop?.Invoke();
         }
         #endregion
     }

@@ -31,15 +31,11 @@ namespace smart3tene.Reaper
             _cancellationTokenSource = new CancellationTokenSource();
 
             _canvasGroup.alpha = 0;
-
-            ReaperEventManager.TextPopupEvent += ShowPanel;
         }
 
         private void OnDestroy()
         {
             _cancellationTokenSource.Cancel();
-
-            ReaperEventManager.TextPopupEvent -= ShowPanel;
         }
         #endregion
 
@@ -96,5 +92,4 @@ namespace smart3tene.Reaper
         }
         #endregion
     }
-
 }

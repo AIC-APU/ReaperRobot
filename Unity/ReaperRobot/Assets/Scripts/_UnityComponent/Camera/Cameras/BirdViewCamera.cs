@@ -19,44 +19,44 @@ namespace ReaperRobot.Scripts.UnityComponent.Camera
         /// </summary>
         public override void FollowTarget()
         {
-            Camera.transform.LookAt(_target.transform.position);
+            _camera.transform.LookAt(_target.transform.position);
         }
 
         public override void ResetCamera()
         {
-            Camera.transform.position = _target.transform.TransformPoint(_cameraDefaultOffsetPos);
-            Camera.transform.eulerAngles = _target.transform.eulerAngles + _cameraDefaultOffsetRot;
-            Camera.transform.LookAt(_target.transform.position);
-            Camera.fieldOfView = defaultFOV;
+            _camera.transform.position = _target.transform.TransformPoint(_cameraDefaultOffsetPos);
+            _camera.transform.eulerAngles = _target.transform.eulerAngles + _cameraDefaultOffsetRot;
+            _camera.transform.LookAt(_target.transform.position);
+            _camera.fieldOfView = defaultFOV;
         }
 
         public override void MoveCamera(float horizontal, float vertical)
         {
             //vertical...ロボットに近づく
-            var distance = Vector3.Distance(_target.transform.position, Camera.transform.position);
+            var distance = Vector3.Distance(_target.transform.position, _camera.transform.position);
             if ((distance > zoomSpeed * 2f && vertical > 0) || (distance < zoomSpeed * 9f && vertical < 0))
             {
-                Camera.transform.position += zoomSpeed * vertical * Camera.transform.forward;
+                _camera.transform.position += zoomSpeed * vertical * _camera.transform.forward;
 
-                var cameraPos = Camera.transform.position;
+                var cameraPos = _camera.transform.position;
                 cameraPos.y = Mathf.Clamp(cameraPos.y, minHeight, maxHeight);
-                Camera.transform.position = cameraPos;
+                _camera.transform.position = cameraPos;
             }
         }
 
         public override void RotateCamera(float horizontal, float vertical)
         {
             //vertical...高さを変更
-            var cameraPos       = Camera.transform.position;      
+            var cameraPos       = _camera.transform.position;      
 
             cameraPos.y += vertical * hightSpeed * Time.deltaTime;
             cameraPos.y  = Mathf.Clamp(cameraPos.y, minHeight, maxHeight);
-            Camera.transform.position = cameraPos;        
+            _camera.transform.position = cameraPos;        
 
             //horizontal...gameobjectを中心に回転
-            var center = new Vector3(_target.transform.position.x, Camera.transform.position.y, _target.transform.position.z);
-            Camera.transform.RotateAround(center, Vector3.up,  -1 * horizontal * rotateSpeed);
-            Camera.transform.LookAt(_target.transform.position);
+            var center = new Vector3(_target.transform.position.x, _camera.transform.position.y, _target.transform.position.z);
+            _camera.transform.RotateAround(center, Vector3.up,  -1 * horizontal * rotateSpeed);
+            _camera.transform.LookAt(_target.transform.position);
         }
         #endregion
     }

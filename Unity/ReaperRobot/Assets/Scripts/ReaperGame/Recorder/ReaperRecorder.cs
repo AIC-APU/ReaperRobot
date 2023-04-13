@@ -167,7 +167,7 @@ public class ReaperRecorder : MonoBehaviour
 
         //UIの表示
         var popupText = GetText(LocalizationSettings.SelectedLocale.Identifier.Code, Path.GetFileName(filePath));
-        ReaperEventManager.InvokeTextPopupEvent(popupText);
+        //ReaperEventManager.InvokeTextPopupEvent(popupText);
 
         //csvDataの初期化
         _csvData = "";

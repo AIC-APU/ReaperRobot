@@ -2,17 +2,33 @@ using UnityEngine;
 
 namespace ReaperRobot.Scripts.UnityComponent.GUI
 {
+    [RequireComponent(typeof(UnityEngine.Camera))]
     public class MiniMapCamera : MonoBehaviour
     {
-        [SerializeField] private UnityEngine.Camera _miniMapCamera;
-        [SerializeField] private Transform _targetTransform;
+        [SerializeField] private Transform _target;
+        private UnityEngine.Camera _miniMapCamera;
 
-         private void LateUpdate()
+        void Awake()
         {
-            if (_miniMapCamera == null || _targetTransform == null) return;
+            _miniMapCamera = GetComponent<UnityEngine.Camera>();
+        }
 
-            _miniMapCamera.transform.position = new Vector3(_targetTransform.position.x, _miniMapCamera.transform.position.y, _targetTransform.position.z);
-            _miniMapCamera.transform.eulerAngles = new Vector3(_miniMapCamera.transform.eulerAngles.x, _targetTransform.eulerAngles.y, _miniMapCamera.transform.eulerAngles.z);
+        private void LateUpdate()
+        {
+            try
+            {
+                _miniMapCamera.transform.position = new Vector3(_target.position.x, 
+                                                                _miniMapCamera.transform.position.y, 
+                                                                _target.position.z);
+
+                _miniMapCamera.transform.eulerAngles = new Vector3(_miniMapCamera.transform.eulerAngles.x, 
+                                                                    _target.eulerAngles.y, 
+                                                                    _miniMapCamera.transform.eulerAngles.z);
+            }
+            catch(System.NullReferenceException e)
+            {
+                Debug.LogError(e.Message);
+            }
         }
     }
 }

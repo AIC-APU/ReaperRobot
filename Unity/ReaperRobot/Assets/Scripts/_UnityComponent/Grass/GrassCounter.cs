@@ -7,8 +7,8 @@ namespace ReaperRobot.Scripts.UnityComponent.Grass
     public class GrassCounter : MonoBehaviour
     {
         #region Unity Events
-        public UnityEvent OnFirstGrassCut;
-        public UnityEvent OnAllGrassCut;
+        [SerializeField] private UnityEvent OnFirstGrassCut;
+        [SerializeField] private UnityEvent OnAllGrassCut;
         #endregion
 
         #region Public Properties

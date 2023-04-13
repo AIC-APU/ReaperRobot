@@ -32,7 +32,7 @@ namespace ReaperRobot.Scripts.UnityComponent.Camera
         public override void FollowTarget()
         {
             //カメラが徐々にtarget + _targetOffsetの方を向く
-            Camera.transform.LookAt(_target.transform.position + _targetOffset); //offset追加
+            _camera.transform.LookAt(_target.transform.position + _targetOffset); //offset追加
 
             if (_rotateGazerY)
             {
@@ -44,20 +44,20 @@ namespace ReaperRobot.Scripts.UnityComponent.Camera
 
         public override void MoveCamera(float horizontal, float vertical)
         {
-            var fov = Camera.fieldOfView;
+            var fov = _camera.fieldOfView;
 
             fov += -vertical * zoomSpeed;
 
             fov = Mathf.Clamp(fov, minFoV, maxFoV);
 
-            Camera.fieldOfView = fov;
+            _camera.fieldOfView = fov;
         }
 
         public override void ResetCamera()
         {
-            Camera.transform.position = Gazer.position + gazerPosOffset;
-            Camera.transform.LookAt(_target.transform.position);
-            Camera.fieldOfView = defaultFoV;
+            _camera.transform.position = Gazer.position + gazerPosOffset;
+            _camera.transform.LookAt(_target.transform.position);
+            _camera.fieldOfView = defaultFoV;
 
             _heigthOffset = 0;
             _sideOffset = 0;
@@ -66,7 +66,7 @@ namespace ReaperRobot.Scripts.UnityComponent.Camera
 
         public override void RotateCamera(float horizontal, float vertical)
         {
-            var distance = Vector3.Distance(Camera.transform.position, _target.position);
+            var distance = Vector3.Distance(_camera.transform.position, _target.position);
 
             _heigthOffset += vertical * rotateSpeed * Time.deltaTime;
             _heigthOffset = Mathf.Clamp(_heigthOffset, -maxOffsetBase * distance, maxOffsetBase * distance);
@@ -74,7 +74,7 @@ namespace ReaperRobot.Scripts.UnityComponent.Camera
             _sideOffset += horizontal * rotateSpeed * Time.deltaTime;
             _sideOffset = Mathf.Clamp(_sideOffset, -maxOffsetBase * distance, maxOffsetBase * distance);
 
-            _targetOffset = new Vector3(0, _heigthOffset, 0) + Camera.transform.right * _sideOffset;
+            _targetOffset = new Vector3(0, _heigthOffset, 0) + _camera.transform.right * _sideOffset;
         }
         #endregion
     }
