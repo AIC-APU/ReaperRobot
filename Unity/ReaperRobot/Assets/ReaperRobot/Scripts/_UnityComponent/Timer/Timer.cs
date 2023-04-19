@@ -8,6 +8,7 @@ namespace Plusplus.ReaperRobot.Scripts.UnityComponent.Timer
     {
         private Stopwatch _stopWatch = new();
 
+        [SerializeField] private bool _startOnAwake = false; 
         [SerializeField] private float _time = 0f;
 
         public bool IsTimerRunning => _stopWatch.IsRunning;
@@ -17,6 +18,11 @@ namespace Plusplus.ReaperRobot.Scripts.UnityComponent.Timer
         public void TimerStop() => _stopWatch.Stop();
         public void TimerReset() => _stopWatch.Reset();
         public void TimerRestart() => _stopWatch.Restart();
+
+        private void Awake()
+        {
+            if (_startOnAwake) TimerStart();
+        }
 
         void Update()
         {

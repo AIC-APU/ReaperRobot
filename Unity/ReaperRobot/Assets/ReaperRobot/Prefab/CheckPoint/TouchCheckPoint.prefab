@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5541683488892601460}
   - component: {fileID: 5541683488892601463}
   - component: {fileID: 5541683488892601462}
-  - component: {fileID: 5541683488892601450}
+  - component: {fileID: 8682096594036127541}
   m_Layer: 0
   m_Name: TouchCheckPoint
   m_TagString: Untagged
@@ -100,7 +100,7 @@ CapsuleCollider:
   m_Height: 2.2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5541683488892601450
+--- !u!114 &8682096594036127541
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -109,11 +109,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5541683488892601457}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a6a9c5b3611e6f4e9d78177270d2c77, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e6cfbce026a3f949a1bd7561f436e2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _introduction: Go to Red Pole!
-  _mode: 1
+  _ja: "\u65E5\u672C\u8A9E\u306E\u8AAC\u660E"
+  _en: Explanation in ENG
+  _target: {fileID: 0}
 --- !u!1 &5541683490084368504
 GameObject:
   m_ObjectHideFlags: 0
