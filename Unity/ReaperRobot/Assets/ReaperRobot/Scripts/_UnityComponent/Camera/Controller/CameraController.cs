@@ -16,14 +16,15 @@ namespace Plusplus.ReaperRobot.Scripts.UnityComponent.Camera
             public List<BaseCamera> Cameras;
         }
         #endregion
-
+        
         #region  Serialized Private Fields
+        [Header("Cameras")]
         [SerializeField] private List<ViewLoop> _loops = new List<ViewLoop>();
+        #endregion
 
-        [Space(10)]
-
+         #region Event
         [Header("Unity Events")]
-        [SerializeField] private UnityEvent OnChangeLoop;
+        public UnityEvent OnChangeLoop;
         #endregion
 
         #region  Public Fields

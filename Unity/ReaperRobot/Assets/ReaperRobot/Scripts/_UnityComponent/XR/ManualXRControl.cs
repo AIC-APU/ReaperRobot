@@ -5,11 +5,11 @@ using UnityEngine.XR.Management;
 namespace Plusplus.ReaperRobot.Scripts.UnityComponent.XR
 {
     //参考: https://docs.unity3d.com/Packages/com.unity.xr.management@4.0/manual/EndUser.html
-    public class ManualXRControl
+    internal class ManualXRControl
     {
-        public bool IsRunning => XRGeneralSettings.Instance.InitManagerOnStart;
+        internal bool IsRunning => XRGeneralSettings.Instance.InitManagerOnStart;
 
-        public IEnumerator StartXRCoroutine()
+        internal IEnumerator StartXRCoroutine()
         {
             Debug.Log("Initializing XR...");
             yield return XRGeneralSettings.Instance.Manager.InitializeLoader();
@@ -25,7 +25,7 @@ namespace Plusplus.ReaperRobot.Scripts.UnityComponent.XR
             }
         }
 
-        public void StopXR()
+        internal void StopXR()
         {
             Debug.Log("Stopping XR...");
 

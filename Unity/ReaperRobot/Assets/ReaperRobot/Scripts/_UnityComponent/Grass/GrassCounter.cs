@@ -7,8 +7,8 @@ namespace Plusplus.ReaperRobot.Scripts.UnityComponent.Grass
     public class GrassCounter : MonoBehaviour
     {
         #region Unity Events
-        [SerializeField] private UnityEvent OnFirstGrassCut;
-        [SerializeField] private UnityEvent OnAllGrassCut;
+        public UnityEvent OnFirstGrassCut;
+        public UnityEvent OnAllGrassCut;
         #endregion
 
         #region Public Properties
@@ -42,12 +42,10 @@ namespace Plusplus.ReaperRobot.Scripts.UnityComponent.Grass
                         if (_cutGrassCount == 1)
                         {
                             OnFirstGrassCut?.Invoke();
-                            Debug.Log("OnFirstGrassCut");
                         }
                         if (IsAllGrassCut)
                         {
                             OnAllGrassCut?.Invoke();
-                            Debug.Log("OnAllGrassCut");
                         }
                     }
                     else

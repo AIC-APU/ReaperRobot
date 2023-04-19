@@ -11,6 +11,8 @@ namespace Plusplus.ReaperRobot.Scripts.UnityComponent.Camera.GUI
 
         void Start()
         {
+            _viewModeText.text = _cameraController.ActiveCamera.Value.ViewMode;
+
             _cameraController
                 .ActiveCamera
                 .Subscribe(x => _viewModeText.text = x.ViewMode)
