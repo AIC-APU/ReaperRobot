@@ -16,7 +16,6 @@ namespace smart3tene.Reaper
         #endregion
 
         #region Public Properties
-        public string FilePath { get; set; }
         public float PlayTime { get; protected set; } = 0f;
         #endregion
 
@@ -105,7 +104,7 @@ namespace smart3tene.Reaper
             return new Vector3(posX, posY, posZ);
         }
 
-        protected Vector3　ExtractPosition(List<string[]> data, float seconds)
+        protected Vector3 ExtractPosition(List<string[]> data, float seconds)
         {
             var index = FindIndexFromSeconds(data, seconds);
 

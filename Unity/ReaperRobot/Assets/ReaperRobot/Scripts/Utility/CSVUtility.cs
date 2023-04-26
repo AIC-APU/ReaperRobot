@@ -1,22 +1,25 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Linq;
 using UnityEditor;
+using UnityEngine;
 
 namespace smart3tene
 {
     public static class CSVUtility
     {
-        public static void CreateFile(string filePath)
+        private static readonly string _directory = Application.streamingAssetsPath + "/../../../CSVData";
+
+        public static void CreateFile(string fileName)
         {
-            Write(filePath, "");
+            Write(_directory + $"/{fileName}", "");
         }
 
-        public static void Write(string filePath, string data, FileMode fileMode = FileMode.Create)
+        public static void Write(string fileName, string data, FileMode fileMode = FileMode.Create)
         {
-            if (!filePath.EndsWith(".csv")) filePath += ".csv";
+            if (!fileName.EndsWith(".csv")) fileName += ".csv";
+            var filePath = _directory + $"/{fileName}";
 
             //ディレクトリ作成
             var dir = Path.GetDirectoryName(filePath);
@@ -36,17 +39,23 @@ namespace smart3tene
             #endif
         }
 
-        public static void Write(string filePath, List<string[]> dataList, FileMode fileMode = FileMode.Create)
+        public static void Write(string fileName, List<string[]> dataList, FileMode fileMode = FileMode.Create)
         {
             var stringData = dataList
                 .Select(i => string.Join(",", i))
                 .Aggregate((i, j) => i + "\n" + j);
 
-            Write(filePath, stringData);
+            Write(fileName, stringData);
         }
 
-        public static List<string[]> Read(string filePath)
+        /// <summary>
+        /// CSVファイルを読み込み、二次元配列として返す
+        /// </summary>
+        public static List<string[]> Read(string fileName)
         {
+            if (!fileName.EndsWith(".csv")) fileName += ".csv";
+            var filePath = _directory + $"/{fileName}";
+
             // 読み込み
             string csvText = File.ReadAllText(filePath, Encoding.GetEncoding("utf-8"));
             StringReader stringReader = new StringReader(csvText);
@@ -68,9 +77,8 @@ namespace smart3tene
             stringReader.Close();
 
             // リストで出力
-            return recordList;
-
             //recordList[0][1]のように行列で取り出せる。
+            return recordList;
         }
     }
 

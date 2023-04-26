@@ -938,7 +938,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8613353878049715702}
-  - component: {fileID: 2828651731221509337}
   m_Layer: 0
   m_Name: ReaperCrawlerShadow
   m_TagString: Player
@@ -965,23 +964,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2828651731221509337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6569828215229620751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb02a0f284681534e8fa4fdf8589b92b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _reaper: {fileID: 3316602345082050556}
-  _cutterR: {fileID: 1115909135012658433}
-  _cutterL: {fileID: 4243517453631129760}
-  _crawlerL: {fileID: 3219325653907331688}
-  _crawlerR: {fileID: 2628045898812304561}
 --- !u!1 &7679767570250116018
 GameObject:
   m_ObjectHideFlags: 0
