@@ -1,0 +1,19 @@
+{
+    "name": "ReaperRobot.Replay",
+    "rootNamespace": "Plusplus.ReaperRobot.Scripts.View.Replay",
+    "references": [
+        "GUID:560b04d1a97f54a4e82edc0cbbb69285",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:909cb485cabd03e4dbeecb0adabbb76c",
+        "GUID:2f0db50d590f7a942803035d030777ed"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

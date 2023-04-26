@@ -788,7 +788,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &74122203
 MonoBehaviour:
@@ -802,8 +802,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bcb4feed642004e83c2b635346cc8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _reaperManager: {fileID: 691473189}
-  _reaperTransform: {fileID: 691473187}
+  _reaperTransform: {fileID: 0}
   _fileName: InputLog
   _ja: "\u3092\u4FDD\u5B58\u3057\u307E\u3057\u305F"
   _en: was saved.
@@ -1291,11 +1290,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 91158521}
   m_CullTransparentMesh: 1
---- !u!146 &97428369 stripped
-WheelCollider:
-  m_CorrespondingSourceObject: {fileID: 2404359564415754450, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-  m_PrefabInstance: {fileID: 691473186}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &99332030
 GameObject:
   m_ObjectHideFlags: 0
@@ -1369,8 +1363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99a6b58b5fcb2744badfbd1d9e0dbe8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _miniMapCamera: {fileID: 99332031}
-  _targetTransform: {fileID: 691473187}
+  _target: {fileID: 0}
 --- !u!4 &99332033
 Transform:
   m_ObjectHideFlags: 0
@@ -1993,7 +1986,7 @@ RectTransform:
   - {fileID: 1913749891}
   - {fileID: 1906810133}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2015,7 +2008,6 @@ MonoBehaviour:
   _reaperRecorder: {fileID: 74122203}
   _shadowReaperPlayer: {fileID: 298449272}
   _robotPlayer: {fileID: 298449271}
-  _controller: {fileID: 1943855788}
   _downLiftButton: {fileID: 917874368}
   _upLiftButton: {fileID: 1268335666}
   _rotateCutterButton: {fileID: 1738785415}
@@ -3320,11 +3312,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 263526314}
   m_CullTransparentMesh: 1
---- !u!146 &264776345 stripped
-WheelCollider:
-  m_CorrespondingSourceObject: {fileID: 7977552535057078125, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-  m_PrefabInstance: {fileID: 691473186}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &272617146
 GameObject:
   m_ObjectHideFlags: 0
@@ -3625,8 +3612,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RepositionPos: {x: 0, y: 0, z: 0}
   RepositionAng: {x: 0, y: 0, z: 0}
-  _reaperManager: {fileID: 691473189}
-  _reaperTransform: {fileID: 691473187}
+  _reaperTransform: {fileID: 0}
   _pathMaterial: {fileID: 2100000, guid: fe19eca1867b4554784a254a6fe516fb, type: 2}
 --- !u!114 &298449272
 MonoBehaviour:
@@ -3643,8 +3629,7 @@ MonoBehaviour:
   RepositionPos: {x: 0, y: 0, z: 0}
   RepositionAng: {x: 0, y: 0, z: 0}
   _shadowPrefab: {fileID: 6569828215229620751, guid: 867756d26096d35419251b8ca2f51d6e, type: 3}
-  _reaperManager: {fileID: 691473189}
-  _reaperTransform: {fileID: 691473187}
+  _reaperTransform: {fileID: 0}
   _pathMaterial: {fileID: 2100000, guid: 6a418f7d67c7d79429f0ff49c4235a05, type: 2}
 --- !u!4 &298449273
 Transform:
@@ -3659,7 +3644,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &299800004
 GameObject:
@@ -4982,7 +4967,7 @@ Transform:
   - {fileID: 951432689}
   - {fileID: 753447683}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &385375164
 GameObject:
@@ -8778,7 +8763,7 @@ Transform:
   - {fileID: 429029673}
   - {fileID: 433168165}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &621632282
 GameObject:
@@ -9493,11 +9478,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 645857913}
   m_CullTransparentMesh: 1
---- !u!146 &648951387 stripped
-WheelCollider:
-  m_CorrespondingSourceObject: {fileID: 4036112779091549744, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-  m_PrefabInstance: {fileID: 691473186}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &662144006
 GameObject:
   m_ObjectHideFlags: 0
@@ -10046,93 +10026,6 @@ MonoBehaviour:
   _playButton: {fileID: 631580255}
   _pauseButton: {fileID: 783677916}
   _stopButton: {fileID: 806838677}
---- !u!1001 &691473186
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5832357075693654913, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5832357075693654913, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5832357075693654913, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5832357075693654913, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5832357075693654913, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5832357075693654913, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5832357075693654913, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5832357075693654913, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5832357075693654913, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5832357075693654913, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5832357075693654913, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7195942872361190858, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-      propertyPath: sceneViewId
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8958998419709330552, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-      propertyPath: m_Name
-      value: ReaperCrawlerResource
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
---- !u!4 &691473187 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5832357075693654913, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-  m_PrefabInstance: {fileID: 691473186}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &691473188 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8958998419709330552, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-  m_PrefabInstance: {fileID: 691473186}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &691473189 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1780129434565651634, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-  m_PrefabInstance: {fileID: 691473186}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 691473188}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30982129f9fed88469fbce703661f386, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!54 &691473190 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 5540086616994095123, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-  m_PrefabInstance: {fileID: 691473186}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &695404512
 GameObject:
   m_ObjectHideFlags: 0
@@ -11321,11 +11214,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dd960977ad916642b4469ebf92431e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: {fileID: 691473187}
-  Camera: {fileID: 601594927}
+  _viewMode: 4
+  _target: {fileID: 0}
+  _camera: {fileID: 0}
   _cameraDefaultOffsetPos: {x: 0, y: 1, z: -1.5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
-  _viewMode: 4
 --- !u!1 &766364846
 GameObject:
   m_ObjectHideFlags: 0
@@ -11840,7 +11733,7 @@ RectTransform:
   m_Children:
   - {fileID: 194932081}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -14754,11 +14647,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a030d73ea6444442b9d79b914d392c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: {fileID: 691473187}
-  Camera: {fileID: 601594927}
+  _viewMode: 1
+  _target: {fileID: 0}
+  _camera: {fileID: 0}
   _cameraDefaultOffsetPos: {x: 0, y: 3, z: -5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
-  _viewMode: 1
 --- !u!1 &962558053
 GameObject:
   m_ObjectHideFlags: 0
@@ -16170,8 +16063,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c57765202cf219e45846f57db46814dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _reaperManager: {fileID: 691473189}
+  _reaperManager: {fileID: 0}
   _cutterLamp: {fileID: 856135604}
+  _cuttingColor: {r: 1, g: 0.3529412, b: 0, a: 1}
+  _notCuttingColor: {r: 0.76862746, g: 0.76862746, b: 0.76862746, a: 1}
 --- !u!1 &1080557650
 GameObject:
   m_ObjectHideFlags: 0
@@ -17820,6 +17715,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25af1527a7d93f942a992f0d72eb8f7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delay: 0
+  recordingCamera: {fileID: 0}
 --- !u!114 &1251496380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18809,11 +18706,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75aa0ba04d10ff544a5a243ac0e46814, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: {fileID: 691473187}
-  Camera: {fileID: 601594927}
+  _viewMode: 0
+  _target: {fileID: 0}
+  _camera: {fileID: 0}
   _cameraDefaultOffsetPos: {x: 0, y: 1.2, z: -0.5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
-  _viewMode: 0
 --- !u!1 &1375037352
 GameObject:
   m_ObjectHideFlags: 0
@@ -21549,11 +21446,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1662311275}
   m_CullTransparentMesh: 1
---- !u!146 &1662408896 stripped
-WheelCollider:
-  m_CorrespondingSourceObject: {fileID: 205683000655548139, guid: bfe532fa612b6f34a852867cc2c26d07, type: 3}
-  m_PrefabInstance: {fileID: 691473186}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1668510554
 GameObject:
   m_ObjectHideFlags: 0
@@ -25806,8 +25698,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44f97792c0b93ce4d93901383ec39af7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _reaperManager: {fileID: 691473189}
+  _reaperManager: {fileID: 0}
   _liftLamp: {fileID: 1925310654}
+  _liftDownColor: {r: 1, g: 0.3529412, b: 0, a: 1}
+  _liftUpColor: {r: 0.76862746, g: 0.76862746, b: 0.76862746, a: 1}
 --- !u!1 &1872169421
 GameObject:
   m_ObjectHideFlags: 0
@@ -26035,7 +25929,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &1896233428
 GameObject:
@@ -26570,18 +26464,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94c205105ebfccc408f58688a7393ac7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _reaperManager: {fileID: 691473189}
+  _reaperManager: {fileID: 0}
   _wheelColliders:
-  - {fileID: 97428369}
-  - {fileID: 264776345}
-  - {fileID: 648951387}
-  - {fileID: 1662408896}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   _robotParameterPanel: {fileID: 1913749890}
   _dampingInputField: {fileID: 1766786329}
   _moveTorqueInputField: {fileID: 854859443}
   _torqueRateInputField: {fileID: 258353807}
   _robotMassInputField: {fileID: 1106522327}
-  _robotBody: {fileID: 691473190}
+  _robotBody: {fileID: 0}
   _forwardFrictionField: {fileID: 1776840377}
   _sidewaysFrictionField: {fileID: 1792403240}
 --- !u!1 &1925310652
@@ -26875,7 +26769,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23501ee1b329e244786f05cac95b8491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TargetRobot: {fileID: 691473188}
+  _reaperManager: {fileID: 0}
 --- !u!114 &1943855789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26919,7 +26813,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1943855791
 MonoBehaviour:
@@ -26949,6 +26843,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a553690be5ddf644b390cb940cfc3c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _menuCanvas: {fileID: 0}
+  _pauseGame: 1
+  _disableController: 1
 --- !u!1 &1956403277
 GameObject:
   m_ObjectHideFlags: 0

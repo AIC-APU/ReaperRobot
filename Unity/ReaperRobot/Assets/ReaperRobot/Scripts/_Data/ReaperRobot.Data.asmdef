@@ -1,0 +1,16 @@
+{
+    "name": "ReaperRobot.Data",
+    "rootNamespace": "Plusplus.ReaperRobot.Scripts.Data",
+    "references": [
+        "GUID:9470a20afcd34c342960dc2b20318f17"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
