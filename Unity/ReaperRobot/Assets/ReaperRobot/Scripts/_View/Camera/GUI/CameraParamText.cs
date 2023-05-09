@@ -1,12 +1,12 @@
 using UnityEngine;
 using TMPro;
 
-namespace Plusplus.ReaperRobot.Scripts.View.Camera.GUI
+namespace Plusplus.ReaperRobot.Scripts.View.Camera
 {
     public class CameraParamText : MonoBehaviour
     {
         #region Serialized Private Fields
-        [SerializeField] private CameraController _cameraController;
+        [SerializeField] private CameraManager _cameraMangaer;
         [SerializeField] private TMP_Text _positionX;
         [SerializeField] private TMP_Text _positionY;
         [SerializeField] private TMP_Text _positionZ;
@@ -18,7 +18,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera.GUI
         #region MonoBehaviour Callbacks
         void Update()
         {
-            var activeCamera = _cameraController.ActiveCamera.Value;
+            var activeCamera = _cameraMangaer.ActiveCamera.Value;
 
             var localPos = activeCamera.Target.InverseTransformPoint(activeCamera.Camera.transform.position);
             var localRot = GetLocalAngle(activeCamera.Target, activeCamera.Camera.transform);

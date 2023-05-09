@@ -92,8 +92,8 @@ namespace smart3tene.Reaper
             //10フレーム毎に軌跡をポリゴンで描画
             if(_flameCount % 10 == 0)
             {
-                var obj = MeshCreator.CreateCubeMesh(_shadowTransform.position, _pathMaterial, 0.05f);
-                _pathObjects.Add(obj);
+                // var obj = MeshCreator.CreateCubeMesh(_shadowTransform.position, _pathMaterial, 0.05f);
+                // _pathObjects.Add(obj);
             }
             _flameCount++;
             

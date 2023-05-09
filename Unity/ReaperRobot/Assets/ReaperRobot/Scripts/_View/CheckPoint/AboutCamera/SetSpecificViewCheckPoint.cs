@@ -10,7 +10,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.CheckPoint.AboutCamera
     public class SetSpecificViewCheckPoint : BaseCheckPoint
     {
         #region Serialized Private Fields
-        [SerializeField] private CameraController _cameraController;
+        [SerializeField] private CameraManager _cameraManager;
         [SerializeField] private BaseCamera _goalCamera;
         #endregion
 
@@ -28,7 +28,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.CheckPoint.AboutCamera
         #region Public method
         public override void InitializeCheckPoint()
         {
-            _disposable = _cameraController
+            _disposable = _cameraManager
                                 .ActiveCamera
                                 .Where(x => x == _goalCamera)
                                 .Subscribe(_ => _isChecked.Value = true);

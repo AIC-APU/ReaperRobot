@@ -25,19 +25,12 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         [SerializeField] private Animator _crawlerL;
         [SerializeField] private Animator _crawlerR;
 
-        [Header("Center of Gravity")]
-        [SerializeField] private Vector3 _centerOfGravity = new(0, 0, -0.2f);
-        #endregion
-
-        #region Public Field
-        //トルク関連の値
-        [Header("Torque")]
-        public float moveTorque = 110f;
-        public float torqueRateAtCutting = 0.5f;
+        [Header("Parameter")]
+        [SerializeField] private ReaperParameter _params;
         #endregion
 
         #region I Read Only Reactive Property
-        public IReadOnlyReactiveProperty<float> InputH  => _inputH;
+        public IReadOnlyReactiveProperty<float> InputH => _inputH;
         public IReadOnlyReactiveProperty<float> InputV => _inputV;
         public IReadOnlyReactiveProperty<bool> IsCutting => _isCutting;
         public IReadOnlyReactiveProperty<bool> IsLiftDown => _isLiftDown;
@@ -60,29 +53,31 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         private ReactiveProperty<float> _inputV = new(0);
         #endregion
 
-        #region Readonly Field
-        readonly float brakeTorque = 500f;
-        #endregion
-
 
         #region MonoBehaviour Callbacks
         private void Start()
-        {            
-            //重心の設定
-            GetComponent<Rigidbody>().centerOfMass = _centerOfGravity;
+        {
+            var rigidbody = GetComponent<Rigidbody>();
 
-            //rpmの購読
+            //重心の購読
+            _params.CenterOfGravity.Subscribe(x => rigidbody.centerOfMass = x).AddTo(this);
+
+            //質量の購読
+            _params.RobotMath.Subscribe(x => rigidbody.mass = x).AddTo(this);
+
+            //減衰率の購読
+            _params.DampingRate.Subscribe(x => SetWheelDanpingRate(x)).AddTo(this);
+
+            //摩擦の購読
+            _params.ForwardFriction.Subscribe(x => SetWheelForwardFriction(x)).AddTo(this);
+            _params.SidewaysFriction.Subscribe(x => SetWheelSidewaysFriction(x)).AddTo(this);
+
             //crawlerアニメーションの処理
-            //素のrpmは値が大きすぎるので、直進時の最大rpm = 70f（計測値）で除算している
-            _leftRpm
-                .Subscribe(x => _crawlerL.SetFloat("WheelTorque", (float)x / 70f))
-                .AddTo(this);
+            //素のrpmは値が大きすぎるので、直進時の最大rpm = 70f で除算している
+            _leftRpm.Subscribe(x => _crawlerL.SetFloat("WheelTorque", (float)x / 70f)).AddTo(this);
+            _rightRpm.Subscribe(x => _crawlerR.SetFloat("WheelTorque", (float)x / 70f)).AddTo(this);
 
-            _rightRpm
-                .Subscribe(x => _crawlerR.SetFloat("WheelTorque", (float)x / 70f))
-                .AddTo(this);
-
-            //isLiftDownの購読
+            //リフトの処理
             _isLiftDown.
                 Subscribe(isDown =>
                 {
@@ -92,7 +87,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
                 })
                 .AddTo(this);
 
-            //isCuttingの購読
+            //カッターの処理
             _isCutting
                 .Subscribe(isRotate =>
                 {
@@ -116,7 +111,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         private void Update()
         {
             _leftRpm.Value = (int)_wheelColliderL2.rpm;
-            _rightRpm.Value = (int)_wheelColliderR2.rpm;       
+            _rightRpm.Value = (int)_wheelColliderR2.rpm;
         }
 
         private void OnDestroy()
@@ -136,7 +131,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         /// <param name="vertical">垂直方向の入力。-1~+1の範囲</param>
         public void Move(float horizontal, float vertical, bool useRPC = true)
         {
-            if(horizontal == 0 && vertical == 0 && _wheelColliderL2.motorTorque == 0 && _wheelColliderR2.motorTorque == 0)
+            if (horizontal == 0 && vertical == 0 && _wheelColliderL2.motorTorque == 0 && _wheelColliderR2.motorTorque == 0)
             {
                 return;
             }
@@ -150,14 +145,14 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
             _inputV.Value = vertical;
 
             //左右車輪のトルクを計算
-            var torqueL = moveTorque * vertical;
-            var torqueR = moveTorque * vertical;
+            var torqueL = _params.MoveTorque.Value * vertical;
+            var torqueR = _params.MoveTorque.Value * vertical;
 
-            if(horizontal > 0)
+            if (horizontal > 0)
             {
                 torqueR *= 1f - 2f * horizontal;
             }
-            else if(horizontal < 0)
+            else if (horizontal < 0)
             {
                 torqueL *= 1f + 2f * horizontal;
             }
@@ -165,25 +160,22 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
 
             if (_isCutting.Value)
             {
-                torqueL *= torqueRateAtCutting;
-                torqueR *= torqueRateAtCutting;
+                torqueL *= _params.TorqueRateAtCutting.Value;
+                torqueR *= _params.TorqueRateAtCutting.Value;
             }
 
             _wheelColliderL2.motorTorque = torqueL;
             _wheelColliderL3.motorTorque = torqueL;
             _wheelColliderR2.motorTorque = torqueR;
             _wheelColliderR3.motorTorque = torqueR;
-
-            //モーター音
-
         }
 
         public void PutOnBrake()
         {
-            _wheelColliderL2.brakeTorque = brakeTorque;
-            _wheelColliderL3.brakeTorque = brakeTorque;
-            _wheelColliderR2.brakeTorque = brakeTorque;
-            _wheelColliderR3.brakeTorque = brakeTorque;
+            _wheelColliderL2.brakeTorque = _params.BrakeTorque.Value;
+            _wheelColliderL3.brakeTorque = _params.BrakeTorque.Value;
+            _wheelColliderR2.brakeTorque = _params.BrakeTorque.Value;
+            _wheelColliderR3.brakeTorque = _params.BrakeTorque.Value;
         }
 
         public void ReleaseBrake()
@@ -198,7 +190,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         {
             _isLiftDown.Value = isDown;
         }
-        
+
         public void RotateCutter(bool isRotate)
         {
             _isCutting.Value = isRotate;
@@ -259,14 +251,60 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
                 _cutterL.Rotate(0, _nowCutterSpeed * Time.deltaTime, 0);
                 _cutterR.Rotate(0, -_nowCutterSpeed * Time.deltaTime, 0);
 
-                //モーター音
-
-
                 await UniTask.Yield(PlayerLoopTiming.Update, ct);
 
                 //刃が止まったらループを抜ける
                 if (!isCutting && _nowCutterSpeed == 0) break;
             }
+        }
+
+        private void SetWheelDanpingRate(float dampingRate)
+        {
+            //Danpingの設定
+            _wheelColliderL2.wheelDampingRate = dampingRate;
+            _wheelColliderL3.wheelDampingRate = dampingRate;
+            _wheelColliderR2.wheelDampingRate = dampingRate;
+            _wheelColliderR3.wheelDampingRate = dampingRate;
+        }
+
+        private void SetWheelForwardFriction(float stiffness)
+        {
+            //前輪の摩擦の設定
+            var forwardFrictionL2 = _wheelColliderL2.forwardFriction;
+            forwardFrictionL2.stiffness = stiffness;
+            _wheelColliderL2.forwardFriction = forwardFrictionL2;
+
+            var forwardFrictionL3 = _wheelColliderL3.forwardFriction;
+            forwardFrictionL3.stiffness = stiffness;
+            _wheelColliderL3.forwardFriction = forwardFrictionL3;
+
+            var forwardFrictionR2 = _wheelColliderR2.forwardFriction;
+            forwardFrictionR2.stiffness = stiffness;
+            _wheelColliderR2.forwardFriction = forwardFrictionR2;
+
+            var forwardFrictionR3 = _wheelColliderR3.forwardFriction;
+            forwardFrictionR3.stiffness = stiffness;
+            _wheelColliderR3.forwardFriction = forwardFrictionR3;
+        }
+
+        private void SetWheelSidewaysFriction(float stiffness)
+        {
+            //後輪の摩擦の設定
+            var sidewaysFrictionL2 = _wheelColliderL2.sidewaysFriction;
+            sidewaysFrictionL2.stiffness = stiffness;
+            _wheelColliderL2.sidewaysFriction = sidewaysFrictionL2;
+
+            var sidewaysFrictionL3 = _wheelColliderL3.sidewaysFriction;
+            sidewaysFrictionL3.stiffness = stiffness;
+            _wheelColliderL3.sidewaysFriction = sidewaysFrictionL3;
+
+            var sidewaysFrictionR2 = _wheelColliderR2.sidewaysFriction;
+            sidewaysFrictionR2.stiffness = stiffness;
+            _wheelColliderR2.sidewaysFriction = sidewaysFrictionR2;
+
+            var sidewaysFrictionR3 = _wheelColliderR3.sidewaysFriction;
+            sidewaysFrictionR3.stiffness = stiffness;
+            _wheelColliderR3.sidewaysFriction = sidewaysFrictionR3;
         }
         #endregion
     }

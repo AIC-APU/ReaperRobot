@@ -2,33 +2,20 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot.GUI
+namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
 {
     public class ReaperRobotParamUI : MonoBehaviour
     {
         #region Serialized Private Fields
-        [SerializeField] private ReaperManager _reaperManager;
-
-        [Header("Wheels")]
-        [SerializeField] private List<WheelCollider> _wheelColliders = new List<WheelCollider>();
+        [Header("Parameters")]
+        [SerializeField] private ReaperParameter _targetParameter;
 
         [Header("UIs")]
         [SerializeField] private GameObject _robotParameterPanel;
-
-        [Header("Damping Rate")]
         [SerializeField] private TMP_InputField _dampingInputField;
-
-        [Header("Move Torque")]
         [SerializeField] private TMP_InputField _moveTorqueInputField;
-
-        [Header("Torque Rate at Cutting")]
         [SerializeField] private TMP_InputField _torqueRateInputField;
-
-        [Header("Mass")]
         [SerializeField] private TMP_InputField _robotMassInputField;
-        [SerializeField] private Rigidbody _robotBody;
-
-        [Header("Friction")]
         [SerializeField] private TMP_InputField _forwardFrictionField;
         [SerializeField] private TMP_InputField _sidewaysFrictionField;
         #endregion
@@ -46,40 +33,41 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot.GUI
         private void Awake()
         {
             //テキストの更新
-            _dampingInputField.text = _wheelColliders[0].wheelDampingRate.ToString();
-            _moveTorqueInputField.text = _reaperManager.moveTorque.ToString();
-            _torqueRateInputField.text = _reaperManager.torqueRateAtCutting.ToString();
-            _robotMassInputField.text = _robotBody.mass.ToString();
-            _forwardFrictionField.text = _wheelColliders[0].forwardFriction.stiffness.ToString();
-            _sidewaysFrictionField.text = _wheelColliders[0].sidewaysFriction.stiffness.ToString();
+            _dampingInputField.text = _targetParameter.DampingRate.Value.ToString();
+            _moveTorqueInputField.text = _targetParameter.MoveTorque.Value.ToString();
+            _torqueRateInputField.text = _targetParameter.TorqueRateAtCutting.Value.ToString();
+            _robotMassInputField.text = _targetParameter.RobotMath.Value.ToString();
+            _forwardFrictionField.text = _targetParameter.ForwardFriction.Value.ToString();
+            _sidewaysFrictionField.text = _targetParameter.SidewaysFriction.Value.ToString();
 
             //デフォルト値の設定
-            _defaultDampingRate = _wheelColliders[0].wheelDampingRate;
-            _defaultMoveTorque = _reaperManager.moveTorque;
-            _defaultTorqueRate = _reaperManager.torqueRateAtCutting;
-            _defaultMass = _robotBody.mass;
-            _defaultForwardFriction = _wheelColliders[0].forwardFriction.stiffness;
-            _defaultSidewaysFriction = _wheelColliders[0].sidewaysFriction.stiffness;
+            _defaultDampingRate = _targetParameter.DampingRate.Value;
+            _defaultMoveTorque = _targetParameter.MoveTorque.Value;
+            _defaultTorqueRate = _targetParameter.TorqueRateAtCutting.Value;
+            _defaultMass = _targetParameter.RobotMath.Value;
+            _defaultForwardFriction = _targetParameter.ForwardFriction.Value;
+            _defaultSidewaysFriction = _targetParameter.SidewaysFriction.Value;
+        }
+
+        void OnDestroy()
+        {
+            //デフォルト値に戻す処理
+            //一応書いておくが、必要なければ消していい
+            OnClickReset();
         }
         #endregion
 
         #region Public method for InputFields
-
         public void OnEndEditDanpingRate()
         {
             if (_dampingInputField.text == "" || _dampingInputField.text == "-")
             {
-                _dampingInputField.text = _wheelColliders[0].wheelDampingRate.ToString();
+                _dampingInputField.text = _targetParameter.DampingRate.Value.ToString();
                 return;
             }
 
             var value = Mathf.Abs(float.Parse(_dampingInputField.text));
-
-            foreach (WheelCollider wheel in _wheelColliders)
-            {
-                wheel.wheelDampingRate = value;
-            }
-
+            _targetParameter.DampingRate.Value = value;
             _dampingInputField.text = value.ToString();
         }
 
@@ -87,12 +75,12 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot.GUI
         {
             if (_moveTorqueInputField.text == "" || _moveTorqueInputField.text == "-")
             {
-                _moveTorqueInputField.text = _reaperManager.moveTorque.ToString();
+                _moveTorqueInputField.text = _targetParameter.MoveTorque.Value.ToString();
                 return;
             }
 
             var value = Mathf.Abs(float.Parse(_moveTorqueInputField.text));
-            _reaperManager.moveTorque = value;
+            _targetParameter.MoveTorque.Value = value;
             _moveTorqueInputField.text = value.ToString();
 
         }
@@ -100,101 +88,63 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot.GUI
         {
             if (_torqueRateInputField.text == "" || _torqueRateInputField.text == "-")
             {
-                _torqueRateInputField.text = _reaperManager.torqueRateAtCutting.ToString();
+                _torqueRateInputField.text = _targetParameter.TorqueRateAtCutting.Value.ToString();
                 return;
             }
 
             var value = Mathf.Abs(float.Parse(_torqueRateInputField.text));
             value = Mathf.Clamp(value, 0, 1);
 
-            _reaperManager.torqueRateAtCutting = value;
+            _targetParameter.TorqueRateAtCutting.Value = value;
             _torqueRateInputField.text = value.ToString();
         }
         public void OnEndEditRobotMass()
         {
             if (_robotMassInputField.text == "" || _robotMassInputField.text == "-")
             {
-                _robotMassInputField.text = _robotBody.mass.ToString();
+                _robotMassInputField.text = _targetParameter.RobotMath.Value.ToString();
                 return;
             }
 
             var value = Mathf.Abs(float.Parse(_robotMassInputField.text));
 
-            _robotBody.mass = value;
+            _targetParameter.RobotMath.Value = value;
             _robotMassInputField.text = value.ToString();
         }
         public void OnEndEditForwardFriction()
         {
             if (_forwardFrictionField.text == "" || _forwardFrictionField.text == "-")
             {
-                _forwardFrictionField.text = _wheelColliders[0].forwardFriction.stiffness.ToString();
+                _forwardFrictionField.text = _targetParameter.ForwardFriction.Value.ToString();
                 return;
             }
 
             var value = Mathf.Abs(float.Parse(_forwardFrictionField.text));
             value = Mathf.Clamp(value, 0, 1);
-
-            foreach (WheelCollider wheel in _wheelColliders)
-            {
-                var ForwardFriction = wheel.forwardFriction;
-                ForwardFriction.stiffness = value;
-                wheel.forwardFriction = ForwardFriction;
-            }
+            _targetParameter.ForwardFriction.Value = value;
             _forwardFrictionField.text = value.ToString();
         }
         public void OnEndEditSidewaysFriction()
         {
             if (_sidewaysFrictionField.text == "" || _sidewaysFrictionField.text == "-")
             {
-                _sidewaysFrictionField.text = _wheelColliders[0].sidewaysFriction.stiffness.ToString();
+                _sidewaysFrictionField.text = _targetParameter.SidewaysFriction.Value.ToString();
                 return;
             }
 
             var value = Mathf.Abs(float.Parse(_sidewaysFrictionField.text));
             value = Mathf.Clamp(value, 0, 1);
-
-            foreach (WheelCollider wheel in _wheelColliders)
-            {
-                var sidewaysFriction = wheel.sidewaysFriction;
-                sidewaysFriction.stiffness = value;
-                wheel.sidewaysFriction = sidewaysFriction;
-            }
+            _targetParameter.SidewaysFriction.Value = value;
             _sidewaysFrictionField.text = value.ToString();
         }
         public void OnClickReset()
         {
-            //Damping Rate
-            foreach (WheelCollider wheel in _wheelColliders)
-            {
-                wheel.wheelDampingRate = _defaultDampingRate;
-            }
-            _dampingInputField.text = _defaultDampingRate.ToString();
-
-            //Move Torque
-            _reaperManager.moveTorque = _defaultMoveTorque;
-            _moveTorqueInputField.text = _defaultMoveTorque.ToString();
-
-            //TorqueRateAtCutting
-            _reaperManager.torqueRateAtCutting = _defaultTorqueRate;
-            _torqueRateInputField.text = _defaultTorqueRate.ToString();
-
-            //Mass
-            _robotBody.mass = _defaultMass;
-            _robotMassInputField.text = _defaultMass.ToString();
-
-            //Friction Stiffness
-            foreach (WheelCollider wheel in _wheelColliders)
-            {
-                var ForwardFriction = wheel.forwardFriction;
-                ForwardFriction.stiffness = _defaultForwardFriction;
-                wheel.forwardFriction = ForwardFriction;
-
-                var sidewaysFriction = wheel.sidewaysFriction;
-                sidewaysFriction.stiffness = _defaultSidewaysFriction;
-                wheel.sidewaysFriction = sidewaysFriction;
-            }
-            _forwardFrictionField.text = _defaultForwardFriction.ToString();
-            _sidewaysFrictionField.text = _defaultSidewaysFriction.ToString();
+            _targetParameter.DampingRate.Value = _defaultDampingRate;
+            _targetParameter.MoveTorque.Value = _defaultMoveTorque;
+            _targetParameter.TorqueRateAtCutting.Value = _defaultTorqueRate;
+            _targetParameter.RobotMath.Value = _defaultMass;
+            _targetParameter.ForwardFriction.Value = _defaultForwardFriction;
+            _targetParameter.SidewaysFriction.Value = _defaultSidewaysFriction;
         }
         #endregion
     }

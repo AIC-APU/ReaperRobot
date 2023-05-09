@@ -34,10 +34,6 @@ MonoBehaviour:
     m_Localized: Cutter
     m_Metadata:
       m_Items: []
-  - m_Id: 7753657700352
-    m_Localized: mode
-    m_Metadata:
-      m_Items: []
   - m_Id: 18455919284224
     m_Localized: REAPER_FPV
     m_Metadata:

@@ -14,97 +14,76 @@ namespace Plusplus.ReaperRobot.Scripts.View.Replay
         #endregion
 
         #region Private Fields
-        private Vector3 _offsetPosition;
-        private Vector3 _offsetAngle;
-        private IDisposable _timeDisposable;
-        private IDisposable _runDisposable;
+        private Vector3 _defaultPosition;
+        private Vector3 _defaultAngle;
         #endregion
 
-        #region MonoBehaviour Callbacks
-        void OnDestroy()
+        #region MonoBehaviour Callback
+        void Awake()
         {
-            _timeDisposable?.Dispose();
-            _runDisposable?.Dispose();
-        }
-        #endregion
+            _defaultPosition = _reaperTransform.position;
+            _defaultAngle = _reaperTransform.eulerAngles;
 
-        #region Public method
-        public override void FinalizeReplay()
-        {
-            _timeDisposable?.Dispose();
-            _runDisposable?.Dispose();
-            _dataSets.Clear();
-        }
-
-        public override void InitializeReplay(string filePath)
-        {
-            //データの読み込み
-            _dataSets.Clear();
-            _dataSets.AddRange(GetDataSets(filePath));
-
-            //位置と角度のオフセットを取得
-            _offsetPosition = _reaperTransform.transform.position - ExtractPosition(_dataSets, 0f);
-            _offsetAngle = _reaperTransform.transform.eulerAngles - new Vector3(0, ExtractAngleY(_dataSets, 0f), 0);
-
-            _timeDisposable =
-                _timer
+            _replayManager
                 .Time
+                .Where(_ => _replayManager.IsDataReady)
                 .Subscribe(seconds =>
                 {
                     if (seconds != 0)
                     {
                         //通常再生されている時
-                        if(_timer.IsNomalSpeed()) Replay(_dataSets, seconds);
+                        if (_replayManager.IsNomalSpeed) Replay();
                     }
                     else
                     {
                         //初期状態に戻った時
                         _reaperManager.Move(0, 0);
-                        ResetPosition(_dataSets, _timer.Time.Value);
+                        ResetPosition(_reaperTransform);
                     }
-                });
 
-            _runDisposable =
-                _timer
+                })
+                .AddTo(this);
+
+            _replayManager
                 .IsReplaying
                 .Skip(1)
-                .Subscribe(isReplaying =>
+                .Subscribe(x =>
                 {
-                    if (isReplaying)
+                    if (x)
                     {
                         //停止状態から再生された時
-                        ResetPosition(_dataSets, _timer.Time.Value);
+                        ResetPosition(_reaperTransform);
                     }
                     else
                     {
                         //再生状態から停止された時
                         _reaperManager.Move(0, 0);
                     }
-                });
+                })
+                .AddTo(this);
         }
         #endregion
 
         #region Private method
-        protected override void Replay(List<DataSet> data, float seconds)
+        protected override void Replay()
         {
-            var inputH = ExtractInputH(data, seconds);
-            var inputV = ExtractInputV(data, seconds);
+            var inputH = _replayManager.GetInputH();
+            var inputV = _replayManager.GetInputV();
             _reaperManager.Move(inputH, inputV);
         }
 
-        private void ResetPosition(List<DataSet> data, float seconds)
+        private void ResetPosition(Transform target)
         {
-            var rawPos = ExtractPosition(data, seconds);
-            var posx = rawPos.x + _offsetPosition.x;
-            var posy = rawPos.y + _offsetPosition.y;
-            var posz = rawPos.z + _offsetPosition.z;
-            var pos = new Vector3(posx, posy, posz);
+            var rawPos = _replayManager.GetPosition();
+            var offsetPos = _defaultPosition - _replayManager.GetStartPosition();
+            var pos = rawPos + offsetPos;
 
-            var rawAngleY = ExtractAngleY(data, seconds);
-            var angleY = rawAngleY + _offsetAngle.y;
+            var rawAngleY = _replayManager.GetAngleY();
+            var offsetAngle = _defaultAngle - new Vector3(0, _replayManager.GetStartAngleY(), 0);
+            var angleY = rawAngleY + offsetAngle.y;
             var rot = Quaternion.Euler(0, angleY, 0);
 
-            _reaperTransform.transform.SetPositionAndRotation(pos, rot);
+            target.transform.SetPositionAndRotation(pos, rot);
         }
         #endregion
     }
