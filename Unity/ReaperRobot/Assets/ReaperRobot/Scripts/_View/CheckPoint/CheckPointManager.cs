@@ -41,22 +41,22 @@ namespace Plusplus.ReaperRobot.Scripts.View.CheckPoint
         #region Private method
         private async UniTask CheckPointFlow(CancellationToken ct = default)
         {
-            foreach (BaseCheckPoint checkPoint in _checkPointList)
+            for(int i = 0; i < _checkPointList.Count; i++)
             {
                 //チェックポイントの初期化
-                checkPoint.InitializeCheckPoint();
+                _checkPointList[i].InitializeCheckPoint();
 
                 //チェックポイントの説明の表示
-                InvokePopupIntroduction(checkPoint.Introduction);
+                InvokePopupIntroduction(_checkPointList[i].Introduction);
 
                 //チェックポイントを通過するまで待機
-                await UniTask.WaitUntil(() => checkPoint.IsChecked.Value, PlayerLoopTiming.Update, ct);
-
-                //チェックポイントの通過イベント発生
-                InvokeCheckPointPass();
+                await UniTask.WaitUntil(() => _checkPointList[i].IsChecked.Value, PlayerLoopTiming.Update, ct);
 
                 //チェックポイントの後処理
-                checkPoint.FinalizeCheckPoint();
+                _checkPointList[i].FinalizeCheckPoint();
+
+                //チェックポイントの通過イベント発生
+                if(i < _checkPointList.Count - 1) InvokeCheckPointPass();
             }
 
             //すべてのチェックポイントを通過したらイベント発生

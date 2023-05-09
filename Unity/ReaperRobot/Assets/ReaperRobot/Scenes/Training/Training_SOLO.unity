@@ -1073,7 +1073,6 @@ GameObject:
   - component: {fileID: 135766314}
   - component: {fileID: 135766317}
   - component: {fileID: 135766316}
-  - component: {fileID: 135766315}
   m_Layer: 5
   m_Name: ViewModeText
   m_TagString: Untagged
@@ -1101,46 +1100,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &135766315
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 135766313}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_StringReference:
-    m_TableReference:
-      m_TableCollectionName: GUID:a99e44ca0e0c2cd45a5c185acaaf3fe2
-    m_TableEntryReference:
-      m_KeyId: 7753657700352
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_FormatArguments: []
-  m_UpdateString:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 135766316}
-        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
-        m_MethodName: set_text
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-  references:
-    version: 2
-    RefIds: []
 --- !u!114 &135766316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1320,9 +1279,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1620706534}
-        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.UnityComponent.Timer.Timer,
-          ReaperRobot.Timer
-        m_MethodName: TimerStop
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.ElapsedTimer.ElapsedTimer,
+          ReaperRobot.ElapsedTimer
+        m_MethodName: StopTimer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4625,7 +4584,7 @@ MonoBehaviour:
 
     Controller:
     Select (switch) / Right stick (rotation)'
-  _cameraController: {fileID: 1504616886}
+  _cameraManager: {fileID: 1983901328}
   _goalCamera: {fileID: 1214231331}
 --- !u!1 &880181957
 GameObject:
@@ -5873,7 +5832,7 @@ MonoBehaviour:
 
     Controller:
     X button'
-  _cameraController: {fileID: 1504616886}
+  _cameraManager: {fileID: 1983901328}
   _goalCamera: {fileID: 1449420789}
 --- !u!1 &1100840762
 GameObject:
@@ -6861,7 +6820,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewModeText: {fileID: 135766316}
-  _cameraController: {fileID: 1504616886}
+  _cameraManager: {fileID: 1983901328}
 --- !u!4 &1299560864 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8996102183553057519, guid: a58b104885dc57d418a9062019e6939c, type: 3}
@@ -8162,6 +8121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 677badc80cdad8343b2e475bbe210f4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cameraManager: {fileID: 1983901328}
 --- !u!114 &1504616886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8174,17 +8134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcc3be4cc9b973e4f87a114eefec18bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _loops:
-  - Cameras:
-    - {fileID: 884200199}
-    - {fileID: 1100840764}
-    - {fileID: 1214231331}
-  - Cameras:
-    - {fileID: 1449420789}
-    - {fileID: 1123392855}
-  OnChangeLoop:
-    m_PersistentCalls:
-      m_Calls: []
+  _cameraManager: {fileID: 1983901328}
 --- !u!114 &1504616887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9034,11 +8984,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1620706532}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77d92c89664521f4c9d5ef67c9ffbc6c, type: 3}
+  m_Script: {fileID: 11500000, guid: 93c58b8309b68cf42bc9bb7026a61a05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _nowTime: 0
   _startOnAwake: 1
-  _time: 0
 --- !u!1 &1628894815
 GameObject:
   m_ObjectHideFlags: 0
@@ -10260,6 +10210,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2711841310705522347, guid: fe3144423c01fcf41a38ecfaf1651c2b, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2711841310705522347, guid: fe3144423c01fcf41a38ecfaf1651c2b, type: 3}
+      propertyPath: _reaperParameter
+      value: 
+      objectReference: {fileID: 11400000, guid: 6ee5d18074ac61f4f8b540f1fa50ac3a, type: 2}
     - target: {fileID: 4702583329144847969, guid: fe3144423c01fcf41a38ecfaf1651c2b, type: 3}
       propertyPath: m_Name
       value: ReaperCrawler
@@ -10914,6 +10872,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1983901327}
+  - component: {fileID: 1983901328}
   m_Layer: 0
   m_Name: CameraSetteings
   m_TagString: Untagged
@@ -10941,6 +10900,29 @@ Transform:
   m_Father: {fileID: 582371975}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1983901328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1983901326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86774ddecac5ffb458e6bed8b29aeadb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _loops:
+  - Cameras:
+    - {fileID: 884200199}
+    - {fileID: 1100840764}
+    - {fileID: 1214231331}
+  - Cameras:
+    - {fileID: 1449420789}
+    - {fileID: 1123392855}
+  OnChangeLoop:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2036569163
 GameObject:
   m_ObjectHideFlags: 0
@@ -11095,7 +11077,7 @@ MonoBehaviour:
 
     Controller:
     X button'
-  _cameraController: {fileID: 1504616886}
+  _cameraManager: {fileID: 1983901328}
   _goalCamera: {fileID: 884200199}
 --- !u!4 &2112281013 stripped
 Transform:

@@ -56,8 +56,8 @@ namespace smart3tene.Reaper
             //メッシュを使った軌跡の記録
             if (_flameCount % 10 == 0)
             {
-                var obj = MeshCreator.CreateCubeMesh(_reaperTransform.position, _pathMaterial, 0.05f);
-                _pathObjects.Add(obj);
+                // var obj = MeshCreator.CreateCubeMesh(_reaperTransform.position, _pathMaterial, 0.05f);
+                // _pathObjects.Add(obj);
             }
             _flameCount++;
 

@@ -1,16 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using Plusplus.ReaperRobot.Scripts.Data;
 using TMPro;
 
-namespace Plusplus.ReaperRobot.Scripts.View.Replay.GUI
+namespace Plusplus.ReaperRobot.Scripts.View.Replay
 {
     public class SelectFileButton : MonoBehaviour
     {
         #region Private Fields
-        [SerializeField] private List<BaseReplay> _replaySystems = new List<BaseReplay>();
+        [SerializeField] private ReplayManager _replayManager;
         [SerializeField] private TMP_Text _text;
         #endregion
 
@@ -25,11 +22,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.Replay.GUI
 
             if(path != "")
             {
-                foreach (var replay in _replaySystems)
-                {
-                    replay.InitializeReplay(path);
-                    _text.text = Path.GetFileName(path);
-                }
+                _replayManager.InitializeData(path);
+                _text.text = Path.GetFileName(path);
             }
             else
             {

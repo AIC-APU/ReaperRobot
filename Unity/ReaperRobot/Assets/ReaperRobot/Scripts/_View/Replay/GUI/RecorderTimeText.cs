@@ -1,7 +1,8 @@
 using UnityEngine;
 using TMPro;
+using System;
 
-namespace Plusplus.ReaperRobot.Scripts.View.Replay.GUI
+namespace Plusplus.ReaperRobot.Scripts.View.Replay
 {
     public class RecorderTimeText : MonoBehaviour
     {
@@ -10,9 +11,9 @@ namespace Plusplus.ReaperRobot.Scripts.View.Replay.GUI
 
         private void Update()
         {
-            if(_recorder.IsRecording.Value || !(_recorder.Time == 0))
+            if(_recorder.IsRecording.Value || !(_recorder.Time.Value == 0))
             {
-                _timeNum.text = TimeConverter.ToString(_recorder.Time);
+                _timeNum.text = TimeSpan.FromSeconds(_recorder.Time.Value).ToString(@"hh\:mm\:ss\:fff");
             }
             else
             {

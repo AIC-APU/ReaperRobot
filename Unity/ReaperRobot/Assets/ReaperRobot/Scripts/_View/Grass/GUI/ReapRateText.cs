@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using UniRx;
 
-namespace Plusplus.ReaperRobot.Scripts.View.Grass.GUI
+namespace Plusplus.ReaperRobot.Scripts.View.Grass
 {
     public class ReapRateText : MonoBehaviour
     {

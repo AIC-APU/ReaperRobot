@@ -27,9 +27,9 @@ namespace Plusplus.ReaperRobot.Scripts.View.Grass
         #region MonoBehaviour Callbacks
         void Awake()
         {
-            Grass[] grasses = FindObjectsOfType<Grass>();
+            GrassObject[] grasses = FindObjectsOfType<GrassObject>();
             _allGrassCount = grasses.Length;
-            foreach (Grass grass in grasses)
+            foreach (GrassObject grass in grasses)
             {
                 grass
                 .IsCut

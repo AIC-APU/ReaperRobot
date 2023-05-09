@@ -1044,9 +1044,7 @@ MonoBehaviour:
   _wheelColliderR3: {fileID: 4597212729122272498}
   _crawlerL: {fileID: 3946013965446891014}
   _crawlerR: {fileID: 4474019163192602847}
-  _centerOfGravity: {x: 0, y: 0, z: -0.2}
-  moveTorque: 200
-  torqueRateAtCutting: 0.5
+  _params: {fileID: 11400000, guid: 6ee5d18074ac61f4f8b540f1fa50ac3a, type: 2}
 --- !u!1 &4928232077862936953
 GameObject:
   m_ObjectHideFlags: 0

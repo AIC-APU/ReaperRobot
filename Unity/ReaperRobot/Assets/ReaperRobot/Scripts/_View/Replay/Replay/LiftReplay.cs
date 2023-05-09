@@ -11,46 +11,26 @@ namespace Plusplus.ReaperRobot.Scripts.View.Replay
         #region Serialized Private Fields
         [SerializeField] private ReaperManager _reaperManager;
         #endregion
-
-        #region Private Fields
-        private IDisposable _disposable;
-        #endregion
-
+        
         #region MonoBehaviour Callbacks
-        void OnDestroy()
+        void Awake()
         {
-            _disposable?.Dispose();
-        }
-        #endregion
-
-        #region Public method
-        public override void FinalizeReplay()
-        {
-            _disposable?.Dispose();
-            _dataSets.Clear();
-        }
-
-        public override void InitializeReplay(string filePath)
-        {
-            //データの読み込み
-            _dataSets.Clear();
-            _dataSets.AddRange(GetDataSets(filePath));
-
-            _disposable =
-                _timer
+            _replayManager
                 .Time
-                .Subscribe(seconds =>
+                .Where(_ => _replayManager.IsDataReady)
+                .Subscribe(_ =>
                 {
-                    Replay(_dataSets, seconds);
-                });
+                    Replay();
+                })
+                .AddTo(this);
         }
         #endregion
 
         #region Private method
-        protected override void Replay(List<DataSet> data, float seconds)
+        protected override void Replay()
         {
-            var liftData = ExtractLift(data, seconds);
-            _reaperManager.MoveLift(liftData);
+            var liftData = _replayManager.GetLift();
+            _reaperManager.RotateCutter(liftData);
         }
         #endregion
     }

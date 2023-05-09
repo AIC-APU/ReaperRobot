@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 
-namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot.GUI
+namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
 {
     public class CutterUI : MonoBehaviour
     {

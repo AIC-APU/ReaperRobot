@@ -2997,7 +2997,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a8164e7381c73b41ad8db7bc1026133, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cameraController: {fileID: 653367597}
+  _cameraMangaer: {fileID: 1729175746}
   _positionX: {fileID: 2098429707}
   _positionY: {fileID: 1091408723}
   _positionZ: {fileID: 91954785}
@@ -3139,30 +3139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcc3be4cc9b973e4f87a114eefec18bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _loops:
-  - Cameras:
-    - {fileID: 856294185}
-    - {fileID: 1733106938}
-    - {fileID: 81614028}
-  - Cameras:
-    - {fileID: 1100132407}
-    - {fileID: 2024924641}
-  OnChangeLoop:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1392477803}
-        m_TargetAssemblyTypeName: ReaperRobot.Scripts.UnityComponent.GUI.ShowAndHide,
-          UnityComponent_GUI
-        m_MethodName: ShowAndHideFunc
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  _cameraManager: {fileID: 1729175746}
 --- !u!114 &653367598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3187,6 +3164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 677badc80cdad8343b2e475bbe210f4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cameraManager: {fileID: 1729175746}
 --- !u!1 &664984227
 GameObject:
   m_ObjectHideFlags: 0
@@ -6710,10 +6688,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 974599978}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77d92c89664521f4c9d5ef67c9ffbc6c, type: 3}
+  m_Script: {fileID: 11500000, guid: 93c58b8309b68cf42bc9bb7026a61a05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _time: 0
+  _nowTime: 0
 --- !u!1 &988794504
 GameObject:
   m_ObjectHideFlags: 0
@@ -6829,7 +6807,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewModeText: {fileID: 1136667997}
-  _cameraController: {fileID: 653367597}
+  _cameraManager: {fileID: 1729175746}
 --- !u!1 &1009746946
 GameObject:
   m_ObjectHideFlags: 0
@@ -7850,7 +7828,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1729175745}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1136667995
 GameObject:
@@ -7863,7 +7841,6 @@ GameObject:
   - component: {fileID: 1136667996}
   - component: {fileID: 1136667998}
   - component: {fileID: 1136667997}
-  - component: {fileID: 1136667999}
   m_Layer: 5
   m_Name: ViewModeText
   m_TagString: Untagged
@@ -7988,46 +7965,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1136667995}
   m_CullTransparentMesh: 1
---- !u!114 &1136667999
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1136667995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_StringReference:
-    m_TableReference:
-      m_TableCollectionName: GUID:a99e44ca0e0c2cd45a5c185acaaf3fe2
-    m_TableEntryReference:
-      m_KeyId: 7753657700352
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_FormatArguments: []
-  m_UpdateString:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1136667997}
-        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
-        m_MethodName: set_text
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-  references:
-    version: 2
-    RefIds: []
 --- !u!1 &1173466057
 GameObject:
   m_ObjectHideFlags: 0
@@ -8436,9 +8373,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 974599980}
-        m_TargetAssemblyTypeName: ReaperRobot.Scripts.UnityComponent.Timer.Timer,
-          UnityComponent_Timer
-        m_MethodName: TimerStart
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.GameTimer.GameTimer,
+          ReaperRobot.GameTimer
+        m_MethodName: StartTimer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8452,9 +8389,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 974599980}
-        m_TargetAssemblyTypeName: ReaperRobot.Scripts.UnityComponent.Timer.Timer,
-          UnityComponent_Timer
-        m_MethodName: TimerStop
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.GameTimer.GameTimer,
+          ReaperRobot.GameTimer
+        m_MethodName: StopTimer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10247,6 +10184,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1729175745}
+  - component: {fileID: 1729175746}
   m_Layer: 0
   m_Name: CameraSetteings
   m_TagString: Untagged
@@ -10269,11 +10207,34 @@ Transform:
   - {fileID: 856294184}
   - {fileID: 1733106937}
   - {fileID: 81614027}
-  - {fileID: 2024924640}
   - {fileID: 1100132408}
+  - {fileID: 2024924640}
   m_Father: {fileID: 902527486}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1729175746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729175744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86774ddecac5ffb458e6bed8b29aeadb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _loops:
+  - Cameras:
+    - {fileID: 856294185}
+    - {fileID: 1733106938}
+    - {fileID: 81614028}
+  - Cameras:
+    - {fileID: 1100132407}
+    - {fileID: 2024924641}
+  OnChangeLoop:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1733106936
 GameObject:
   m_ObjectHideFlags: 0
@@ -11316,7 +11277,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1729175745}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2024924641
 MonoBehaviour:

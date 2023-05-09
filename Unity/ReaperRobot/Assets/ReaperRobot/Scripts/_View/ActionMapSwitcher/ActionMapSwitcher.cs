@@ -10,14 +10,13 @@ using Plusplus.ReaperRobot.Scripts.View.ReaperRobot;
 namespace Plusplus.ReaperRobot.Scripts.View.ActionMapSwitcher
 {
     [RequireComponent(typeof(PlayerInput))]
-    [RequireComponent(typeof(CameraController))]
     public class ActionMapSwitcher : MonoBehaviour
     {
         #region Private Fields
         private PlayerInput _playerInput;
         private InputActionMap _reaperMap;
         private InputActionMap _personMap;
-        private CameraController _cameraCon;
+        [SerializeField] private CameraManager _cameraManager;
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -27,9 +26,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.ActionMapSwitcher
             _reaperMap = _playerInput.actions.FindActionMap("Reaper");
             _personMap = _playerInput.actions.FindActionMap("Person");
 
-            _cameraCon = GetComponent<CameraController>();
-
-            _cameraCon
+            _cameraManager
                 .ActiveCamera
                 .Subscribe(x =>
                 {

@@ -31,10 +31,6 @@ MonoBehaviour:
     m_Key: CUTTER
     m_Metadata:
       m_Items: []
-  - m_Id: 7753657700352
-    m_Key: MODE
-    m_Metadata:
-      m_Items: []
   - m_Id: 18455919284224
     m_Key: REAPER_FPV
     m_Metadata:
