@@ -9,7 +9,7 @@
                     "name": "Move",
                     "type": "Value",
                     "id": "42e9c303-c9fa-4b37-9511-e16fa10fdcd8",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -40,13 +40,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Turn",
+                    "type": "Value",
+                    "id": "dceb3b1b-b355-414f-9475-c30cc170bd6c",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
-                    "name": "WASD",
-                    "id": "3a17f79a-adee-44dd-ae08-20db30f982c3",
-                    "path": "2DVector",
+                    "name": "",
+                    "id": "8e85425a-2e2f-4a0a-8395-ce4568752890",
+                    "path": "<OculusTouchController>{LeftHand}/thumbstick/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "WS",
+                    "id": "905950b6-1200-461f-a788-b8c6e63dbd01",
+                    "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -55,8 +75,8 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
-                    "id": "a9068ffa-5540-4e00-aee1-236425024da5",
+                    "name": "positive",
+                    "id": "0733dd74-dc58-4b9d-b3aa-1d7226524158",
                     "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
@@ -66,8 +86,8 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "down",
-                    "id": "966104c9-470c-4b9c-bdcf-63f824e8da77",
+                    "name": "negative",
+                    "id": "325ebb28-48b5-456e-87e2-1cac172f03ec",
                     "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
@@ -77,45 +97,12 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "left",
-                    "id": "751710d3-d169-4e7c-9cae-3ccc97d8cd02",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "7b6efba1-8616-4c85-9c0c-7482cb831a68",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "",
-                    "id": "4202663e-eb10-4ad1-8765-05b752ffc173",
-                    "path": "<Gamepad>/leftStick",
+                    "id": "9654ab6f-73a5-4bcb-913a-ddb20f393acd",
+                    "path": "<Gamepad>/leftStick/y",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "8e85425a-2e2f-4a0a-8395-ce4568752890",
-                    "path": "<OculusTouchController>{LeftHand}/thumbstick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "XR",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -156,7 +143,7 @@
                 {
                     "name": "",
                     "id": "4174f0a4-0cba-4893-9e9e-0287ad7471d0",
-                    "path": "<Gamepad>/leftShoulder",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -189,7 +176,7 @@
                 {
                     "name": "",
                     "id": "68968f2f-5467-4d3d-9b2d-106b87c241ca",
-                    "path": "<Gamepad>/rightShoulder",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -205,6 +192,61 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "Cutter",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0222e746-ffdc-4fb8-9211-72437b30c27a",
+                    "path": "<OculusTouchController>{RightHand}/thumbstick/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR",
+                    "action": "Turn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "AD",
+                    "id": "63b8812b-52b0-4244-b1c1-96bc30223427",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Turn",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "positive",
+                    "id": "afa7a872-10fa-48b8-9dc2-53d58bab2d90",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Turn",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "negative",
+                    "id": "8c28138d-3831-4ef7-a277-980cb766bf21",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Turn",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "62e52fe9-3f16-4644-beee-ac19d86753de",
+                    "path": "<Gamepad>/rightStick/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Turn",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -356,15 +398,37 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "6ad70ab5-ef9f-435c-bb98-60552547dddc",
-                    "path": "<Gamepad>/rightStickPress",
+                    "name": "LRPress",
+                    "id": "46320af4-5f74-4445-8ff4-049258b45473",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ResetCamera",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "3699a00b-b0f6-4183-851c-357fb247cfa6",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "ResetCamera",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "9e503d5f-ba76-4884-8518-73a15e013499",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ResetCamera",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
@@ -445,17 +509,6 @@
                 },
                 {
                     "name": "",
-                    "id": "fabcd1bb-41a9-4356-8008-134febfee37b",
-                    "path": "<Gamepad>/dpad",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "MoveCamera",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "3a5b36aa-d7bd-4288-b821-1105eb5462cf",
                     "path": "<Gamepad>/select",
                     "interactions": "",
@@ -533,14 +586,69 @@
                 },
                 {
                     "name": "",
-                    "id": "326e05fd-08e4-4255-a353-4bcfa6fc2765",
-                    "path": "<Gamepad>/rightStick",
+                    "id": "fabcd1bb-41a9-4356-8008-134febfee37b",
+                    "path": "<Gamepad>/dpad",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "RotateCamera",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "LR[GamePad]",
+                    "id": "7f71155b-d3b6-4626-b5fb-46aa350b0377",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateCamera",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "7defba8f-0c2e-489f-823a-5969b118b676",
+                    "path": "<Gamepad>/dpad/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "RotateCamera",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "735fab25-c00f-4b6f-9a4d-2a06e5397a36",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "RotateCamera",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "ecb2060c-1719-4909-905f-7579bcb6a696",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "RotateCamera",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "f0d8b19f-4d11-40d8-a28e-120c73333b7d",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "RotateCamera",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },
