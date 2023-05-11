@@ -9,6 +9,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
     {
         #region Serialized Private Fields    
         [SerializeField] private ReaperManager _reaperManager;
+        [SerializeField] private bool _transmitterMode = true;
         #endregion
 
         #region private Fields
@@ -52,10 +53,17 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         {
             if (!_playerInput.enabled || !_reaperActionMap.enabled) return;
 
-            var move = _reaperActionMap["Move"].ReadValue<float>();
-            var turn = _reaperActionMap["Turn"].ReadValue<float>();
-            _reaperManager.Move(turn, move);
-            Debug.Log(new Vector2(turn, move));
+            var move = new Vector2();
+            if (_transmitterMode)
+            {
+                move.x = _reaperActionMap["Turn"].ReadValue<float>();
+                move.y = _reaperActionMap["FrontBack"].ReadValue<float>();
+            }
+            else
+            {
+                move = _reaperActionMap["Move"].ReadValue<Vector2>();
+            }
+            _reaperManager.Move(move.x, move.y);
         }
         #endregion
 

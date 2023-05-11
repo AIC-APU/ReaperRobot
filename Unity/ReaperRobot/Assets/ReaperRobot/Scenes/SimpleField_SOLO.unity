@@ -3041,6 +3041,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _reaperManager: {fileID: 898190599}
+  _transmitterMode: 1
 --- !u!114 &653367589
 MonoBehaviour:
   m_ObjectHideFlags: 0
