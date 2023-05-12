@@ -11,6 +11,9 @@ namespace Plusplus.ReaperRobot.Scripts.View.DelayProjector
         //カメラが撮影した映像をRawImageに投影します
         //delayの秒数,表示を遅らせることができます
 
+        //Build SettingsのプラットフォームがWindows・MacOSX・Linuxの時のみ上手く表示することができます
+        //androidにしていた時、いくつかのオブジェクトが表示されませんでした
+
         #region public Fields
         public float delay = 0f; //単位: 秒
         public Camera recordingCamera;

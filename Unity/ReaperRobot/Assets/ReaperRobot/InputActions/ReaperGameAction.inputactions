@@ -251,7 +251,7 @@
                 {
                     "name": "",
                     "id": "8e85425a-2e2f-4a0a-8395-ce4568752890",
-                    "path": "<OculusTouchController>{LeftHand}/thumbstick/y",
+                    "path": "<OpenVROculusTouchController>{LeftHand}/thumbstick/y",
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
