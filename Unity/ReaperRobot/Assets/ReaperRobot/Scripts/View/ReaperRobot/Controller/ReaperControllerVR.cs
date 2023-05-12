@@ -7,11 +7,10 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
     public class ReaperControllerVR : MonoBehaviour
     {
         #region Serialized Private Fields    
-        [SerializeField] private GameObject TargetRobot;
+        [SerializeField] private ReaperManager _reaperManager;
         #endregion
 
         #region Private Fields
-        private ReaperManager _reaperManager;
         private PlayerInput _playerInput;
         private InputActionMap _reaperActionMap;
         #endregion
@@ -19,7 +18,6 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         #region MonoBehaviour Callbacks
         private void Awake()
         {
-            _reaperManager = TargetRobot.GetComponent<ReaperManager>();
             _playerInput = GetComponent<PlayerInput>(); 
             _reaperActionMap = _playerInput.actions.FindActionMap("Reaper");
 
@@ -48,6 +46,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         {
             var move = _reaperActionMap["Move"].ReadValue<Vector2>();
             _reaperManager.Move(move.x, move.y);
+            Debug.Log(move);
         }
         private void Stop(InputAction.CallbackContext obj)
         {
@@ -66,6 +65,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         private void MoveLift(InputAction.CallbackContext obj)
         {
             _reaperManager.MoveLift(!_reaperManager.IsLiftDown.Value);
+            Debug.Log("Lift");
         }
         private void RotateCutter(InputAction.CallbackContext obj)
         {
