@@ -1,14 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using UnityEngine;
 
@@ -30,7 +38,7 @@ namespace Oculus.Interaction.Input
         }
 
         [SerializeField]
-        private ProgressCurve _wristPositionLockCurve = new ProgressCurve();
+        private ProgressCurve _wristPositionLockCurve;
         [SerializeField]
         private ProgressCurve _wristPositionUnlockCurve;
         [SerializeField]
@@ -76,18 +84,18 @@ namespace Oculus.Interaction.Input
 
         protected override void Start()
         {
-            base.Start();
-
+            this.BeginStart(ref _started, () => base.Start());
             for (int i = 0; i < FingersMetadata.HAND_JOINT_IDS.Length; i++)
             {
                 _jointLockProgressCurves[i] = new ProgressCurve(_jointLockCurve);
                 _jointUnlockProgressCurves[i] = new ProgressCurve(_jointUnlockCurve);
             }
+            this.EndStart(ref _started);
         }
 
         protected override void Apply(HandDataAsset data)
         {
-            if (!data.IsDataValid || !data.IsTracked || !data.IsHighConfidence)
+            if (!Started || !data.IsDataValid || !data.IsTracked || !data.IsHighConfidence)
             {
                 data.IsConnected = false;
                 data.RootPoseOrigin = PoseOrigin.None;
@@ -356,7 +364,8 @@ namespace Oculus.Interaction.Input
         /// <param name="skipAnimation">Whether to skip the animation curve for this override.</param>
         public void LockWristPose(Pose wristPose, float overrideFactor = 1f, WristLockMode lockMode = WristLockMode.Full, bool worldPose = false, bool skipAnimation = false)
         {
-            Pose desiredWristPose = (worldPose && TrackingToWorldTransformer != null ) ? TrackingToWorldTransformer.ToTrackingPose(wristPose) : wristPose;
+            Pose desiredWristPose = (worldPose && TrackingToWorldTransformer != null ) ?
+                TrackingToWorldTransformer.ToTrackingPose(wristPose): wristPose;
 
             if ((lockMode & WristLockMode.Position) != 0)
             {
@@ -464,13 +473,12 @@ namespace Oculus.Interaction.Input
 
         public void InjectAllSyntheticHandModifier(UpdateModeFlags updateMode, IDataSource updateAfter,
             DataModifier<HandDataAsset> modifyDataFromSource, bool applyModifier,
-            Component[] aspects,
             ProgressCurve wristPositionLockCurve, ProgressCurve wristPositionUnlockCurve,
             ProgressCurve wristRotationLockCurve, ProgressCurve wristRotationUnlockCurve,
             ProgressCurve jointLockCurve, ProgressCurve jointUnlockCurve,
             float spreadAllowance)
         {
-            base.InjectAllHand(updateMode, updateAfter, modifyDataFromSource, applyModifier, aspects);
+            base.InjectAllHand(updateMode, updateAfter, modifyDataFromSource, applyModifier);
 
             InjectWristPositionLockCurve(wristPositionLockCurve);
             InjectWristPositionUnlockCurve(wristPositionUnlockCurve);

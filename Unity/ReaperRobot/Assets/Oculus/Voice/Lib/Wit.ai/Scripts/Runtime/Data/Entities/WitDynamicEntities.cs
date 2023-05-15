@@ -1,5 +1,6 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,11 +9,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Facebook.WitAi.Interfaces;
-using Facebook.WitAi.Lib;
+using Meta.WitAi.Interfaces;
+using Meta.WitAi.Json;
+using Meta.WitAi.Data.Info;
 using UnityEngine;
 
-namespace Facebook.WitAi.Data.Entities
+namespace Meta.WitAi.Data.Entities
 {
     [Serializable]
     public class WitDynamicEntities : IDynamicEntitiesProvider, IEnumerable<WitDynamicEntity>
@@ -82,7 +84,7 @@ namespace Facebook.WitAi.Data.Entities
         {
             int index = entities.FindIndex(e => e.entity == dynamicEntity.entity);
             if(index < 0) entities.Add(dynamicEntity);
-            else Debug.LogWarning($"Cannot add entity, registry already has an entry for {dynamicEntity.entity}");
+            else VLog.W($"Cannot add entity, registry already has an entry for {dynamicEntity.entity}");
         }
 
         public void Remove(WitDynamicEntity dynamicEntity)
@@ -90,7 +92,7 @@ namespace Facebook.WitAi.Data.Entities
             entities.Remove(dynamicEntity);
         }
 
-        public void AddKeyword(string entityName, WitEntityKeyword keyword)
+        public void AddKeyword(string entityName, WitEntityKeywordInfo keyword)
         {
             var entity = entities.Find(e => entityName == e.entity);
             if (null == entity)
@@ -101,7 +103,7 @@ namespace Facebook.WitAi.Data.Entities
             entity.keywords.Add(keyword);
         }
 
-        public void RemoveKeyword(string entityName, WitEntityKeyword keyword)
+        public void RemoveKeyword(string entityName, WitEntityKeywordInfo keyword)
         {
             int index = entities.FindIndex(e => e.entity == entityName);
             if (index >= 0)

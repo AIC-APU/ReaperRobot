@@ -9,7 +9,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.XR
         #endregion
 
         #region MonoBehaviour Callbacks
-        private void Awake()
+        private void OnEnable()
         {
             //VRモード起動
             _manualXRControl = new ManualXRControl();

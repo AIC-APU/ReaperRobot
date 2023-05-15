@@ -1,5 +1,6 @@
 ﻿/*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,10 +8,12 @@
 
 using System;
 using System.Reflection;
+using Lib.Conduit.Editor;
+using Meta.Conduit;
 using UnityEngine;
 using UnityEditor;
 
-namespace Facebook.WitAi.Windows
+namespace Meta.WitAi.Windows
 {
     // Edit Type
     public enum WitPropertyEditType
@@ -29,7 +32,11 @@ namespace Facebook.WitAi.Windows
         protected virtual bool FoldoutEnabled => true;
         // Determine edit type for this drawer
         protected virtual WitPropertyEditType EditType => WitPropertyEditType.NoEdit;
-
+        // The manifest loader
+        internal static readonly ManifestLoader ManifestLoader = new ManifestLoader();
+        // Used to map type names to their source code
+        internal static readonly SourceCodeMapper CodeMapper = new SourceCodeMapper();
+        
         // Remove padding
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
@@ -51,7 +58,10 @@ namespace Facebook.WitAi.Windows
             string titleText = GetLocalizedText(property, LocalizedTitleKey);
             if (FoldoutEnabled)
             {
+                GUILayout.BeginHorizontal();
                 property.isExpanded = WitEditorUI.LayoutFoldout(new GUIContent(titleText), property.isExpanded);
+                OnDrawLabelInline(property);
+                GUILayout.EndHorizontal();
                 if (!property.isExpanded)
                 {
                     return;
@@ -95,6 +105,13 @@ namespace Facebook.WitAi.Windows
             EditorGUI.indentLevel--;
             GUILayout.EndVertical();
         }
+
+        // Called per line
+        protected virtual void OnDrawLabelInline(SerializedProperty property)
+        {
+            
+        }
+
         // Override pre fields
         protected virtual void OnGUIPreFields(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -103,6 +120,13 @@ namespace Facebook.WitAi.Windows
         // Draw a specific property
         protected virtual void LayoutField(int index, SerializedProperty property, FieldInfo subfield, WitPropertyEditType editType)
         {
+            // Get property if possible
+            SerializedProperty subfieldProperty = property.FindPropertyRelative(subfield.Name);
+            if (subfieldProperty == null)
+            {
+                return;
+            }
+
             // Begin layout
             GUILayout.BeginHorizontal();
 
@@ -116,7 +140,6 @@ namespace Facebook.WitAi.Windows
             GUI.enabled = canEdit;
 
             // Cannot edit, just show field
-            SerializedProperty subfieldProperty = property.FindPropertyRelative(subfield.Name);
             if (!canEdit && subfieldProperty.type == "string")
             {
                 // Get value text
@@ -213,8 +236,7 @@ namespace Facebook.WitAi.Windows
         public const string LocalizedMissingKey = "missing";
         protected virtual string GetLocalizedText(SerializedProperty property, string key)
         {
-            Debug.Log("Missing Localization: " + key);
-            return key;
+            return string.IsNullOrEmpty(key) || string.Equals(LocalizedTitleKey, key) ? property.displayName : key[0].ToString().ToUpper() + key.Substring(1);
         }
         // Way to ignore certain properties
         protected virtual bool ShouldLayoutField(SerializedProperty property, FieldInfo subfield)

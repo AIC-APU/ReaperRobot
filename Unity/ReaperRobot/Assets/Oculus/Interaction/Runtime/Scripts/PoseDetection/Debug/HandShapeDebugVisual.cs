@@ -1,14 +1,22 @@
-﻿/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using Oculus.Interaction.Input;
 using System;
@@ -22,6 +30,10 @@ namespace Oculus.Interaction.PoseDetection.Debug
 {
     public class HandShapeDebugVisual : MonoBehaviour
     {
+        [SerializeField, Interface(typeof(IFingerFeatureStateProvider))]
+        private UnityEngine.Object _fingerFeatureStateProvider;
+        private IFingerFeatureStateProvider FingerFeatureStateProvider;
+
         [SerializeField]
         private ShapeRecognizerActiveState _shapeRecognizerActiveState;
 
@@ -56,10 +68,11 @@ namespace Oculus.Interaction.PoseDetection.Debug
 
         protected virtual void Awake()
         {
-            Assert.IsNotNull(_shapeRecognizerActiveState);
-            Assert.IsNotNull(_target);
-            Assert.IsNotNull(_fingerFeatureDebugVisualPrefab);
-            Assert.IsNotNull(_targetText);
+            FingerFeatureStateProvider = _fingerFeatureStateProvider as IFingerFeatureStateProvider;
+            this.AssertField(_shapeRecognizerActiveState, nameof(_shapeRecognizerActiveState));
+            this.AssertField(_target, nameof(_target));
+            this.AssertField(_fingerFeatureDebugVisualPrefab, nameof(_fingerFeatureDebugVisualPrefab));
+            this.AssertField(_targetText, nameof(_targetText));
             _material = _target.material;
 
             _material.color = _lastActiveValue ? _activeColor : _normalColor;
@@ -72,8 +85,7 @@ namespace Oculus.Interaction.PoseDetection.Debug
 
         protected virtual void Start()
         {
-            bool foundAspect = _shapeRecognizerActiveState.Hand.GetHandAspect(out FingerFeatureStateProvider stateProvider);
-            Assert.IsTrue(foundAspect);
+            this.AssertField(FingerFeatureStateProvider, nameof(FingerFeatureStateProvider));
 
             Vector3 fingerOffset = Vector3.zero;
 
@@ -92,7 +104,7 @@ namespace Oculus.Interaction.PoseDetection.Debug
                     var fingerFeatureDebugVisInst = Instantiate(_fingerFeatureDebugVisualPrefab, _fingerFeatureParent);
                     var debugVisComp = fingerFeatureDebugVisInst.GetComponent<FingerFeatureDebugVisual>();
 
-                    debugVisComp.Initialize(g.HandFinger, config, stateProvider);
+                    debugVisComp.Initialize(g.HandFinger, config, FingerFeatureStateProvider);
                     var debugVisTransform = debugVisComp.transform;
                     debugVisTransform.localScale = _fingerFeatureDebugLocalScale;
                     debugVisTransform.localRotation = Quaternion.identity;

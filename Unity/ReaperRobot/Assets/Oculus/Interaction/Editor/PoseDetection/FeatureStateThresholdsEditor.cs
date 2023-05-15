@@ -1,14 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using System;
 using System.Collections.Generic;
@@ -22,7 +30,7 @@ namespace Oculus.Interaction.PoseDetection.Editor
     public abstract class FeatureStateThresholdsEditor<TFeature> : UnityEditor.Editor
         where TFeature : unmanaged, Enum
     {
-#region static helpers
+        #region static helpers
         public static readonly TFeature[] FeatureEnumValues = (TFeature[])Enum.GetValues(typeof(TFeature));
         public static TFeature IntToFeature(int value)
         {
@@ -42,9 +50,9 @@ namespace Oculus.Interaction.PoseDetection.Editor
 
             throw new ArgumentOutOfRangeException();
         }
-#endregion
+        #endregion
 
-#region Model Classes
+        #region Model Classes
         public class FeatureStateThresholdsModel
         {
             private readonly SerializedProperty _thresholdsProp;
@@ -85,19 +93,23 @@ namespace Oculus.Interaction.PoseDetection.Editor
                 Assert.IsNotNull(_secondStateProp);
             }
 
-            public float ThresholdMidpoint{
+            public float ThresholdMidpoint
+            {
                 get => _thresholdMidpointProp.floatValue;
                 set { _thresholdMidpointProp.floatValue = value; }
             }
-            public float ThresholdWidth {
+            public float ThresholdWidth
+            {
                 get => _thresholdWidthProp.floatValue;
                 set { _thresholdWidthProp.floatValue = value; }
             }
-            public string FirstStateId {
+            public string FirstStateId
+            {
                 get => _firstStateProp.stringValue;
                 set => _firstStateProp.stringValue = value;
             }
-            public string SecondStateId {
+            public string SecondStateId
+            {
                 get => _secondStateProp.stringValue;
                 set => _secondStateProp.stringValue = value;
             }
@@ -105,24 +117,29 @@ namespace Oculus.Interaction.PoseDetection.Editor
             public float ToFirstWhenBelow => ThresholdMidpoint - ThresholdWidth * 0.5f;
             public float ToSecondWhenAbove => ThresholdMidpoint + ThresholdWidth * 0.5f;
         }
-#endregion
+        #endregion
 
-        SerializedProperty _rootProperty;
-        SerializedProperty _minTimeInStateProp;
+        private SerializedProperty _rootProperty;
+        private SerializedProperty _minTimeInStateProp;
 
-        private readonly bool[] _featureVisible = new bool [FeatureEnumValues.Length];
+        private readonly bool[] _featureVisible = new bool[FeatureEnumValues.Length];
 
         private readonly Color _visStateColorPro = new Color32(194, 194, 194, 255);
         private readonly Color _visStateColorLight = new Color32(56, 56, 56, 255);
         private readonly Color _visTransitionColorPro = new Color32(80, 80, 80, 255);
         private readonly Color _visTransitionColorLight = new Color32(160, 160, 160, 255);
-        private readonly Color _visBorderColor = new Color32(0,0,0,255);
+        private readonly Color _visDragColor = new Color32(0, 0, 128, 255);
+        private readonly Color _visBorderColor = new Color32(0, 0, 0, 255);
         private const float _visHeight = 20.0f;
         private const float _visMargin = 10.0f;
+        private const float _dragMargin = 10f;
 
         private IReadOnlyDictionary<TFeature, FeatureDescription> _featureDescriptions;
 
         protected abstract IReadOnlyDictionary<TFeature, FeatureDescription> CreateFeatureDescriptions();
+
+        protected abstract string FeatureMidpointTooltip { get; }
+        protected abstract string FeatureWidthTooltip { get; }
 
         void OnEnable()
         {
@@ -325,14 +342,13 @@ namespace Oculus.Interaction.PoseDetection.Editor
                         float thresholdMidpoint = model.ThresholdMidpoint;
                         float thresholdWidth = model.ThresholdWidth;
 
-                        float newMidpoint = EditorGUILayout.FloatField("Midpoint", thresholdMidpoint);
-                        float newWidth = EditorGUILayout.Slider("Width", thresholdWidth, 0.0f,
+                        float newMidpoint = EditorGUILayout.FloatField(new GUIContent("Midpoint", FeatureMidpointTooltip), thresholdMidpoint);
+                        float newWidth = EditorGUILayout.Slider(new GUIContent("Width", FeatureWidthTooltip), thresholdWidth, 0.0f,
                             thresholdMaxWidth);
 
                         if (Math.Abs(newMidpoint - thresholdMidpoint) > float.Epsilon ||
                             Math.Abs(newWidth - thresholdWidth) > float.Epsilon)
                         {
-                            // save new values.
                             model.ThresholdMidpoint = newMidpoint;
                             model.ThresholdWidth = newWidth;
                         }
@@ -356,6 +372,7 @@ namespace Oculus.Interaction.PoseDetection.Editor
                     }
 
                     RenderFeatureStateGraphic(featureStateThresholdsModel,
+                        states,
                         Mathf.Min(featureDescription.MinValueHint, minVal),
                         Mathf.Max(featureDescription.MaxValueHint, maxVal));
                 }
@@ -374,10 +391,11 @@ namespace Oculus.Interaction.PoseDetection.Editor
                 new GUIContent($"[{featureDescription.MinValueHint}, {featureDescription.MaxValueHint}]"));
         }
 
-        private void RenderFeatureStateGraphic(FeatureStateThresholdsModel prop, float minVal,
-            float maxVal)
+        private void RenderFeatureStateGraphic(FeatureStateThresholdsModel prop,
+            FeatureStateDescription[] stateDescriptions,
+            float minVal, float maxVal)
         {
-            var lastRect = GUILayoutUtility.GetLastRect();
+            Rect lastRect = GUILayoutUtility.GetLastRect();
             float xOffset = lastRect.xMin + _visMargin;
             float widgetWidth = lastRect.width - _visMargin;
 
@@ -394,6 +412,10 @@ namespace Oculus.Interaction.PoseDetection.Editor
             Color transitionColor = EditorGUIUtility.isProSkin
                 ? _visTransitionColorPro
                 : _visTransitionColorLight;
+            GUIStyle richTextStyle = new GUIStyle();
+            richTextStyle.alignment = TextAnchor.MiddleCenter;
+            richTextStyle.normal.textColor = transitionColor;
+
             for (var firstStateIdx = 0;
                 firstStateIdx < prop.ThresholdsProp.arraySize;
                 firstStateIdx++)
@@ -402,24 +424,75 @@ namespace Oculus.Interaction.PoseDetection.Editor
                     prop.ThresholdsProp.GetArrayElementAtIndex(firstStateIdx));
 
                 float firstPc = ((model.ToFirstWhenBelow - minVal)) / range;
-                EditorGUI.DrawRect(
-                    new Rect(Mathf.Floor(xOffset), lastRect.yMax + _visMargin,
-                        Mathf.Ceil(widgetWidth * firstPc), _visHeight), stateColor);
+                DrawStateRect(firstPc, firstStateIdx);
                 xOffset += widgetWidth * firstPc;
                 minVal = model.ToFirstWhenBelow;
 
                 float secondPc = ((model.ToSecondWhenAbove - minVal)) / range;
-                EditorGUI.DrawRect(
-                    new Rect(Mathf.Floor(xOffset), lastRect.yMax + _visMargin,
-                        Mathf.Ceil(widgetWidth * secondPc), _visHeight), transitionColor);
+                Rect rect = DrawTransitionRect(secondPc);
+                UpdateDrag(rect, model, range / widgetWidth);
                 xOffset += widgetWidth * secondPc;
                 minVal = model.ToSecondWhenAbove;
             }
 
             float lastPc = ((maxVal - minVal)) / range;
-            EditorGUI.DrawRect(
-                new Rect(Mathf.Floor(xOffset), lastRect.yMax + _visMargin,
-                    Mathf.Ceil(widgetWidth * lastPc), _visHeight), stateColor);
+            DrawStateRect(lastPc, prop.ThresholdsProp.arraySize);
+
+
+            Rect DrawStateRect(float pc, int stateIndex)
+            {
+                Rect rect = new Rect(xOffset, lastRect.yMax + _visMargin,
+                        widgetWidth * pc, _visHeight);
+                EditorGUI.DrawRect(rect, stateColor);
+                EditorGUI.LabelField(rect,
+                    $"{stateDescriptions[stateIndex].Name}", richTextStyle);
+                return rect;
+            }
+
+            Rect DrawTransitionRect(float pc)
+            {
+                Rect rect = new Rect(xOffset, lastRect.yMax + _visMargin,
+                        widgetWidth * pc, _visHeight);
+                EditorGUI.DrawRect(rect, transitionColor);
+
+                Rect leftRect = new Rect(rect);
+                leftRect.width = _dragMargin;
+                Rect rightRect = new Rect(rect);
+                rightRect.width = _dragMargin;
+                rightRect.x = rect.x + rect.width - _dragMargin;
+
+                EditorGUI.DrawRect(leftRect, _visDragColor);
+                EditorGUI.DrawRect(rightRect, _visDragColor);
+
+                return rect;
+            }
+        }
+
+        private void UpdateDrag(Rect rect, FeatureStateThresholdModel model, float factor)
+        {
+            Event currentEvent = Event.current;
+            Vector2 prevPos = currentEvent.mousePosition - currentEvent.delta;
+            if (currentEvent.type != EventType.MouseDrag
+                || !rect.Contains(prevPos))
+            {
+                return;
+            }
+
+            float delta = currentEvent.delta.x * factor;
+            if (prevPos.x < rect.x + _dragMargin)
+            {
+                model.ThresholdMidpoint += delta * 0.5f;
+                model.ThresholdWidth -= delta;
+            }
+            else if (prevPos.x > rect.x + rect.width - _dragMargin)
+            {
+                model.ThresholdMidpoint += delta * 0.5f;
+                model.ThresholdWidth += delta;
+            }
+            else
+            {
+                model.ThresholdMidpoint += delta;
+            }
         }
     }
 }

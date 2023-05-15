@@ -1,5 +1,6 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,22 +8,23 @@
 
 using System;
 using System.Collections.Generic;
-using Facebook.WitAi.Interfaces;
-using Facebook.WitAi.Lib;
+using Meta.WitAi.Interfaces;
+using Meta.WitAi.Json;
+using Meta.WitAi.Data.Info;
 
-namespace Facebook.WitAi.Data.Entities
+namespace Meta.WitAi.Data.Entities
 {
     [Serializable]
     public class WitDynamicEntity : IDynamicEntitiesProvider
     {
         public string entity;
-        public List<WitEntityKeyword> keywords = new List<WitEntityKeyword>();
+        public List<WitEntityKeywordInfo> keywords = new List<WitEntityKeywordInfo>();
 
         public WitDynamicEntity()
         {
         }
 
-        public WitDynamicEntity(string entity, WitEntityKeyword keyword)
+        public WitDynamicEntity(string entity, WitEntityKeywordInfo keyword)
         {
             this.entity = entity;
             this.keywords.Add(keyword);
@@ -33,7 +35,11 @@ namespace Facebook.WitAi.Data.Entities
             this.entity = entity;
             foreach (var keyword in keywords)
             {
-                this.keywords.Add(new WitEntityKeyword(keyword));
+                this.keywords.Add(new WitEntityKeywordInfo()
+                {
+                    keyword = keyword,
+                    synonyms = new List<string>(new string[] { keyword })
+                });
             }
         }
 
@@ -43,7 +49,7 @@ namespace Facebook.WitAi.Data.Entities
 
             foreach (var synonym in keywordsToSynonyms)
             {
-                keywords.Add(new WitEntityKeyword()
+                keywords.Add(new WitEntityKeywordInfo()
                 {
                     keyword = synonym.Key,
                     synonyms = synonym.Value
@@ -56,13 +62,7 @@ namespace Facebook.WitAi.Data.Entities
         {
             get
             {
-                WitResponseArray synonymArray = new WitResponseArray();
-                foreach (var keyword in keywords)
-                {
-                    synonymArray.Add(keyword.AsJson);
-                }
-
-                return synonymArray;
+                return JsonConvert.SerializeToken(keywords).AsArray;
             }
         }
 

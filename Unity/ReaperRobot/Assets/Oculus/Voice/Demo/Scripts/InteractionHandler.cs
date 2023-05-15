@@ -1,17 +1,25 @@
-﻿/**************************************************************************************************
- * Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+﻿/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
  *
- * Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
  * https://developer.oculus.com/licenses/oculussdk/
  *
- * Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
- * under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
- * ANY KIND, either express or implied. See the License for the specific language governing
- * permissions and limitations under the License.
- **************************************************************************************************/
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-using Facebook.WitAi;
-using Facebook.WitAi.Lib;
+using Meta.WitAi;
+using Meta.WitAi.Json;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,26 +44,29 @@ namespace Oculus.Voice.Demo
         // Add delegates
         private void OnEnable()
         {
-            appVoiceExperience.events.OnRequestCreated.AddListener(OnRequestStarted);
-            appVoiceExperience.events.OnPartialTranscription.AddListener(OnRequestTranscript);
-            appVoiceExperience.events.OnFullTranscription.AddListener(OnRequestTranscript);
-            appVoiceExperience.events.OnStartListening.AddListener(OnListenStart);
-            appVoiceExperience.events.OnStoppedListening.AddListener(OnListenStop);
-            appVoiceExperience.events.OnStoppedListeningDueToDeactivation.AddListener(OnListenForcedStop);
-            appVoiceExperience.events.OnResponse.AddListener(OnRequestResponse);
-            appVoiceExperience.events.OnError.AddListener(OnRequestError);
+            textArea.text = freshStateText;
+            appVoiceExperience.VoiceEvents.OnRequestCreated.AddListener(OnRequestStarted);
+            appVoiceExperience.VoiceEvents.OnPartialTranscription.AddListener(OnRequestTranscript);
+            appVoiceExperience.VoiceEvents.OnFullTranscription.AddListener(OnRequestTranscript);
+            appVoiceExperience.VoiceEvents.OnStartListening.AddListener(OnListenStart);
+            appVoiceExperience.VoiceEvents.OnStoppedListening.AddListener(OnListenStop);
+            appVoiceExperience.VoiceEvents.OnStoppedListeningDueToDeactivation.AddListener(OnListenForcedStop);
+            appVoiceExperience.VoiceEvents.OnStoppedListeningDueToInactivity.AddListener(OnListenForcedStop);
+            appVoiceExperience.VoiceEvents.OnResponse.AddListener(OnRequestResponse);
+            appVoiceExperience.VoiceEvents.OnError.AddListener(OnRequestError);
         }
         // Remove delegates
         private void OnDisable()
         {
-            appVoiceExperience.events.OnRequestCreated.RemoveListener(OnRequestStarted);
-            appVoiceExperience.events.OnPartialTranscription.RemoveListener(OnRequestTranscript);
-            appVoiceExperience.events.OnFullTranscription.RemoveListener(OnRequestTranscript);
-            appVoiceExperience.events.OnStartListening.RemoveListener(OnListenStart);
-            appVoiceExperience.events.OnStoppedListening.RemoveListener(OnListenStop);
-            appVoiceExperience.events.OnStoppedListeningDueToDeactivation.RemoveListener(OnListenForcedStop);
-            appVoiceExperience.events.OnResponse.RemoveListener(OnRequestResponse);
-            appVoiceExperience.events.OnError.RemoveListener(OnRequestError);
+            appVoiceExperience.VoiceEvents.OnRequestCreated.RemoveListener(OnRequestStarted);
+            appVoiceExperience.VoiceEvents.OnPartialTranscription.RemoveListener(OnRequestTranscript);
+            appVoiceExperience.VoiceEvents.OnFullTranscription.RemoveListener(OnRequestTranscript);
+            appVoiceExperience.VoiceEvents.OnStartListening.RemoveListener(OnListenStart);
+            appVoiceExperience.VoiceEvents.OnStoppedListening.RemoveListener(OnListenStop);
+            appVoiceExperience.VoiceEvents.OnStoppedListeningDueToDeactivation.RemoveListener(OnListenForcedStop);
+            appVoiceExperience.VoiceEvents.OnStoppedListeningDueToInactivity.RemoveListener(OnListenForcedStop);
+            appVoiceExperience.VoiceEvents.OnResponse.RemoveListener(OnRequestResponse);
+            appVoiceExperience.VoiceEvents.OnError.RemoveListener(OnRequestError);
         }
 
         // Request began

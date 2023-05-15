@@ -1,14 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using System.Collections;
 using UnityEngine;
@@ -34,15 +42,18 @@ public class OVRTrackedKeyboardSampleControls : MonoBehaviour
     {
         StartingFocusField.Select();
         StartingFocusField.ActivateInputField();
-        if(TrackingToggle.isOn != trackedKeyboard.TrackingEnabled){
+        if (TrackingToggle.isOn != trackedKeyboard.TrackingEnabled)
+        {
             TrackingToggle.isOn = trackedKeyboard.TrackingEnabled;
         }
+
         if (ConnectionToggle.isOn != trackedKeyboard.ConnectionRequired)
         {
             ConnectionToggle.isOn = trackedKeyboard.ConnectionRequired;
         }
 
-        if (RemoteKeyboardToggle.isOn != trackedKeyboard.RemoteKeyboard) {
+        if (RemoteKeyboardToggle.isOn != trackedKeyboard.RemoteKeyboard)
+        {
             RemoteKeyboardToggle.isOn = trackedKeyboard.RemoteKeyboard;
         }
 
@@ -51,7 +62,9 @@ public class OVRTrackedKeyboardSampleControls : MonoBehaviour
     void Update()
     {
         NameValue.text = trackedKeyboard.SystemKeyboardInfo.Name;
-        ConnectedValue.text = ((bool)((trackedKeyboard.SystemKeyboardInfo.KeyboardFlags & OVRPlugin.TrackedKeyboardFlags.Connected) > 0)).ToString();
+        ConnectedValue.text =
+            ((bool)((trackedKeyboard.SystemKeyboardInfo.KeyboardFlags & OVRPlugin.TrackedKeyboardFlags.Connected) > 0))
+            .ToString();
         StateValue.text = trackedKeyboard.TrackingState.ToString();
         SelectKeyboardValue.text = "Select " + trackedKeyboard.KeyboardQueryFlags.ToString() + " Keyboard";
         TypeValue.text = trackedKeyboard.KeyboardQueryFlags.ToString();
@@ -68,7 +81,6 @@ public class OVRTrackedKeyboardSampleControls : MonoBehaviour
                 StateValue.color = GoodStateColor;
                 break;
         }
-
     }
 
     public void SetPresentationOpaque()
@@ -95,7 +107,8 @@ public class OVRTrackedKeyboardSampleControls : MonoBehaviour
     {
         bool trackingWasEnabled = trackedKeyboard.TrackingEnabled;
         trackedKeyboard.TrackingEnabled = false;
-        yield return new WaitWhile(() => trackedKeyboard.TrackingState != OVRTrackedKeyboard.TrackedKeyboardState.Offline);
+        yield return new WaitWhile(() =>
+            trackedKeyboard.TrackingState != OVRTrackedKeyboard.TrackedKeyboardState.Offline);
         trackedKeyboard.keyboardModelShader = Shader.Find(shaderName);
         trackedKeyboard.TrackingEnabled = trackingWasEnabled;
     }

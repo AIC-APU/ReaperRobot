@@ -1,18 +1,24 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using UnityEngine;
-using UnityEngine.Assertions;
-using UnityEngine.Serialization;
 
 namespace Oculus.Interaction
 {
@@ -25,10 +31,12 @@ namespace Oculus.Interaction
             HasInteractable = 1 << 1,
             IsSelecting = 1 << 2,
             HasSelectedInteractable = 1 << 3,
+            IsNormal = 1 << 4,
+            IsHovering = 1 << 5,
         }
 
         [SerializeField, Interface(typeof(IInteractor))]
-        private MonoBehaviour _interactor;
+        private UnityEngine.Object _interactor;
         private IInteractor Interactor;
 
         [SerializeField]
@@ -50,7 +58,12 @@ namespace Oculus.Interaction
         {
             get
             {
-                if((_property & InteractorProperty.HasCandidate) != 0
+                if (!isActiveAndEnabled)
+                {
+                    return false;
+                }
+
+                if ((_property & InteractorProperty.HasCandidate) != 0
                     && Interactor.HasCandidate)
                 {
                     return true;
@@ -70,6 +83,16 @@ namespace Oculus.Interaction
                 {
                     return true;
                 }
+                if ((_property & InteractorProperty.IsNormal) != 0
+                    && Interactor.State == InteractorState.Normal)
+                {
+                    return true;
+                }
+                if ((_property & InteractorProperty.IsHovering) != 0
+                    && Interactor.State == InteractorState.Hover)
+                {
+                    return true;
+                }
                 return false;
             }
         }
@@ -81,7 +104,7 @@ namespace Oculus.Interaction
 
         protected virtual void Start()
         {
-            Assert.IsNotNull(Interactor);
+            this.AssertField(Interactor, nameof(Interactor));
         }
 
         #region Inject
@@ -93,7 +116,7 @@ namespace Oculus.Interaction
 
         public void InjectInteractor(IInteractor interactor)
         {
-            _interactor = interactor as MonoBehaviour;
+            _interactor = interactor as UnityEngine.Object;
             Interactor = interactor;
         }
         #endregion

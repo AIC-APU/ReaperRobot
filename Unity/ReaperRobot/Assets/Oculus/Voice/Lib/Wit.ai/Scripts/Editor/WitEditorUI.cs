@@ -1,5 +1,6 @@
 ﻿/*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,10 +10,8 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using Facebook.WitAi.Data.Configuration;
-using UnityEditor.PackageManager.UI;
 
-namespace Facebook.WitAi
+namespace Meta.WitAi
 {
     public static class WitEditorUI
     {
@@ -52,6 +51,31 @@ namespace Facebook.WitAi
         {
             EditorGUILayout.LabelField(key, text, WitStyles.TextField);
         }
+        public static void LayoutKeyObjectLabels(string key, object obj)
+        {
+            // Null
+            if (obj == null)
+            {
+                LayoutKeyLabel(key, "NULL");
+                return;
+            }
+            // Foldout
+            bool foldoutVoice = WitEditorUI.LayoutFoldout(new GUIContent(key), obj);
+            if (!foldoutVoice)
+            {
+                return;
+            }
+            // Iterate fields
+            EditorGUI.indentLevel++;
+            foreach (var field in obj.GetType().GetFields())
+            {
+                if (field.IsPublic && !field.IsStatic)
+                {
+                    LayoutKeyLabel(field.Name, field.GetValue(obj).ToString());
+                }
+            }
+            EditorGUI.indentLevel--;
+        }
         #endregion
 
         #region BUTTONS
@@ -61,6 +85,18 @@ namespace Facebook.WitAi
             float width = WitStyles.TextButton.CalcSize(content).x + WitStyles.TextButtonPadding * 2f;
             return LayoutButton(content, WitStyles.TextButton, new GUILayoutOption[] { GUILayout.Width(width) });
         }
+
+        public static bool LayoutTextLink(string text)
+        {
+            GUIContent content = new GUIContent(text);
+#if UNITY_2021_3_OR_NEWER
+            return EditorGUILayout.LinkButton(content);
+#else
+            var style = GUI.skin.GetStyle("Label");
+            return LayoutButton(content, style, new GUILayoutOption[] {});
+#endif
+        }
+
         public static bool LayoutIconButton(GUIContent icon)
         {
             return LayoutButton(icon, WitStyles.IconButton, null);
@@ -91,7 +127,7 @@ namespace Facebook.WitAi
             return GUILayout.Button(content, style, options);
         }
         // Layout header button
-        public static void LayoutHeaderButton(Texture2D headerTexture, string headerURL)
+        public static void LayoutHeaderButton(Texture2D headerTexture, string headerURL, string docsUrl)
         {
             if (headerTexture != null)
             {
@@ -104,11 +140,11 @@ namespace Facebook.WitAi
                 {
                     Application.OpenURL(headerURL);
                 }
-                GUILayout.FlexibleSpace();
-                if (LayoutIconButton(WitStyles.HelpIcon))
+                if (!string.IsNullOrEmpty(docsUrl) && LayoutIconButton(WitStyles.HelpIcon))
                 {
-                    Application.OpenURL(headerURL);
+                    Application.OpenURL(docsUrl);
                 }
+                GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
             }
         }
@@ -292,7 +328,7 @@ namespace Facebook.WitAi
         }
         #endregion
 
-        #region MISCELANEOUS
+        #region MISCELLANEOUS
         public static void LayoutToggle(GUIContent key, ref bool toggleValue, ref bool isUpdated)
         {
             // Simple layout
@@ -367,46 +403,47 @@ namespace Facebook.WitAi
         #endregion
 
         #region WINDOW
-        public static void LayoutWindow(string windowTitle, Texture2D windowHeader, string windowHeaderUrl, Action windowContentLayout, ref Vector2 offset, out Vector2 size)
+        public static void LayoutWindow(string windowTitle, Texture2D windowHeader, string windowHeaderUrl, string windowInfoUrl, Action windowContentLayout, ref Vector2 offset, out Vector2 size)
         {
             // Get minimum width
             float minWidth = WitStyles.WindowMinWidth;
 
             // Begin Header
             GUILayout.BeginVertical();
-            GUILayout.BeginHorizontal();
-            GUILayout.Space(WitStyles.WindowPaddingLeft);
-            GUILayout.BeginVertical();
-            GUILayout.Space(WitStyles.WindowPaddingTop);
-            // Layout header image
-            if (windowHeader != null)
-            {
-                LayoutHeaderButton(windowHeader, windowHeaderUrl);
-            }
-            // Layout header label
-            if (!string.IsNullOrEmpty(windowTitle))
-            {
-                LayoutHeaderLabel(windowTitle);
-            }
-            // End Header
+                GUILayout.BeginHorizontal();
+                    GUILayout.Space(WitStyles.WindowPaddingLeft);
+                    GUILayout.BeginVertical();
+                        GUILayout.Space(WitStyles.WindowPaddingTop);
+                        // Layout header image
+                        if (windowHeader != null)
+                        {
+                            LayoutHeaderButton(windowHeader, windowHeaderUrl, windowInfoUrl);
+                        }
+                        // Layout header label
+                        if (!string.IsNullOrEmpty(windowTitle))
+                        {
+                            LayoutHeaderLabel(windowTitle);
+                        }
+                        // End Header
+                    GUILayout.EndVertical();
+                    GUILayout.Space(WitStyles.WindowPaddingRight);
+                GUILayout.EndHorizontal();
             GUILayout.EndVertical();
-            GUILayout.Space(WitStyles.WindowPaddingRight);
-            GUILayout.EndHorizontal();
-            GUILayout.EndVertical();
+
             // Begin Content
             GUILayout.BeginVertical();
-            offset = GUILayout.BeginScrollView(offset);
-            GUILayout.BeginHorizontal();
-            GUILayout.Space(WitStyles.WindowPaddingLeft);
-            GUILayout.BeginVertical(GUILayout.MinWidth(minWidth), GUILayout.MaxWidth(WitStyles.WindowMaxSize));
-            // Layout content
-            windowContentLayout?.Invoke();
-            // End Content
-            GUILayout.EndVertical();
-            GUILayout.Space(WitStyles.WindowPaddingRight);
-            GUILayout.EndHorizontal();
-            GUILayout.Space(WitStyles.WindowPaddingBottom);
-            GUILayout.EndScrollView();
+                offset = GUILayout.BeginScrollView(offset);
+                    GUILayout.BeginHorizontal();
+                        GUILayout.Space(WitStyles.WindowPaddingLeft);
+                        GUILayout.BeginVertical(GUILayout.MinWidth(minWidth), GUILayout.MaxWidth(WitStyles.WindowMaxSize));
+                            // Layout content
+                            windowContentLayout?.Invoke();
+                            // End Content
+                        GUILayout.EndVertical();
+                        GUILayout.Space(WitStyles.WindowPaddingRight);
+                    GUILayout.EndHorizontal();
+                    GUILayout.Space(WitStyles.WindowPaddingBottom);
+                GUILayout.EndScrollView();
             GUILayout.EndVertical();
 
             // Return size

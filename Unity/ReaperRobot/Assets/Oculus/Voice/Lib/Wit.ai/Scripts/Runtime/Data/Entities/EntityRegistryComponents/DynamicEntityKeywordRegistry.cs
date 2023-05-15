@@ -1,14 +1,16 @@
 ﻿/*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-using Facebook.WitAi.Interfaces;
 using UnityEngine;
+using Meta.WitAi.Data.Info;
+using Meta.WitAi.Interfaces;
 
-namespace Facebook.WitAi.Data.Entities
+namespace Meta.WitAi.Data.Entities
 {
     /// <summary>
     /// Singleton registry for tracking any objects owned defined in entities in
@@ -48,12 +50,12 @@ namespace Facebook.WitAi.Data.Entities
             instance = null;
         }
 
-        public void RegisterDynamicEntity(string entity, WitEntityKeyword keyword)
+        public void RegisterDynamicEntity(string entity, WitEntityKeywordInfo keyword)
         {
             entities.AddKeyword(entity, keyword);
         }
 
-        public void UnregisterDynamicEntity(string entity, WitEntityKeyword keyword)
+        public void UnregisterDynamicEntity(string entity, WitEntityKeywordInfo keyword)
         {
             entities.RemoveKeyword(entity, keyword);
         }

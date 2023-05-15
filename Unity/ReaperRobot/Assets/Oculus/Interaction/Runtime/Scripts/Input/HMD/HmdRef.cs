@@ -1,14 +1,22 @@
-﻿/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using System;
 using UnityEngine;
@@ -21,14 +29,14 @@ namespace Oculus.Interaction.Input
     /// </summary>
     public class HmdRef : MonoBehaviour, IHmd
     {
-        [SerializeField, Interface(typeof(Hmd))]
-        private MonoBehaviour _hmd;
+        [SerializeField, Interface(typeof(IHmd))]
+        private UnityEngine.Object _hmd;
         private IHmd Hmd;
 
-        public event Action HmdUpdated
+        public event Action WhenUpdated
         {
-            add => Hmd.HmdUpdated += value;
-            remove => Hmd.HmdUpdated -= value;
+            add => Hmd.WhenUpdated += value;
+            remove => Hmd.WhenUpdated -= value;
         }
 
         protected virtual void Awake()
@@ -38,12 +46,12 @@ namespace Oculus.Interaction.Input
 
         protected virtual void Start()
         {
-            Assert.IsNotNull(Hmd);
+            this.AssertField(Hmd, nameof(Hmd));
         }
 
-        public bool GetRootPose(out Pose pose)
+        public bool TryGetRootPose(out Pose pose)
         {
-            return Hmd.GetRootPose(out pose);
+            return Hmd.TryGetRootPose(out pose);
         }
 
         #region Inject
@@ -54,7 +62,7 @@ namespace Oculus.Interaction.Input
 
         public void InjectHmd(IHmd hmd)
         {
-            _hmd = hmd as MonoBehaviour;
+            _hmd = hmd as UnityEngine.Object;
             Hmd = hmd;
         }
         #endregion

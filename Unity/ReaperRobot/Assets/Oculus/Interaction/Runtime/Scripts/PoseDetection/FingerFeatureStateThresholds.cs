@@ -1,14 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using System;
 using System.Collections.Generic;
@@ -33,12 +41,16 @@ namespace Oculus.Interaction.PoseDetection
         }
 
         [SerializeField]
+        [Tooltip(FingerFeatureProperties.FeatureStateThresholdMidpointHelpText)]
         private float _thresholdMidpoint;
         [SerializeField]
+        [Tooltip(FingerFeatureProperties.FeatureStateThresholdWidthHelpText)]
         private float _thresholdWidth;
         [SerializeField]
+        [Tooltip("State to transition to when value passes below the threshold")]
         private string _firstState;
         [SerializeField]
+        [Tooltip("State to transition to when value passes above the threshold")]
         private string _secondState;
 
         public float ThresholdMidpoint => _thresholdMidpoint;
@@ -62,8 +74,13 @@ namespace Oculus.Interaction.PoseDetection
         }
 
         [SerializeField]
+        [Tooltip("Which feature this collection of thresholds controls. " +
+            "Each feature should exist at most once.")]
         private FingerFeature _feature;
+
         [SerializeField]
+        [Tooltip("List of state transitions, with thresold settings. " +
+            "The entries in this list must be in ascending order, based on their 'midpoint' values.")]
         private List<FingerFeatureStateThreshold> _thresholds;
 
         public FingerFeature Feature => _feature;
@@ -78,6 +95,7 @@ namespace Oculus.Interaction.PoseDetection
         IFeatureThresholds<FingerFeature, string>
     {
         [SerializeField]
+        [Tooltip("List of all supported finger features, along with the state entry/exit thresholds.")]
         private List<FingerFeatureThresholds> _featureThresholds;
 
         [SerializeField]

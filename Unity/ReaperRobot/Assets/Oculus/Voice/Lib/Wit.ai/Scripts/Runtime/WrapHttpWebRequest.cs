@@ -1,5 +1,6 @@
 ﻿/*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,8 +9,9 @@
 using System;
 using System.IO;
 using System.Net;
+using UnityEngine;
 
-namespace Facebook.WitAi
+namespace Meta.WitAi
 {
     public class WrapHttpWebRequest : IRequest
     {
@@ -17,6 +19,10 @@ namespace Facebook.WitAi
 
         public WrapHttpWebRequest(HttpWebRequest httpWebRequest)
         {
+            if (Application.isBatchMode)
+            {
+                httpWebRequest.KeepAlive = false;
+            }
             _httpWebRequest = httpWebRequest;
         }
 
@@ -31,6 +37,12 @@ namespace Facebook.WitAi
         public void Abort()
         {
             _httpWebRequest.Abort();
+        }
+
+        public void Dispose()
+        {
+            _httpWebRequest.Abort();
+            _httpWebRequest = null;
         }
 
         public IAsyncResult BeginGetRequestStream(AsyncCallback callback, object state)

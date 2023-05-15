@@ -1,14 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using Oculus.Interaction.Input;
 using UnityEngine;
@@ -38,7 +46,7 @@ namespace Oculus.Interaction.GrabAPI
                 _tipId = HandJointUtils.GetHandFingerTip(fingerId);
             }
 
-            public void UpdateTipPosition(IHand hand)
+            private void UpdateTipPosition(IHand hand)
             {
                 if (hand.GetJointPoseFromWrist(_tipId, out Pose pose))
                 {
@@ -48,6 +56,7 @@ namespace Oculus.Interaction.GrabAPI
 
             public void UpdateIsPinching(IHand hand)
             {
+                UpdateTipPosition(hand);
                 PinchStrength = hand.GetFingerPinchStrength(_finger);
                 bool isPinching = hand.GetFingerIsPinching(_finger);
                 if(isPinching != IsPinching)
@@ -77,7 +86,7 @@ namespace Oculus.Interaction.GrabAPI
             return _fingersPinchData[(int)finger].IsPinching;
         }
 
-        public Vector3 GetCenterOffset()
+        public Vector3 GetWristOffsetLocal()
         {
             float maxStrength = float.NegativeInfinity;
             Vector3 thumbTip = _fingersPinchData[0].TipPosition;
