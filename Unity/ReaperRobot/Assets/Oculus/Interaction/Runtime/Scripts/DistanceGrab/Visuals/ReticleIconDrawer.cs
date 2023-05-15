@@ -1,14 +1,22 @@
-﻿/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -18,9 +26,8 @@ namespace Oculus.Interaction.DistanceReticles
     public class ReticleIconDrawer : InteractorReticle<ReticleDataIcon>
     {
         [SerializeField, Interface(typeof(IDistanceInteractor))]
-        private MonoBehaviour _distanceInteractor;
+        private UnityEngine.Object _distanceInteractor;
         private IDistanceInteractor DistanceInteractor { get; set; }
-        protected override IInteractorView Interactor => DistanceInteractor;
 
         [SerializeField]
         private MeshRenderer _renderer;
@@ -58,6 +65,9 @@ namespace Oculus.Interaction.DistanceReticles
 
         private Vector3 _originalScale;
 
+        protected override IInteractorView Interactor { get; set; }
+        protected override Component InteractableComponent => DistanceInteractor.DistanceInteractable as Component;
+
         #region Editor events
         protected virtual void OnValidate()
         {
@@ -68,16 +78,17 @@ namespace Oculus.Interaction.DistanceReticles
         }
         #endregion
 
-        private void Awake()
+        protected virtual void Awake()
         {
             DistanceInteractor = _distanceInteractor as IDistanceInteractor;
+            Interactor = DistanceInteractor;
         }
 
         protected override void Start()
         {
-            this.BeginStart(ref _started);
-            Assert.IsNotNull(_renderer);
-            Assert.IsNotNull(_centerEye);
+            this.BeginStart(ref _started, () => base.Start());
+            this.AssertField(_renderer, nameof(_renderer));
+            this.AssertField(_centerEye, nameof(_centerEye));
             _originalScale = this.transform.localScale;
             this.EndStart(ref _started);
         }
@@ -103,8 +114,7 @@ namespace Oculus.Interaction.DistanceReticles
 
         protected override void Align(ReticleDataIcon data)
         {
-            ConicalFrustum frustum = DistanceInteractor.PointerFrustum;
-            this.transform.position = data.GetTargetHit(frustum);
+            this.transform.position = data.ProcessHitPoint(DistanceInteractor.HitPoint);
 
             if (_renderer.enabled)
             {
@@ -125,18 +135,19 @@ namespace Oculus.Interaction.DistanceReticles
         }
 
         #region Inject
-        public void InjectAllReticleIconDrawer(IDistanceInteractor interactor,
+        public void InjectAllReticleIconDrawer(IDistanceInteractor distanceInteractor,
             Transform centerEye, MeshRenderer renderer)
         {
-            InjectDistanceInteractor(interactor);
+            InjectDistanceInteractor(distanceInteractor);
             InjectCenterEye(centerEye);
             InjectRenderer(renderer);
         }
 
-        public void InjectDistanceInteractor(IDistanceInteractor interactor)
+        public void InjectDistanceInteractor(IDistanceInteractor distanceInteractor)
         {
-            _distanceInteractor = interactor as MonoBehaviour;
-            DistanceInteractor = interactor;
+            _distanceInteractor = distanceInteractor as UnityEngine.Object;
+            DistanceInteractor = distanceInteractor;
+            Interactor = distanceInteractor;
         }
 
         public void InjectCenterEye(Transform centerEye)

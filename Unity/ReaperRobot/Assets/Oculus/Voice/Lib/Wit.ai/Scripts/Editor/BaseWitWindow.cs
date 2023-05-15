@@ -1,15 +1,16 @@
 /*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-using Facebook.WitAi.Data.Configuration;
+using Meta.WitAi.Data.Configuration;
 using UnityEditor;
 using UnityEngine;
 
-namespace Facebook.WitAi.Windows
+namespace Meta.WitAi.Windows
 {
     public abstract class BaseWitWindow : EditorWindow
     {
@@ -20,6 +21,7 @@ namespace Facebook.WitAi.Windows
         protected abstract GUIContent Title { get; }
         protected virtual Texture2D HeaderIcon => WitTexts.HeaderIcon;
         protected virtual string HeaderUrl => WitTexts.WitUrl;
+        protected virtual string DocsUrl => WitTexts.Texts.WitDocsUrl;
 
         // Window open
         protected virtual void OnEnable()
@@ -36,7 +38,7 @@ namespace Facebook.WitAi.Windows
         protected virtual void OnGUI()
         {
             Vector2 size;
-            WitEditorUI.LayoutWindow(titleContent.text, HeaderIcon, HeaderUrl, LayoutContent, ref ScrollOffset, out size);
+            WitEditorUI.LayoutWindow(titleContent.text, HeaderIcon, HeaderUrl, DocsUrl, LayoutContent, ref ScrollOffset, out size);
         }
         // Draw content of window
         protected abstract void LayoutContent();

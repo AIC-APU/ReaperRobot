@@ -1,14 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using UnityEngine;
 
@@ -33,7 +41,8 @@ namespace Oculus.Interaction.HandGrab
 
         public HandPose HandPose => _isHandPoseValid ? _handPose : null;
 
-        public Pose WorldGrabPose => _relativeTo != null ? _relativeTo.GlobalPose(Pose) : Pose.identity;
+        public Pose WorldGrabPose => _relativeTo != null ?
+            PoseUtils.GlobalPose(_relativeTo, Pose) : Pose.identity;
         public HandAlignType HandAlignment => _handAlignment;
 
         public GrabAnchor Anchor { get; private set; } = GrabAnchor.None;
@@ -45,22 +54,26 @@ namespace Oculus.Interaction.HandGrab
         private Transform _relativeTo;
         private HandAlignType _handAlignment;
 
-
         public void Set(HandGrabTarget other)
         {
-            Set(other._relativeTo, other._handAlignment, other.HandPose, other._pose, other.Anchor);
+            _relativeTo = other._relativeTo;
+            _handAlignment = other._handAlignment;
+            _pose = other._pose;
+            _isHandPoseValid = other._isHandPoseValid;
+            _handPose.CopyFrom(other._handPose);
+            Anchor = other.Anchor;
         }
 
-        public void Set(Transform relativeTo, HandAlignType handAlignment, HandPose pose, in Pose snapPoint, GrabAnchor anchor)
+        public void Set(Transform relativeTo, HandAlignType handAlignment, GrabAnchor anchor, HandGrabResult result)
         {
             Anchor = anchor;
             _relativeTo = relativeTo;
             _handAlignment = handAlignment;
-            _pose.CopyFrom(snapPoint);
-            _isHandPoseValid = pose != null;
+            _pose.CopyFrom(result.RelativePose);
+            _isHandPoseValid = result.HasHandPose;
             if (_isHandPoseValid)
             {
-                _handPose.CopyFrom(pose);
+                _handPose.CopyFrom(result.HandPose);
             }
         }
 

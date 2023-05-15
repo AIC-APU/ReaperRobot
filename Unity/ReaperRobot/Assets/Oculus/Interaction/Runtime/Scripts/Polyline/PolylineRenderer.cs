@@ -1,14 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using System.Collections.Generic;
 using UnityEngine;
@@ -92,7 +100,7 @@ namespace Oculus.Interaction
             _material.SetBuffer(_positionBufferShaderID, _positionBuffer);
             _material.SetBuffer(_colorBufferShaderID, _colorBuffer);
 
-            _argsData = new uint[5] {0, 0, 0, 0, 0};
+            _argsData = new uint[5] { 0, 0, 0, 0, 0 };
             _argsData[0] = (uint)_baseMesh.GetIndexCount(0);
             _argsData[1] = (uint)(_maxLineCount * Copies);
 
@@ -121,18 +129,22 @@ namespace Oculus.Interaction
 
         public void SetLines(List<Vector4> positions, Color color)
         {
-            List<Color> colors = new List<Color>();
-            for (int i = 0; i < positions.Count; i++)
-            {
-                colors.Add(color);
-            }
-
-            SetLines(positions, colors);
+            SetPositions(positions.Count, positions);
+            SetDrawCount(positions.Count / 2);
+            SetColor(positions.Count, color);
         }
 
         public void SetLines(List<Vector4> positions, List<Color> colors, int maxCount = -1)
         {
             int count = maxCount < 0 ? positions.Count : maxCount;
+            SetPositions(count, positions);
+            SetDrawCount(count / 2);
+            SetColors(count, colors);
+
+        }
+
+        private void SetPositions(int count, List<Vector4> positions)
+        {
             if (count * Copies > _positions.Length)
             {
                 _maxLineCount = count / 2;
@@ -180,18 +192,12 @@ namespace Oculus.Interaction
                 }
             }
             _bounds.SetMinMax(min, max);
-
             _positionsNeedUpdate = true;
+        }
 
-            if (count * Copies > _colors.Length)
-            {
-                _maxLineCount = count / 2;
-                _colors = new Color[BufferSize];
-                _colorBuffer.Release();
-                _colorBuffer = new ComputeBuffer(BufferSize, 16);
-                _colorBuffer.SetData(_colors);
-            }
-
+        private void SetColors(int count, List<Color> colors)
+        {
+            PrepareColorBuffer(count);
             // Given color data c0,c1,c2,c3
             // For double pass -> [c0,c1, c2,c3]
             // For single pass -> [c0,c1, c0,c1, c2,c3, c2,c3]
@@ -201,15 +207,30 @@ namespace Oculus.Interaction
                 {
                     for (int k = 0; k < Copies; k++)
                     {
-                        Vector4 color = colors[i + j];
-                        _colors[(i + k)*Copies + j] = color;
+                        _colors[(i + k) * Copies + j] = colors[i + j];
                     }
                 }
             }
-
             _colorsNeedUpdate = true;
+        }
 
-            SetDrawCount(count / 2);
+        private void SetColor(int count, Color color)
+        {
+            PrepareColorBuffer(count);
+            // Given color data c0,c1,c2,c3
+            // For double pass -> [c0,c1, c2,c3]
+            // For single pass -> [c0,c1, c0,c1, c2,c3, c2,c3]
+            for (int i = 0; i < count; i += 2)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    for (int k = 0; k < Copies; k++)
+                    {
+                        _colors[(i + k) * Copies + j] = color;
+                    }
+                }
+            }
+            _colorsNeedUpdate = true;
         }
 
         private void SetDrawCount(int c)
@@ -217,6 +238,19 @@ namespace Oculus.Interaction
             int drawCount = c;
             _argsData[1] = (uint)(drawCount * Copies);
             _argsBuffer.SetData(_argsData);
+        }
+
+        private void PrepareColorBuffer(int count)
+        {
+            if (count * Copies <= _colors.Length)
+            {
+                return;
+            }
+            _maxLineCount = count / 2;
+            _colors = new Color[BufferSize];
+            _colorBuffer.Release();
+            _colorBuffer = new ComputeBuffer(BufferSize, 16);
+            _colorBuffer.SetData(_colors);
         }
 
         public void RenderLines()
@@ -237,7 +271,12 @@ namespace Oculus.Interaction
 
             _material.SetFloat(_scaleShaderID, _lineScaleFactor);
             _material.SetMatrix(_localToWorldShaderID, _matrix);
-            Graphics.DrawMeshInstancedIndirect(_baseMesh, 0, _material, _bounds, _argsBuffer);
+
+            Bounds bounds = new Bounds(
+                _matrix.MultiplyPoint(_bounds.center),
+                _matrix.MultiplyVector(_bounds.size));
+
+            Graphics.DrawMeshInstancedIndirect(_baseMesh, 0, _material, bounds, _argsBuffer);
         }
 
         public void SetTransform(Transform transform)

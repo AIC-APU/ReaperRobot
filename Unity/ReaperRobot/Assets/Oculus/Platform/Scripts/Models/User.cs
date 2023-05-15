@@ -10,16 +10,24 @@ namespace Oculus.Platform.Models
 
   public class User
   {
+    /// A potentially non unique displayable name chosen by the user. Could also be
+    /// the same as the oculus_ID
     public readonly string DisplayName;
     public readonly UInt64 ID;
     public readonly string ImageURL;
-    public readonly string InviteToken;
     public readonly string OculusID;
+    /// Human readable string of what the user is currently doing. Not intended to
+    /// be parsed as it might change at anytime or be translated
     public readonly string Presence;
+    /// Intended to be parsed and used to deeplink to parts of the app
     public readonly string PresenceDeeplinkMessage;
+    /// If provided, the destination this user is currently at in the app
     public readonly string PresenceDestinationApiName;
+    /// If provided, the lobby session this user is currently at in the app
     public readonly string PresenceLobbySessionId;
+    /// If provided, the match session this user is currently at in the app
     public readonly string PresenceMatchSessionId;
+    /// Enum value of what the user is currently doing.
     public readonly UserPresenceStatus PresenceStatus;
     public readonly string SmallImageUrl;
 
@@ -29,7 +37,6 @@ namespace Oculus.Platform.Models
       DisplayName = CAPI.ovr_User_GetDisplayName(o);
       ID = CAPI.ovr_User_GetID(o);
       ImageURL = CAPI.ovr_User_GetImageUrl(o);
-      InviteToken = CAPI.ovr_User_GetInviteToken(o);
       OculusID = CAPI.ovr_User_GetOculusID(o);
       Presence = CAPI.ovr_User_GetPresence(o);
       PresenceDeeplinkMessage = CAPI.ovr_User_GetPresenceDeeplinkMessage(o);

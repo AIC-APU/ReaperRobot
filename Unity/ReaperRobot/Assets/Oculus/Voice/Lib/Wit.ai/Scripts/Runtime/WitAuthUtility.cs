@@ -1,22 +1,17 @@
 ﻿/*
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Facebook.WitAi.Data.Configuration;
-using UnityEngine;
-
+using Meta.WitAi.Data.Configuration;
 #if UNITY_EDITOR
-using UnityEditor;
+
 #endif
 
-namespace Facebook.WitAi
+namespace Meta.WitAi
 {
     public class WitAuthUtility
     {
@@ -36,7 +31,7 @@ namespace Facebook.WitAi
         public static string GetAppServerToken(WitConfiguration configuration,
             string defaultValue = "")
         {
-            return GetAppServerToken(configuration?.application?.id, defaultValue);
+            return GetAppServerToken(configuration.GetApplicationId(), defaultValue);
         }
 
         public static string GetAppServerToken(string appId, string defaultServerToken = "")

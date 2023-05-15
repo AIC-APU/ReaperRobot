@@ -1,22 +1,29 @@
-/**************************************************************************************************
- * Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
  *
- * Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
  * https://developer.oculus.com/licenses/oculussdk/
  *
- * Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
- * under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
- * ANY KIND, either express or implied. See the License for the specific language governing
- * permissions and limitations under the License.
- **************************************************************************************************/
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-using System;
 using System.Collections.Generic;
-using Facebook.WitAi;
-using Facebook.WitAi.Data.Configuration;
-using Facebook.WitAi.Windows;
+using Meta.WitAi;
+using Meta.WitAi.Data.Configuration;
+using Meta.WitAi.Windows;
+using Meta.WitAi.Data.Info;
 using Oculus.Voice.Utility;
-using UnityEditor;
 using UnityEngine;
 
 namespace Oculus.Voice.Windows
@@ -30,6 +37,7 @@ namespace Oculus.Voice.Windows
         protected override GUIContent Title => VoiceSDKStyles.SetupTitle;
         protected override string ContentHeaderLabel => VoiceSDKStyles.Texts.SetupHeaderLabel;
         protected override string ContentSubheaderLabel => VoiceSDKStyles.Texts.SetupSubheaderLabel;
+        protected override string DocsUrl => VoiceSDKStyles.Texts.VoiceDocsUrl;
 
         protected override void OnEnable()
         {
@@ -86,16 +94,18 @@ namespace Oculus.Voice.Windows
 
             // Generate asset using app data
             WitConfiguration configuration = ScriptableObject.CreateInstance<WitConfiguration>();
-            configuration.clientAccessToken = appData["clientToken"];
-            WitApplication application = new WitApplication();
-            application.name = appData["name"];
-            application.id = appData["id"];
-            application.lang = appData["lang"];
-            configuration.application = application;
+            configuration.SetClientAccessToken(appData["clientToken"]);
+            WitAppInfo application = new WitAppInfo()
+            {
+                name = appData["name"],
+                id = appData["id"],
+                lang = appData["lang"]
+            };
+            configuration.SetApplicationInfo(application);
             configuration.name = application.id;
 
             // Save configuration to asset
-            return WitConfigurationUtility.SaveConfiguration(newToken, configuration);
+            return WitConfigurationUtility.SaveConfiguration(string.Empty, configuration);
         }
     }
 

@@ -1,19 +1,25 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using UnityEngine;
-using UnityEngine.Assertions;
 using Oculus.Interaction.Input;
-using UnityEngine.Serialization;
 
 namespace Oculus.Interaction
 {
@@ -25,7 +31,7 @@ namespace Oculus.Interaction
     public class HandPokeLimiterVisual : MonoBehaviour
     {
         [SerializeField, Interface(typeof(IHand))]
-        private MonoBehaviour _hand;
+        private UnityEngine.Object _hand;
         private IHand Hand;
 
         [SerializeField]
@@ -34,12 +40,7 @@ namespace Oculus.Interaction
         [SerializeField]
         private SyntheticHand _syntheticHand;
 
-        [SerializeField]
-        private float _maxDistanceFromTouchPoint = 0.1f;
-
         private bool _isTouching;
-        private Vector3 _initialTouchPoint;
-        private float _maxDeltaFromTouchPoint;
 
         protected bool _started = false;
 
@@ -51,9 +52,9 @@ namespace Oculus.Interaction
         protected virtual void Start()
         {
             this.BeginStart(ref _started);
-            Assert.IsNotNull(Hand);
-            Assert.IsNotNull(_pokeInteractor);
-            Assert.IsNotNull(_syntheticHand);
+            this.AssertField(Hand, nameof(Hand));
+            this.AssertField(_pokeInteractor, nameof(_pokeInteractor));
+            this.AssertField(_syntheticHand, nameof(_syntheticHand));
             this.EndStart(ref _started);
         }
 
@@ -61,8 +62,8 @@ namespace Oculus.Interaction
         {
             if (_started)
             {
-                _pokeInteractor.WhenInteractableSelected.Action += HandleLock;
-                _pokeInteractor.WhenInteractableUnselected.Action += HandleUnlock;
+                _pokeInteractor.WhenStateChanged += HandleStateChanged;
+                _pokeInteractor.WhenPassedSurfaceChanged += HandlePassedSurfaceChanged;
             }
         }
 
@@ -72,11 +73,33 @@ namespace Oculus.Interaction
             {
                 if (_isTouching)
                 {
-                    HandleUnlock(_pokeInteractor.SelectedInteractable);
+                    UnlockWrist();
                 }
 
-                _pokeInteractor.WhenInteractableSelected.Action -= HandleLock;
-                _pokeInteractor.WhenInteractableUnselected.Action -= HandleUnlock;
+                _pokeInteractor.WhenStateChanged -= HandleStateChanged;
+                _pokeInteractor.WhenPassedSurfaceChanged -= HandlePassedSurfaceChanged;
+            }
+        }
+
+        private void HandlePassedSurfaceChanged(bool passed)
+        {
+            CheckPassedSurface();
+        }
+
+        private void HandleStateChanged(InteractorStateChangeArgs args)
+        {
+            CheckPassedSurface();
+        }
+
+        private void CheckPassedSurface()
+        {
+            if (_pokeInteractor.IsPassedSurface)
+            {
+                LockWrist();
+            }
+            else
+            {
+                UnlockWrist();
             }
         }
 
@@ -85,21 +108,15 @@ namespace Oculus.Interaction
             UpdateWrist();
         }
 
-        private void HandleLock(PokeInteractable pokeInteractable)
+        private void LockWrist()
         {
             _isTouching = true;
-            _initialTouchPoint = _pokeInteractor.TouchPoint;
         }
 
-        private void HandleUnlock(PokeInteractable pokeInteractable)
+        private void UnlockWrist()
         {
             _syntheticHand.FreeWrist();
             _isTouching = false;
-        }
-
-        private Vector3 ComputeSurfacePosition(Vector3 point, PokeInteractable interactable)
-        {
-            return interactable.ClosestSurfacePoint(point);
         }
 
         private void UpdateWrist()
@@ -111,20 +128,10 @@ namespace Oculus.Interaction
                 return;
             }
 
-            Vector3 surfacePosition = ComputeSurfacePosition(_pokeInteractor.Origin, _pokeInteractor.SelectedInteractable);
-            _maxDeltaFromTouchPoint = Mathf.Max((surfacePosition - _initialTouchPoint).magnitude, _maxDeltaFromTouchPoint);
-
-            float deltaAsPercent = 1;
-            if (_maxDistanceFromTouchPoint != 0f)
-            {
-                deltaAsPercent = Mathf.Clamp01(_maxDeltaFromTouchPoint / _maxDistanceFromTouchPoint);
-            }
-
-            Vector3 fullDelta = surfacePosition - _initialTouchPoint;
-            Vector3 easedPosition = _initialTouchPoint + fullDelta * deltaAsPercent;
-
             Vector3 positionDelta = rootPose.position - _pokeInteractor.Origin;
-            Vector3 targetPosePosition = easedPosition + positionDelta;
+            Vector3 targetPosePosition = _pokeInteractor.TouchPoint + positionDelta +
+                                         _pokeInteractor.Radius *
+                                         _pokeInteractor.TouchNormal;
             Pose wristPoseOverride = new Pose(targetPosePosition, rootPose.rotation);
 
             _syntheticHand.LockWristPose(wristPoseOverride, 1.0f, SyntheticHand.WristLockMode.Full, true, true);
@@ -143,7 +150,7 @@ namespace Oculus.Interaction
 
         public void InjectHand(IHand hand)
         {
-            _hand = hand as MonoBehaviour;
+            _hand = hand as UnityEngine.Object;
             Hand = hand;
         }
 

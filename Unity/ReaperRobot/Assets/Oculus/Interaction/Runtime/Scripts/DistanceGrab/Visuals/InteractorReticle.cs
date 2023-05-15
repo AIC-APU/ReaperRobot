@@ -1,55 +1,65 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace Oculus.Interaction.DistanceReticles
 {
     public abstract class InteractorReticle<TReticleData> : MonoBehaviour
-        where TReticleData : IReticleData
+        where TReticleData : class, IReticleData
     {
         [SerializeField]
-        private bool _showOnSelect = false;
-        private bool ShowOnSelect
+        private bool _visibleDuringSelect = false;
+        private bool VisibleDuringSelect
         {
             get
             {
-                return _showOnSelect;
+                return _visibleDuringSelect;
             }
             set
             {
-                _showOnSelect = value;
+                _visibleDuringSelect = value;
             }
         }
 
-        protected abstract IInteractorView Interactor { get; }
-
-        private TReticleData _targetData;
-        private bool _drawing;
         protected bool _started;
+        protected TReticleData _targetData;
+        private bool _drawn;
+
+        protected abstract IInteractorView Interactor { get; set; }
+        protected abstract Component InteractableComponent { get; }
 
         protected virtual void Start()
         {
             this.BeginStart(ref _started);
-            Assert.IsNotNull(Interactor);
+            this.AssertField(Interactor, nameof(Interactor));
             Hide();
             this.EndStart(ref _started);
         }
+
         protected virtual void OnEnable()
         {
             if (_started)
             {
                 Interactor.WhenStateChanged += HandleStateChanged;
+                Interactor.WhenPostprocessed += HandlePostProcessed;
             }
         }
 
@@ -58,63 +68,71 @@ namespace Oculus.Interaction.DistanceReticles
             if (_started)
             {
                 Interactor.WhenStateChanged -= HandleStateChanged;
+                Interactor.WhenPostprocessed -= HandlePostProcessed;
             }
         }
 
         private void HandleStateChanged(InteractorStateChangeArgs args)
         {
             if (args.NewState == InteractorState.Normal
-                && args.PreviousState != InteractorState.Disabled)
+                   || args.NewState == InteractorState.Disabled)
             {
                 InteractableUnset();
             }
-            else if(args.NewState == InteractorState.Select)
+            else if (args.NewState == InteractorState.Hover
+                && args.PreviousState != InteractorState.Select)
             {
-                if (!_showOnSelect)
-                {
-                    InteractableUnset();
-                }
-            }
-            else if (args.NewState == InteractorState.Hover)
-            {
-                InteractableSet(Interactor.Candidate as MonoBehaviour);
+                InteractableSet(InteractableComponent);
             }
         }
 
-        #region Drawing
-        protected abstract void Draw(TReticleData data);
-        protected abstract void Hide();
-        protected abstract void Align(TReticleData data);
-        #endregion
-
-        private void InteractableSet(MonoBehaviour interactableComponent)
+        private void HandlePostProcessed()
         {
-            if (interactableComponent != null
-                && interactableComponent.TryGetComponent(out TReticleData reticleData))
+            if (_targetData != null
+                  && (Interactor.State == InteractorState.Hover
+                  || (Interactor.State == InteractorState.Select && _visibleDuringSelect)))
             {
-                _targetData = reticleData;
-                Draw(reticleData);
-                Align(reticleData);
-                _drawing = true;
+                if (!_drawn)
+                {
+                    _drawn = true;
+                    Draw(_targetData);
+                }
+                Align(_targetData);
+            }
+            else if (_drawn)
+            {
+                _drawn = false;
+                Hide();
+            }
+        }
+
+        private void InteractableSet(Component interactable)
+        {
+            if (interactable != null
+                && interactable.TryGetComponent(out _targetData))
+            {
+                _drawn = false;
+            }
+            else
+            {
+                _targetData = null;
             }
         }
 
         private void InteractableUnset()
         {
-            if (_drawing)
+            if (_drawn)
             {
+                _drawn = false;
                 Hide();
-                _targetData = default(TReticleData);
-                _drawing = false;
             }
+            _targetData = default(TReticleData);
         }
 
-        protected virtual void LateUpdate()
-        {
-            if (_drawing)
-            {
-                Align(_targetData);
-            }
-        }
+        #region Drawing
+        protected abstract void Draw(TReticleData data);
+        protected abstract void Align(TReticleData data);
+        protected abstract void Hide();
+        #endregion
     }
 }

@@ -1,14 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using Oculus.Interaction.HandGrab.Visuals;
 using Oculus.Interaction.Input;
@@ -159,7 +167,7 @@ namespace Oculus.Interaction.HandGrab.Editor
         /// Finds the nearest object that can be snapped to and adds a new HandGrabInteractable to
         /// it with the user hand representation.
         /// </summary>
-        private void RecordPose()
+        public void RecordPose()
         {
             if (!Application.isPlaying)
             {
@@ -192,7 +200,7 @@ namespace Oculus.Interaction.HandGrab.Editor
                 return;
             }
 
-            Pose gripPoint = _item.transform.RelativeOffset(handRoot);
+            Pose gripPoint = PoseUtils.DeltaScaled(_item.transform, handRoot);
             HandGrabPose point = AddHandGrabPose(trackedHandPose, gripPoint);
             AttachGhost(point);
         }
@@ -232,14 +240,14 @@ namespace Oculus.Interaction.HandGrab.Editor
         /// <returns>The generated HandGrabPose.</returns>
         private HandGrabPose AddHandGrabPose(HandPose rawPose, Pose snapPoint)
         {
-            HandGrabInteractable interactable = HandGrabInteractable.Create(_item.transform);
-            HandGrabPoseData pointData = new HandGrabPoseData()
+            HandGrabInteractable interactable = HandGrabUtils.CreateHandGrabInteractable(_item.transform);
+            var pointData = new HandGrabUtils.HandGrabPoseData()
             {
                 handPose = rawPose,
-                scale = 1f,
+                scale = Hand.Scale / interactable.RelativeTo.lossyScale.x,
                 gripPose = snapPoint,
             };
-            return interactable.LoadHandGrabPose(pointData);
+            return HandGrabUtils.LoadHandGrabPose(interactable, pointData);
         }
 
         /// <summary>
@@ -248,10 +256,10 @@ namespace Oculus.Interaction.HandGrab.Editor
         /// </summary>
         /// <param name="data">The data of the HandGrabInteractable.</param>
         /// <returns>The generated HandGrabInteractable.</returns>
-        private HandGrabInteractable LoadHandGrabInteractable(HandGrabInteractableData data)
+        private HandGrabInteractable LoadHandGrabInteractable(HandGrabUtils.HandGrabInteractableData data)
         {
-            HandGrabInteractable interactable = HandGrabInteractable.Create(_item.transform);
-            interactable.LoadData(data);
+            HandGrabInteractable interactable = HandGrabUtils.CreateHandGrabInteractable(_item.transform);
+            HandGrabUtils.LoadData(interactable, data);
             return interactable;
         }
 
@@ -267,10 +275,10 @@ namespace Oculus.Interaction.HandGrab.Editor
             {
                 GenerateCollectionAsset();
             }
-            List<HandGrabInteractableData> savedPoses = new List<HandGrabInteractableData>();
+            var savedPoses = new List<HandGrabUtils.HandGrabInteractableData>();
             foreach (HandGrabInteractable snap in _item.GetComponentsInChildren<HandGrabInteractable>(false))
             {
-                savedPoses.Add(snap.SaveData());
+                savedPoses.Add(HandGrabUtils.SaveData(snap));
             }
             _posesCollection.StoreInteractables(savedPoses);
         }
@@ -286,7 +294,7 @@ namespace Oculus.Interaction.HandGrab.Editor
                 return;
             }
 
-            foreach (HandGrabInteractableData handPose in _posesCollection.InteractablesData)
+            foreach (var handPose in _posesCollection.InteractablesData)
             {
                 LoadHandGrabInteractable(handPose);
             }
