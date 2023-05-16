@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using Plusplus.ReaperRobot.Scripts.Model;
 
@@ -5,9 +6,9 @@ namespace Plusplus.ReaperRobot.Scripts.Data
 {
     public class RoadFromCSV : IRoadData
     {
-        public List<ReaperDataSet> Road(string filePath)
+        public async UniTask<List<ReaperDataSet>> Road(string filePath)
         {
-            var csvdata = CSVUtility.Read(filePath);
+            var csvdata = await CSVUtility.Read(filePath);
             var list = new List<ReaperDataSet>();
 
             //一行目はラベルなので飛ばす

@@ -5,14 +5,14 @@ using System;
 
 namespace Plusplus.ReaperRobot.Scripts.View.GUI
 {
-     [RequireComponent(typeof(CanvasGroup))]
+    [RequireComponent(typeof(CanvasGroup))]
     public class FadePanel : MonoBehaviour
     {
-        [SerializeField, Range(1, 10)] private int _fadeInTime = 1;
-        [SerializeField, Range(1, 10)] private int _popupTime = 3;
-        [SerializeField, Range(1, 10)] private int _fadeOutTime = 1;
-        [SerializeField] private bool _useRepeat = false;
-        [SerializeField, Range(1, 10)] private int _repeatInterval = 10;
+        [SerializeField, Range(1, 10)] private int FadeInTime = 1;
+        [SerializeField, Range(1, 10)] private int PopupTime = 3;
+        [SerializeField, Range(1, 10)] private int FadeOutTime = 1;
+        [SerializeField] private bool UseRepeat = false;
+        [SerializeField, Range(1, 10)] private int RepeatInterval = 10;
 
         private CanvasGroup _canvasGroup;
         private CancellationTokenSource _cancellationTokenSource = new();
@@ -36,9 +36,14 @@ namespace Plusplus.ReaperRobot.Scripts.View.GUI
             _ = ShowPanelTask(_cancellationTokenSource.Token);
         }
 
+        public void SetRepeat(bool value)
+        {
+            UseRepeat = value;
+        }
+
         private async UniTask ShowPanelTask(CancellationToken ct = default)
         {
-           while (true)
+            while (true)
             {
                 //最初は非表示
                 _canvasGroup.alpha = 0;
@@ -48,31 +53,31 @@ namespace Plusplus.ReaperRobot.Scripts.View.GUI
                 while (_canvasGroup.alpha < 1)
                 {
                     time += Time.deltaTime;
-                    time = Mathf.Clamp(time, 0, _fadeInTime);
-                    _canvasGroup.alpha = time / _fadeInTime;
+                    time = Mathf.Clamp(time, 0, FadeInTime);
+                    _canvasGroup.alpha = time / FadeInTime;
                     await UniTask.Yield(PlayerLoopTiming.Update, ct);
                 }
 
                 //数秒待つ
-                await UniTask.Delay(TimeSpan.FromSeconds(_popupTime), false, PlayerLoopTiming.Update, ct);
+                await UniTask.Delay(TimeSpan.FromSeconds(PopupTime), false, PlayerLoopTiming.Update, ct);
 
                 //フェードで非表示
-                time = _fadeOutTime;
+                time = FadeOutTime;
                 while (_canvasGroup.alpha > 0)
                 {
                     time -= Time.deltaTime;
-                    time = Mathf.Clamp(time, 0, _fadeOutTime);
-                    _canvasGroup.alpha = time / _fadeOutTime;
+                    time = Mathf.Clamp(time, 0, FadeOutTime);
+                    _canvasGroup.alpha = time / FadeOutTime;
                     await UniTask.Yield(PlayerLoopTiming.Update, ct);
                 }
 
-                if (!_useRepeat)
+                if (!UseRepeat)
                 {
                     break;
                 }
                 else
                 {
-                    await UniTask.Delay(TimeSpan.FromSeconds(_repeatInterval), false, PlayerLoopTiming.Update, ct);
+                    await UniTask.Delay(TimeSpan.FromSeconds(RepeatInterval), false, PlayerLoopTiming.Update, ct);
                 }
             }
         }

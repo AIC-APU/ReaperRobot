@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,14 +42,14 @@ namespace Plusplus.ReaperRobot.Scripts.View.Replay
         #endregion
 
         #region Public method
-        public void InitializeData(string filePath)
+        public async void InitializeData(string filePath)
         {
             //データの初期化
             _dataSets.Clear();
 
             try
             {
-                _dataSets = _roadModel.Road(filePath);
+                _dataSets = await _roadModel.Road(filePath);
             }
             catch (System.NullReferenceException e)
             {
