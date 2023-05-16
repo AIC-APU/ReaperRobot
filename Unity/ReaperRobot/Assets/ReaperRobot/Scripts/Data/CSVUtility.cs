@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Plusplus.ReaperRobot.Scripts.Data
 {
     internal static class CSVUtility
     {
-        internal static void Write(string filePath, string data, FileMode fileMode = FileMode.Create)
+        internal static async UniTask Write(string filePath, string data, FileMode fileMode = FileMode.Create)
         {
             if (!filePath.EndsWith(".csv")) filePath += ".csv";
 
@@ -22,7 +23,7 @@ namespace Plusplus.ReaperRobot.Scripts.Data
             using (var fs = new FileStream(filePath, fileMode))
             using (var writer = new StreamWriter(fs, Encoding.UTF8))
             {
-                writer.Write(data);
+                await writer.WriteAsync(data);
             }
 
             #if UNITY_EDITOR
@@ -30,19 +31,19 @@ namespace Plusplus.ReaperRobot.Scripts.Data
             #endif
         }
 
-        internal static void Write(string filePath, IEnumerable<string[]> dataList, FileMode fileMode = FileMode.Create)
+        internal static async UniTask Write(string filePath, IEnumerable<string[]> dataList, FileMode fileMode = FileMode.Create)
         {
             var stringData = dataList
                 .Select(i => string.Join(",", i))
                 .Aggregate((i, j) => i + "\n" + j);
 
-            Write(filePath, stringData);
+            await Write(filePath, stringData);
         }
 
         /// <summary>
         /// CSVファイルを読み込み、二次元配列として返す
         /// </summary>
-        internal static List<string[]> Read(string filePath)
+        internal static async UniTask<List<string[]>> Read(string filePath)
         {
             if (!filePath.EndsWith(".csv")) filePath += ".csv";
 
@@ -54,7 +55,7 @@ namespace Plusplus.ReaperRobot.Scripts.Data
             while (stringReader.Peek() > -1)
             {
                 // 1行を取り出す
-                string record = stringReader.ReadLine();
+                string record = await stringReader.ReadLineAsync();
 
                 // カンマ区切りの値を配列に格納
                 string[] fields = record.Split(',');

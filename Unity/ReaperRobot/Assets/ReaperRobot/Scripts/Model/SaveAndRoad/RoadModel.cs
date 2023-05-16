@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using Zenject;
 
@@ -7,9 +8,9 @@ namespace Plusplus.ReaperRobot.Scripts.Model
     {
         [Inject] readonly IRoadData _roadData;
 
-        public List<ReaperDataSet> Road(string filePath)
+        public async UniTask<List<ReaperDataSet>> Road(string filePath)
         {
-            return _roadData.Road(filePath);
+            return await _roadData.Road(filePath);
         }
     }
 }

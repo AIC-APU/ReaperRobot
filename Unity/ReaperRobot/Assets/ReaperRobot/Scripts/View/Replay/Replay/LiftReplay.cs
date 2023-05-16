@@ -28,7 +28,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Replay
         protected override void Replay()
         {
             var liftData = _replayManager.GetLift();
-            _reaperManager.RotateCutter(liftData);
+            _reaperManager.MoveLift(liftData);
         }
         #endregion
     }

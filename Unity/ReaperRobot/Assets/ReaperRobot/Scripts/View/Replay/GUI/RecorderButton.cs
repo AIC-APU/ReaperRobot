@@ -43,14 +43,11 @@ namespace Plusplus.ReaperRobot.Scripts.View.Replay
 
         private async void StopButton()
         {
-            _recorder.StopRecording();
             _reaperController.enabled = false;
             SetIntaractable(false, false, false);
 
-            //書き込みが終わるまで1秒待つ
-            //本当はちゃんと書き込みが終わったか確認するべき
-            //至急必要ないので後回し
-            await UniTask.Delay(1000);
+            //書き込みが終わるまで待つ
+            await _recorder.StopRecording();
 
             SetIntaractable(false, false, true);
         }

@@ -1,4 +1,6 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using UniRx;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.Replay
         [SerializeField] private ReaperManager _reaperManager;
         [SerializeField] private Transform _reaperTransform;
         [SerializeField] private string _fileName = "ReaperLog";
+        [SerializeField] private UnityEvent<string> OnSaving;
+        [SerializeField] private UnityEvent<string> OnFinishSave;
         #endregion
 
         #region Reactive Properties
@@ -28,7 +32,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Replay
         private List<ReaperDataSet> _dataList = new();
         private Vector3 _defaultPosition;
         private Quaternion _defaultRotation;
-        
+
         #endregion
 
         #region Readonly Fields
@@ -61,10 +65,10 @@ namespace Plusplus.ReaperRobot.Scripts.View.Replay
             _dataList.Add(_nowData.Value);
         }
 
-        void OnDestroy()
+        public async void OnDestroy()
         {
             //記録の途中でゲームが終わったならそこでExportする
-            if (_isRecording.Value) ExportCSV(_dataList);
+            if (_isRecording.Value) await ExportCSV(_dataList);
         }
         #endregion
 
@@ -75,43 +79,42 @@ namespace Plusplus.ReaperRobot.Scripts.View.Replay
             _isRecording.Value = true;
             _timer.StartTimer();
         }
-        public void StopRecording()
+        public async UniTask StopRecording()
         {
             //記録停止
             _isRecording.Value = false;
             _timer.StopTimer();
 
             //CSV書き出し
-            ExportCSV(_dataList);
+            await ExportCSV(_dataList);
 
             //初期化
             _nowData.Value = null;
             _dataList.Clear();
             _timer.ResetTimer();
-            _reaperManager.Move(0,0);
+            _reaperManager.Move(0, 0);
         }
         public void ResetRecording()
         {
             //リセット
             _reaperTransform.position = _defaultPosition;
             _reaperTransform.rotation = _defaultRotation;
-            _reaperManager.Move(0,0);
+            _reaperManager.Move(0, 0);
         }
         #endregion
 
         #region Private method
-        private void ExportCSV(List<ReaperDataSet> dataSet)
+        private async UniTask ExportCSV(List<ReaperDataSet> dataSet)
         {
             //ファイル名作成
             var now = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
             var fileName = $"{_fileName}_{now}";
 
-            //ファイル書き出し
-            Debug.Log($"{fileName}を書き出しています...");
+            OnSaving?.Invoke($"csvファイルを書き出しています...");
 
-            _saveModel.Save(dataSet, fileName);
+            await _saveModel.Save(dataSet, fileName);
 
-            Debug.Log($"{fileName}を書き出しました");
+            OnFinishSave?.Invoke($"{fileName}を書き出しました");
         }
         #endregion
     }
