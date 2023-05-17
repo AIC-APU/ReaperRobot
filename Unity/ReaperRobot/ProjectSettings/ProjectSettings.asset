@@ -138,6 +138,7 @@ PlayerSettings:
   preloadedAssets:
   - {fileID: 11400000, guid: 42a0154c0dc80004c932ec17a38bc72c, type: 2}
   - {fileID: 11400000, guid: e5538fed376a4cf41ac62768ed59d03c, type: 2}
+  - {fileID: 11400000, guid: c079799945709e541baa616685064e37, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -426,7 +427,7 @@ PlayerSettings:
     m_Automatic: 1
   - m_BuildTarget: WebGLSupport
     m_APIs: 0b000000
-    m_Automatic: 1
+    m_Automatic: 0
   - m_BuildTarget: WindowsStandaloneSupport
     m_APIs: 02000000
     m_Automatic: 0
@@ -450,6 +451,8 @@ PlayerSettings:
   - m_BuildTarget: iPhone
     m_EncodingQuality: 1
   - m_BuildTarget: tvOS
+    m_EncodingQuality: 1
+  - m_BuildTarget: WebGL
     m_EncodingQuality: 1
   m_BuildTargetGroupLightmapSettings: []
   m_BuildTargetNormalMapEncoding:
@@ -745,6 +748,7 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform:
     Android: 3
     Standalone: 3
+    WebGL: 3
     Windows Store Apps: 3
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
