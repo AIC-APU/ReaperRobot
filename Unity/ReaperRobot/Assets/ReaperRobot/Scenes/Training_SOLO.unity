@@ -5450,6 +5450,7 @@ GameObject:
   - component: {fileID: 1050456242}
   - component: {fileID: 1050456241}
   - component: {fileID: 1050456240}
+  - component: {fileID: 1050456243}
   m_Layer: 5
   m_Name: EndGameButton
   m_TagString: Untagged
@@ -5517,7 +5518,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 1050456241}
   m_OnClick:
     m_PersistentCalls:
@@ -5560,6 +5561,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1050456238}
   m_CullTransparentMesh: 1
+--- !u!114 &1050456243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1050456238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9ddcdc900f84374399d41c95e4b5d5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _button: {fileID: 1050456240}
+  _sceneName: StartMenu
 --- !u!1001 &1074863871
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6400,20 +6415,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1222099746}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1222099745}
-        m_TargetAssemblyTypeName: ReaperRobot.Scripts.UnityComponent.SceneTransition.ResetScene,
-          UnityComponent_SceneTransition
-        m_MethodName: ResetThisScene
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1222099745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6426,6 +6428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94626c25d71dce747a79489ff1ddf0b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _resetButton: {fileID: 1222099744}
 --- !u!114 &1222099746
 MonoBehaviour:
   m_ObjectHideFlags: 0

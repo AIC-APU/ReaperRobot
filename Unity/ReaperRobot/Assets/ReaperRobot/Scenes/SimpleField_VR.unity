@@ -3159,6 +3159,7 @@ GameObject:
   - component: {fileID: 1183397146}
   - component: {fileID: 1183397145}
   - component: {fileID: 1183397144}
+  - component: {fileID: 1183397147}
   m_Layer: 5
   m_Name: EndGameButton
   m_TagString: Untagged
@@ -3269,6 +3270,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1183397142}
   m_CullTransparentMesh: 1
+--- !u!114 &1183397147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183397142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9ddcdc900f84374399d41c95e4b5d5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _button: {fileID: 1183397144}
+  _sceneName: StartMenu
 --- !u!1 &1660818011
 GameObject:
   m_ObjectHideFlags: 0
@@ -3542,7 +3557,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1833194983
 MonoBehaviour:
   m_ObjectHideFlags: 0
