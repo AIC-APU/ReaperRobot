@@ -4,7 +4,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
 {
     public class GazeCamera : BaseCamera
     {
-        public Transform Gazer;
+        public GameObject Gazer;
 
         #region Private Fields
         [SerializeField] private bool _rotateGazerY = true;
@@ -37,7 +37,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
             if (_rotateGazerY)
             {
                 var pos = _target.transform.position + _targetOffset;
-                pos.y = Gazer.position.y;
+                pos.y = Gazer.transform.position.y;
                 Gazer.transform.LookAt(pos, Vector3.up);
             }
         }
@@ -55,7 +55,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
 
         public override void ResetCamera()
         {
-            _camera.transform.position = Gazer.position + gazerPosOffset;
+            _camera.transform.position = Gazer.transform.position + gazerPosOffset;
             _camera.transform.LookAt(_target.transform.position);
             _camera.fieldOfView = defaultFoV;
 
@@ -66,7 +66,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
 
         public override void RotateCamera(float horizontal, float vertical)
         {
-            var distance = Vector3.Distance(_camera.transform.position, _target.position);
+            var distance = Vector3.Distance(_camera.transform.position, _target.transform.position);
 
             _heigthOffset += vertical * rotateSpeed * Time.deltaTime;
             _heigthOffset = Mathf.Clamp(_heigthOffset, -maxOffsetBase * distance, maxOffsetBase * distance);

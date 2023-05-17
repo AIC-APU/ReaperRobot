@@ -26,7 +26,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
 
         public override void ResetCamera()
         {
-            _cameraOffsetPos = _target.TransformDirection(_cameraDefaultOffsetPos);
+            _cameraOffsetPos = _target.transform.TransformDirection(_cameraDefaultOffsetPos);
             _cameraOffsetRot = _cameraDefaultOffsetRot;
             _camera.transform.eulerAngles = _target.transform.eulerAngles + _cameraOffsetRot;
             _camera.fieldOfView = defaultFOV;

@@ -20,8 +20,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
         {
             var activeCamera = _cameraMangaer.ActiveCamera.Value;
 
-            var localPos = activeCamera.Target.InverseTransformPoint(activeCamera.Camera.transform.position);
-            var localRot = GetLocalAngle(activeCamera.Target, activeCamera.Camera.transform);
+            var localPos = activeCamera.Target.transform.InverseTransformPoint(activeCamera.Camera.transform.position);
+            var localRot = GetLocalAngle(activeCamera.Target.transform, activeCamera.Camera.transform);
 
             _positionX.text = localPos.x.ToString("F1");
             _positionY.text = localPos.y.ToString("F1");
