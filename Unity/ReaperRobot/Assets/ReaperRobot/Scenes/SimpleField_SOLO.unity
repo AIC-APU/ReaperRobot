@@ -668,7 +668,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewMode: REAPER_AROUND
-  _target: {fileID: 898190598}
+  _target: {fileID: 282077254}
   _camera: {fileID: 963194227}
   _cameraDefaultOffsetPos: {x: 0, y: 1, z: -1.5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
@@ -1513,6 +1513,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 213194097}
   m_CullTransparentMesh: 1
+--- !u!1 &282077254 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4702583329144847969, guid: fe3144423c01fcf41a38ecfaf1651c2b, type: 3}
+  m_PrefabInstance: {fileID: 898190597}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &341309638
 GameObject:
   m_ObjectHideFlags: 0
@@ -3166,6 +3171,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraManager: {fileID: 1729175746}
+  _pairs:
+  - Target: {fileID: 282077254}
+    ActionMapName: Reaper
+  - Target: {fileID: 1399509881}
+    ActionMapName: Person
 --- !u!1 &664984227
 GameObject:
   m_ObjectHideFlags: 0
@@ -3805,7 +3815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewMode: REAPER_FPV
-  _target: {fileID: 898190598}
+  _target: {fileID: 282077254}
   _camera: {fileID: 963194227}
   _cameraDefaultOffsetPos: {x: 0, y: 1.2, z: -0.5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
@@ -4130,7 +4140,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2711841310705522347, guid: fe3144423c01fcf41a38ecfaf1651c2b, type: 3}
   m_PrefabInstance: {fileID: 898190597}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 282077254}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30982129f9fed88469fbce703661f386, type: 3}
@@ -7813,7 +7823,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewMode: PERSON_AROUND
-  _target: {fileID: 2038885716}
+  _target: {fileID: 1399509881}
   _camera: {fileID: 963194227}
   _cameraDefaultOffsetPos: {x: 0, y: 1.5, z: -1}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
@@ -9350,6 +9360,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1396684472}
   m_CullTransparentMesh: 1
+--- !u!1 &1399509881 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 384662605969435491, guid: 1c1c0a51e4ed0e140bdc347be2343327, type: 3}
+  m_PrefabInstance: {fileID: 2038885715}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1410884058
 GameObject:
   m_ObjectHideFlags: 0
@@ -10295,7 +10310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewMode: REAPER_BIRDVIEW
-  _target: {fileID: 898190598}
+  _target: {fileID: 282077254}
   _camera: {fileID: 963194227}
   _cameraDefaultOffsetPos: {x: 0, y: 3, z: -5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
@@ -11307,11 +11322,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewMode: REAPER_GAZE
-  _target: {fileID: 898190598}
+  _target: {fileID: 282077254}
   _camera: {fileID: 963194227}
   _cameraDefaultOffsetPos: {x: 0, y: 1.2, z: -0.5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
-  Gazer: {fileID: 2038885716}
+  Gazer: {fileID: 1399509881}
   _rotateGazerY: 1
 --- !u!1001 &2038885715
 PrefabInstance:
@@ -11382,17 +11397,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c1c0a51e4ed0e140bdc347be2343327, type: 3}
---- !u!4 &2038885716 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6462909652852571802, guid: 1c1c0a51e4ed0e140bdc347be2343327, type: 3}
-  m_PrefabInstance: {fileID: 2038885715}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2038885717 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7825979989578444759, guid: 1c1c0a51e4ed0e140bdc347be2343327, type: 3}
   m_PrefabInstance: {fileID: 2038885715}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1399509881}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 547b845ce5b1d12468e7aa3a31dafe90, type: 3}
