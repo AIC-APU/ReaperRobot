@@ -1,14 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using Oculus.Interaction.Input;
 using UnityEngine;
@@ -23,7 +31,7 @@ namespace Oculus.Interaction.HandGrab
     {
         [SerializeField]
         [Interface(typeof(IHandGrabState))]
-        private MonoBehaviour _handGrabState;
+        private UnityEngine.Object _handGrabState;
 
         private IHandGrabState HandGrabState;
 
@@ -32,9 +40,9 @@ namespace Oculus.Interaction.HandGrab
 
         private bool _areFingersFree = true;
         private bool _isWristFree = true;
+        private bool _wasCompletelyFree = true;
 
         protected bool _started = false;
-        protected bool _grabbing;
 
         protected virtual void Awake()
         {
@@ -44,53 +52,23 @@ namespace Oculus.Interaction.HandGrab
         protected virtual void Start()
         {
             this.BeginStart(ref _started);
-            Assert.IsNotNull(HandGrabState);
-            Assert.IsNotNull(_syntheticHand);
+            this.AssertField(HandGrabState, nameof(HandGrabState));
+            this.AssertField(_syntheticHand, nameof(_syntheticHand));
             this.EndStart(ref _started);
-        }
-
-        protected virtual void OnEnable()
-        {
-            if (_started)
-            {
-                HandGrabState.WhenHandGrabStarted += HandleGrabStarted;
-                HandGrabState.WhenHandGrabEnded += HandleGrabEnded;
-            }
-        }
-
-        protected virtual void OnDisable()
-        {
-            if (_started)
-            {
-                HandGrabState.WhenHandGrabStarted -= HandleGrabStarted;
-                HandGrabState.WhenHandGrabEnded -= HandleGrabEnded;
-            }
         }
 
         private void LateUpdate()
         {
-            if (!_grabbing)
-            {
-                return;
-            }
             ConstrainingForce(HandGrabState, out float fingersConstraint, out float wristConstraint);
             UpdateHandPose(HandGrabState, fingersConstraint, wristConstraint);
-            _syntheticHand.MarkInputDataRequiresUpdate();
-        }
 
-        private void HandleGrabStarted(IHandGrabState handGrabState)
-        {
-            _grabbing = true;
-        }
-
-        private void HandleGrabEnded(IHandGrabState handGrabState)
-        {
-            if (_grabbing)
+            bool isCompletelyFree = _areFingersFree && _isWristFree;
+            if (!isCompletelyFree
+                || isCompletelyFree && !_wasCompletelyFree)
             {
-                FreeFingers();
-                FreeWrist();
+                _syntheticHand.MarkInputDataRequiresUpdate();
             }
-            _grabbing = false;
+            _wasCompletelyFree = isCompletelyFree;
         }
 
         private void ConstrainingForce(IHandGrabState grabSource, out float fingersConstraint, out float wristConstraint)
@@ -104,26 +82,19 @@ namespace Oculus.Interaction.HandGrab
             }
 
             bool isGrabbing = grabSource.IsGrabbing;
-
             if (isGrabbing && grabData.HandAlignment != HandAlignType.None)
             {
-                fingersConstraint = grabData.HandPose != null ? 1f : 0f;
-                wristConstraint = 1f;
+                fingersConstraint = grabSource.FingersStrength;
+                wristConstraint = grabSource.WristStrength;
             }
             else if (grabData.HandAlignment == HandAlignType.AttractOnHover)
             {
-                fingersConstraint = grabData.HandPose != null ? grabSource.GrabStrength : 0f;
-                wristConstraint = grabSource.GrabStrength;
+                fingersConstraint = grabSource.FingersStrength;
+                wristConstraint = grabSource.WristStrength;
             }
-
-            if (fingersConstraint >= 1f && !isGrabbing)
+            else if (grabData.HandAlignment == HandAlignType.AlignFingersOnHover)
             {
-                fingersConstraint = 0;
-            }
-
-            if (wristConstraint >= 1f && !isGrabbing)
-            {
-                wristConstraint = 0f;
+                fingersConstraint = grabSource.FingersStrength;
             }
         }
 
@@ -151,8 +122,8 @@ namespace Oculus.Interaction.HandGrab
 
             if (wristConstraint > 0f)
             {
-                Pose wristLocalPose = GetWristPose(grabTarget.WorldGrabPose, grabSource.WristToGrabPoseOffset);
-                _syntheticHand.LockWristPose(wristLocalPose, wristConstraint,
+                Pose wristPose = GetWristPose(grabTarget.WorldGrabPose, grabSource.WristToGrabPoseOffset);
+                _syntheticHand.LockWristPose(wristPose, wristConstraint,
                     SyntheticHand.WristLockMode.Full, true);
                 _isWristFree = false;
             }
@@ -227,7 +198,7 @@ namespace Oculus.Interaction.HandGrab
         public void InjectHandGrabState(IHandGrabState handGrabState)
         {
             HandGrabState = handGrabState;
-            _handGrabState = handGrabState as MonoBehaviour;
+            _handGrabState = handGrabState as UnityEngine.Object;
         }
 
         public void InjectSyntheticHand(SyntheticHand syntheticHand)

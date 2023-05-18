@@ -1,14 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,7 +27,7 @@ namespace Oculus.Interaction
     public class PointableDebugGizmos : MonoBehaviour
     {
         [SerializeField, Interface(typeof(IPointable))]
-        private MonoBehaviour _pointable;
+        private UnityEngine.Object _pointable;
 
         [SerializeField]
         private float _radius = 0.01f;
@@ -30,13 +38,21 @@ namespace Oculus.Interaction
         [SerializeField]
         private Color _selectColor = Color.green;
 
-        class PointData
-        {
-            public Pose Pose { get; set; }
-            public bool Selecting { get; set; }
-        }
+        [SerializeField]
+        private bool _drawAxes = true;
 
-        private Dictionary<int, PointData> _points;
+        #region Properties
+
+        public float Radius {
+            get
+            {
+                return _radius;
+            }
+            set
+            {
+                _radius = value;
+            }
+        }
 
         public Color HoverColor
         {
@@ -62,9 +78,38 @@ namespace Oculus.Interaction
             }
         }
 
+        public bool DrawAxes
+        {
+            get
+            {
+                return _drawAxes;
+            }
+            set
+            {
+                _drawAxes = value;
+            }
+        }
+
+        #endregion Properties
+
+        class PointData
+        {
+            public Pose Pose { get; set; }
+            public bool Selecting { get; set; }
+        }
+
+        private Dictionary<int, PointData> _points;
+
         private IPointable Pointable;
 
         protected bool _started = false;
+        #region Editor callbacks
+        private void Reset()
+        {
+            IPointable pointable = this.GetComponent<IPointable>();
+            this.InjectAllPointableDebugGizmos(pointable);
+        }
+        #endregion
 
         protected virtual void Awake()
         {
@@ -74,7 +119,7 @@ namespace Oculus.Interaction
         protected virtual void Start()
         {
             this.BeginStart(ref _started);
-            Assert.IsNotNull(Pointable);
+            this.AssertField(Pointable, nameof(Pointable));
             _points = new Dictionary<int, PointData>();
             this.EndStart(ref _started);
         }
@@ -95,40 +140,45 @@ namespace Oculus.Interaction
             }
         }
 
-        private void HandlePointerEventRaised(PointerArgs args)
+        private void HandlePointerEventRaised(PointerEvent evt)
         {
-            switch (args.PointerEvent)
+            switch (evt.Type)
             {
-                case PointerEvent.Hover:
-                    _points.Add(args.Identifier,
-                        new PointData() {Pose = args.Pose, Selecting = false});
+                case PointerEventType.Hover:
+                    _points.Add(evt.Identifier,
+                        new PointData() {Pose = evt.Pose, Selecting = false});
                     break;
-                case PointerEvent.Select:
-                    _points[args.Identifier].Selecting = true;
+                case PointerEventType.Select:
+                    _points[evt.Identifier].Selecting = true;
                     break;
-                case PointerEvent.Move:
-                    _points[args.Identifier].Pose = args.Pose;
+                case PointerEventType.Move:
+                    _points[evt.Identifier].Pose = evt.Pose;
                     break;
-                case PointerEvent.Unselect:
-                    if (_points.ContainsKey(args.Identifier))
+                case PointerEventType.Unselect:
+                    if (_points.ContainsKey(evt.Identifier))
                     {
-                        _points[args.Identifier].Selecting = false;
+                        _points[evt.Identifier].Selecting = false;
                     }
                     break;
-                case PointerEvent.Unhover:
-                case PointerEvent.Cancel:
-                    _points.Remove(args.Identifier);
+                case PointerEventType.Unhover:
+                case PointerEventType.Cancel:
+                    _points.Remove(evt.Identifier);
                     break;
             }
         }
 
         protected virtual void LateUpdate()
         {
-            DebugGizmos.LineWidth = _radius;
             foreach (PointData pointData in _points.Values)
             {
+                DebugGizmos.LineWidth = _radius;
                 DebugGizmos.Color = pointData.Selecting ? _selectColor : _hoverColor;
                 DebugGizmos.DrawPoint(pointData.Pose.position);
+                if (_drawAxes)
+                {
+                    DebugGizmos.LineWidth = _radius / 2f;
+                    DebugGizmos.DrawAxis(pointData.Pose.position, pointData.Pose.rotation, _radius * 2);
+                }
             }
         }
 
@@ -141,7 +191,7 @@ namespace Oculus.Interaction
 
         public void InjectPointable(IPointable pointable)
         {
-            _pointable = pointable as MonoBehaviour;
+            _pointable = pointable as UnityEngine.Object;
             Pointable = pointable;
         }
 

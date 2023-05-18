@@ -1,14 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,21 +36,23 @@ namespace Oculus.Interaction
     [DefaultExecutionOrder(1)]
     public class ActiveStateTracker : MonoBehaviour
     {
+        [Tooltip("The IActiveState to be tracked.")]
         [SerializeField, Interface(typeof(IActiveState))]
-        private MonoBehaviour _activeState;
+        private UnityEngine.Object _activeState;
 
         private IActiveState ActiveState;
 
         [Header("Active state dependents")]
         [SerializeField]
+        [Tooltip("If true, all children of this object will be included as dependents.")]
         private bool _includeChildrenAsDependents = false;
 
         [SerializeField, Optional]
-        [Tooltip("Sets the `active` field on whole GameObjects")]
+        [Tooltip("Sets the `active` field on whole GameObjects.")]
         private List<GameObject> _gameObjects;
 
         [SerializeField, Optional]
-        [Tooltip("Sets the `enabled` field on individual components")]
+        [Tooltip("Sets the `enabled` field on individual components.")]
         private List<MonoBehaviour> _monoBehaviours;
 
         protected virtual void Awake()
@@ -54,7 +64,7 @@ namespace Oculus.Interaction
 
         protected virtual void Start()
         {
-            Assert.IsNotNull(ActiveState);
+            this.AssertField(ActiveState, nameof(ActiveState));
 
             if (_includeChildrenAsDependents)
             {
@@ -97,7 +107,7 @@ namespace Oculus.Interaction
 
         public void InjectActiveState(IActiveState activeState)
         {
-            _activeState = activeState as MonoBehaviour;
+            _activeState = activeState as UnityEngine.Object;
             ActiveState = activeState;
         }
 

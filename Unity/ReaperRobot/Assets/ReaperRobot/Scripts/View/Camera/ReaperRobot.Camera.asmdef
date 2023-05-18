@@ -1,0 +1,18 @@
+{
+    "name": "ReaperRobot.Camera",
+    "rootNamespace": "Plusplus.ReaperRobot.Scripts.View.Camera",
+    "references": [
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:560b04d1a97f54a4e82edc0cbbb69285",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

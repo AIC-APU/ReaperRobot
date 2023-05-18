@@ -1,14 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using System;
 using System.Collections.Generic;
@@ -34,7 +42,7 @@ namespace Oculus.Interaction.HandGrab
         }
 
         [SerializeField, Interface(typeof(IPointableElement))]
-        private MonoBehaviour _pointableElement;
+        private UnityEngine.Object _pointableElement;
         public IPointableElement PointableElement { get; private set; }
 
         private bool _started;
@@ -49,7 +57,7 @@ namespace Oculus.Interaction.HandGrab
         protected virtual void Start()
         {
             this.BeginStart(ref _started);
-            Assert.IsNotNull(_pointableElement);
+            this.AssertField(_pointableElement, nameof(_pointableElement));
             this.EndStart(ref _started);
         }
 
@@ -92,7 +100,7 @@ namespace Oculus.Interaction.HandGrab
         public void InjectPointableElement(IPointableElement pointableElement)
         {
             PointableElement = pointableElement;
-            _pointableElement = pointableElement as MonoBehaviour;
+            _pointableElement = pointableElement as UnityEngine.Object;
         }
         #endregion
     }
@@ -156,8 +164,8 @@ namespace Oculus.Interaction.HandGrab
             _source = pose;
             if (_tween != null && !_tween.Stopped)
             {
-                GeneratePointerEvent(PointerEvent.Hover);
-                GeneratePointerEvent(PointerEvent.Select);
+                GeneratePointerEvent(PointerEventType.Hover);
+                GeneratePointerEvent(PointerEventType.Select);
                 Aborting = true;
                 WhenAborted.Invoke(this);
             }
@@ -168,7 +176,7 @@ namespace Oculus.Interaction.HandGrab
             _tween.Tick();
             if (Aborting)
             {
-                GeneratePointerEvent(PointerEvent.Move);
+                GeneratePointerEvent(PointerEventType.Move);
                 if (_tween.Stopped)
                 {
                     AbortSelfAligment();
@@ -176,9 +184,9 @@ namespace Oculus.Interaction.HandGrab
             }
         }
 
-        private void HandlePointerEventRaised(PointerArgs args)
+        private void HandlePointerEventRaised(PointerEvent evt)
         {
-            if (args.PointerEvent == PointerEvent.Select || args.PointerEvent == PointerEvent.Unselect)
+            if (evt.Type == PointerEventType.Select || evt.Type == PointerEventType.Unselect)
             {
                 AbortSelfAligment();
             }
@@ -190,15 +198,15 @@ namespace Oculus.Interaction.HandGrab
             {
                 Aborting = false;
 
-                GeneratePointerEvent(PointerEvent.Unselect);
-                GeneratePointerEvent(PointerEvent.Unhover);
+                GeneratePointerEvent(PointerEventType.Unselect);
+                GeneratePointerEvent(PointerEventType.Unhover);
             }
         }
 
-        private void GeneratePointerEvent(PointerEvent pointerEvent)
+        private void GeneratePointerEvent(PointerEventType pointerEventType)
         {
-            PointerArgs args = new PointerArgs(Identifier, pointerEvent, Pose);
-            _pointableElement.ProcessPointerEvent(args);
+            PointerEvent evt = new PointerEvent(Identifier, pointerEventType, Pose);
+            _pointableElement.ProcessPointerEvent(evt);
         }
     }
 }

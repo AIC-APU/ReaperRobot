@@ -1,19 +1,26 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
-using UnityEngine.Assertions;
 
 namespace Oculus.Interaction.PoseDetection.Debug
 {
@@ -25,18 +32,23 @@ namespace Oculus.Interaction.PoseDetection.Debug
 
     public class ActiveStateDebugTreeUI : MonoBehaviour
     {
+        [Tooltip("The IActiveState to debug.")]
         [SerializeField, Interface(typeof(IActiveState))]
-        private MonoBehaviour _activeState;
+        private UnityEngine.Object _activeState;
 
+        [Tooltip("The node prefab which will be used to build the visual tree.")]
         [SerializeField, Interface(typeof(IActiveStateNodeUI))]
-        private MonoBehaviour _nodePrefab;
+        private UnityEngine.Object _nodePrefab;
 
+        [Tooltip("Node prefabs will be instantiated inside of this content area.")]
         [SerializeField]
         private RectTransform _contentArea;
 
+        [Tooltip("If true, the tree UI will be built on Start.")]
         [SerializeField]
         private bool _buildTreeOnStart;
 
+        [Tooltip("This title text will display the GameObject name of the IActiveState.")]
         [SerializeField, Optional]
         private TMP_Text _title;
 
@@ -54,9 +66,9 @@ namespace Oculus.Interaction.PoseDetection.Debug
 
         protected virtual void Start()
         {
-            Assert.IsNotNull(ActiveState);
-            Assert.IsNotNull(_nodePrefab);
-            Assert.IsNotNull(_contentArea);
+            this.AssertField(ActiveState, nameof(ActiveState));
+            this.AssertField(_nodePrefab, nameof(_nodePrefab));
+            this.AssertField(_contentArea, nameof(_contentArea));
 
             if (_buildTreeOnStart)
             {
@@ -107,7 +119,7 @@ namespace Oculus.Interaction.PoseDetection.Debug
             if (_title != null)
             {
                 _title.text = _activeState != null ?
-                    _activeState.gameObject.name : "";
+                    _activeState.name : "";
             }
         }
 

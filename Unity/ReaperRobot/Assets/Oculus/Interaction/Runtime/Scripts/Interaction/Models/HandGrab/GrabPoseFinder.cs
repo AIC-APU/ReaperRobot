@@ -1,15 +1,24 @@
-﻿/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+﻿/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
-
+using Oculus.Interaction.Grab;
 using Oculus.Interaction.Input;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,39 +31,43 @@ namespace Oculus.Interaction.HandGrab
     /// </summary>
     public class GrabPoseFinder
     {
+        public enum FindResult
+        {
+            NotFound,
+            NotCompatible,
+            Found,
+        }
+
         /// <summary>
         /// List of HandGrabPoses that can move the provided _relativeTo Transform
         /// </summary>
         private List<HandGrabPose> _handGrabPoses;
         /// <summary>
-        /// Target Transform that is grabbed
+        /// Reference transform used to convert the local HandGrabPoses data into
+        /// worldspace.
         /// </summary>
         private Transform _relativeTo;
-        /// <summary>
-        /// When no HandGrabPoses are provided. This transform is used
-        /// as a HandGrabPoses without HandPose or Handedness.
-        /// </summary>
-        private Transform _fallbackTransform;
-        /// <summary>
-        /// Cached relative pose from the target object to the fallbacktransform
-        /// to save computation when the _fallbackTransform is used.
-        /// </summary>
-        private Pose _cachedFallbackPose;
-
         private InterpolationCache _interpolationCache = new InterpolationCache();
 
-        public GrabPoseFinder(List<HandGrabPose> handGrabPoses, Transform relativeTo, Transform fallbackTransform)
+        public GrabPoseFinder(List<HandGrabPose> handGrabPoses, Transform relativeTo)
         {
             _handGrabPoses = handGrabPoses;
             _relativeTo = relativeTo;
-            _fallbackTransform = fallbackTransform;
-
-            _cachedFallbackPose = _relativeTo.RelativeOffset(fallbackTransform);
         }
 
         public bool UsesHandPose()
         {
             return _handGrabPoses.Count > 0 && _handGrabPoses[0].HandPose != null;
+        }
+
+        public bool SupportsHandedness(Handedness handedness)
+        {
+            if (!UsesHandPose())
+            {
+                return true;
+            }
+
+            return _handGrabPoses[0].HandPose.Handedness == handedness;
         }
 
         /// <summary>
@@ -64,85 +77,94 @@ namespace Oculus.Interaction.HandGrab
         /// <param name="userPose">Pose to compare to the snap point in world coordinates.</param>
         /// <param name="handScale">The scale of the tracked hand.</param>
         /// <param name="handedness">The handedness of the tracked hand.</param>
-        /// <param name="bestHandPose">The most similar valid HandPose at this HandGrabInteractable.</param>
-        /// <param name="bestSnapPoint">The point of the valid snap.</param>
         /// <param name="scoringModifier">Parameters indicating how to score the different poses.</param>
-        /// <param name="usesHandPose">True if the resultHandPose was populated.</param>
-        /// <param name="score">The score of the best pose found.</param>
+        /// <param name="result">The resultant best pose found.</param>
         /// <returns>True if a good pose was found</returns>
-        public bool FindBestPose(Pose userPose, float handScale, Handedness handedness,
-            ref HandPose bestHandPose, ref Pose bestSnapPoint, in PoseMeasureParameters scoringModifier, out bool usesHandPose, out float score)
+        public FindResult FindBestPose(Pose userPose, float handScale, Handedness handedness,
+            PoseMeasureParameters scoringModifier,
+            ref HandGrabResult result)
         {
             if (_handGrabPoses.Count == 1)
             {
-                return _handGrabPoses[0].CalculateBestPose(userPose, handedness,
-                    ref bestHandPose, ref bestSnapPoint, scoringModifier, out usesHandPose, out score);
+                if (_handGrabPoses[0].CalculateBestPose(userPose,
+                    handedness, scoringModifier, _relativeTo, ref result))
+                {
+                    return FindResult.Found;
+                }
+                return FindResult.NotCompatible;
             }
             else if (_handGrabPoses.Count > 1)
             {
-                return CalculateBestScaleInterpolatedPose(userPose, handedness, handScale,
-                    ref bestHandPose, ref bestSnapPoint, scoringModifier, out usesHandPose, out score);
+                if (CalculateBestScaleInterpolatedPose(userPose,
+                    handedness, handScale, scoringModifier, ref result))
+                {
+                    return FindResult.Found;
+                }
+                return FindResult.NotCompatible;
             }
-            else
-            {
-                usesHandPose = false;
-                bestSnapPoint = new Pose(_cachedFallbackPose.position, Quaternion.Inverse(_relativeTo.rotation) * userPose.rotation);
-                score = PoseUtils.Similarity(userPose, _fallbackTransform.GetPose(), scoringModifier);
-                return true;
-            }
+            return FindResult.NotFound;
         }
 
-        private bool CalculateBestScaleInterpolatedPose(Pose userPose, Handedness handedness, float handScale,
-            ref HandPose result, ref Pose snapPoint, in PoseMeasureParameters scoringModifier, out bool usesHandPose, out float score)
+        private bool CalculateBestScaleInterpolatedPose(Pose userPose, Handedness handedness,
+            float handScale, PoseMeasureParameters scoringModifier, ref HandGrabResult result)
         {
-            usesHandPose = false;
-            score = float.NaN;
+            result.HasHandPose = false;
 
-            FindInterpolationRange(handScale, _handGrabPoses, out HandGrabPose under, out HandGrabPose over, out float t);
+            float scale = handScale / _relativeTo.lossyScale.x;
+            bool rangeFound = FindInterpolationRange(scale, _handGrabPoses,
+                out HandGrabPose under, out HandGrabPose over, out float t);
+
+            if (!rangeFound)
+            {
+                return false;
+            }
 
             bool underFound = under.CalculateBestPose(userPose, handedness,
-               ref _interpolationCache.underHandPose, ref _interpolationCache.underSnapPoint, scoringModifier,
-               out bool underPoseWritten, out float underScore);
+                scoringModifier, _relativeTo, ref _interpolationCache.underResult);
 
             bool overFound = over.CalculateBestPose(userPose, handedness,
-                ref _interpolationCache.overHandPose, ref _interpolationCache.overSnapPoint, scoringModifier,
-                out bool overPoseWritten, out float overScore);
+                scoringModifier, _relativeTo, ref _interpolationCache.overResult);
 
-            if (underPoseWritten && overPoseWritten)
+            if (_interpolationCache.underResult.HasHandPose
+                && _interpolationCache.overResult.HasHandPose)
             {
-                usesHandPose = true;
-                result.CopyFrom(_interpolationCache.underHandPose);
-                HandPose.Lerp(_interpolationCache.underHandPose, _interpolationCache.overHandPose, t, ref result);
-                PoseUtils.Lerp(_interpolationCache.underSnapPoint, _interpolationCache.overSnapPoint, t, ref snapPoint);
+                result.HasHandPose = true;
+                result.HandPose.CopyFrom(_interpolationCache.underResult.HandPose);
+                HandPose.Lerp(_interpolationCache.underResult.HandPose,
+                    _interpolationCache.overResult.HandPose, t, ref result.HandPose);
+                PoseUtils.Lerp(_interpolationCache.underResult.RelativePose,
+                    _interpolationCache.overResult.RelativePose, t, ref result.RelativePose);
             }
-            else if (underPoseWritten)
+            else if (_interpolationCache.underResult.HasHandPose)
             {
-                usesHandPose = true;
-                result.CopyFrom(_interpolationCache.underHandPose);
-                snapPoint.CopyFrom(_interpolationCache.underSnapPoint);
+                result.HasHandPose = true;
+                result.HandPose.CopyFrom(_interpolationCache.underResult.HandPose);
+                result.RelativePose.CopyFrom(_interpolationCache.underResult.RelativePose);
             }
-            else if (overPoseWritten)
+            else if (_interpolationCache.overResult.HasHandPose)
             {
-                usesHandPose = true;
-                result.CopyFrom(_interpolationCache.overHandPose);
-                snapPoint.CopyFrom(_interpolationCache.overSnapPoint);
+                result.HasHandPose = true;
+                result.HandPose.CopyFrom(_interpolationCache.overResult.HandPose);
+                result.RelativePose.CopyFrom(_interpolationCache.overResult.RelativePose);
             }
 
             if (underFound && overFound)
             {
-                score = Mathf.Lerp(underScore, overScore, t);
+                result.Score = GrabPoseScore.Lerp(
+                    _interpolationCache.underResult.Score,
+                    _interpolationCache.overResult.Score, t);
                 return true;
             }
 
             if (underFound)
             {
-                score = underScore;
+                result.Score = _interpolationCache.underResult.Score;
                 return true;
             }
 
             if (overFound)
             {
-                score = overScore;
+                result.Score = _interpolationCache.overResult.Score;
                 return true;
             }
 
@@ -153,42 +175,102 @@ namespace Oculus.Interaction.HandGrab
         /// Finds the two nearest HandGrabPose to interpolate from given a scale.
         /// The result can require an unclamped interpolation (t can be bigger than 1 or smaller than 0).
         /// </summary>
-        /// <param name="scale">The user scale</param>
+        /// <param name="relativeHandScale">The user scale relative to the target</param>
         /// <param name="grabPoses">The list of grab poses to interpolate from</param>
         /// <param name="from">The HandGrabInteractable with nearest scale recorder that is smaller than the provided one</param>
         /// <param name="to">The HandGrabInteractable with nearest scale recorder that is bigger than the provided one</param>
         /// <param name="t">The progress between from and to variables at which the desired scale resides</param>
         /// <returns>The HandGrabPose near under and over the scale, and the interpolation factor between them.</returns>
-        public static void FindInterpolationRange(float scale, List<HandGrabPose> grabPoses, out HandGrabPose from, out HandGrabPose to, out float t)
+        public static bool FindInterpolationRange(float relativeHandScale,
+            List<HandGrabPose> grabPoses, out HandGrabPose from, out HandGrabPose to, out float t)
         {
-            from = grabPoses[0];
-            to = grabPoses[1];
-
-            for (int i = 2; i < grabPoses.Count; i++)
+            if (grabPoses.Count == 0)
             {
-                HandGrabPose point = grabPoses[i];
-
-                if (point.Scale <= scale
-                    && point.Scale > from.Scale)
-                {
-                    from = point;
-                }
-                else if (point.Scale >= scale
-                    && point.Scale < to.Scale)
-                {
-                    to = point;
-                }
+                from = to = null;
+                t = 0;
+                return false;
+            }
+            if (grabPoses.Count == 1)
+            {
+                t = 0;
+                from = to = grabPoses[0];
+                return true;
             }
 
-            t = (scale - from.Scale) / (to.Scale - from.Scale);
+            from = FindPreviousScaledGrabPose(grabPoses, relativeHandScale);
+            to = FindNextScaledGrabPose(grabPoses, relativeHandScale);
+
+            if (from == null && to == null)
+            {
+                t = 0;
+                return false;
+            }
+
+            if (to == null)
+            {
+                to = from;
+                from = FindPreviousScaledGrabPose(grabPoses, from.RelativeScale, notEqual: true);
+            }
+
+            if (from == null)
+            {
+                from = to;
+                to = FindNextScaledGrabPose(grabPoses, to.RelativeScale, notEqual: true);
+            }
+            float denom = to.RelativeScale - from.RelativeScale;
+            if (denom == 0f)
+            {
+                t = 0f;
+            }
+            else
+            {
+                t = (relativeHandScale - from.RelativeScale) / denom;
+            }
+            return true;
+        }
+
+        private static HandGrabPose FindPreviousScaledGrabPose(List<HandGrabPose> grabPoses,
+            float upLimit, bool notEqual = false)
+        {
+            float lowLimit = float.NegativeInfinity;
+            HandGrabPose foundGrabPose = null;
+            foreach (HandGrabPose grabPose in grabPoses)
+            {
+                float correctedScale = grabPose.RelativeScale;
+                if (((!notEqual && correctedScale <= upLimit)
+                    || (notEqual && correctedScale < upLimit))
+                    && correctedScale > lowLimit)
+                {
+                    lowLimit = correctedScale;
+                    foundGrabPose = grabPose;
+                }
+            }
+            return foundGrabPose;
+        }
+
+        private static HandGrabPose FindNextScaledGrabPose(List<HandGrabPose> grabPoses,
+            float lowLimit, bool notEqual = false)
+        {
+            float upLimit = float.PositiveInfinity;
+            HandGrabPose foundGrabPose = null;
+            foreach (HandGrabPose grabPose in grabPoses)
+            {
+                float correctedScale = grabPose.RelativeScale;
+                if (((!notEqual && correctedScale >= lowLimit)
+                    || (notEqual && correctedScale > lowLimit))
+                    && correctedScale < upLimit)
+                {
+                    upLimit = correctedScale;
+                    foundGrabPose = grabPose;
+                }
+            }
+            return foundGrabPose;
         }
 
         private class InterpolationCache
         {
-            public HandPose underHandPose = new HandPose();
-            public HandPose overHandPose = new HandPose();
-            public Pose underSnapPoint = Pose.identity;
-            public Pose overSnapPoint = Pose.identity;
+            public HandGrabResult underResult = new HandGrabResult();
+            public HandGrabResult overResult = new HandGrabResult();
         }
     }
 }

@@ -1,14 +1,22 @@
-﻿/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+﻿/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using Oculus.Interaction.Input;
 using TMPro;
@@ -31,7 +39,7 @@ namespace Oculus.Interaction.PoseDetection.Debug
         [SerializeField]
         private TextMeshPro _targetText;
 
-        private FingerFeatureStateProvider _fingerFeatureState;
+        private IFingerFeatureStateProvider _fingerFeatureState;
 
         private Material _material;
 
@@ -43,8 +51,8 @@ namespace Oculus.Interaction.PoseDetection.Debug
         protected virtual void Awake()
         {
             _material = _target.material;
-            Assert.IsNotNull(_material);
-            Assert.IsNotNull(_targetText);
+            this.AssertField(_material, nameof(_material));
+            this.AssertField(_targetText, nameof(_targetText));
 
             _material.color = _lastActiveValue ? _activeColor : _normalColor;
         }
@@ -56,7 +64,7 @@ namespace Oculus.Interaction.PoseDetection.Debug
 
         public void Initialize(HandFinger handFinger,
             ShapeRecognizer.FingerFeatureConfig config,
-            FingerFeatureStateProvider fingerFeatureState)
+            IFingerFeatureStateProvider fingerFeatureState)
         {
             _initialized = true;
             _handFinger = handFinger;
