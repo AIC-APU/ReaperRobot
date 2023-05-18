@@ -1,0 +1,19 @@
+{
+    "name": "ReaperRobot.CheckPoint.AboutReaper",
+    "rootNamespace": "Plusplus.ReaperRobot.Scripts.View.CheckPoint.AboutReaper",
+    "references": [
+        "GUID:5aeaefef56c7ceb4085ad32adec2428a",
+        "GUID:909cb485cabd03e4dbeecb0adabbb76c",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:560b04d1a97f54a4e82edc0cbbb69285"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

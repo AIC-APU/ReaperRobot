@@ -1,30 +1,30 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
-
-using Oculus.Interaction.HandGrab.SnapSurfaces;
+using Oculus.Interaction.Grab;
+using Oculus.Interaction.Grab.GrabSurfaces;
 using Oculus.Interaction.Input;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace Oculus.Interaction.HandGrab
 {
-    [System.Serializable]
-    public struct HandGrabPoseData
-    {
-        public Pose gripPose;
-        public HandPose handPose;
-        public float scale;
-    }
-
     /// <summary>
     /// The HandGrabPose defines the local point in an object to which the grip point
     /// of the hand should align. It can also contain information about the final pose
@@ -33,20 +33,21 @@ namespace Oculus.Interaction.HandGrab
     /// </summary>
     public class HandGrabPose : MonoBehaviour
     {
-        [SerializeField]
-        private Transform _relativeTo;
-
-        [SerializeField, Optional, Interface(typeof(ISnapSurface))]
-        private MonoBehaviour _surface = null;
-        private ISnapSurface _snapSurface;
-        public ISnapSurface SnapSurface
+        [SerializeField, Optional, Interface(typeof(IGrabSurface))]
+        private UnityEngine.Object _surface = null;
+        private IGrabSurface _snapSurface;
+        public IGrabSurface SnapSurface
         {
-            get => _snapSurface ?? _surface as ISnapSurface;
+            get => _snapSurface ?? _surface as IGrabSurface;
             private set
             {
                 _snapSurface = value;
             }
         }
+
+        [SerializeField]
+        [Tooltip("Transform used as a reference to measure the local data of the HandGrabPose")]
+        private Transform _relativeTo;
 
         [SerializeField]
         private bool _usesHandPose = true;
@@ -56,117 +57,117 @@ namespace Oculus.Interaction.HandGrab
         private HandPose _handPose = new HandPose();
 
         public HandPose HandPose => _usesHandPose ? _handPose : null;
-        public float Scale => this.transform.lossyScale.x;
-        public Transform RelativeTo { get => _relativeTo; set => _relativeTo = value; }
-        public Pose RelativeGrip => RelativeTo.RelativeOffset(this.transform);
 
-        #region editor events
-
-        protected virtual void Reset()
+        /// <summary>
+        /// Scale of the HandGrabPoint relative to its reference transform.
+        /// </summary>
+        public float RelativeScale
         {
-            _relativeTo = this.GetComponentInParent<HandGrabInteractable>()?.RelativeTo;
-        }
-        #endregion
-
-        protected virtual void Start()
-        {
-            Assert.IsNotNull(_relativeTo, "The relative transform can not be null");
+            get
+            {
+                return this.transform.lossyScale.x / _relativeTo.lossyScale.x;
+            }
         }
 
         /// <summary>
-        /// Applies the given position/rotation to the HandGrabPose
+        /// Pose of the HandGrabPose relative to its reference transform.
         /// </summary>
-        /// <param name="handPose">Relative hand position/rotation.</param>
-        /// <param name="relativeTo">Reference coordinates for the pose.</param>
-        public void SetPose(HandPose handPose, in Pose gripPoint, Transform relativeTo)
+        public Pose RelativePose
         {
-            _handPose = new HandPose(handPose);
-            _relativeTo = relativeTo;
-            this.transform.SetPose(relativeTo.GlobalPose(gripPoint));
-        }
-
-        public HandGrabPoseData SaveData()
-        {
-            HandGrabPoseData data = new HandGrabPoseData()
+            get
             {
-                handPose = new HandPose(_handPose),
-                scale = Scale,
-                gripPose = _relativeTo.RelativeOffset(this.transform)
-            };
-
-            return data;
-        }
-
-        public void LoadData(HandGrabPoseData data, Transform relativeTo)
-        {
-            _relativeTo = relativeTo;
-            this.transform.localScale = Vector3.one * data.scale;
-            this.transform.SetPose(_relativeTo.GlobalPose(data.gripPose));
-            if (data.handPose != null)
-            {
-                _handPose = new HandPose(data.handPose);
+                if (_relativeTo != null)
+                {
+                    return PoseUtils.DeltaScaled(_relativeTo, transform);
+                }
+                else
+                {
+                    return transform.GetPose(Space.Self);
+                }
             }
         }
 
-        public virtual bool CalculateBestPose(Pose userPose, Handedness handedness,
-            ref HandPose bestHandPose, ref Pose bestSnapPoint, in PoseMeasureParameters scoringModifier,
-            out bool usesHandPose, out float score)
+        /// <summary>
+        /// Reference transform of the HandGrabPose
+        /// </summary>
+        public Transform RelativeTo => _relativeTo;
+
+        #region editor events
+        protected virtual void Reset()
         {
-            usesHandPose = false;
-            if (HandPose != null && HandPose.Handedness != handedness)
+            _relativeTo = this.GetComponentInParent<IRelativeToRef>()?.RelativeTo;
+        }
+        #endregion
+
+        public bool UsesHandPose()
+        {
+            return _usesHandPose;
+        }
+
+        public virtual bool CalculateBestPose(Pose userPose,
+            Handedness handedness, PoseMeasureParameters scoringModifier,
+            Transform relativeTo, ref HandGrabResult result)
+        {
+            result.HasHandPose = false;
+            if (HandPose != null
+                && HandPose.Handedness != handedness)
             {
-                score = float.NaN;
                 return false;
             }
 
-            score = CompareNearPoses(userPose, ref bestSnapPoint, scoringModifier);
+            result.Score = CompareNearPoses(userPose,
+                scoringModifier, relativeTo, out Pose worldPose);
+            result.RelativePose = PoseUtils.Delta(relativeTo, worldPose);
             if (HandPose != null)
             {
-                usesHandPose = true;
-                bestHandPose.CopyFrom(HandPose);
+                result.HasHandPose = true;
+                result.HandPose.CopyFrom(HandPose);
             }
 
             return true;
         }
 
         /// <summary>
-        /// Finds the most similar pose at this HandGrabInteractable to the user hand pose
+        /// Finds the most similar pose to the provided pose.
+        /// If the HandGrabPose contains a surface it will defer the calculation to it.
         /// </summary>
-        /// <param name="worldPoint">The user current hand pose.</param>
-        /// <param name="bestSnapPoint">The snap point hand pose within the surface (if any).</param>
-        /// <returns>The adjusted best pose at the surface.</returns>
-        private float CompareNearPoses(in Pose worldPoint, ref Pose bestSnapPoint, in PoseMeasureParameters scoringModifier)
+        /// <param name="worldPoint">The desired pose in world space</param>
+        /// <param name="scoringModifier">How much to weight the translational or rotational distance</returns>
+        /// <param name="relativeTo">Reference transform used to measure the local parameters</param>
+        /// <param name="bestWorldPose">Best pose available that is near the desired one</param>
+        /// <returns>The score from the desired worldPoint to the result BestWorldPose</returns>
+        private GrabPoseScore CompareNearPoses(in Pose worldPoint,
+            PoseMeasureParameters scoringModifier, Transform relativeTo,
+            out Pose bestWorldPose)
         {
-            Pose desired = worldPoint;
-            Pose snap = this.transform.GetPose();
-
-            float bestScore;
-            Pose bestPlace;
+            GrabPoseScore bestScore;
             if (SnapSurface != null)
             {
-                bestScore = SnapSurface.CalculateBestPoseAtSurface(desired, snap, out bestPlace, scoringModifier);
+                bestScore = SnapSurface.CalculateBestPoseAtSurface(worldPoint, out bestWorldPose, scoringModifier, relativeTo);
             }
             else
             {
-                bestPlace = snap;
-                bestScore = PoseUtils.Similarity(desired, snap, scoringModifier);
+                bestWorldPose = PoseUtils.GlobalPoseScaled(relativeTo, this.RelativePose);
+                bestScore = new GrabPoseScore(worldPoint, bestWorldPose, scoringModifier.PositionRotationWeight);
             }
-
-            _relativeTo.RelativeOffset(bestPlace, ref bestSnapPoint);
 
             return bestScore;
         }
 
         #region Inject
+        public void InjectAllHandGrabPose(Transform relativeTo)
+        {
+            InjectRelativeTo(relativeTo);
+        }
 
         public void InjectRelativeTo(Transform relativeTo)
         {
             _relativeTo = relativeTo;
         }
 
-        public void InjectOptionalSurface(ISnapSurface surface)
+        public void InjectOptionalSurface(IGrabSurface surface)
         {
-            _surface = surface as MonoBehaviour;
+            _surface = surface as UnityEngine.Object;
             SnapSurface = surface;
         }
 
@@ -176,10 +177,6 @@ namespace Oculus.Interaction.HandGrab
             _usesHandPose = _handPose != null;
         }
 
-        public void InjectAllHandGrabPose(Transform relativeTo)
-        {
-            InjectRelativeTo(relativeTo);
-        }
         #endregion
 
     }

@@ -1,15 +1,24 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
-
+using Oculus.Interaction.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,94 +26,59 @@ namespace Oculus.Interaction.HandGrab.Editor
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(HandGrabInteractable))]
-    public class HandGrabInteractableEditor : UnityEditor.Editor
+    public partial class HandGrabInteractableEditor : SimplifiedEditor
     {
-        private HandGrabInteractable _interactable;
-
+        private HandGrabInteractable _target;
+        private HandGrabScaleKeysEditor<HandGrabInteractable> _listDrawer;
         private void Awake()
         {
-            _interactable = target as HandGrabInteractable;
+            _target = target as HandGrabInteractable;
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            _listDrawer = new HandGrabScaleKeysEditor<HandGrabInteractable>(serializedObject,
+                _target.HandGrabPoses, "_handGrabPoses", true);
+            _editorDrawer.Draw("_handGrabPoses", (modeProp) =>
+            {
+                _listDrawer.DrawInspector();
+            });
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            _listDrawer.TearDown();
         }
 
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
 
-            DrawGrabPosesMenu();
-            GUILayout.Space(20f);
-            DrawGenerationMenu();
-        }
-
-        private void DrawGrabPosesMenu()
-        {
-            if (GUILayout.Button("Refresh HandGrab Pose"))
-            {
-                _interactable.HandGrabPoses.Clear();
-                HandGrabPose[] handGrabPoses = _interactable.GetComponentsInChildren<HandGrabPose>();
-                _interactable.HandGrabPoses.AddRange(handGrabPoses);
-            }
-
-            if (GUILayout.Button("Add HandGrab Pose"))
-            {
-                if (_interactable.HandGrabPoses.Count > 0)
-                {
-                    AddHandGrabPose(_interactable.HandGrabPoses[0]);
-                }
-                else
-                {
-                    AddHandGrabPose();
-                }
-            }
-
-            if (GUILayout.Button("Replicate Default Scaled HandGrab Pose"))
-            {
-                if (_interactable.HandGrabPoses.Count > 0)
-                {
-                    AddHandGrabPose(_interactable.HandGrabPoses[0], 0.8f);
-                    AddHandGrabPose(_interactable.HandGrabPoses[0], 1.2f);
-                }
-                else
-                {
-                    Debug.LogError("You have to provide a default HandGrabPose first!");
-                }
-            }
-        }
-
-        private void AddHandGrabPose(HandGrabPose copy = null, float? scale = null)
-        {
-            HandGrabPose point = _interactable.CreatePoint();
-            if (copy != null)
-            {
-                HandGrabPoseEditor.CloneHandGrabPose(copy, point);
-                if (scale.HasValue)
-                {
-                    HandGrabPoseData scaledData = point.SaveData();
-                    scaledData.scale = scale.Value;
-                    point.LoadData(scaledData, copy.RelativeTo);
-                }
-            }
-            _interactable.HandGrabPoses.Add(point);
-        }
-
-        private void DrawGenerationMenu()
-        {
             if (GUILayout.Button("Create Mirrored HandGrabInteractable"))
             {
-                HandGrabInteractable mirrorInteractable =
-                    HandGrabInteractable.Create(_interactable.RelativeTo,
-                        $"{_interactable.gameObject.name}_mirror");
+                Mirror();
+            }
+        }
 
-                HandGrabInteractableData data = _interactable.SaveData();
-                data.poses = null;
-                mirrorInteractable.LoadData(data);
+        private void Mirror()
+        {
+            HandGrabInteractable mirrorInteractable =
+                   HandGrabUtils.CreateHandGrabInteractable(_target.RelativeTo,
+                       $"{_target.gameObject.name}_mirror");
 
-                foreach (HandGrabPose point in _interactable.HandGrabPoses)
-                {
-                    HandGrabPose mirrorPoint = mirrorInteractable.CreatePoint();
-                    HandGrabPoseEditor.Mirror(point, mirrorPoint);
-                    mirrorPoint.transform.SetParent(mirrorInteractable.transform);
-                    mirrorInteractable.HandGrabPoses.Add(mirrorPoint);
-                }
+            var data = HandGrabUtils.SaveData(_target);
+            data.poses = null;
+            HandGrabUtils.LoadData(mirrorInteractable, data);
+            foreach (HandGrabPose point in _target.HandGrabPoses)
+            {
+                HandGrabPose mirrorPose = HandGrabUtils.CreateHandGrabPose(mirrorInteractable.transform,
+                    mirrorInteractable.RelativeTo);
+                HandGrabUtils.MirrorHandGrabPose(point, mirrorPose, _target.RelativeTo);
+                mirrorPose.transform.SetParent(mirrorInteractable.transform);
+                mirrorInteractable.HandGrabPoses.Add(mirrorPose);
             }
         }
     }

@@ -1,4 +1,4 @@
-// Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
 using System.Collections;
 using UnityEngine;
@@ -145,6 +145,7 @@ public class Anchor : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
 
     /// <summary>
     /// UI callback for the anchor menu's Erase button

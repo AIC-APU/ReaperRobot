@@ -22,10 +22,6 @@ namespace Oculus.Platform.Models
     [Obsolete("Deprecated in favor of LeaderOptional")]
     public readonly User Leader;
     // May be null. Check before using.
-    public readonly Room RoomOptional;
-    [Obsolete("Deprecated in favor of RoomOptional")]
-    public readonly Room Room;
-    // May be null. Check before using.
     public readonly UserList UsersOptional;
     [Obsolete("Deprecated in favor of UsersOptional")]
     public readonly UserList Users;
@@ -50,15 +46,6 @@ namespace Oculus.Platform.Models
           LeaderOptional = null;
         } else {
           LeaderOptional = Leader;
-        }
-      }
-      {
-        var pointer = CAPI.ovr_Party_GetRoom(o);
-        Room = new Room(pointer);
-        if (pointer == IntPtr.Zero) {
-          RoomOptional = null;
-        } else {
-          RoomOptional = Room;
         }
       }
       {

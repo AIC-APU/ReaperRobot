@@ -1,5 +1,7 @@
 fileFormatVersion: 2
-guid: cada41609b5284144aef14e522e6351a
+guid: cada41609b5284144aef14e522e6351b
+labels:
+- oculus_interaction_deprecated
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

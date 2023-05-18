@@ -1,14 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +28,7 @@ namespace Oculus.Interaction
     public class RayInteractor : PointerInteractor<RayInteractor, RayInteractable>
     {
         [SerializeField, Interface(typeof(ISelector))]
-        private MonoBehaviour _selector;
+        private UnityEngine.Object _selector;
 
         [SerializeField]
         private Transform _rayOrigin;
@@ -28,7 +36,16 @@ namespace Oculus.Interaction
         [SerializeField]
         private float _maxRayLength = 5f;
 
-        private RayCandidate _rayCandidate = null;
+        [SerializeField]
+        [Tooltip("(Meters, World) The threshold below which distances to a surface " +
+                 "are treated as equal for the purposes of ranking.")]
+        private float _equalDistanceThreshold = 0.001f;
+
+        private RayCandidateProperties _rayCandidateProperties = null;
+
+        private IMovement _movement;
+        private SurfaceHit _movedHit;
+        private Pose _movementHitDelta = Pose.identity;
 
         public Vector3 Origin { get; protected set; }
         public Quaternion Rotation { get; protected set; }
@@ -59,8 +76,8 @@ namespace Oculus.Interaction
         protected override void Start()
         {
             base.Start();
-            Assert.IsNotNull(Selector);
-            Assert.IsNotNull(_rayOrigin);
+            this.AssertField(Selector, nameof(Selector));
+            this.AssertField(_rayOrigin, nameof(_rayOrigin));
         }
 
         protected override void DoPreprocess()
@@ -71,18 +88,18 @@ namespace Oculus.Interaction
             Ray = new Ray(Origin, Forward);
         }
 
-        public class RayCandidate : ICandidatePosition
+        public class RayCandidateProperties : ICandidatePosition
         {
             public RayInteractable ClosestInteractable { get; }
             public Vector3 CandidatePosition { get; }
-            public RayCandidate(RayInteractable closestInteractable, Vector3 candidatePosition)
+            public RayCandidateProperties(RayInteractable closestInteractable, Vector3 candidatePosition)
             {
                 ClosestInteractable = closestInteractable;
                 CandidatePosition = candidatePosition;
             }
         }
 
-        public override object Candidate => _rayCandidate;
+        public override object CandidateProperties => _rayCandidateProperties;
 
         protected override RayInteractable ComputeCandidate()
         {
@@ -91,13 +108,15 @@ namespace Oculus.Interaction
             RayInteractable closestInteractable = null;
             float closestDist = float.MaxValue;
             Vector3 candidatePosition = Vector3.zero;
-            IEnumerable<RayInteractable> interactables = RayInteractable.Registry.List(this);
+            var interactables = RayInteractable.Registry.List(this);
 
             foreach (RayInteractable interactable in interactables)
             {
                 if (interactable.Raycast(Ray, out SurfaceHit hit, MaxRayLength, false))
                 {
-                    if (hit.Distance < closestDist)
+                    bool equal = Mathf.Abs(hit.Distance - closestDist) < _equalDistanceThreshold;
+                    if ((!equal && hit.Distance < closestDist) ||
+                        (equal && ComputeCandidateTiebreaker(interactable, closestInteractable) > 0))
                     {
                         closestDist = hit.Distance;
                         closestInteractable = interactable;
@@ -110,16 +129,65 @@ namespace Oculus.Interaction
             float rayDist = (closestInteractable != null ? closestDist : MaxRayLength);
             End = Origin + rayDist * Forward;
 
-            _rayCandidate = new RayCandidate(closestInteractable, candidatePosition);
+            _rayCandidateProperties = new RayCandidateProperties(closestInteractable, candidatePosition);
 
             return closestInteractable;
+        }
+
+        protected override int ComputeCandidateTiebreaker(RayInteractable a, RayInteractable b)
+        {
+            int result = base.ComputeCandidateTiebreaker(a, b);
+            if (result != 0)
+            {
+                return result;
+            }
+
+            return a.TiebreakerScore.CompareTo(b.TiebreakerScore);
+        }
+
+        protected override void InteractableSelected(RayInteractable interactable)
+        {
+            if (interactable != null)
+            {
+                _movedHit = CollisionInfo.Value;
+                Pose hitPose = new Pose(_movedHit.Point, Quaternion.LookRotation(_movedHit.Normal));
+                Pose backHitPose = new Pose(_movedHit.Point, Quaternion.LookRotation(-_movedHit.Normal));
+                _movement = interactable.GenerateMovement(_rayOrigin.GetPose(), backHitPose);
+                if (_movement != null)
+                {
+                    _movementHitDelta = PoseUtils.Delta(_movement.Pose, hitPose);
+                }
+            }
+            base.InteractableSelected(interactable);
+        }
+
+        protected override void InteractableUnselected(RayInteractable interactable)
+        {
+            if (_movement != null)
+            {
+                _movement.StopAndSetPose(_movement.Pose);
+            }
+            base.InteractableUnselected(interactable);
+            _movement = null;
         }
 
         protected override void DoSelectUpdate()
         {
             RayInteractable interactable = _selectedInteractable;
-            CollisionInfo = null;
 
+            if (_movement != null)
+            {
+                _movement.UpdateTarget(_rayOrigin.GetPose());
+                _movement.Tick();
+                Pose hitPoint = PoseUtils.Multiply(_movement.Pose, _movementHitDelta);
+                _movedHit.Point = hitPoint.position;
+                _movedHit.Normal = hitPoint.forward;
+                CollisionInfo = _movedHit;
+                End = _movedHit.Point;
+                return;
+            }
+
+            CollisionInfo = null;
             if (interactable != null &&
                 interactable.Raycast(Ray, out SurfaceHit hit, MaxRayLength, true))
             {
@@ -134,6 +202,11 @@ namespace Oculus.Interaction
 
         protected override Pose ComputePointerPose()
         {
+            if (_movement != null)
+            {
+                return _movement.Pose;
+            }
+
             if (CollisionInfo != null)
             {
                 Vector3 position = CollisionInfo.Value.Point;
@@ -152,7 +225,7 @@ namespace Oculus.Interaction
 
         public void InjectSelector(ISelector selector)
         {
-            _selector = selector as MonoBehaviour;
+            _selector = selector as UnityEngine.Object;
             Selector = selector;
         }
 
@@ -160,6 +233,12 @@ namespace Oculus.Interaction
         {
             _rayOrigin = rayOrigin;
         }
+
+        public void InjectOptionalEqualDistanceThreshold(float equalDistanceThreshold)
+        {
+            _equalDistanceThreshold = equalDistanceThreshold;
+        }
+
         #endregion
     }
 }

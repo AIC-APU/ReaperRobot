@@ -1,14 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using Oculus.Interaction.Input;
 using UnityEngine;
@@ -20,7 +28,7 @@ namespace Oculus.Interaction
     public class ControllerPointerPose : MonoBehaviour, IActiveState
     {
         [SerializeField, Interface(typeof(IController))]
-        private MonoBehaviour _controller;
+        private UnityEngine.Object _controller;
         public IController Controller { get; private set; }
 
         [SerializeField]
@@ -38,7 +46,7 @@ namespace Oculus.Interaction
         protected virtual void Start()
         {
             this.BeginStart(ref _started);
-            Assert.IsNotNull(Controller);
+            this.AssertField(Controller, nameof(Controller));
             this.EndStart(ref _started);
         }
 
@@ -46,7 +54,7 @@ namespace Oculus.Interaction
         {
             if (_started)
             {
-                Controller.ControllerUpdated += HandleControllerUpdated;
+                Controller.WhenUpdated += HandleUpdated;
             }
         }
 
@@ -54,16 +62,16 @@ namespace Oculus.Interaction
         {
             if (_started)
             {
-                Controller.ControllerUpdated -= HandleControllerUpdated;
+                Controller.WhenUpdated -= HandleUpdated;
             }
         }
 
-        private void HandleControllerUpdated()
+        private void HandleUpdated()
         {
             IController controller = Controller;
             if (controller.TryGetPointerPose(out Pose pose))
             {
-                pose.position += pose.rotation * _offset;
+                pose.position += pose.rotation * (Controller.Scale * _offset);
                 transform.SetPose(pose);
                 Active = true;
             }
@@ -77,7 +85,7 @@ namespace Oculus.Interaction
 
         public void InjectController(IController controller)
         {
-            _controller = controller as MonoBehaviour;
+            _controller = controller as UnityEngine.Object;
             Controller = controller;
         }
 

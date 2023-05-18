@@ -1,26 +1,34 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using UnityEditor;
 using UnityEngine;
+using Oculus.Interaction.Surfaces;
 
 namespace Oculus.Interaction.Editor
 {
     [CustomEditor(typeof(PokeInteractable))]
-    public class PokeInteractableEditor : UnityEditor.Editor
+    public class PokeInteractableEditor : SimplifiedEditor
     {
         private PokeInteractable _interactable;
 
-        private SerializedProperty _proximityFieldProperty;
         private SerializedProperty _surfaceProperty;
 
         private static readonly float DRAW_RADIUS = 0.02f;
@@ -29,32 +37,30 @@ namespace Oculus.Interaction.Editor
         {
             _interactable = target as PokeInteractable;
 
-            _proximityFieldProperty = serializedObject.FindProperty("_proximityField");
-            _surfaceProperty = serializedObject.FindProperty("_surface");
+            _surfaceProperty = serializedObject.FindProperty("_surfacePatch");
         }
 
         public void OnSceneGUI()
         {
             Handles.color = EditorConstants.PRIMARY_COLOR;
-            Surfaces.PointablePlane plane = _surfaceProperty.objectReferenceValue as Surfaces.PointablePlane;
+            ISurfacePatch surfacePatch = _surfaceProperty.objectReferenceValue as ISurfacePatch;
 
-            if (plane == null)
+            if (surfacePatch == null)
             {
-                // TODO support non-planar surfaces for this gizmo?
+                // Currently only supports visualizing planar surfaces
                 return;
             }
 
-            Transform triggerPlaneTransform = plane.transform;
-            IProximityField proximityField = _proximityFieldProperty.objectReferenceValue as IProximityField;
+            Transform triggerPlaneTransform = surfacePatch.Transform;
 
-            if (triggerPlaneTransform == null
-                || proximityField == null)
+            if (triggerPlaneTransform == null)
             {
                 return;
             }
 
-            Vector3 touchPoint = triggerPlaneTransform.position - triggerPlaneTransform.forward * _interactable.MaxDistance;
-            Vector3 proximalPoint = proximityField.ComputeClosestPoint(touchPoint);
+            Vector3 touchPoint = triggerPlaneTransform.position - triggerPlaneTransform.forward * _interactable.EnterHoverNormal;
+            surfacePatch.ClosestSurfacePoint(touchPoint, out SurfaceHit hit);
+            Vector3 proximalPoint = hit.Point;
 
             Handles.DrawSolidDisc(touchPoint, triggerPlaneTransform.forward, DRAW_RADIUS);
 
@@ -73,7 +79,6 @@ namespace Oculus.Interaction.Editor
             Handles.DrawLine(proximalPoint - triggerPlaneTransform.up * DRAW_RADIUS,
                 proximalPoint + triggerPlaneTransform.up * DRAW_RADIUS);
 #endif
-
         }
     }
 }
