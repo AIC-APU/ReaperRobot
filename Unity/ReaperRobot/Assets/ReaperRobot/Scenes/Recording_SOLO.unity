@@ -1646,6 +1646,7 @@ GameObject:
   - component: {fileID: 730344369}
   - component: {fileID: 730344367}
   - component: {fileID: 730344365}
+  - component: {fileID: 730344371}
   - component: {fileID: 730344362}
   - component: {fileID: 730344370}
   m_Layer: 0
@@ -1694,7 +1695,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcc3be4cc9b973e4f87a114eefec18bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cameraManager: {fileID: 1266804669}
+  ActiveCamera: {fileID: 485953159}
 --- !u!114 &730344367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1754,6 +1755,26 @@ MonoBehaviour:
   _menuCanvas: {fileID: 788204740}
   _pauseGame: 1
   _disableController: 1
+--- !u!114 &730344371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 730344360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86774ddecac5ffb458e6bed8b29aeadb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _loops:
+  - Cameras:
+    - {fileID: 485953159}
+    - {fileID: 419340459}
+    - {fileID: 978015313}
+  OnChangeLoop:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &731738917
 GameObject:
   m_ObjectHideFlags: 0
@@ -3577,7 +3598,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1266804668}
-  - component: {fileID: 1266804669}
   m_Layer: 0
   m_Name: CameraSetteings
   m_TagString: Untagged
@@ -3603,26 +3623,6 @@ Transform:
   m_Father: {fileID: 597122941}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1266804669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1266804667}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86774ddecac5ffb458e6bed8b29aeadb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _loops:
-  - Cameras:
-    - {fileID: 485953159}
-    - {fileID: 419340459}
-    - {fileID: 978015313}
-  OnChangeLoop:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &1285980271
 GameObject:
   m_ObjectHideFlags: 0

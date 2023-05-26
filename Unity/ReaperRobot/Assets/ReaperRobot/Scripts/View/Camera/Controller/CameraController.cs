@@ -7,7 +7,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
     public class CameraController : MonoBehaviour
     {
         #region  Serialized Private Fields
-        [SerializeField] private CameraManager _cameraManager;
+        public BaseCamera ActiveCamera;
         #endregion
 
         #region Private Fields
@@ -26,17 +26,13 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
             _actionMap.Enable();
 
             _actionMap["MoveCamera"].performed += MoveCamera;
-            _actionMap["ResetCamera"].started += ResetCamera;
-            _actionMap["ChangeCamera"].started += ChangeCamera;
-            _actionMap["ChangeLoop"].started += ChangeLoop;     
+            _actionMap["ResetCamera"].started += ResetCamera;    
         }
 
         void OnDisable()
         {
             _actionMap["MoveCamera"].performed -= MoveCamera;
             _actionMap["ResetCamera"].started -= ResetCamera;
-            _actionMap["ChangeCamera"].started -= ChangeCamera;
-            _actionMap["ChangeLoop"].started -= ChangeLoop;
         }
 
         void LateUpdate()
@@ -44,10 +40,10 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
             //RotateCamera
             if (!_playerInput.enabled) return;
 
-            _cameraManager.FollowTarget();
+            ActiveCamera.FollowTarget();
 
             var vec = _actionMap["RotateCamera"].ReadValue<Vector2>();
-            _cameraManager.RotateCamera(vec.x, vec.y);
+            ActiveCamera.RotateCamera(vec.x, vec.y);
         }
         #endregion
 
@@ -55,22 +51,12 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
         private void MoveCamera(InputAction.CallbackContext obj)
         {
             var vec = obj.ReadValue<Vector2>();
-           _cameraManager.MoveCamera(vec.x, vec.y);
+           ActiveCamera.MoveCamera(vec.x, vec.y);
         }
 
         private void ResetCamera(InputAction.CallbackContext obj)
         {
-            _cameraManager.ResetCamera();
-        }
-
-        private void ChangeCamera(InputAction.CallbackContext obj)
-        {
-            _cameraManager.ChangeCamera();
-        }
-
-        private void ChangeLoop(InputAction.CallbackContext obj)
-        {
-            _cameraManager.ChangeLoop();
+            ActiveCamera.ResetCamera();
         }
         #endregion
     }
