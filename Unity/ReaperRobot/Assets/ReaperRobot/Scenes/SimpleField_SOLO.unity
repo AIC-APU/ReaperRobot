@@ -672,6 +672,7 @@ MonoBehaviour:
   _camera: {fileID: 963194227}
   _cameraDefaultOffsetPos: {x: 0, y: 1, z: -1.5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _rotateCameraWhenTargetRotate: 1
 --- !u!1 &88091891
 GameObject:
   m_ObjectHideFlags: 0
@@ -3171,7 +3172,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 677badc80cdad8343b2e475bbe210f4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cameraController: {fileID: 653367597}
   _pairs:
   - Target: {fileID: 282077254}
     ActionMapName: Reaper
@@ -7864,6 +7864,7 @@ MonoBehaviour:
   _camera: {fileID: 963194227}
   _cameraDefaultOffsetPos: {x: 0, y: 1.5, z: -1}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _rotateCameraWhenTargetRotate: 0
 --- !u!4 &1100132408
 Transform:
   m_ObjectHideFlags: 0
