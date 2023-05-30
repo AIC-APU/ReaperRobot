@@ -159,9 +159,9 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.35
-    y: 0
-    width: 0.35
+    x: 0.2
+    y: -0.005
+    width: 0.5
     height: 0.5
   near clip plane: 0.3
   far clip plane: 1000
@@ -246,8 +246,9 @@ MonoBehaviour:
   _viewMode: REAPER_AROUND
   _target: {fileID: 282077254}
   _camera: {fileID: 54991458}
-  _cameraDefaultOffsetPos: {x: 0, y: 0.6, z: -2}
-  _cameraDefaultOffsetRot: {x: 20, y: 0, z: 0}
+  _cameraDefaultOffsetPos: {x: 0, y: 0.6, z: -1.5}
+  _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _rotateCameraWhenTargetRotate: 1
 --- !u!114 &81614029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3099,8 +3100,8 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0
-    width: 0.35
+    y: -0.005
+    width: 0.2
     height: 0.5
   near clip plane: 0.3
   far clip plane: 1000
@@ -4508,8 +4509,9 @@ MonoBehaviour:
   _viewMode: TARGET_CAMERATYPE
   _target: {fileID: 282077254}
   _camera: {fileID: 983921424}
-  _cameraDefaultOffsetPos: {x: 0, y: 3, z: 0}
+  _cameraDefaultOffsetPos: {x: 0, y: 2, z: 0}
   _cameraDefaultOffsetRot: {x: 90, y: 0, z: 0}
+  _rotateCameraWhenTargetRotate: 1
 --- !u!1 &1770658976
 GameObject:
   m_ObjectHideFlags: 0
