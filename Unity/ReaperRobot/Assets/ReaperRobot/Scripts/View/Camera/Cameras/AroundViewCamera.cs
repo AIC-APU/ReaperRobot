@@ -37,7 +37,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
             if (_rotateCameraWhenTargetRotate)
             {
                 //ターゲットの回転に合わせてカメラが背後に回ってほしい場合はこっち（子オブジェクトの様にカメラが追従する）
-                //ロボットに付けるカメラはこっちの方がいいかも
+                //ロボットに付けるカメラはこっちの方がいい
                 _camera.transform.position = _target.transform.TransformPoint(_cameraParam.localPos);
                 _camera.transform.eulerAngles = _target.transform.eulerAngles - _cameraParam.angleOffset;
             }
@@ -99,9 +99,11 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
         private CameraParam CalcCameraParam(UnityEngine.Camera camera, GameObject obj)
         {
             var param = new CameraParam();
+
             param.positionOffset = camera.transform.position - obj.transform.position;
             param.angleOffset = obj.transform.eulerAngles - camera.transform.eulerAngles;
             param.localPos = _target.transform.InverseTransformPoint(camera.transform.position);
+            
             return param;
         }
         #endregion
