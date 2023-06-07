@@ -318,7 +318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25af1527a7d93f942a992f0d72eb8f7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 0
+  delay: 0.1
   recordingCamera: {fileID: 1095629508}
 --- !u!114 &292220506
 MonoBehaviour:
@@ -3055,6 +3055,10 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 157
       objectReference: {fileID: 0}
+    - target: {fileID: 3455388046946658434, guid: 783fa7b83bb801f4595982b253818444, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3455388047229200514, guid: 783fa7b83bb801f4595982b253818444, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -3352,7 +3356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25af1527a7d93f942a992f0d72eb8f7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 1
+  delay: 0.1
   recordingCamera: {fileID: 54991458}
 --- !u!114 &1135745719
 MonoBehaviour:
@@ -4753,7 +4757,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25af1527a7d93f942a992f0d72eb8f7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 0.5
+  delay: 0.1
   recordingCamera: {fileID: 983921424}
 --- !u!114 &1731229241
 MonoBehaviour:

@@ -32,31 +32,58 @@ namespace Plusplus.ReaperRobot.Scripts.View.DelayProjector
             _textureSize = Vector2Int.RoundToInt(_rawImage.rectTransform.rect.size);
 
             await UniTask.WaitUntil(() => recordingCamera != null);
-            _rawImage.texture = RecordTexture(recordingCamera, _textureSize);
+
+            var newTexture = RecordTexture(recordingCamera, _textureSize);
+            _rawImage.texture = newTexture;
+            newTexture = null;
+        }
+
+        void OnDestroy()
+        {
+            while (_savedTexQueue.Count > 0)
+            {
+                var dequeueTex = _savedTexQueue.Dequeue();
+                Destroy(dequeueTex);
+                dequeueTex = null;
+            }
+
+            Destroy(_rawImage.texture);
+            _rawImage.texture = null;
+
+            _savedTexQueue.Clear();
         }
 
         private void FixedUpdate()
         {
-            //テクスチャの生成
+            //テクスチャの生成と保存
             _textureSize = Vector2Int.RoundToInt(_rawImage.rectTransform.rect.size);
-            var recordedTexture = RecordTexture(recordingCamera, _textureSize);
-            _savedTexQueue.Enqueue(recordedTexture);
 
+            var newTexture = RecordTexture(recordingCamera, _textureSize);
+            _savedTexQueue.Enqueue(newTexture);
+            newTexture = null;
 
             //delayのために保存が必要なテクスチャの枚数を計算
             var optimalTexQueueSize = (int)(delay / Time.fixedDeltaTime);
 
+            //保存しているテクスチャの枚数がdelayのために必要な枚数に達していない場合は、何もしない
             if (_savedTexQueue.Count < optimalTexQueueSize + 1) return;
 
+            //保存しているテクスチャの枚数がdelayのために必要な枚数を超えたら、古いテクスチャを削除
             while (_savedTexQueue.Count > optimalTexQueueSize + 1)
             {
-                Destroy(_savedTexQueue.Dequeue());
+                var dequeueTex = _savedTexQueue.Dequeue();
+                Destroy(dequeueTex);
+                dequeueTex = null;
             }
 
+            //保存しているテクスチャの枚数がdelayのために必要な枚数に達したら、RawImageのテクスチャを更新
             if (_savedTexQueue.Count == optimalTexQueueSize + 1)
             {
                 Destroy(_rawImage.texture);
-                _rawImage.texture = _savedTexQueue.Dequeue();
+                _rawImage.texture = null;
+
+                var dequeueTex = _savedTexQueue.Dequeue();
+                _rawImage.texture = dequeueTex;
             }
         }
         #endregion
@@ -65,23 +92,23 @@ namespace Plusplus.ReaperRobot.Scripts.View.DelayProjector
         private Texture2D RecordTexture(Camera camera, Vector2Int textureSize)
         {
             //cameraの画像をテクスチャとして取得
-            var texture = new Texture2D(textureSize.x, textureSize.y, TextureFormat.RGB24, false);
-            var render = new RenderTexture(textureSize.x, textureSize.y, 0);
+            var texture = new Texture2D(textureSize.x, textureSize.y, TextureFormat.RGBA32, false);
+            var render = new RenderTexture(textureSize.x, textureSize.y, 24, RenderTextureFormat.ARGB32);
 
             camera.targetTexture = render;
             camera.Render();
 
-            var cache = RenderTexture.active;
-            RenderTexture.active = render;
+            //var cache = RenderTexture.active;
+            //RenderTexture.active = render;
 
-            //ReadPixelsは重い処理らしい。
-            //https://docs.unity3d.com/jp/current/ScriptReference/Texture2D.ReadPixels.html に代替案あり
-            texture.ReadPixels(new Rect(0, 0, textureSize.x, textureSize.y), 0, 0);
-            texture.Apply();
+            Graphics.CopyTexture(render, texture);
 
-            RenderTexture.active = cache;
+            //RenderTexture.active = cache;
             camera.targetTexture = null;
+
+            render.Release();
             Destroy(render);
+            render = null;
 
             return texture;
         }
