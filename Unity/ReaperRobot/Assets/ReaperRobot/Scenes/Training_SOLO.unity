@@ -4584,7 +4584,7 @@ MonoBehaviour:
 
     Controller:
     Select (switch) / Right stick (rotation)'
-  _cameraManager: {fileID: 1983901328}
+  _cameraController: {fileID: 1504616886}
   _goalCamera: {fileID: 1214231331}
 --- !u!1 &880181957
 GameObject:
@@ -5847,7 +5847,7 @@ MonoBehaviour:
 
     Controller:
     X button'
-  _cameraManager: {fileID: 1983901328}
+  _cameraController: {fileID: 1504616886}
   _goalCamera: {fileID: 1449420789}
 --- !u!1 &1100840762
 GameObject:
@@ -6257,6 +6257,7 @@ MonoBehaviour:
   _camera: {fileID: 1685995399}
   _cameraDefaultOffsetPos: {x: 0, y: 1, z: -1.5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _rotateCameraWhenTargetRotate: 1
 --- !u!1 &1214858901
 GameObject:
   m_ObjectHideFlags: 0
@@ -6823,7 +6824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewModeText: {fileID: 135766316}
-  _cameraManager: {fileID: 1983901328}
+  _cameraController: {fileID: 1504616886}
 --- !u!4 &1299560864 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8996102183553057519, guid: a58b104885dc57d418a9062019e6939c, type: 3}
@@ -7581,6 +7582,7 @@ MonoBehaviour:
   _camera: {fileID: 1685995399}
   _cameraDefaultOffsetPos: {x: 0, y: 1.5, z: -1}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _rotateCameraWhenTargetRotate: 0
 --- !u!1 &1452276740
 GameObject:
   m_ObjectHideFlags: 0
@@ -8017,6 +8019,7 @@ GameObject:
   - component: {fileID: 1504616882}
   - component: {fileID: 1504616884}
   - component: {fileID: 1504616886}
+  - component: {fileID: 1504616888}
   - component: {fileID: 1504616885}
   - component: {fileID: 1504616887}
   m_Layer: 0
@@ -8125,8 +8128,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 677badc80cdad8343b2e475bbe210f4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cameraManager: {fileID: 1983901328}
-  _pairs: []
+  _pairs:
+  - Target: {fileID: 1821138473}
+    ActionMapName: Reaper
+  - Target: {fileID: 1937706699}
+    ActionMapName: Person
 --- !u!114 &1504616886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8139,7 +8145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcc3be4cc9b973e4f87a114eefec18bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cameraManager: {fileID: 1983901328}
+  ActiveCamera: {fileID: 884200199}
 --- !u!114 &1504616887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8152,6 +8158,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b97d99957a12f9a46876525328be6004, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1504616888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1504616874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86774ddecac5ffb458e6bed8b29aeadb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _loops:
+  - Cameras:
+    - {fileID: 884200199}
+    - {fileID: 1100840764}
+    - {fileID: 1214231331}
+  - Cameras:
+    - {fileID: 1449420789}
+    - {fileID: 1123392855}
+  OnChangeLoop:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1522787194
 GameObject:
   m_ObjectHideFlags: 0
@@ -10877,7 +10906,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1983901327}
-  - component: {fileID: 1983901328}
   m_Layer: 0
   m_Name: CameraSetteings
   m_TagString: Untagged
@@ -10905,29 +10933,6 @@ Transform:
   m_Father: {fileID: 582371975}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1983901328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1983901326}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86774ddecac5ffb458e6bed8b29aeadb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _loops:
-  - Cameras:
-    - {fileID: 884200199}
-    - {fileID: 1100840764}
-    - {fileID: 1214231331}
-  - Cameras:
-    - {fileID: 1449420789}
-    - {fileID: 1123392855}
-  OnChangeLoop:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &2036569163
 GameObject:
   m_ObjectHideFlags: 0
@@ -11082,7 +11087,7 @@ MonoBehaviour:
 
     Controller:
     X button'
-  _cameraManager: {fileID: 1983901328}
+  _cameraController: {fileID: 1504616886}
   _goalCamera: {fileID: 884200199}
 --- !u!4 &2112281013 stripped
 Transform:
@@ -11152,7 +11157,6 @@ GameObject:
   - component: {fileID: 2125796299}
   - component: {fileID: 2125796298}
   - component: {fileID: 2125796297}
-  - component: {fileID: 2125796296}
   m_Layer: 5
   m_Name: MainCanvas
   m_TagString: Untagged
@@ -11160,20 +11164,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2125796296
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2125796295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcf22386436ccef4c886928749008f9c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _targetObject: {fileID: 2125796295}
-  _defaultActive: 1
 --- !u!114 &2125796297
 MonoBehaviour:
   m_ObjectHideFlags: 0
