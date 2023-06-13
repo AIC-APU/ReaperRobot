@@ -7,9 +7,9 @@ using UniRx;
 namespace Plusplus.ReaperRobot.Scripts.View.Camera
 {
     [RequireComponent(typeof(PlayerInput))]
+    [RequireComponent(typeof(CameraController))]
     public class ActionMapSwitcher : MonoBehaviour
     {
-
         #region Struct
         [Serializable]
         struct ActionMapPair
@@ -22,17 +22,18 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
         #endregion
 
         #region Serialized Private Fields
-        [SerializeField] private CameraManager _cameraManager;
         [SerializeField] private List<ActionMapPair> _pairs = new List<ActionMapPair>();
         #endregion
 
         #region Private Fields
+        private CameraController _cameraController;
         private PlayerInput _playerInput;
         #endregion
 
         #region MonoBehaviour Callbacks
         void Start()
         {
+            _cameraController = GetComponent<CameraController>();
             _playerInput = GetComponent<PlayerInput>();
 
             //ActionMapPairのActionMapを取得
@@ -44,8 +45,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
             }
 
             //カメラのターゲットが変更されたら、そのターゲットに対応するアクションマップをEnableにする
-            _cameraManager
-                .ActiveCamera
+            _cameraController
+                .ObserveEveryValueChanged(x => x.ActiveCamera)
                 .Select(x => x.Target)
                 .Subscribe(x => EnableActionMap(x))
                 .AddTo(this);

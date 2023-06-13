@@ -672,6 +672,7 @@ MonoBehaviour:
   _camera: {fileID: 963194227}
   _cameraDefaultOffsetPos: {x: 0, y: 1, z: -1.5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _rotateCameraWhenTargetRotate: 1
 --- !u!1 &88091891
 GameObject:
   m_ObjectHideFlags: 0
@@ -3002,7 +3003,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a8164e7381c73b41ad8db7bc1026133, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cameraMangaer: {fileID: 1729175746}
+  _cameraController: {fileID: 653367597}
   _positionX: {fileID: 2098429707}
   _positionY: {fileID: 1091408723}
   _positionZ: {fileID: 91954785}
@@ -3023,6 +3024,7 @@ GameObject:
   - component: {fileID: 653367588}
   - component: {fileID: 653367592}
   - component: {fileID: 653367597}
+  - component: {fileID: 653367600}
   - component: {fileID: 653367596}
   - component: {fileID: 653367599}
   - component: {fileID: 653367598}
@@ -3145,7 +3147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcc3be4cc9b973e4f87a114eefec18bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cameraManager: {fileID: 1729175746}
+  ActiveCamera: {fileID: 856294185}
 --- !u!114 &653367598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3170,12 +3172,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 677badc80cdad8343b2e475bbe210f4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cameraManager: {fileID: 1729175746}
   _pairs:
   - Target: {fileID: 282077254}
     ActionMapName: Reaper
   - Target: {fileID: 1399509881}
     ActionMapName: Person
+--- !u!114 &653367600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653367586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86774ddecac5ffb458e6bed8b29aeadb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _loops:
+  - Cameras:
+    - {fileID: 856294185}
+    - {fileID: 1733106938}
+    - {fileID: 81614028}
+  - Cameras:
+    - {fileID: 1100132407}
+    - {fileID: 2024924641}
+  OnChangeLoop:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1392477803}
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.GUI.ShowAndHide,
+          ReaperRobot.GUI
+        m_MethodName: ShowAndHideFunc
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &664984227
 GameObject:
   m_ObjectHideFlags: 0
@@ -6819,7 +6856,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewModeText: {fileID: 1136667997}
-  _cameraManager: {fileID: 1729175746}
+  _cameraController: {fileID: 653367597}
 --- !u!1 &1009746946
 GameObject:
   m_ObjectHideFlags: 0
@@ -7827,6 +7864,7 @@ MonoBehaviour:
   _camera: {fileID: 963194227}
   _cameraDefaultOffsetPos: {x: 0, y: 1.5, z: -1}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
+  _rotateCameraWhenTargetRotate: 0
 --- !u!4 &1100132408
 Transform:
   m_ObjectHideFlags: 0
@@ -10204,7 +10242,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1729175745}
-  - component: {fileID: 1729175746}
   m_Layer: 0
   m_Name: CameraSetteings
   m_TagString: Untagged
@@ -10232,42 +10269,6 @@ Transform:
   m_Father: {fileID: 902527486}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1729175746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1729175744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86774ddecac5ffb458e6bed8b29aeadb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _loops:
-  - Cameras:
-    - {fileID: 856294185}
-    - {fileID: 1733106938}
-    - {fileID: 81614028}
-  - Cameras:
-    - {fileID: 1100132407}
-    - {fileID: 2024924641}
-  OnChangeLoop:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1392477803}
-        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.GUI.ShowAndHide,
-          ReaperRobot.GUI
-        m_MethodName: ShowAndHideFunc
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &1733106936
 GameObject:
   m_ObjectHideFlags: 0
