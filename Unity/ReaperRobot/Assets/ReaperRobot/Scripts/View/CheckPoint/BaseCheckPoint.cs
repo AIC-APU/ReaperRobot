@@ -29,6 +29,13 @@ namespace Plusplus.ReaperRobot.Scripts.View.CheckPoint
         #region Private Methods
         private string GetIntroduction()
         {
+            #if UNITY_WEBGL
+
+            //In WebGL, "LocalizationSettings.SelectedLocale.Identifier.Code" does not work.
+            return _ja;
+
+            #else
+
             switch (LocalizationSettings.SelectedLocale.Identifier.Code)
             {
                 case "ja":
@@ -36,8 +43,10 @@ namespace Plusplus.ReaperRobot.Scripts.View.CheckPoint
                 case "en":
                     return _en;
                 default:
-                    return "";
+                    return $"Not supported language: {LocalizationSettings.SelectedLocale.Identifier.Code}";
             }
+
+            #endif
         }
         #endregion
     }

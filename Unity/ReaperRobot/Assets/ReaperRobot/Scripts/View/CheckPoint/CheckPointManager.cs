@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
-using System;
-using System.Collections.Generic;
 using System.Threading;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -23,23 +22,24 @@ namespace Plusplus.ReaperRobot.Scripts.View.CheckPoint
         #endregion
 
         #region Private Fields
-        private CancellationTokenSource _cancellationTokenSource = new();
+        private CancellationTokenSource _cancellationTokenSource;
         #endregion
 
         #region MonoBehaviour Callbacks
         void Start()
         {
-            _ = CheckPointFlow(_cancellationTokenSource.Token);
+            _cancellationTokenSource = new CancellationTokenSource();
+            CheckPointFlow(_cancellationTokenSource.Token).Forget();
         }
 
         void OnDestroy()
         {
-            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource?.Cancel();
         }
         #endregion
 
         #region Private method
-        private async UniTask CheckPointFlow(CancellationToken ct = default)
+        private async UniTaskVoid CheckPointFlow(CancellationToken ct = default)
         {
             for(int i = 0; i < _checkPointList.Count; i++)
             {
