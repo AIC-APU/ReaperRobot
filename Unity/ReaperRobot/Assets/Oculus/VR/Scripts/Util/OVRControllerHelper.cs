@@ -70,6 +70,7 @@ public class OVRControllerHelper : MonoBehaviour
     /// </summary>
     public OVRInput.Controller m_controller;
 
+
     /// <summary>
     /// The animator component that contains the controller animation controller for animating buttons and triggers.
     /// </summary>
@@ -95,6 +96,7 @@ public class OVRControllerHelper : MonoBehaviour
     private bool m_prevControllerConnected = false;
     private bool m_prevControllerConnectedCached = false;
 
+
     void Start()
     {
         if (OVRManager.OVRManagerinitialized)
@@ -112,13 +114,15 @@ public class OVRControllerHelper : MonoBehaviour
         OVRPlugin.Hand controllerHand = m_controller == OVRInput.Controller.LTouch
             ? OVRPlugin.Hand.HandLeft
             : OVRPlugin.Hand.HandRight;
+        OVRPlugin.InteractionProfile profile = OVRPlugin.GetCurrentInteractionProfile(controllerHand);
+
         switch (headset)
         {
             case OVRPlugin.SystemHeadset.Rift_CV1:
                 activeControllerType = ControllerType.Rift;
                 break;
             case OVRPlugin.SystemHeadset.Oculus_Quest_2:
-                if (OVRPlugin.GetCurrentInteractionProfile(controllerHand) == OVRPlugin.InteractionProfile.TouchPro)
+                if (profile == OVRPlugin.InteractionProfile.TouchPro)
                 {
                     activeControllerType = ControllerType.TouchPro;
                 }
@@ -129,7 +133,7 @@ public class OVRControllerHelper : MonoBehaviour
 
                 break;
             case OVRPlugin.SystemHeadset.Oculus_Link_Quest_2:
-                if (OVRPlugin.GetCurrentInteractionProfile(controllerHand) == OVRPlugin.InteractionProfile.TouchPro)
+                if (profile == OVRPlugin.InteractionProfile.TouchPro)
                 {
                     activeControllerType = ControllerType.TouchPro;
                 }
@@ -182,6 +186,7 @@ public class OVRControllerHelper : MonoBehaviour
                 return;
             }
         }
+
 
         bool controllerConnected = OVRInput.IsControllerConnected(m_controller);
 
@@ -269,7 +274,9 @@ public class OVRControllerHelper : MonoBehaviour
                     : m_modelMetaTouchProRightController;
             }
 
-            m_activeController.SetActive(m_hasInputFocus && controllerConnected);
+            bool shouldSetControllerActive = m_hasInputFocus && controllerConnected;
+
+            m_activeController.SetActive(shouldSetControllerActive);
 
             m_prevControllerConnected = controllerConnected;
             m_prevControllerConnectedCached = true;

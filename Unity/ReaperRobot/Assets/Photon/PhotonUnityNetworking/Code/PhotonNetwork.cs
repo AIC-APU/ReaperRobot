@@ -64,7 +64,7 @@ namespace Photon.Pun
     public static partial class PhotonNetwork
     {
         /// <summary>Version number of PUN. Used in the AppVersion, which separates your playerbase in matchmaking.</summary>
-        public const string PunVersion = "2.41";
+        public const string PunVersion = "2.42";
 
         /// <summary>Version number of your game. Setting this updates the AppVersion, which separates your playerbase in matchmaking.</summary>
         /// <remarks>
@@ -1372,7 +1372,7 @@ namespace Photon.Pun
 
             if (NetworkingClient == null)
             {
-                return; // Surpress error when quitting playmode in the editor
+                return; // Suppress error when quitting playmode in the editor
             }
 
             NetworkingClient.Disconnect();
@@ -3201,11 +3201,12 @@ namespace Photon.Pun
             }
 
 
-            // in the editor, store the settings file as it's not loaded
-            #if  UNITY_EDITOR
-            // don't save the settings before OnProjectUpdated got called (this hints at an ongoing import/load)
-            if (!PhotonEditorUtils.ProjectChangedWasCalled)
+            #if UNITY_EDITOR
+            // in the editor, store the settings file as it could not be loaded
+            // unless Unity still imports assets
+            if (UnityEditor.EditorApplication.isUpdating)
             {
+                EditorApplication.delayCall += delegate { LoadOrCreateSettings(true); };
                 return;
             }
 

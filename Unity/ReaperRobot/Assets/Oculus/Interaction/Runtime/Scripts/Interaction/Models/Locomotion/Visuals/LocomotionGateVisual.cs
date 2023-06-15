@@ -67,6 +67,7 @@ namespace Oculus.Interaction.Locomotion
         private TubePoint[] _teleportDownPoints;
         private TubePoint[] _turningPoints;
 
+        private LocomotionGate.LocomotionMode _prevLocomotionMode = LocomotionGate.LocomotionMode.None;
         protected bool _started;
 
         private Vector2 TurnLimits
@@ -99,7 +100,7 @@ namespace Oculus.Interaction.Locomotion
             }
         }
 
-        protected void Start()
+        protected virtual void Start()
         {
             this.BeginStart(ref _started);
             this.AssertField(_locomotionGate, nameof(_locomotionGate));
@@ -113,7 +114,7 @@ namespace Oculus.Interaction.Locomotion
             this.EndStart(ref _started);
         }
 
-        protected void LateUpdate()
+        protected virtual void LateUpdate()
         {
             if (_locomotionGate.ActiveMode == LocomotionGate.LocomotionMode.None)
             {
@@ -123,8 +124,10 @@ namespace Oculus.Interaction.Locomotion
             {
                 Show(true);
                 UpdatePosition();
-                UpdateActiveSegment();
+                bool redraw = _prevLocomotionMode != _locomotionGate.ActiveMode;
+                UpdateActiveSegment(redraw);
             }
+            _prevLocomotionMode = _locomotionGate.ActiveMode;
         }
 
         private void Show(bool show)
@@ -132,7 +135,7 @@ namespace Oculus.Interaction.Locomotion
             _ring.enabled = show;
         }
 
-        private void UpdateActiveSegment()
+        private void UpdateActiveSegment(bool redraw)
         {
             float circleLength = 2 * Mathf.PI * _radius;
             if (_locomotionGate.ActiveMode == LocomotionGate.LocomotionMode.Turn)
@@ -146,7 +149,10 @@ namespace Oculus.Interaction.Locomotion
                 _ringTube.StartFadeThresold = circleLength * pointerPosStart + gap;
                 _ringTube.EndFadeThresold = circleLength * pointerPosEnd + gap;
                 _ringTube.InvertThreshold = true;
-                _ringTube.RenderTube(_turningPoints);
+                if (redraw)
+                {
+                    _ringTube.RenderTube(_turningPoints);
+                }
             }
             else if (_locomotionGate.ActiveMode == LocomotionGate.LocomotionMode.TeleportUp)
             {
@@ -156,7 +162,10 @@ namespace Oculus.Interaction.Locomotion
                 _ringTube.StartFadeThresold = circleLength * pointerPos + _fadeGap;
                 _ringTube.EndFadeThresold = -100f;
                 _ringTube.InvertThreshold = false;
-                _ringTube.RenderTube(_teleportUpPoints);
+                if (redraw)
+                {
+                    _ringTube.RenderTube(_teleportUpPoints);
+                }
             }
             else if (_locomotionGate.ActiveMode == LocomotionGate.LocomotionMode.TeleportDown)
             {
@@ -166,7 +175,15 @@ namespace Oculus.Interaction.Locomotion
                 _ringTube.StartFadeThresold = -100f;
                 _ringTube.EndFadeThresold = circleLength * pointerPos + _fadeGap;
                 _ringTube.InvertThreshold = false;
-                _ringTube.RenderTube(_teleportDownPoints);
+                if (redraw)
+                {
+                    _ringTube.RenderTube(_teleportDownPoints);
+                }
+            }
+
+            if (!redraw)
+            {
+                _ringTube.RedrawFadeThresholds();
             }
         }
 

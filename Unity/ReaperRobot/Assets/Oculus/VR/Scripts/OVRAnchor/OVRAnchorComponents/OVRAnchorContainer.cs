@@ -21,6 +21,15 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// Represents a container for other <see cref="OVRAnchor"/>s.
+/// </summary>
+/// <remarks>
+/// This component can be accessed from an <see cref="OVRAnchor"/> that supports it by calling
+/// <see cref="OVRAnchor.GetComponent{T}"/> from the anchor.s
+/// </remarks>
+/// <seealso cref="Uuids"/>
+/// <seealso cref="FetchChildrenAsync"/>
 public readonly partial struct OVRAnchorContainer : IOVRAnchorComponent<OVRAnchorContainer>,
     IEquatable<OVRAnchorContainer>
 {

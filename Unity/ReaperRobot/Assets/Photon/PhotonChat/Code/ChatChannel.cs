@@ -75,7 +75,7 @@ namespace Photon.Chat
         {
             this.Name = name;
         }
-
+        
         /// <summary>Used internally to add messages to this channel.</summary>
         public void Add(string sender, object message, int msgId)
         {
@@ -197,7 +197,7 @@ namespace Photon.Chat
                 this.usersProperties = new Dictionary<string, Dictionary<object, object>>();
             }
             Dictionary<object, object> userProperties;
-            if (!this.usersProperties.TryGetValue(userId, out userProperties))
+            if (!this.usersProperties.TryGetValue(userId, out userProperties)) 
             {
                 userProperties = new Dictionary<object, object>();
                 this.usersProperties.Add(userId, userProperties);
@@ -215,7 +215,7 @@ namespace Photon.Chat
                 }
             }
         }
-
+        
         internal bool TryGetChannelProperty<T>(object propertyKey, out T propertyValue)
         {
             propertyValue = default;

@@ -18,10 +18,34 @@
  * limitations under the License.
  */
 
+/// <summary>
+/// Interface shared by all components from an <see cref="OVRAnchor"/>.
+/// </summary>
+/// <typeparam name="T">The actual implementation Type of the interface.</typeparam>
+/// <seealso cref="OVRAnchor.FetchAnchorsAsync{T}"/>
+/// <seealso cref="OVRAnchor.TryGetComponent{T}"/>
+/// <seealso cref="OVRAnchor.SupportsComponent{T}"/>
 public interface IOVRAnchorComponent<T>
 {
+    /// <summary>
+    /// Whether this object represents a valid anchor component.
+    /// </summary>
     public bool IsNull { get; }
+
+    /// <summary>
+    /// True if this component is enabled and no change to its enabled status is pending.
+    /// </summary>
     public bool IsEnabled { get; }
+
+    /// <summary>
+    /// Sets the enabled status of this component.
+    /// </summary>
+    /// <remarks>
+    /// A component must be enabled to access its data.
+    /// </remarks>
+    /// <param name="enabled">The desired state of the component.</param>
+    /// <param name="timeout">The timeout, in seconds, for the operation. Use zero to indicate an infinite timeout.</param>
+    /// <returns>Returns an <see cref="OVRTask{T}" /> whose result indicates the result of the operation.</returns>
     public OVRTask<bool> SetEnabledAsync(bool enable, double timeout = 0);
 
     internal OVRPlugin.SpaceComponentType Type { get; }

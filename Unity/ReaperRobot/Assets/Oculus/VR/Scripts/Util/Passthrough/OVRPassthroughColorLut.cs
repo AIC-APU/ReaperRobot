@@ -19,14 +19,13 @@
  */
 
 using System.Runtime.InteropServices;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 
 public class OVRPassthroughColorLut : System.IDisposable
 {
-    /// <summary>
-    /// System limit on the maximum allowed LUT resolution.
-    /// </summary>
-    public static int MaxResolution { get; } = 64;
+    private const int RecomendedBatchSize = 128;
 
     public uint Resolution { get; private set; }
     public ColorChannels Channels { get; private set; }
@@ -40,18 +39,15 @@ public class OVRPassthroughColorLut : System.IDisposable
     private object _locker = new object();
 
     /// <summary>
-    /// Initialize the color LUT data from a texture. If the texture is opaque, `channels`
-    /// can be set to `ColorChannels.Rgb`, otherwise `ColorChannels.Rgba` should be used.
+    /// Initialize the color LUT data from a texture. Color channels are inferred from texture format.
     /// Use `UpdateFrom()` to update LUT data after construction.
     /// </summary>
     /// <param name="initialLutTexture">Texture to initialize the LUT from</param>
-    /// <param name="channels">Color channels for one color LUT entry</param>
     /// <param name="flipY">Flag to inform whether the LUT texture should be flipped vertically. This is needed for LUT images which have color (0, 0, 0)
     /// in the top-left corner. Some color grading systems, e.g. Unity post-processing, have color (0, 0, 0) in the bottom-left corner,
     /// in which case flipping is not needed.</param>
-    public OVRPassthroughColorLut(Texture2D initialLutTexture, ColorChannels channels = ColorChannels.Rgba,
-        bool flipY = true)
-        : this(initialLutTexture.width * initialLutTexture.height, channels)
+    public OVRPassthroughColorLut(Texture2D initialLutTexture, bool flipY = true)
+        : this(GetTextureSize(initialLutTexture), GetChannelsForTextureFormat(initialLutTexture.format))
     {
         Create(CreateLutDataFromTexture(initialLutTexture, flipY));
     }
@@ -66,7 +62,37 @@ public class OVRPassthroughColorLut : System.IDisposable
     /// <param name="initialColorLut">Color array to initialize the LUT from</param>
     /// <param name="channels">Color channels for one color LUT entry</param>
     public OVRPassthroughColorLut(Color[] initialColorLut, ColorChannels channels)
-        : this(initialColorLut.Length, channels)
+        : this(GetArraySize(initialColorLut), channels)
+    {
+        Create(CreateLutDataFromArray(initialColorLut));
+    }
+
+    /// <summary>
+    /// Set the color LUT data from an array of `Color`. The resolution is
+    /// inferred from the array size, thus the size needs to be a result of
+    /// `resolution = size ^ 3 * numColorChannels`, where `numColorChannels` depends
+    /// on `channels`.
+    /// Use `UpdateFrom()` to update color LUT data after construction.
+    /// </summary>
+    /// <param name="initialColorLut">Color32 array to initialize the LUT from</param>
+    /// <param name="channels">Color channels for one color LUT entry</param>
+    public OVRPassthroughColorLut(Color32[] initialColorLut, ColorChannels channels)
+        : this(GetArraySize(initialColorLut), channels)
+    {
+        Create(CreateLutDataFromArray(initialColorLut));
+    }
+
+    /// <summary>
+    /// Set the color LUT data from an array of `Color`. The resolution is
+    /// inferred from the array size, thus the size needs to be a result of
+    /// `resolution = size ^ 3 * numColorChannels`, where `numColorChannels` depends
+    /// on `channels`.
+    /// Use `UpdateFrom()` to update color LUT data after construction.
+    /// </summary>
+    /// <param name="initialColorLut">Color byte array to initialize the LUT from</param>
+    /// <param name="channels">Color channels for one color LUT entry</param>
+    public OVRPassthroughColorLut(byte[] initialColorLut, ColorChannels channels)
+        : this(GetTextureSizeFromByteArray(initialColorLut, channels), channels)
     {
         Create(CreateLutDataFromArray(initialColorLut));
     }
@@ -78,22 +104,39 @@ public class OVRPassthroughColorLut : System.IDisposable
     /// <param name="colors">Color array</param>
     public void UpdateFrom(Color[] colors)
     {
-        if (!IsInitialized)
+        if (IsValidLutUpdate(colors, _channelCount))
         {
-            Debug.LogError("Can not update an uninitialized lut object.");
-            return;
+            WriteColorsAsBytes(colors, _colorBytes);
+            OVRPlugin.UpdatePassthroughColorLut(_colorLutHandle, _lutData);
         }
+    }
 
-        var resolution = GetResolutionFromSize(colors.Length);
-
-        if (resolution != Resolution)
+    /// <summary>
+    /// Update color LUT data from an array of Colors.
+    /// Color channels and resolution must match the original.
+    /// </summary>
+    /// <param name="colors">Color array</param>
+    public void UpdateFrom(Color32[] colors)
+    {
+        if (IsValidLutUpdate(colors, _channelCount))
         {
-            Debug.LogError($"Can only update with the same resolution of {Resolution}.");
-            return;
+            WriteColorsAsBytes(colors, _colorBytes);
+            OVRPlugin.UpdatePassthroughColorLut(_colorLutHandle, _lutData);
         }
+    }
 
-        WriteColorsAsBytes(colors, _colorBytes);
-        OVRPlugin.UpdatePassthroughColorLut(_colorLutHandle, _lutData);
+    /// <summary>
+    /// Update color LUT data from an array of Colors.
+    /// Color channels and resolution must match the original.
+    /// </summary>
+    /// <param name="colors">Color array</param>
+    public void UpdateFrom(byte[] colors)
+    {
+        if (IsValidLutUpdate(colors, 1))
+        {
+            colors.CopyTo(_colorBytes, 0);
+            OVRPlugin.UpdatePassthroughColorLut(_colorLutHandle, _lutData);
+        }
     }
 
     /// <summary>
@@ -106,22 +149,11 @@ public class OVRPassthroughColorLut : System.IDisposable
     /// in which case flipping is not needed.</param>
     public void UpdateFrom(Texture2D lutTexture, bool flipY = true)
     {
-        if (!IsInitialized)
+        if (IsValidUpdateResolution(GetTextureSize(lutTexture), _channelCount))
         {
-            Debug.LogError("Can not update an uninitialized lut object.");
-            return;
+            ColorLutTextureConverter.TextureToColorByteMap(lutTexture, _channelCount, _colorBytes, flipY);
+            OVRPlugin.UpdatePassthroughColorLut(_colorLutHandle, _lutData);
         }
-
-        var resolution = GetResolutionFromSize(lutTexture.width * lutTexture.height);
-
-        if (resolution != Resolution)
-        {
-            Debug.LogError($"Can only update with the same resolution of {Resolution}.");
-            return;
-        }
-
-        ColorLutTextureConverter.TextureToColorByteMap(lutTexture, _channelCount, _colorBytes, flipY);
-        OVRPlugin.UpdatePassthroughColorLut(_colorLutHandle, _lutData);
     }
 
     public void Dispose()
@@ -145,6 +177,16 @@ public class OVRPassthroughColorLut : System.IDisposable
     /// <returns></returns>
     public static bool IsTextureSupported(Texture2D texture, out string errorMessage)
     {
+        try
+        {
+            GetChannelsForTextureFormat(texture.format);
+        }
+        catch (System.ArgumentException e)
+        {
+            errorMessage = e.Message;
+            return false;
+        }
+
         if (!ColorLutTextureConverter.TryGetTextureLayout(texture.width, texture.height, out _, out _,
                 out var layoutMessage))
         {
@@ -167,22 +209,120 @@ public class OVRPassthroughColorLut : System.IDisposable
     {
         Channels = channels;
         Resolution = GetResolutionFromSize(size);
-        _channelCount = channels == ColorChannels.Rgb ? 3 : 4;
+        _channelCount = ChannelsToCount(channels);
 
         if (!IsResolutionAccepted(Resolution, size, out var message))
         {
-            throw new System.Exception(message);
+            throw new System.ArgumentException(message);
         }
+
+        var passthroughCapabilities = OVRManager.GetPassthroughCapabilities();
+        if (passthroughCapabilities != null)
+        {
+            if (Resolution > passthroughCapabilities.MaxColorLutResolution)
+            {
+                throw new System.Exception(
+                    $"Color LUT resolution {Resolution} exceeds the maximum of {passthroughCapabilities.MaxColorLutResolution}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Unable to validate the maximum LUT resolution. Please instantiate OVRPassthroughColorLut after initializing the Oculus XR Plugin.");
+        }
+    }
+
+    private bool IsValidUpdateResolution(int lutSize, int elementByteSize)
+    {
+        if (!IsInitialized)
+        {
+            Debug.LogError("Can not update an uninitialized lut object.");
+            return false;
+        }
+
+        var resolution = GetResolutionFromSize(lutSize * elementByteSize / _channelCount);
+
+        if (resolution != Resolution)
+        {
+            Debug.LogError($"Can only update with the same resolution of {Resolution}.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool IsValidLutUpdate<T>(T[] colorArray, int elementByteSize)
+    {
+        var arraySize = GetArraySize(colorArray);
+
+        if (!IsValidUpdateResolution(arraySize, elementByteSize))
+        {
+            return false;
+        }
+
+        if (arraySize * elementByteSize != _colorBytes.Length)
+        {
+            Debug.LogError("New color byte array doesn't match LUT size.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private static ColorChannels GetChannelsForTextureFormat(TextureFormat format)
+    {
+        switch (format)
+        {
+            case TextureFormat.RGB24:
+                return ColorChannels.Rgb;
+            case TextureFormat.RGBA32:
+                return ColorChannels.Rgba;
+            default:
+                throw new System.ArgumentException(
+                    $"Texture format {format} not supported for Color LUTs. Supported formats are RGB24 and RGBA32.");
+        }
+    }
+
+    private static int GetTextureSizeFromByteArray(byte[] initialColorLut, ColorChannels channels)
+    {
+        var arraySize = GetArraySize(initialColorLut);
+        var channelCount = ChannelsToCount(channels);
+        if (arraySize % channelCount != 0)
+        {
+            throw new System.ArgumentException(
+                $"Invalid byte array given, {channelCount} bytes required for each color for {channels} color channels.");
+        }
+
+        return initialColorLut.Length / channelCount;
+    }
+
+    private static int GetTextureSize(Texture2D texture)
+    {
+        if (texture == null)
+        {
+            throw new System.ArgumentNullException("Lut texture is undefined.");
+        }
+
+        return texture.width * texture.height;
+    }
+
+    private static int GetArraySize<T>(T[] array)
+    {
+        if (array == null)
+        {
+            throw new System.ArgumentNullException($"Lut {typeof(T).Name} array is undefined.");
+        }
+
+        return array.Length;
+    }
+
+    private static int ChannelsToCount(ColorChannels channels)
+    {
+        return channels == ColorChannels.Rgb ? 3 : 4;
     }
 
     private static bool IsResolutionAccepted(uint resolution, int size, out string errorMessage)
     {
-        if (resolution > MaxResolution)
-        {
-            errorMessage = $"Color LUT texture resolution exceeds {MaxResolution} maximum.";
-            return false;
-        }
-
         if (!IsPowerOfTwo(resolution))
         {
             errorMessage = "Color LUT texture resolution should be a power of 2.";
@@ -244,11 +384,44 @@ public class OVRPassthroughColorLut : System.IDisposable
         return lutData;
     }
 
+    private OVRPlugin.PassthroughColorLutData CreateLutDataFromArray(Color32[] colors)
+    {
+        var lutData = CreateLutData(out _colorBytes);
+        WriteColorsAsBytes(colors, _colorBytes);
+        return lutData;
+    }
+
+    private OVRPlugin.PassthroughColorLutData CreateLutDataFromArray(byte[] colors)
+    {
+        var lutData = CreateLutData(out _colorBytes);
+        colors.CopyTo(_colorBytes, 0);
+        return lutData;
+    }
+
     private void WriteColorsAsBytes(Color[] colors, byte[] target)
+    {
+        using var source = new NativeArray<Color>(colors, Allocator.TempJob);
+        using var targetNative = new NativeArray<byte>(target, Allocator.TempJob);
+
+        var job = new WriteColorsAsBytesJob
+        {
+            source = source,
+            target = targetNative,
+            channelCount = _channelCount
+        }.Schedule(source.Length, RecomendedBatchSize);
+
+        job.Complete();
+        targetNative.CopyTo(target);
+    }
+
+    private void WriteColorsAsBytes(Color32[] colors, byte[] target)
     {
         for (int i = 0; i < colors.Length; i++)
         {
-            ColorLutTextureConverter.WriteColorAsBytes(_channelCount, colors[i], i * _channelCount, target);
+            for (int c = 0; c < _channelCount; c++)
+            {
+                target[i * _channelCount + c] = colors[i][c];
+            }
         }
     }
 
@@ -275,6 +448,27 @@ public class OVRPassthroughColorLut : System.IDisposable
         Rgba = OVRPlugin.PassthroughColorLutChannels.Rgba
     }
 
+    private struct WriteColorsAsBytesJob : IJobParallelFor
+    {
+        [NativeDisableParallelForRestriction]
+        [WriteOnly]
+        public NativeArray<byte> target;
+
+        [NativeDisableParallelForRestriction]
+        [ReadOnly]
+        public NativeArray<Color> source;
+
+        public int channelCount;
+
+        public void Execute(int index)
+        {
+            for (int c = 0; c < channelCount; c++)
+            {
+                target[index * channelCount + c] = (byte)Mathf.Min(source[index][c] * 255.0f, 255.0f);
+            }
+        }
+    }
+
     private static class ColorLutTextureConverter
     {
         /// <summary>
@@ -286,30 +480,21 @@ public class OVRPassthroughColorLut : System.IDisposable
         /// <param name="flipY">Flag to inform whether the LUT texture should be flipped vertically</param>
         public static void TextureToColorByteMap(Texture2D lut, int channelCount, byte[] target, bool flipY)
         {
-            MapColorValues(GetTextureSettings(lut, channelCount, flipY), lut.GetPixels(0), target);
+            MapColorValues(GetTextureSettings(lut, channelCount, flipY), lut.GetPixelData<byte>(0), target);
         }
 
-        private static void MapColorValues(TextureSettings settings, Color[] colors, byte[] target)
+        private static void MapColorValues(TextureSettings settings, NativeArray<byte> source, byte[] target)
         {
-            for (int bi = 0; bi < settings.Resolution; bi++)
+            using var targetNative = new NativeArray<byte>(target, Allocator.TempJob);
+            var job = new MapColorValuesJob
             {
-                int bi_row = bi % settings.SlicesPerRow;
-                int bi_col = (int)Mathf.Floor(bi / settings.SlicesPerRow);
-                for (int gi = 0; gi < settings.Resolution; gi++)
-                {
-                    for (int ri = 0; ri < settings.Resolution; ri++)
-                    {
-                        int sX = ri + bi_row * settings.Resolution;
-                        int sY = gi + bi_col * settings.Resolution;
-                        int y = settings.FlipY ? settings.Height - sY - 1 : sY;
-                        int sourceIndex = sX + y * settings.Width;
-                        int targetIndex = bi * settings.Resolution * settings.Resolution +
-                                          gi * settings.Resolution + ri;
-                        WriteColorAsBytes(settings.ChannelCount, colors[sourceIndex],
-                            targetIndex * settings.ChannelCount, target);
-                    }
-                }
-            }
+                settings = settings,
+                source = source,
+                target = targetNative
+            }.Schedule(settings.Resolution * settings.Resolution, settings.Resolution);
+
+            job.Complete();
+            targetNative.CopyTo(target);
         }
 
         private static TextureSettings GetTextureSettings(Texture2D lut, int channelCount, bool flipY)
@@ -322,14 +507,6 @@ public class OVRPassthroughColorLut : System.IDisposable
             else
             {
                 throw new System.Exception(message);
-            }
-        }
-
-        public static void WriteColorAsBytes(int channels, Color color, int index, byte[] target)
-        {
-            for (int c = 0; c < channels; c++)
-            {
-                target[index + c] = (byte)Mathf.Min(color[c] * 255.0f, 255.0f);
             }
         }
 
@@ -373,6 +550,37 @@ public class OVRPassthroughColorLut : System.IDisposable
 
             errorMessage = string.Empty;
             return true;
+        }
+
+        private struct MapColorValuesJob : IJobParallelFor
+        {
+            public TextureSettings settings;
+
+            [NativeDisableParallelForRestriction]
+            [WriteOnly]
+            public NativeArray<byte> target;
+
+            [NativeDisableParallelForRestriction]
+            [ReadOnly]
+            public NativeArray<byte> source;
+
+            public void Execute(int index)
+            {
+                var bi = index / settings.Resolution;
+                var gi = index % settings.Resolution;
+                int bi_row = bi % settings.SlicesPerRow;
+                int bi_col = (int)Mathf.Floor(bi / settings.SlicesPerRow);
+                int sY = gi + bi_col * settings.Resolution;
+                int y = settings.FlipY ? settings.Height - sY - 1 : sY;
+                int sourceIndex = (bi_row * settings.Resolution + y * settings.Width) * settings.ChannelCount;
+                int targetIndex = (bi * settings.Resolution * settings.Resolution +
+                                   gi * settings.Resolution) * settings.ChannelCount;
+
+                for (int i = 0; i < settings.Resolution * settings.ChannelCount; i++)
+                {
+                    target[targetIndex + i] = source[sourceIndex + i];
+                }
+            }
         }
 
         private struct TextureSettings

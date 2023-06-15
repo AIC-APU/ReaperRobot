@@ -157,7 +157,7 @@ internal class OVRConfigurationTask
 
         var isDone = IsDone(buildTargetGroup);
 
-        OVRProjectSetupTelemetryEvent.Start(OVRProjectSetupTelemetryEvent.EventTypes.Fix)
+        OVRTelemetry.Start(OVRProjectSetupTelemetryEvent.EventTypes.Fix)
             .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Uid, Uid.ToString())
             .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Level,
                 Level.GetValue(buildTargetGroup).ToString())

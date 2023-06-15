@@ -32,24 +32,33 @@ using Debug = UnityEngine.Debug;
 public class OVRSceneManager : MonoBehaviour
 {
     /// <summary>
-    /// A prefab that will be used to instantiate any Plane found when querying the Scene model
+    /// A prefab that will be used to instantiate any Plane found
+    /// when querying the Scene model. If the anchor contains both
+    /// Volume and Plane elements, <see cref="VolumePrefab"/> will
+    /// be used instead.
     /// </summary>
     [FormerlySerializedAs("planePrefab")]
-    [Tooltip("A prefab that will be used to instantiate any Plane found when querying the Scene model")]
+    [Tooltip("A prefab that will be used to instantiate any Plane found " +
+             "when querying the Scene model. If the anchor contains both " +
+             "Volume and Plane elements, Volume will be used instead.")]
     public OVRSceneAnchor PlanePrefab;
 
     /// <summary>
-    /// A prefab that will be used to instantiate any Volume found when querying the Scene model
+    /// A prefab that will be used to instantiate any Volume found
+    /// when querying the Scene model. This anchor may also contain
+    /// Plane elements.
     /// </summary>
     [FormerlySerializedAs("volumePrefab")]
-    [Tooltip("A prefab that will be used to instantiate any Volume found when querying the Scene model")]
+    [Tooltip("A prefab that will be used to instantiate any Volume found " +
+             "when querying the Scene model. This anchor may also contain " +
+             "Plane elements.")]
     public OVRSceneAnchor VolumePrefab;
 
     /// <summary>
-    /// Overrides the instantiation of the generic Plane and Volume prefabs with specialized ones
+    /// Overrides the instantiation of the generic Plane and Volume prefabs with specialized ones.
     /// </summary>
     [FormerlySerializedAs("prefabOverrides")]
-    [Tooltip("Overrides the instantiation of the generic Plane/Volume prefabs with specialized ones")]
+    [Tooltip("Overrides the instantiation of the generic Plane/Volume prefabs with specialized ones.")]
     public List<OVRScenePrefabOverride> PrefabOverrides = new List<OVRScenePrefabOverride>();
 
     /// <summary>
@@ -146,7 +155,9 @@ public class OVRSceneManager : MonoBehaviour
 
         /// <summary>
         /// Represents an <see cref="OVRSceneAnchor"/> that is classified as a desk.
+        /// This label has been deprecated in favor of <see cref="Table"/>.
         /// </summary>
+        [Obsolete("Deprecated. Use Table classification instead.")]
         public const string Desk = "DESK";
 
         /// <summary>
@@ -194,16 +205,25 @@ public class OVRSceneManager : MonoBehaviour
         /// </summary>
         public const string Plant = "PLANT";
 
+        /// <summary>
+        /// Represents an <see cref="OVRSceneAnchor"/> that is classified as a table.
+        /// </summary>
+        public const string Table = "TABLE";
+
+
 
         /// <summary>
         /// The list of possible semantic labels.
         /// </summary>
+
         public static IReadOnlyList<string> List { get; } = new[]
         {
             Floor,
             Ceiling,
             WallFace,
+#pragma warning disable CS0618 // Type or member is obsolete
             Desk,
+#pragma warning restore CS0618 // Type or member is obsolete
             Couch,
             DoorFrame,
             WindowFrame,
@@ -213,6 +233,7 @@ public class OVRSceneManager : MonoBehaviour
             Screen,
             Lamp,
             Plant,
+            Table,
         };
     }
 
@@ -486,7 +507,8 @@ public class OVRSceneManager : MonoBehaviour
                 plane.UpdateTransform();
                 plane.RequestBoundary();
             }
-            else if (sceneAnchor.TryGetComponent(out OVRSceneVolume volume))
+
+            if (sceneAnchor.TryGetComponent(out OVRSceneVolume volume))
             {
                 volume.UpdateTransform();
             }

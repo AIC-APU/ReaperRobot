@@ -207,6 +207,10 @@ namespace Oculus.Interaction.Locomotion
         {
             Vector3 up = _stabilizationPoint.up;
             Vector3 direction = (pose.position - _stabilizationPoint.position).normalized;
+            if (direction.sqrMagnitude == 0f)
+            {
+                direction = _stabilizationPoint.forward;
+            }
             Quaternion stabilizedRotation = Quaternion.LookRotation(direction);
 
             float mixing = Vector3.Dot(direction, up) * 0.5f + 0.5f;

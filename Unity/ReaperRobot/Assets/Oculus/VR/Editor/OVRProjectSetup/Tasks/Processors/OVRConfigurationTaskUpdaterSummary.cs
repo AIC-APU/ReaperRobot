@@ -92,14 +92,16 @@ internal class OVRConfigurationTaskUpdaterSummary
         {
             if (GetTotalNumberOfFixes() > 0)
             {
-                interactionFlowEvent = OVRProjectSetupTelemetryEvent
+                interactionFlowEvent = OVRTelemetry
                     .Start(OVRProjectSetupTelemetryEvent.EventTypes.InteractionFlow)
-                    .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Level, HighestFixLevel?.ToString() ?? "None")
+                    .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Level,
+                        HighestFixLevel?.ToString() ?? "None")
                     .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Count,
                         GetNumberOfFixes(HighestFixLevel ?? OVRProjectSetup.TaskLevel.Required).ToString())
                     .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Level,
                         HighestFixLevel?.ToString() ?? "None")
-                    .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Value, GetTotalNumberOfFixes().ToString())
+                    .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Value,
+                        GetTotalNumberOfFixes().ToString())
                     .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.BuildTargetGroup,
                         BuildTargetGroup.ToString());
 
@@ -108,11 +110,13 @@ internal class OVRConfigurationTaskUpdaterSummary
         }
         else
         {
-            interactionFlowEvent.AddAnnotation(
+            interactionFlowEvent = interactionFlowEvent?.AddAnnotation(
                     OVRProjectSetupTelemetryEvent.AnnotationTypes.BuildTargetGroupAfter,
                     BuildTargetGroup.ToString())
                 .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.ValueAfter,
                     GetTotalNumberOfFixes().ToString());
+
+            OVRProjectSetupSettingsProvider.InteractionFlowEvent = interactionFlowEvent;
         }
     }
 
@@ -170,7 +174,7 @@ internal class OVRConfigurationTaskUpdaterSummary
 
     public void LogEvent()
     {
-        OVRProjectSetupTelemetryEvent.Start(OVRProjectSetupTelemetryEvent.EventTypes.Summary)
+        OVRTelemetry.Start(OVRProjectSetupTelemetryEvent.EventTypes.Summary)
             .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Level, HighestFixLevel?.ToString() ?? "None")
             .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Count,
                 GetNumberOfFixes(HighestFixLevel ?? OVRProjectSetup.TaskLevel.Required).ToString())

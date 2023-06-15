@@ -18,7 +18,6 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Unity.Collections;
 using UnityEngine;
@@ -65,6 +64,19 @@ namespace Oculus.Interaction
             set
             {
                 _renderQueue = value;
+            }
+        }
+        [SerializeField]
+        private Vector2 _renderOffset = Vector2.zero;
+        public Vector2 RenderOffset
+        {
+            get
+            {
+                return _renderOffset;
+            }
+            set
+            {
+                _renderOffset = value;
             }
         }
 
@@ -190,6 +202,7 @@ namespace Oculus.Interaction
         }
 
         public float Progress { get; set; } = 0f;
+        public float TotalLength => _totalLength;
 
         private VertexAttributeDescriptor[] _dataLayout;
         private NativeArray<VertexLayout> _vertsData;
@@ -198,8 +211,12 @@ namespace Oculus.Interaction
         private int[] _tris;
         private int _initializedSteps = -1;
 
+        private float _totalLength = 0f;
+
         private static readonly int _fadeLimitsShaderID = Shader.PropertyToID("_FadeLimit");
         private static readonly int _fadeSignShaderID = Shader.PropertyToID("_FadeSign");
+        private static readonly int _offsetFactorShaderPropertyID = Shader.PropertyToID("_OffsetFactor");
+        private static readonly int _offsetUnitsShaderPropertyID = Shader.PropertyToID("_OffsetUnits");
 
         #region Editor events
 
@@ -229,7 +246,12 @@ namespace Oculus.Interaction
             _renderer.enabled = false;
         }
 
-        public void RenderTube(TubePoint[] points)
+        /// <summary>
+        /// Updates the mesh data for the tube with  the specified points
+        /// </summary>
+        /// <param name="points">The points that the tube must follow</param>
+        /// <param name="space">Indicates if the points are specified in local space or world space</param>
+        public void RenderTube(TubePoint[] points, Space space = Space.Self)
         {
             int steps = points.Length;
             if (steps != _initializedSteps)
@@ -237,11 +259,13 @@ namespace Oculus.Interaction
                 InitializeMeshData(steps);
                 _initializedSteps = steps;
             }
-            UpdateMeshData(points);
-            _renderer.enabled = true;
-            _renderer.material.renderQueue = _renderQueue;
+            UpdateMeshData(points, space);
+            _renderer.enabled = enabled;
         }
 
+        /// <summary>
+        /// Hides the renderer of the tube
+        /// </summary>
         public void Hide()
         {
             _renderer.enabled = false;
@@ -261,31 +285,56 @@ namespace Oculus.Interaction
             };
 
             int vertsCount = SetVertexCount(steps, _divisions, _bevel);
+            SubMeshDescriptor submeshDesc = new SubMeshDescriptor(0, _tris.Length, MeshTopology.Triangles);
+
             _vertsData = new NativeArray<VertexLayout>(vertsCount, Allocator.Persistent);
             _mesh = new Mesh();
             _mesh.SetVertexBufferParams(vertsCount, _dataLayout);
-            _mesh.SetTriangles(_tris, 0);
+
+            _mesh.SetIndexBufferParams(_tris.Length, IndexFormat.UInt32);
+            _mesh.SetIndexBufferData(_tris, 0, 0, _tris.Length);
+            _mesh.subMeshCount = 1;
+            _mesh.SetSubMesh(0, submeshDesc);
+
             _filter.mesh = _mesh;
         }
 
-        private void UpdateMeshData(TubePoint[] points)
+        private void UpdateMeshData(TubePoint[] points, Space space)
         {
             int steps = points.Length;
             float totalLength = 0f;
+            Vector3 prevPoint = Vector3.zero;
+            Pose pose = Pose.identity;
+            Pose start = Pose.identity;
+            Pose end = Pose.identity;
 
-            BevelCap(points[0], false, 0);
+            Pose rootPose = this.transform.GetPose(Space.World);
+            Quaternion inverseRootRotation = Quaternion.Inverse(rootPose.rotation);
+            Vector3 rootPositionScaled = new Vector3(
+                rootPose.position.x / this.transform.lossyScale.x,
+                rootPose.position.y / this.transform.lossyScale.y,
+                rootPose.position.z / this.transform.lossyScale.z);
+            float uniformScale = space == Space.World ? this.transform.lossyScale.x : 1f;
+
+            TransformPose(points[0], ref start);
+            TransformPose(points[points.Length - 1], ref end);
+
+            BevelCap(start, false, 0);
 
             for (int i = 0; i < steps; i++)
             {
-                Vector3 point = points[i].position;
-                Quaternion rotation = points[i].rotation;
+                TransformPose(points[i], ref pose);
+                Vector3 point = pose.position;
+                Quaternion rotation = pose.rotation;
+
                 float progress = points[i].relativeLength;
                 Color color = Gradient.Evaluate(progress) * _tint;
 
                 if (i > 0)
                 {
-                    totalLength += Vector3.Distance(point, points[i - 1].position);
+                    totalLength += Vector3.Distance(point, prevPoint);
                 }
+                prevPoint = point;
 
                 if (i / (steps - 1f) < Progress)
                 {
@@ -297,17 +346,40 @@ namespace Oculus.Interaction
                 WriteCircle(point, rotation, _radius, i + _bevel, progress);
             }
 
-            BevelCap(points[points.Length - 1], true, _bevel + steps);
+            BevelCap(end, true, _bevel + steps);
 
             _mesh.bounds = new Bounds(
-                (points[0].position + points[steps - 1].position) * 0.5f,
-                points[steps - 1].position - points[0].position);
+                (start.position + end.position) * 0.5f,
+                end.position - start.position);
             _mesh.SetVertexBufferData(_vertsData, 0, 0, _vertsData.Length, 0, MeshUpdateFlags.DontRecalculateBounds);
 
-            float originFadeIn = StartFadeThresold / totalLength;
-            float originFadeOut = (StartFadeThresold + Feather) / totalLength;
-            float endFadeIn = (totalLength - EndFadeThresold) / totalLength;
-            float endFadeOut = (totalLength - EndFadeThresold - Feather) / totalLength;
+            _totalLength = totalLength * uniformScale;
+
+            RedrawFadeThresholds();
+
+            void TransformPose(in TubePoint tubePoint, ref Pose pose)
+            {
+                if (space == Space.Self)
+                {
+                    pose.position = tubePoint.position;
+                    pose.rotation = tubePoint.rotation;
+                    return;
+                }
+
+                pose.position = inverseRootRotation * (tubePoint.position - rootPositionScaled);
+                pose.rotation = inverseRootRotation * tubePoint.rotation;
+            }
+        }
+
+        /// <summary>
+        /// Resubmits the fading thresholds data to the material without re-generating the mesh
+        /// </summary>
+        public void RedrawFadeThresholds()
+        {
+            float originFadeIn = StartFadeThresold / _totalLength;
+            float originFadeOut = (StartFadeThresold + Feather) / _totalLength;
+            float endFadeIn = (_totalLength - EndFadeThresold) / _totalLength;
+            float endFadeOut = (_totalLength - EndFadeThresold - Feather) / _totalLength;
 
             _renderer.material.SetVector(_fadeLimitsShaderID, new Vector4(
                 _invertThreshold ? originFadeOut : originFadeIn,
@@ -315,12 +387,16 @@ namespace Oculus.Interaction
                 endFadeOut,
                 endFadeIn));
             _renderer.material.SetFloat(_fadeSignShaderID, _invertThreshold ? -1 : 1);
+            _renderer.material.renderQueue = _renderQueue;
+
+            _renderer.material.SetFloat(_offsetFactorShaderPropertyID, _renderOffset.x);
+            _renderer.material.SetFloat(_offsetUnitsShaderPropertyID, _renderOffset.y);
         }
 
-        private void BevelCap(TubePoint tubePoint, bool end, int indexOffset)
+        private void BevelCap(in Pose pose, bool end, int indexOffset)
         {
-            Vector3 origin = tubePoint.position;
-            Quaternion rotation = tubePoint.rotation;
+            Vector3 origin = pose.position;
+            Quaternion rotation = pose.rotation;
             for (int i = 0; i < _bevel; i++)
             {
                 float radiusFactor = Mathf.InverseLerp(-1, _bevel + 1, i);
@@ -336,6 +412,13 @@ namespace Oculus.Interaction
 
         private void WriteCircle(Vector3 point, Quaternion rotation, float width, int index, float progress)
         {
+            Color color = Gradient.Evaluate(progress) * _tint;
+            if (progress < Progress)
+            {
+                color.a *= ProgressFade;
+            }
+            _layout.color = color;
+
             for (int j = 0; j <= _divisions; j++)
             {
                 float radius = 2 * Mathf.PI * j / _divisions;

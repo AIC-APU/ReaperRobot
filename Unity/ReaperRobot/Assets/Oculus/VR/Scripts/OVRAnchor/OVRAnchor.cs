@@ -59,6 +59,7 @@ public readonly struct OVRAnchor : IEquatable<OVRAnchor>, IDisposable
         MaxResults = OVRSpaceQuery.Options.MaxUuidCount,
     }.ToQueryInfo();
 
+
     internal static OVRTask<bool> FetchAnchorsAsync(SpaceComponentType type, IList<OVRAnchor> anchors,
         OVRSpace.StorageLocation location = OVRSpace.StorageLocation.Local,
         int maxResults = OVRSpaceQuery.Options.MaxUuidCount, double timeout = 0.0)
@@ -117,6 +118,7 @@ public readonly struct OVRAnchor : IEquatable<OVRAnchor>, IDisposable
         return FetchAnchors(anchors, GetQueryInfo(uuids, location, timeout));
     }
 
+
     private static OVRTask<bool> FetchAnchors(IList<OVRAnchor> anchors, OVRPlugin.SpaceQueryInfo queryInfo)
     {
         if (anchors == null)
@@ -135,6 +137,7 @@ public readonly struct OVRAnchor : IEquatable<OVRAnchor>, IDisposable
         task.SetInternalData(anchors);
         return task;
     }
+
 
     internal static void OnSpaceQueryCompleteData(OVRDeserialize.SpaceQueryCompleteData data)
     {

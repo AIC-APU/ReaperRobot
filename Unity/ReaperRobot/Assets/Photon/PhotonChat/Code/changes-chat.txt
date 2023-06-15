@@ -3,9 +3,6 @@ Photon Chat C# Client - Changelog
 Exit Games GmbH - www.photonengine.com - forum.photonengine.com
 
 
-Version 4.1.6.17 (02. August 2022)
-    Note: No notable changes.
-
 Version 4.1.6.16 (20. June 2022)
     Fixed: The ProxyServerAddress is also applied when connecting to the Frontend Server (was missing in previous update).
 

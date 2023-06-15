@@ -45,11 +45,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hand: {fileID: 5346183831593185114}
   _pokeInteractor: {fileID: 482801000701448007}
+  _handVisual: {fileID: 0}
+  _handRenderer: {fileID: 0}
   _materialEditor: {fileID: 0}
-  _wristTransform: {fileID: 0}
   _glowColor: {r: 1, g: 1, b: 1, a: 0}
   _overshootMaxDistance: 0.15
-  _glowType: 12
+  _pokeFinger: 1
+  _maxGradientLength: 0.9
+  _glowType: 31
 --- !u!1 &4977421493488092299
 GameObject:
   m_ObjectHideFlags: 0

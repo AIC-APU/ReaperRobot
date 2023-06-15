@@ -73,6 +73,7 @@ internal static class OVRSpaceQuery
 
         private IEnumerable<Guid> _uuidFilter;
 
+
         /// <summary>
         /// The components which must be present on the space in order to match the query.
         /// </summary>
@@ -88,8 +89,7 @@ internal static class OVRSpaceQuery
             get => _componentType;
             set
             {
-                if (value != 0 && _uuidFilter != null)
-                    throw new InvalidOperationException($"Cannot have both a component and uuid filter.");
+                ValidateSingleFilter(_uuidFilter, value);
 
                 _componentType = value;
             }
@@ -111,8 +111,7 @@ internal static class OVRSpaceQuery
             get => _uuidFilter;
             set
             {
-                if (value != null && _componentType != 0)
-                    throw new InvalidOperationException($"You may only query by UUID or by component type.");
+                ValidateSingleFilter(value, _componentType);
 
                 if (value is IReadOnlyCollection<Guid> collection && collection.Count > MaxUuidCount)
                     throw new ArgumentException(
@@ -122,6 +121,7 @@ internal static class OVRSpaceQuery
                 _uuidFilter = value;
             }
         }
+
 
         /// <summary>
         /// Creates a copy of <paramref name="other"/>.
@@ -139,9 +139,9 @@ internal static class OVRSpaceQuery
         }
 
         /// <summary>
-        /// Initiates a space query.
+        /// Creates a new <see cref="OVRPlugin.SpaceQueryInfo"/> from this.
         /// </summary>
-        /// <returns>`true` if the query was successfully started; otherwise, `false`.</returns>
+        /// <returns>The newly created info.</returns>
         public OVRPlugin.SpaceQueryInfo ToQueryInfo()
         {
             var filterType = OVRPlugin.SpaceQueryFilterType.None;
@@ -186,6 +186,7 @@ internal static class OVRSpaceQuery
             };
         }
 
+
         /// <summary>
         /// Initiates a space query.
         /// </summary>
@@ -206,6 +207,12 @@ internal static class OVRSpaceQuery
             }
 
             return querySpaces;
+        }
+
+        private static void ValidateSingleFilter(IEnumerable<Guid> uuidFilter, OVRPlugin.SpaceComponentType componentFilter)
+        {
+            if (uuidFilter != null && componentFilter != 0)
+                throw new InvalidOperationException($"You may only query by UUID or by component type.");
         }
     }
 }

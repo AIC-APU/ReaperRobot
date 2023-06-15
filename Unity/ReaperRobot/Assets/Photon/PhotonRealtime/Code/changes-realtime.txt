@@ -3,7 +3,38 @@ Photon Realtime C# Client - Changelog
 Exit Games GmbH - www.photonengine.com - forum.photonengine.com
 
 
-Version 4.1.6.17 (02. August 2022)
+Version 4.1.6.24 (15. May 2023 - rev6894)
+    Fixed: Potential NullReferenceException in PingMono.Dispose().
+
+Version 4.1.6.23 (15. March 2023 - rev6743)
+    Fixed: Replaced Null-conditional operator for MonoBehaviours and GameObjects. This caused issues with the usage of RegionHandler.emptyMonoBehavior.
+
+Version 4.1.6.22  (21. December 2022 - rev6637)
+    Fixed: A casting issue in RoomInfo (and Room) when reading properties.
+
+Version 4.1.6.21  (14. December 2022 - rev6623)
+    Changed: Clients never send room or player properties to the Master Server.
+    Changed: The values MaxPlayers and PlayerCount for Rooms (RoomInfo and Room class) are now  integer in the client API. Between client and server, byte is still used. You can still only set 0-255 players until further note. This prepares a later change.
+    Changed: Event Leave now makes sure the target Player's HasRejoined value is set.
+    Changed: RegionHandler so it can be used by multiple connections at the same time.
+
+Version 4.1.6.20  (23. September 2022 - rev6568)
+    No notable changes.
+
+Version 4.1.6.19 (12. October 2022 - rev6519)
+    No notable changes.
+
+Version 4.1.6.18f2 (23. September 2022 - rev6505)
+    Fixed: RegionHandler compatibility when not running in-Unity. MonoBehaviourEmpty is only used conditionally.
+
+Version 4.1.6.18 (20. September 2022 - rev6501)
+    Added: RegionHandler.Abort() which enables you to stop region pinging (e.g. when the app goes to background or lost connection). This means the ping result callback is not being called.
+    Changed: Unity will always use MonoBehaviourEmpty.Update() to do the callback (set via PingMinimumOfRegions()). This makes sure it is called on the Main Thread.
+    Changed: Where MonoBehaviourEmpty.SelfDestroy() is being called (in Abort or when the "finished"-callback was called).
+    Changed: The MonoBehaviourEmpty is always created in Unity runtimes.
+    Removed: Surplus variable "overtime" in RegionPingCoroutine and RegionPingThreaded.
+
+Version 4.1.6.17 (02. August 2022 - rev6472)
     Added: DisconnectCause.ApplicationQuit. Can be used when your app disconnects on application quit: lbc.Disconnect(DisconnectCause.ApplicationQuit).
     Note: The ConnectionHandler will use this to differentiate a regular disconnect from one that is triggered by Unity / app-quit.
 

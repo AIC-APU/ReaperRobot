@@ -136,6 +136,7 @@ public class OVRManagerEditor : Editor
         EditorGUILayout.EndFoldoutHeaderGroup();
 #endif
 
+
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN || UNITY_ANDROID
         // Insight Passthrough section
 #if UNITY_ANDROID

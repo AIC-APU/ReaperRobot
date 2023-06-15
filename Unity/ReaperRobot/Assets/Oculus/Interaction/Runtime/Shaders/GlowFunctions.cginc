@@ -1,14 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
-https://developer.oculus.com/licenses/oculussdk/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 float inverseLerp(float t, float a, float b) {
   return (t - a)/(b - a);
@@ -57,6 +65,15 @@ void getPalmFingerRadius(out float2 lineRadius[5]) {
   lineRadius = palmFingerRadius;
 }
 
+float2 getPalmFingerRadiusByIndex(int index) {
+  if(index == 0) { return float2(0.070, 0.14); }
+  if(index == 1) { return float2(0.06, 0.06); }
+  if(index == 2) { return float2(0.06, 0.06); }
+  if(index == 3) { return float2(0.06, 0.06); }
+  if(index == 4) { return float2(0.06, 0.06); }
+  return float2(0.0,0.0);
+}
+
 void getFingerRadius(out float2 lineRadius[5]) {
   float2 fingerRadius[5] = {
     float2(0.2, 0.2),
@@ -66,6 +83,15 @@ void getFingerRadius(out float2 lineRadius[5]) {
     float2(0.045, 0.05)
   };
   lineRadius = fingerRadius;
+}
+
+float2 getFingerRadiusByIndex(int index) {
+  if(index == 0) { return float2(0.2, 0.2); }
+  if(index == 1) { return float2(0.065, 0.055); }
+  if(index == 2) { return float2(0.055, 0.055); }
+  if(index == 3) { return float2(0.050, 0.045); }
+  if(index == 4) { return float2(0.045, 0.05); }
+  return float2(0.0,0.0);
 }
 
 float fingerLineGlow(float2 handUV, float strengthValues[5], float distanceScale, float4 lines[5], float2 linesRadius[5]) {
@@ -87,7 +113,21 @@ float fingerLineGlow(float2 handUV, float strengthValues[5], float distanceScale
   return sinEasing(glowMask);
 }
 
-float movingFingerGradient(float2 handUV, float strengthValues[5], float gradientLength, float4 lines[5], float2 linesRadius[5]) {
+float2 movingFingerGradient(float2 handUV, float4 gradientLine, float2 gradientRadius, float strength, float gradientLength, out bool useGlow) {
+  float2 lDist = lineDistance(handUV, gradientLine);
+  float radius = lerp(gradientRadius.x, gradientRadius.y, saturate(lDist.y));
+  if (lDist.x < radius) {
+    float distance = max(0.0, (lDist.x - radius) * -1.0);
+    float hDist = lDist.y;
+    float param = inverseLerp(hDist, strength - gradientLength, strength);
+    useGlow = true;
+    return float2(distance, param);
+  }
+  useGlow = false;
+  return float2(0.0, 0.0);
+}
+
+float movingFingersGradient(float2 handUV, float strengthValues[5], float gradientLength, float4 lines[5], float2 linesRadius[5]) {
   float2 uv = handUV;
   float distValue = 0.0;
   float value = 0.0;

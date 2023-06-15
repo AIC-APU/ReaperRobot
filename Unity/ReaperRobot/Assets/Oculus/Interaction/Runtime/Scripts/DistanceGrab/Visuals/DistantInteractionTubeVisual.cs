@@ -39,7 +39,7 @@ namespace Oculus.Interaction.DistanceReticles
         protected override void RenderLine(Vector3[] linePoints)
         {
             InitializeArcPoints(linePoints);
-            _tubeRenderer.RenderTube(_tubePoints);
+            _tubeRenderer.RenderTube(_tubePoints, Space.World);
         }
 
         protected override void HideLine()

@@ -76,4 +76,3 @@ Shader "Unlit/Crosshair" {
 
 
 }
-

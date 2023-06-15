@@ -299,10 +299,8 @@ public class OVRPassthroughLayerEditor : Editor
             {
                 EditorGUILayout.HelpBox(message, MessageType.Error);
             }
-            else
-            {
-                CheckLutImportSettings(texture);
-            }
+
+            CheckLutImportSettings(texture);
         }
     }
 
@@ -316,11 +314,16 @@ public class OVRPassthroughLayerEditor : Editor
             // builtin resources, thus the check for null
             if (importer != null)
             {
-                bool valid = importer.isReadable == true;
+                bool isReadable = importer.isReadable == true;
+                bool isUncompressed = importer.textureCompression == TextureImporterCompression.Uncompressed;
+                bool valid = isReadable && isUncompressed;
 
                 if (!valid)
                 {
-                    DrawFixMeBox("Texture is not readable.", () => SetLutImportSettings(importer));
+                    string warningMessage = ""
+                                            + (isReadable ? "" : "Texture is not readable. ")
+                                            + (isUncompressed ? "" : "Texture is compressed.");
+                    DrawFixMeBox(warningMessage, () => SetLutImportSettings(importer));
                 }
             }
         }
@@ -329,6 +332,7 @@ public class OVRPassthroughLayerEditor : Editor
     private void SetLutImportSettings(TextureImporter importer)
     {
         importer.isReadable = true;
+        importer.textureCompression = TextureImporterCompression.Uncompressed;
         importer.SaveAndReimport();
         AssetDatabase.Refresh();
     }

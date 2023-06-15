@@ -116,6 +116,7 @@ public class OVRVirtualKeyboardSampleWPMPrompt : MonoBehaviour
                 {
                     StartedAt = time;
                 }
+
                 LastUpdatedAt = time;
                 // Fresh start
                 if (_inputBuffer.Length == 0)
@@ -293,7 +294,7 @@ public class OVRVirtualKeyboardSampleWPMPrompt : MonoBehaviour
     private Text recordOutput;
 
     [SerializeField]
-    private OVRVirtualKeyboard virtualKeyboard;
+    public OVRVirtualKeyboard VirtualKeyboard;
 
     private static readonly List<string> Sentences = new List<string>()
     {
@@ -328,16 +329,16 @@ public class OVRVirtualKeyboardSampleWPMPrompt : MonoBehaviour
         CycleWritingPrompt();
         UpdateTypingPrompt();
 
-        OVRVirtualKeyboard.Events.CommitText += OnCommitText;
-        OVRVirtualKeyboard.Events.Backspace += OnBackspace;
-        OVRVirtualKeyboard.Events.Enter += OnEnter;
+        VirtualKeyboard.CommitText += OnCommitText;
+        VirtualKeyboard.Backspace += OnBackspace;
+        VirtualKeyboard.Enter += OnEnter;
     }
 
     private void OnDestroy()
     {
-        OVRVirtualKeyboard.Events.CommitText -= OnCommitText;
-        OVRVirtualKeyboard.Events.Backspace -= OnBackspace;
-        OVRVirtualKeyboard.Events.Enter -= OnEnter;
+        VirtualKeyboard.CommitText -= OnCommitText;
+        VirtualKeyboard.Backspace -= OnBackspace;
+        VirtualKeyboard.Enter -= OnEnter;
     }
 
     private void UpdateTypingPrompt()

@@ -20,6 +20,14 @@
 
 using System;
 
+/// <summary>
+/// Descriptive labels of the <see cref="OVRAnchor"/>, as comma separated strings.
+/// </summary>
+/// <remarks>
+/// This component can be accessed from an <see cref="OVRAnchor"/> that supports it by calling
+/// <see cref="OVRAnchor.GetComponent{T}"/> from the anchor.
+/// </remarks>
+/// <seealso cref="Labels"/>
 public readonly partial struct OVRSemanticLabels : IOVRAnchorComponent<OVRSemanticLabels>, IEquatable<OVRSemanticLabels>
 {
     // Features
@@ -39,7 +47,7 @@ public readonly partial struct OVRSemanticLabels : IOVRAnchorComponent<OVRSemant
                 throw new Exception("Could not Get Semantic Labels");
             }
 
-            return labels;
+            return OVRSemanticClassification.ValidateAndUpgradeLabels(labels);
         }
     }
 }
