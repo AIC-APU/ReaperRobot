@@ -22,6 +22,16 @@ using System;
 using Unity.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Represents a plane described by its <see cref="Rect"/> and boundary points.
+/// </summary>
+/// <remarks>
+/// This component can be accessed from an <see cref="OVRAnchor"/> that supports it by calling
+/// <see cref="OVRAnchor.GetComponent{T}"/> from the anchor.
+/// </remarks>
+/// <seealso cref="BoundingBox"/>
+/// <seealso cref="TryGetBoundaryPointsCount"/>
+/// <seealso cref="TryGetBoundaryPoints"/>
 public readonly partial struct OVRBounded2D : IOVRAnchorComponent<OVRBounded2D>, IEquatable<OVRBounded2D>
 {
     /// <summary>

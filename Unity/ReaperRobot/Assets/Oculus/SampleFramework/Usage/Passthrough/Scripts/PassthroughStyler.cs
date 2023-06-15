@@ -7,18 +7,25 @@ public class PassthroughStyler : MonoBehaviour
 
     [SerializeField]
     private OVRInput.Controller _controllerHand = OVRInput.Controller.None;
+
     [SerializeField]
     private OVRPassthroughLayer _passthroughLayer;
+
     [SerializeField]
     private RectTransform _colorWheel;
+
     [SerializeField]
     private Texture2D _colorTexture;
+
     [SerializeField]
     private Texture2D _colorLutTexture;
+
     [SerializeField]
     private CanvasGroup _mainCanvas;
+
     [SerializeField]
     private GameObject[] _compactObjects;
+
     [SerializeField]
     private GameObject[] _objectsToHideForColorPassthrough;
 
@@ -28,7 +35,10 @@ public class PassthroughStyler : MonoBehaviour
     private float _savedBrightness = 0.0f;
     private float _savedContrast = 0.0f;
     private float _savedSaturation = 0.0f;
-    private OVRPassthroughLayer.ColorMapEditorType _currentStyle = OVRPassthroughLayer.ColorMapEditorType.ColorAdjustment;
+
+    private OVRPassthroughLayer.ColorMapEditorType _currentStyle =
+        OVRPassthroughLayer.ColorMapEditorType.ColorAdjustment;
+
     private float _savedBlend = 1;
     private OVRPassthroughColorLut _passthroughColorLut;
     private IEnumerator _fade;
@@ -41,6 +51,7 @@ public class PassthroughStyler : MonoBehaviour
             grabOject.ReleasedObjectDelegate += Release;
             grabOject.CursorPositionDelegate += Cursor;
         }
+
         _savedColor = new Color(1, 1, 1, 0);
         ShowFullMenu(false);
         _mainCanvas.interactable = false;
@@ -64,6 +75,7 @@ public class PassthroughStyler : MonoBehaviour
         {
             return;
         }
+
         if (_settingColor)
         {
             GetColorFromWheel();
@@ -193,7 +205,8 @@ public class PassthroughStyler : MonoBehaviour
             float normTimer = Mathf.Clamp01(timer / duration);
             if (_currentStyle == OVRPassthroughLayer.ColorMapEditorType.ColorLut)
             {
-                _passthroughLayer.SetColorLut(_passthroughColorLut, Mathf.Lerp(blend, _savedBlend * styleValueMultiplier, normTimer));
+                _passthroughLayer.SetColorLut(_passthroughColorLut,
+                    Mathf.Lerp(blend, _savedBlend * styleValueMultiplier, normTimer));
             }
             else
             {
@@ -202,7 +215,10 @@ public class PassthroughStyler : MonoBehaviour
                     Mathf.Lerp(contrast, _savedContrast * styleValueMultiplier, normTimer),
                     Mathf.Lerp(saturation, _savedSaturation * styleValueMultiplier, normTimer));
             }
-            _passthroughLayer.edgeColor = Color.Lerp(edgeCol, new Color(_savedColor.r, _savedColor.g, _savedColor.b, _savedColor.a * styleValueMultiplier), normTimer);
+
+            _passthroughLayer.edgeColor = Color.Lerp(edgeCol,
+                new Color(_savedColor.r, _savedColor.g, _savedColor.b, _savedColor.a * styleValueMultiplier),
+                normTimer);
             yield return null;
         }
     }
@@ -229,7 +245,8 @@ public class PassthroughStyler : MonoBehaviour
     {
         // convert cursor world position to UV
         var localPos = _colorWheel.transform.InverseTransformPoint(_cursorPosition);
-        var toImg = new Vector2(localPos.x / _colorWheel.sizeDelta.x + 0.5f, localPos.y / _colorWheel.sizeDelta.y + 0.5f);
+        var toImg = new Vector2(localPos.x / _colorWheel.sizeDelta.x + 0.5f,
+            localPos.y / _colorWheel.sizeDelta.y + 0.5f);
         Debug.Log("Sanctuary: " + toImg.x.ToString() + ", " + toImg.y.ToString());
         Color sampledColor = Color.black;
         if (toImg.x < 1.0 && toImg.x > 0.0f && toImg.y < 1.0 && toImg.y > 0.0f)
@@ -238,6 +255,7 @@ public class PassthroughStyler : MonoBehaviour
             int Vpos = Mathf.RoundToInt(toImg.y * _colorTexture.height);
             sampledColor = _colorTexture.GetPixel(Upos, Vpos);
         }
+
         _savedColor = new Color(sampledColor.r, sampledColor.g, sampledColor.b, _savedColor.a);
         _passthroughLayer.edgeColor = _savedColor;
     }

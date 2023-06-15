@@ -18,6 +18,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -57,8 +58,10 @@ public class OVRHand : MonoBehaviour,
     [SerializeField]
     private Transform _pointerPoseRoot = null;
 
+
     private GameObject _pointerPoseGO;
     private OVRPlugin.HandState _handState = new OVRPlugin.HandState();
+
 
     public bool IsDataValid { get; private set; }
     public bool IsDataHighConfidence { get; private set; }
@@ -110,6 +113,7 @@ public class OVRHand : MonoBehaviour,
 
             IsDataValid = true;
             IsDataHighConfidence = IsTracked && HandConfidence == TrackingConfidence.High;
+
         }
         else
         {
@@ -172,7 +176,6 @@ public class OVRHand : MonoBehaviour,
     OVRSkeleton.SkeletonPoseData OVRSkeleton.IOVRSkeletonDataProvider.GetSkeletonPoseData()
     {
         var data = new OVRSkeleton.SkeletonPoseData();
-
         data.IsDataValid = IsDataValid;
         if (IsDataValid)
         {

@@ -223,6 +223,7 @@ internal static class OVRProjectSetupRenderingTasks
                 if (setting != null)
                 {
                     setting.LowOverheadMode = true;
+                    EditorUtility.SetDirty(setting);
                 }
             },
             fixMessage: "OculusSettings.LowOverheadMode = true"
@@ -241,6 +242,7 @@ internal static class OVRProjectSetupRenderingTasks
                 if (setting != null)
                 {
                     setting.DashSupport = true;
+                    EditorUtility.SetDirty(setting);
                 }
             },
             fixMessage: "OculusSettings.DashSupport = true"

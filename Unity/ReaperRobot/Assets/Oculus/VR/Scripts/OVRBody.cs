@@ -72,6 +72,7 @@ public class OVRBody : MonoBehaviour,
             return;
         }
 
+
         if (OVRPlugin.nativeXrApi == OVRPlugin.XrApi.OpenXR)
         {
             GetBodyState(OVRPlugin.Step.Render);

@@ -551,7 +551,8 @@ internal class OVRProjectSetupDrawer
                             OVRProjectSetup.ProcessorQueue.BusyWith(OVRConfigurationTaskProcessor.ProcessorType.Fixer));
                         if (GUILayout.Button(content, styles.FixAllButton))
                         {
-                            OVRProjectSetupSettingsProvider.SetNewInteraction(OVRProjectSetupSettingsProvider.Interaction.Fixed);
+                            OVRProjectSetupSettingsProvider.SetNewInteraction(OVRProjectSetupSettingsProvider
+                                .Interaction.Fixed);
 
                             OVRProjectSetup.FixTasks(buildTargetGroup, filter, blocking: false,
                                 onCompleted: AfterFixApply);
@@ -671,12 +672,14 @@ internal class OVRProjectSetupDrawer
         {
             OVRProjectSetupSettingsProvider.SetNewInteraction(OVRProjectSetupSettingsProvider.Interaction.Ignored);
         }
+
         task?.SetIgnored(buildTargetGroup, ignore);
     }
 
     private void OnDocumentation(object args)
     {
-        OVRProjectSetupSettingsProvider.SetNewInteraction(OVRProjectSetupSettingsProvider.Interaction.WentToDocumentation);
+        OVRProjectSetupSettingsProvider.SetNewInteraction(OVRProjectSetupSettingsProvider.Interaction
+            .WentToDocumentation);
 
         ReadContextMenuArguments(args, out var buildTargetGroup, out var task);
         var url = task?.URL.GetValue(buildTargetGroup);

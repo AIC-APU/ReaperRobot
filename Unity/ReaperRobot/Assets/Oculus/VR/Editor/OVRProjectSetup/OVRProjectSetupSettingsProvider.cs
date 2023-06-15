@@ -58,7 +58,7 @@ internal class OVRProjectSetupSettingsProvider : SettingsProvider
 
     public static double OpenTimestamp { get; set; }
     public static double TimeSpent => EditorApplication.timeSinceStartup - OpenTimestamp;
-    public static OVRProjectSetupTelemetryEvent InteractionFlowEvent { get; set; }
+    public static OVRTelemetryMarker? InteractionFlowEvent { get; set; }
 
     [SettingsProvider]
     public static SettingsProvider CreateProjectValidationSettingsProvider()
@@ -70,7 +70,7 @@ internal class OVRProjectSetupSettingsProvider : SettingsProvider
     {
         if (interaction > _lastInteraction)
         {
-            InteractionFlowEvent?.AddPoint(OVRProjectSetupTelemetryEvent.MarkerPoints.Interact);
+            InteractionFlowEvent = InteractionFlowEvent?.AddPoint(OVRProjectSetupTelemetryEvent.MarkerPoints.Interact);
             _lastInteraction = interaction;
         }
     }
@@ -98,13 +98,13 @@ internal class OVRProjectSetupSettingsProvider : SettingsProvider
             _activated = true;
             _lastOrigin = _lastOrigin ?? Origins.Settings;
 
-            OVRProjectSetupTelemetryEvent.Start(OVRProjectSetupTelemetryEvent.EventTypes.Open)
+            OVRTelemetry.Start(OVRProjectSetupTelemetryEvent.EventTypes.Open)
                 .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.BuildTargetGroup,
                     EditorUserBuildSettings.selectedBuildTargetGroup.ToString())
                 .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Origin, _lastOrigin.ToString())
                 .Send();
 
-            InteractionFlowEvent?.AddPoint(OVRProjectSetupTelemetryEvent.MarkerPoints.Open)
+            InteractionFlowEvent = InteractionFlowEvent?.AddPoint(OVRProjectSetupTelemetryEvent.MarkerPoints.Open)
                 .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Origin, _lastOrigin.ToString());
         }
     }
@@ -119,15 +119,16 @@ internal class OVRProjectSetupSettingsProvider : SettingsProvider
 
         if (_activated)
         {
-            OVRProjectSetupTelemetryEvent.Start(OVRProjectSetupTelemetryEvent.EventTypes.Close)
+            OVRTelemetry.Start(OVRProjectSetupTelemetryEvent.EventTypes.Close)
                 .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.BuildTargetGroup,
                     EditorUserBuildSettings.selectedBuildTargetGroup.ToString())
                 .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Origin, _lastOrigin.ToString())
-                .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.TimeSpent, TimeSpent.ToString(CultureInfo.InvariantCulture))
+                .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.TimeSpent,
+                    TimeSpent.ToString(CultureInfo.InvariantCulture))
                 .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Interaction, _lastInteraction.ToString())
                 .Send();
 
-            InteractionFlowEvent?.AddPoint(OVRProjectSetupTelemetryEvent.MarkerPoints.Close)
+            InteractionFlowEvent = InteractionFlowEvent?.AddPoint(OVRProjectSetupTelemetryEvent.MarkerPoints.Close)
                 .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Interaction, _lastInteraction.ToString())
                 .Send();
 

@@ -102,12 +102,6 @@ internal class OVRConfigurationTaskProcessorQueue
             return;
         }
 
-        // Trigger specific callbacks
-        processor.Complete();
-
-        // Trigger global callbacks
-        OnProcessorCompleted?.Invoke(processor);
-
         // Dequeue
         _queue.Dequeue();
 
@@ -116,35 +110,40 @@ internal class OVRConfigurationTaskProcessorQueue
             // Now that it is empty, unregister to editor update
             EditorApplication.update -= Update;
         }
+
+        // Trigger specific callbacks
+        processor.Complete();
+
+        // Trigger global callbacks
+        OnProcessorCompleted?.Invoke(processor);
     }
 
     private void Update()
     {
-        do
+        var processor = _queue.Count > 0 ? _queue.Peek() : null;
+
+        while (processor != null)
         {
-            // Grab the current processor
-            var current = _queue.Peek();
-            if (!current.Started)
+            if (!processor.Started)
             {
-                // If not busy, this implies it hasn't been started yet
-                // Start it
-                current.Start();
+                processor.Start();
             }
 
-            current.Update();
+            processor.Update();
 
-            if (current.Completed)
+            if (processor.Completed)
             {
-                // If it is completed, we can remove it from the queue
-                Dequeue(current);
+                Dequeue(processor);
+
+                // Move to the next processor
+                processor = _queue.Count > 0 ? _queue.Peek() : null;
             }
-            else
+
+            if (!(processor?.Blocking ?? false))
             {
-                // If it is not completed, another update call will be necessary
-                return;
+                // Is the processor is not blocking, we can stop the update until the next update call
+                processor = null;
             }
-        } while (_queue.Count > 0 && (_queue.Peek()?.Blocking ?? false));
-        // If the queue is blocking, do it until the queue is not empty
-        // and the current processor is blocking
+        }
     }
 }

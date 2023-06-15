@@ -230,6 +230,10 @@ namespace Oculus.Platform
         });
       }
       EditorGUILayout.Separator();
+
+#if UNITY_EDITOR_WIN
+      EditorGUILayout.HelpBox("For full Unity logs, please check C:\\Users\\<username>\\AppData\\Local\\Unity\\Editor\\Editor.log", MessageType.Info);
+#endif
     }
 
     private string getFRLAccountAccessToken() {

@@ -53,7 +53,7 @@ public class OVRSceneRoom : MonoBehaviour, IOVRSceneComponent
     private OVRSceneAnchor _sceneAnchor;
     private OVRSceneManager _sceneManager;
 
-    internal List<Guid> _uuidToQuery = new List<Guid>();
+    internal HashSet<Guid> _uuidToQuery = new HashSet<Guid>();
     private List<OVRAnchor> _roomAnchors = OVRObjectPool.Get<List<OVRAnchor>>();
 
     internal static readonly Dictionary<Guid, OVRSceneRoom> SceneRooms = new Dictionary<Guid, OVRSceneRoom>();
@@ -157,15 +157,17 @@ public class OVRSceneRoom : MonoBehaviour, IOVRSceneComponent
         var isStrictly2D = bounded2dEnabled && !bounded3dEnabled;
 
         // The plane prefab is for anchors that are only 2D, i.e. they only have
-        // a 2D component. For all others, we use the volume prefab instead.
-        var sceneAnchor = _sceneManager.InstantiateSceneAnchor(anchor.Handle, anchor.Uuid,
-            isStrictly2D ? _sceneManager.PlanePrefab : _sceneManager.VolumePrefab);
+        // a 2D component. If a volume component exists, we use a volume prefab,
+        // else we pass null (prefab overrides may be used)
+        var prefab = isStrictly2D ? _sceneManager.PlanePrefab :
+            (bounded3dEnabled ? _sceneManager.VolumePrefab : null);
 
-        sceneAnchor.transform.parent = transform;
-
-        if (isStrictly2D)
+        var sceneAnchor = _sceneManager.InstantiateSceneAnchor(anchor.Handle, anchor.Uuid, prefab);
+        if (sceneAnchor != null)
         {
-            UpdateRoomInformation(sceneAnchor.GetComponent<OVRScenePlane>());
+            sceneAnchor.transform.parent = transform;
+            if (isStrictly2D)
+                UpdateRoomInformation(sceneAnchor.GetComponent<OVRScenePlane>());
         }
 
         if (_taskCount == 0)
@@ -227,8 +229,11 @@ public class OVRSceneRoom : MonoBehaviour, IOVRSceneComponent
             return;
         }
 
-        if (!roomLayout.ceilingUuid.Equals(Guid.Empty)) _uuidToQuery.Add(roomLayout.ceilingUuid);
-        if (!roomLayout.floorUuid.Equals(Guid.Empty)) _uuidToQuery.Add(roomLayout.floorUuid);
+        // save room ids and add to queryables (duplicates are filtered)
+        if (!roomLayout.ceilingUuid.Equals(Guid.Empty))
+            _uuidToQuery.Add(roomLayout.ceilingUuid);
+        if (!roomLayout.floorUuid.Equals(Guid.Empty))
+            _uuidToQuery.Add(roomLayout.floorUuid);
 
         _orderedRoomGuids.Clear();
         int validWallsCount = 0;
@@ -237,7 +242,7 @@ public class OVRSceneRoom : MonoBehaviour, IOVRSceneComponent
             _sceneManager.Verbose?.Log(nameof(OVRSceneManager),
                 $"{nameof(OVRPlugin.GetSpaceRoomLayout)}: wall [{wallUuid}]");
             _orderedRoomGuids[wallUuid] = validWallsCount++;
-            _uuidToQuery.Add(wallUuid);
+            if (!wallUuid.Equals(Guid.Empty)) _uuidToQuery.Add(wallUuid);
         }
     }
 

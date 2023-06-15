@@ -3250,13 +3250,11 @@ namespace Photon.Realtime
                             isInactive = (bool)photonEvent.Parameters[ParameterCode.IsInactive];
                         }
 
-                        if (isInactive)
+                        originatingPlayer.IsInactive = isInactive;
+                        originatingPlayer.HasRejoined = false;
+
+                        if (!isInactive)
                         {
-                            originatingPlayer.IsInactive = true;
-                        }
-                        else
-                        {
-                            originatingPlayer.IsInactive = false;
                             this.CurrentRoom.RemovePlayer(actorNr);
                         }
                     }
@@ -3275,7 +3273,7 @@ namespace Photon.Realtime
                     break;
 
                 case EventCode.PropertiesChanged:
-                    // whenever properties are sent in-room, they can be broadcasted as event (which we handle here)
+                    // whenever properties are sent in-room, they can be broadcast as event (which we handle here)
                     // we get PLAYERproperties if actorNr > 0 or ROOMproperties if actorNumber is not set or 0
                     int targetActorNr = 0;
                     if (photonEvent.Parameters.ContainsKey(ParameterCode.TargetActorNr))

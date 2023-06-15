@@ -147,7 +147,7 @@ namespace Photon.Realtime
         /// As part of RoomInfo this can't be set.
         /// As part of a Room (which the player joined), the setter will update the server and all clients.
         /// </remarks>
-        public new byte MaxPlayers
+        public new int MaxPlayers
         {
             get
             {
@@ -158,18 +158,19 @@ namespace Photon.Realtime
             {
                 if (value != this.maxPlayers)
                 {
+                    byte maxPlayersPropValue = (byte)value;     // TODO: when the server accepts int typed MaxPlayers, remove this
                     if (!this.isOffline)
                     {
-                        this.LoadBalancingClient.OpSetPropertiesOfRoom(new Hashtable() { { GamePropertyKey.MaxPlayers, value } });
+                        this.LoadBalancingClient.OpSetPropertiesOfRoom(new Hashtable() { { GamePropertyKey.MaxPlayers, maxPlayersPropValue } });
                     }
-                }
 
-                this.maxPlayers = value;
+                    this.maxPlayers = maxPlayersPropValue;
+                }
             }
         }
 
         /// <summary>The count of players in this Room (using this.Players.Count).</summary>
-        public new byte PlayerCount
+        public new int PlayerCount
         {
             get
             {
@@ -274,13 +275,13 @@ namespace Photon.Realtime
         }
 
         /// <summary>
-        /// Gets if this room cleans up the event cache when a player (actor) leaves. 
+        /// Gets if this room cleans up the event cache when a player (actor) leaves.
         /// </summary>
         /// <remarks>
         /// This affects which events joining players get.
-        /// 
+        ///
         /// Set in room creation via RoomOptions.CleanupCacheOnLeave.
-        /// 
+        ///
         /// Within PUN, auto cleanup of events means that cached RPCs and instantiated networked objects are deleted from the room.
         /// </remarks>
         public bool AutoCleanUp
@@ -422,7 +423,7 @@ namespace Photon.Realtime
 
                 // invoking callbacks
                 this.LoadBalancingClient.InRoomCallbackTargets.OnRoomPropertiesUpdate(propertiesToSet);
-               
+
             }
             else
             {
@@ -545,7 +546,7 @@ namespace Photon.Realtime
         public virtual Player GetPlayer(int id, bool findMaster = false)
         {
             int idToFind = (findMaster && id == 0) ? this.MasterClientId : id;
-            
+
             Player result = null;
             this.Players.TryGetValue(idToFind, out result);
 

@@ -83,7 +83,7 @@ internal static class OVRProjectSetupQualityTasks
             isDone: group => EditorUserBuildSettings.androidBuildSubtarget == MobileTextureSubtarget.ASTC ||
                              EditorUserBuildSettings.androidBuildSubtarget == MobileTextureSubtarget.ETC2,
             message: "Optimize Texture Compression : For GPU performance, please use ETC2. In some cases, " +
-                     "ASTC may produce better visuals and is also a viable solution.",
+                     "ASTC may produce better visuals and is also a viable solution",
             fix: group => EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ETC2,
             fixMessage: "EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ETC2"
         );

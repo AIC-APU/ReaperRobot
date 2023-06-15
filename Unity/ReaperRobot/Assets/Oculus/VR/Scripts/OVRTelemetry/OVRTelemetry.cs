@@ -19,11 +19,20 @@
  */
 
 using System;
-using System.Diagnostics;
+using UnityEngine;
 
-internal static class OVRTelemetry
+internal static partial class OVRTelemetry
 {
-    internal static bool IsActive { get; set; } = OVRRuntimeSettings.Instance.TelemetryEnabled;
+    private static bool IsActive
+    {
+        get
+        {
+
+
+            return OVRRuntimeSettings.Instance.TelemetryEnabled;
+        }
+    }
+
     private static readonly TelemetryClient InactiveClient = new NullTelemetryClient();
     private static readonly TelemetryClient ActiveClient = new QPLTelemetryClient();
     public static TelemetryClient Client => IsActive ? ActiveClient : InactiveClient;
@@ -133,56 +142,16 @@ internal static class OVRTelemetry
         }
     }
 
-    public static void SendEvent(int markerId, OVRPlugin.Qpl.ResultType result = OVRPlugin.Qpl.ResultType.Success)
+    public static OVRTelemetryMarker Start(int markerId,
+        int instanceKey = OVRPlugin.Qpl.DefaultInstanceKey,
+        long timestampMs = OVRPlugin.Qpl.AutoSetTimestampMs)
     {
-        Client.MarkerStart(markerId);
-        Client.MarkerEnd(markerId, result);
+        return new OVRTelemetryMarker(markerId, instanceKey, timestampMs);
     }
 
-    public struct MarkerScope : IDisposable
+    public static void SendEvent(int markerId,
+        OVRPlugin.Qpl.ResultType result = OVRPlugin.Qpl.ResultType.Success)
     {
-        private readonly int _markerId;
-        private readonly int _instanceKey;
-        private OVRPlugin.Qpl.ResultType _result;
-        private static string _sdkVersionString;
-
-        public MarkerScope(int markerId, int instanceKey = OVRPlugin.Qpl.DefaultInstanceKey,
-            long timestampMs = OVRPlugin.Qpl.AutoSetTimestampMs)
-        {
-            _markerId = markerId;
-            _instanceKey = instanceKey;
-            _result = OVRPlugin.Qpl.ResultType.Success;
-            Client.MarkerStart(markerId, instanceKey, timestampMs);
-        }
-
-        public void SetResult(OVRPlugin.Qpl.ResultType result)
-        {
-            _result = result;
-        }
-
-        public void AddPoint(MarkerPoint point)
-        {
-            Client.MarkerPointCached(_markerId, point.NameHandle, _instanceKey);
-        }
-
-        public void AddAnnotation(string annotationKey, string annotationValue)
-        {
-            Client.MarkerAnnotation(_markerId, annotationKey, annotationValue, _instanceKey);
-        }
-
-        public void AddSDKVersionAnnotation()
-        {
-            if (string.IsNullOrEmpty(_sdkVersionString))
-            {
-                _sdkVersionString = OVRPlugin.version.ToString();
-            }
-
-            AddAnnotation("sdk_version", _sdkVersionString);
-        }
-
-        public void Dispose()
-        {
-            Client.MarkerEnd(_markerId, _result, _instanceKey);
-        }
+        Start(markerId).SetResult(result).Send();
     }
 }

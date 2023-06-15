@@ -136,22 +136,22 @@ public static class OVRProjectSetup
     /// </summary>
     /// <remarks>
     /// This methods creates, adds and registers an <see cref="OVRConfigurationTask"/> to the SetupTool.
-    /// Please note that the Message or ConditionalMessage parameters are used to generated a unique hash that serves as an Unique ID for the task.
+    /// Please note that the Message or ConditionalMessage parameters have to be unique since they are being hashed to generate a Unique ID for the task.
     /// Those tasks, once added, are not meant to be removed from the Setup Tool, and will get checked at some key points.
     /// This method is the one entry point for developers to add their own sanity checks, technical requirements or other recommendations.
     /// You can use the conditional parameters that accepts lambdas or delegates for more complex behaviours if needed.
     /// </remarks>
     /// <param name="group">Category that fits the task. Feel free to add more to the enum if relevant. Do not use "All".</param>
-    /// <param name="isDone">Func/Delegates/Lambda that checks if the Configuration Task is validated or not.</param>
+    /// <param name="isDone">Delegate that checks if the Configuration Task is validated or not.</param>
     /// <param name="platform">Platform for which this Configuration Task applies. Use "Unknown" for any.</param>
-    /// <param name="fix">Action/Delegates/Lambda that actually validate the Configuration Task.</param>
-    /// <param name="level">Level/Severity/Priority/Behaviour of the Configuration Task</param>
+    /// <param name="fix">Delegate that validates the Configuration Task.</param>
+    /// <param name="level">Severity (or behaviour) of the Configuration Task.</param>
     /// <param name="conditionalLevel">Use this delegate for more control or complex behaviours over the level parameter.</param>
-    /// <param name="message">Description of the Configuration Task</param>
+    /// <param name="message">Description of the Configuration Task.</param>
     /// <param name="conditionalMessage">Use this delegate for more control or complex behaviours over the message parameter.</param>
-    /// <param name="fixMessage">Description of the actual fix for the Task</param>
+    /// <param name="fixMessage">Description of the actual fix for the Task.</param>
     /// <param name="conditionalFixMessage">Use this delegate for more control or complex behaviours over the fixMessage parameter.</param>
-    /// <param name="url">Url to more information about the Configuration Task</param>
+    /// <param name="url">Url to more information about the Configuration Task.</param>
     /// <param name="conditionalUrl">Use this delegate for more control or complex behaviours over the url parameter.</param>
     /// <param name="validity">Checks if the task is valid. If not, it will be ignored by the Setup Tool.</param>
     /// <param name="conditionalValidity">Use this delegate for more control or complex behaviours over the validity parameter.</param>

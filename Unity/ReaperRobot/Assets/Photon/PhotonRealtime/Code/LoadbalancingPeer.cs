@@ -306,6 +306,7 @@ namespace Photon.Realtime
             {
                 op[ParameterCode.Add] = opParams.ExpectedUsers;
             }
+
             if (opParams.OnGameServer)
             {
                 if (opParams.PlayerProperties != null && opParams.PlayerProperties.Count > 0)
@@ -372,10 +373,7 @@ namespace Photon.Realtime
                     op[ParameterCode.PlayerProperties] = opParams.PlayerProperties;
                 }
                 op[ParameterCode.Broadcast] = true; // broadcast actor properties
-            }
 
-            if (opParams.OnGameServer || opParams.JoinMode == JoinMode.CreateIfNotExists)
-            {
                 this.RoomOptionsToOpParameters(op, opParams.RoomOptions);
             }
 
@@ -496,7 +494,8 @@ namespace Photon.Realtime
                     opParameters[ParameterCode.RoomName] = createRoomParams.RoomName;
                 }
 
-                this.RoomOptionsToOpParameters(opParameters, createRoomParams.RoomOptions, true);
+                // this operation is always only done on the Master Server, so we skip sending props (commented out line below)
+                //this.RoomOptionsToOpParameters(opParameters, createRoomParams.RoomOptions, true);
             }
 
             //this.Listener.DebugReturn(DebugLevel.INFO, "OpJoinRandomOrCreateRoom: " + SupportClass.DictionaryToString(opParameters, false));
@@ -1832,7 +1831,7 @@ namespace Photon.Realtime
         private bool isOpen = true;
 
         /// <summary>Max number of players that can be in the room at any time. 0 means "no limit".</summary>
-        public byte MaxPlayers;
+        public int MaxPlayers;
 
         /// <summary>Time To Live (TTL) for an 'actor' in a room. If a client disconnects, this actor is inactive first and removed after this timeout. In milliseconds.</summary>
         public int PlayerTtl;
