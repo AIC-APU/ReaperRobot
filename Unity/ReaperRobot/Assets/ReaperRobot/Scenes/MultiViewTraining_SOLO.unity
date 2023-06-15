@@ -2104,6 +2104,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1055160672}
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.GUI.FadePanel,
+          ReaperRobot.GUI
+        m_MethodName: SetRepeat
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnPopupIntroduction:
     m_PersistentCalls:
       m_Calls:
@@ -2132,6 +2145,19 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1055160672}
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.GUI.FadePanel,
+          ReaperRobot.GUI
+        m_MethodName: SetRepeat
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
   _checkPointList:
   - {fileID: 249333448}
@@ -6332,7 +6358,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1707677649}
   m_OnClick:
     m_PersistentCalls:
@@ -6384,11 +6410,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1707677646}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9ddcdc900f84374399d41c95e4b5d5b, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d8636c8588c6ee4a9f16658b2560154, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _button: {fileID: 1707677648}
-  _sceneName: StartMenu
 --- !u!1 &1715400206
 GameObject:
   m_ObjectHideFlags: 0
