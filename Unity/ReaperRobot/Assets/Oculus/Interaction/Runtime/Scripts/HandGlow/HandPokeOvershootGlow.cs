@@ -21,6 +21,7 @@
 using Oculus.Interaction.Input;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Rendering;
 
 namespace Oculus.Interaction
 {
@@ -39,10 +40,13 @@ namespace Oculus.Interaction
         private PokeInteractor _pokeInteractor;
 
         [SerializeField]
-        private MaterialPropertyBlockEditor _materialEditor;
+        private HandVisual _handVisual;
 
         [SerializeField]
-        private Transform _wristTransform;
+        private SkinnedMeshRenderer _handRenderer;
+
+        [SerializeField]
+        private MaterialPropertyBlockEditor _materialEditor;
 
         [SerializeField]
         private Color _glowColor;
@@ -50,11 +54,18 @@ namespace Oculus.Interaction
         [SerializeField]
         private float _overshootMaxDistance = 0.15f;
 
+        [SerializeField]
+        private HandFinger _pokeFinger = HandFinger.Index;
+
+        [SerializeField]
+        [Range(0.0f, 1.0f)]
+        private float _maxGradientLength;
+
         public enum GlowType
         {
-            Fill = 11,
-            Outline = 12,
-            Both = 15
+            Fill = 30,
+            Outline = 31,
+            Both = 32
         }
 
         [SerializeField]
@@ -63,13 +74,12 @@ namespace Oculus.Interaction
         private IHand Hand;
         private bool _glowEnabled;
 
+        private readonly int _glowFingerIndexID = Shader.PropertyToID("_FingerGlowIndex");
         private readonly int _generateGlowID = Shader.PropertyToID("_GenerateGlow");
-        private readonly int _glowPositionID = Shader.PropertyToID("_GlowPosition");
         private readonly int _glowColorID = Shader.PropertyToID("_GlowColor");
         private readonly int _glowTypeID = Shader.PropertyToID("_GlowType");
         private readonly int _glowParameterID = Shader.PropertyToID("_GlowParameter");
         private readonly int _glowMaxLengthID = Shader.PropertyToID("_GlowMaxLength");
-        private readonly int _planeCenterID = Shader.PropertyToID("_PlaneCenter");
 
         protected bool _started = false;
 
@@ -85,7 +95,7 @@ namespace Oculus.Interaction
             Assert.IsNotNull(Hand);
             Assert.IsNotNull(_pokeInteractor);
             Assert.IsNotNull(_materialEditor);
-            Assert.IsNotNull(_wristTransform);
+            HandFingerMaskGenerator.GenerateFingerMask(_handRenderer, _handVisual, _materialEditor.MaterialPropertyBlock);
             this.EndStart(ref _started);
         }
 
@@ -105,19 +115,16 @@ namespace Oculus.Interaction
             }
         }
 
-        private void UpdateOvershoot(Vector3 planeCenter,
-            float normalizedDistance, Vector3 wristPosition, float glowDistance)
+        private void UpdateOvershoot(float normalizedDistance )
         {
             if (_materialEditor == null) return;
             var _block = _materialEditor.MaterialPropertyBlock;
-            _block.SetVector(_planeCenterID, planeCenter);
-
-            _block.SetFloat(_glowParameterID, 1.0f - Mathf.Clamp01(normalizedDistance));
+            _block.SetFloat(_glowParameterID, Mathf.Clamp01(normalizedDistance));
             _block.SetInt(_generateGlowID, 1);
             _block.SetColor(_glowColorID, _glowColor);
-            _block.SetInt(_glowTypeID, (int) _glowType);
-            _block.SetVector(_glowPositionID, wristPosition);
-            _block.SetFloat(_glowMaxLengthID, glowDistance);
+            _block.SetInt(_glowTypeID, (int)_glowType);
+            _block.SetInt(_glowFingerIndexID, (int)_pokeFinger);
+            _block.SetFloat(_glowMaxLengthID, _maxGradientLength);
         }
 
         private void UpdateVisual()
@@ -127,11 +134,10 @@ namespace Oculus.Interaction
                 _glowEnabled = true;
                 Vector3 planeCenter = _pokeInteractor.TouchPoint;
                 Vector3 pokeOrigin = _pokeInteractor.Origin;
-                float normalizedDistance = Mathf.Clamp01(Vector3.Distance(planeCenter, pokeOrigin) / _overshootMaxDistance);
-                Vector3 wristPosition = _wristTransform.position;
-                float wristToOriginDistance = (_pokeInteractor.Origin - wristPosition).magnitude;
-                UpdateOvershoot(planeCenter, normalizedDistance,
-                    wristPosition, wristToOriginDistance);
+                float normalizedDistance =
+                    Mathf.Clamp01(Vector3.Distance(planeCenter, pokeOrigin) /
+                                  _overshootMaxDistance);
+                UpdateOvershoot(normalizedDistance);
             }
             else
             {
@@ -156,7 +162,6 @@ namespace Oculus.Interaction
             InjectMaterialPropertyBlockEditor(materialEditor);
             InjectGlowColor(glowColor);
             InjectOvershootMaxDistance(distanceMultiplier);
-            InjectSyntheticWristTransform(wristTransform);
             InjectGlowType(glowType);
         }
 
@@ -184,11 +189,6 @@ namespace Oculus.Interaction
         public void InjectOvershootMaxDistance(float overshootMaxDistance)
         {
             _overshootMaxDistance = overshootMaxDistance;
-        }
-
-        public void InjectSyntheticWristTransform(Transform wristTransform)
-        {
-            _wristTransform = wristTransform;
         }
 
         public void InjectGlowType(GlowType glowType)

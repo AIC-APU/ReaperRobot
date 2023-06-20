@@ -290,6 +290,7 @@ public class OVRManifestPreprocessor
             handTrackingEntryNeeded,
             modifyIfFound);
 
+
         AddOrRemoveTag(doc,
             androidNamespaceURI,
             "/manifest/application",

@@ -21,6 +21,15 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// Represents a room described by its floor, ceiling and walls <see cref="OVRAnchor"/>s.
+/// </summary>
+/// <remarks>
+/// This component can be accessed from an <see cref="OVRAnchor"/> that supports it by calling
+/// <see cref="OVRAnchor.GetComponent{T}"/> from the anchor.
+/// </remarks>
+/// <seealso cref="FetchLayoutAnchorsAsync"/>
+/// <seealso cref="TryGetRoomLayout"/>
 public readonly partial struct OVRRoomLayout : IOVRAnchorComponent<OVRRoomLayout>, IEquatable<OVRRoomLayout>
 {
     /// <summary>

@@ -685,6 +685,7 @@ public class OVRSpatialAnchor : MonoBehaviour
             ? OVRTask.FromRequest<bool>(requestId)
             : OVRTask.FromResult(false);
 
+
     private static void ThrowIfBound(Guid uuid)
     {
         if (SpatialAnchors.ContainsKey(uuid))
@@ -916,15 +917,16 @@ public class OVRSpatialAnchor : MonoBehaviour
         {
             foreach (var anchor in value.Anchors)
             {
-                if (result != OperationResult.Success)
-                {
-                    Development.LogError($"[{anchor.Uuid}] {nameof(OVRPlugin)}.{nameof(OVRPlugin.SaveSpace)} failed.");
-                }
-
                 switch (actionType)
                 {
                     case MultiAnchorActionType.Save:
                     {
+                        if (result != OperationResult.Success)
+                        {
+                            Development.LogError(
+                                $"[{anchor.Uuid}] {nameof(OVRPlugin)}.{nameof(OVRPlugin.SaveSpaceList)} failed with result: {result}.");
+                        }
+
                         if (AsyncRequestTaskIds.TryGetValue(anchor, out var taskId))
                         {
                             AsyncRequestTaskIds.Remove(anchor);
@@ -935,6 +937,12 @@ public class OVRSpatialAnchor : MonoBehaviour
                     }
                     case MultiAnchorActionType.Share:
                     {
+                        if (result != OperationResult.Success)
+                        {
+                            Development.LogError(
+                                $"[{anchor.Uuid}] {nameof(OVRPlugin)}.{nameof(OVRPlugin.ShareSpaces)} failed with result: {result}.");
+                        }
+
                         if (AsyncRequestTaskIds.TryGetValue(anchor, out var taskId))
                         {
                             AsyncRequestTaskIds.Remove(anchor);
@@ -1078,6 +1086,7 @@ public class OVRSpatialAnchor : MonoBehaviour
         }
 
         private IReadOnlyList<Guid> _uuids;
+
 
         internal OVRSpaceQuery.Options ToQueryOptions() => new OVRSpaceQuery.Options
         {
@@ -1310,12 +1319,6 @@ public class OVRSpatialAnchor : MonoBehaviour
         return task.IsPending;
     }
 
-    private static void ValidateNonNullIds(IReadOnlyList<Guid> uuids)
-    {
-        if (uuids == null)
-            throw new InvalidOperationException($"{nameof(LoadOptions)}.{nameof(LoadOptions.Uuids)} must not be null.");
-    }
-
     /// <summary>
     /// Performs a query for anchors with the specified <paramref name="options"/>.
     /// </summary>
@@ -1332,7 +1335,10 @@ public class OVRSpatialAnchor : MonoBehaviour
     /// <exception cref="InvalidOperationException">Thrown if <see cref="LoadOptions.Uuids"/> of <paramref name="options"/> is `null`.</exception>
     public static OVRTask<UnboundAnchor[]> LoadUnboundAnchorsAsync(LoadOptions options)
     {
-        ValidateNonNullIds(options.Uuids);
+        if (options.Uuids == null)
+        {
+            throw new InvalidOperationException($"{nameof(LoadOptions)}.{nameof(LoadOptions.Uuids)} must not be null.");
+        }
 
         if (!options.ToQueryOptions().TryQuerySpaces(out var requestId))
         {
@@ -1386,48 +1392,7 @@ public class OVRSpatialAnchor : MonoBehaviour
         UnboundAnchorBuffer.Clear();
         foreach (var result in results)
         {
-            if (SpatialAnchors.ContainsKey(result.uuid))
-            {
-                Development.Log($"[{result.uuid}] Anchor is already bound to an {nameof(OVRSpatialAnchor)}. Ignoring.");
-                continue;
-            }
-
-            // See if it supports localization
-            if (!OVRPlugin.EnumerateSpaceSupportedComponents(result.space, out var numSupportedComponents,
-                    ComponentTypeBuffer))
-            {
-                Development.LogWarning($"[{result.uuid}] Unable to enumerate supported component types. Ignoring.");
-                continue;
-            }
-
-            var supportsLocatable = false;
-            for (var i = 0; i < numSupportedComponents; i++)
-            {
-                supportsLocatable |= ComponentTypeBuffer[i] == OVRPlugin.SpaceComponentType.Locatable;
-            }
-
-#if DEVELOPMENT_BUILD
-            var supportedComponentTypesMsg =
-                $"[{result.uuid}] Supports {numSupportedComponents} component type(s): {(numSupportedComponents == 0 ? "(none)" : string.Join(", ", ComponentTypeBuffer.Take((int)numSupportedComponents).Select(c => c.ToString())))}";
-#endif
-
-            if (!supportsLocatable)
-            {
-#if DEVELOPMENT_BUILD
-                Development.Log($"{supportedComponentTypesMsg} -- ignoring because it does not support localization.");
-#endif
-                continue;
-            }
-
-#if DEVELOPMENT_BUILD
-            Development.Log($"{supportedComponentTypesMsg}.");
-#endif
-
-            OVRPlugin.GetSpaceComponentStatus(result.space, OVRPlugin.SpaceComponentType.Locatable, out var enabled,
-                out var changePending);
-            Debug.Log($"{result.uuid}: locatable enabled? {enabled} changePending? {changePending}");
-
-            UnboundAnchorBuffer.Add(new UnboundAnchor(result.space, result.uuid));
+            PopulateUnbound(result.uuid, result.space);
         }
 
         Development.Log(
@@ -1438,6 +1403,59 @@ public class OVRSpatialAnchor : MonoBehaviour
             : UnboundAnchorBuffer.ToArray();
         OVRTask.GetExisting<UnboundAnchor[]>(requestId).SetResult(unboundAnchors);
     }
+
+    private static void PopulateUnbound(Guid uuid, UInt64 space)
+    {
+        if (SpatialAnchors.ContainsKey(uuid))
+        {
+            Development.Log($"[{uuid}] Anchor is already bound to an {nameof(OVRSpatialAnchor)}. Ignoring.");
+            return;
+        }
+
+        // See if it supports localization
+        if (!OVRPlugin.EnumerateSpaceSupportedComponents(space, out var numSupportedComponents,
+                ComponentTypeBuffer))
+        {
+            Development.LogWarning($"[{uuid}] Unable to enumerate supported component types. Ignoring.");
+            return;
+        }
+
+        var supportsLocatable = false;
+        for (var i = 0; i < numSupportedComponents; i++)
+        {
+            supportsLocatable |= ComponentTypeBuffer[i] == OVRPlugin.SpaceComponentType.Locatable;
+        }
+
+#if DEVELOPMENT_BUILD
+        var supportedComponentTypesMsg =
+            $"[{uuid}] Supports {numSupportedComponents} component type(s): {(numSupportedComponents == 0 ? "(none)" : string.Join(", ", ComponentTypeBuffer.Take((int)numSupportedComponents).Select(c => c.ToString())))}";
+#endif
+
+        if (!supportsLocatable)
+        {
+#if DEVELOPMENT_BUILD
+            Development.Log($"{supportedComponentTypesMsg} -- ignoring because it does not support localization.");
+#endif
+            return;
+        }
+
+        if (!OVRPlugin.GetSpaceComponentStatus(space, OVRPlugin.SpaceComponentType.Locatable, out var enabled,
+                out var changePending))
+        {
+#if DEVELOPMENT_BUILD
+            Development.Log($"{supportedComponentTypesMsg} -- ignoring because failed to get localization.");
+#endif
+            return;
+        }
+#if DEVELOPMENT_BUILD
+        Development.Log($"{supportedComponentTypesMsg}.");
+#endif
+
+        Debug.Log($"{uuid}: locatable enabled? {enabled} changePending? {changePending}");
+
+        UnboundAnchorBuffer.Add(new UnboundAnchor(space, uuid));
+    }
+
 
     private static void OnSpaceSetComponentStatusComplete(ulong requestId, bool result, OVRSpace space, Guid uuid,
         OVRPlugin.SpaceComponentType componentType, bool enabled)
@@ -1598,6 +1616,7 @@ public class OVRSpatialAnchor : MonoBehaviour
             task.ContinueWith(Delegate, new InvertedCapture<TResult, TCapture>(onCompleted, state));
         }
     }
+
 }
 
 /// <summary>

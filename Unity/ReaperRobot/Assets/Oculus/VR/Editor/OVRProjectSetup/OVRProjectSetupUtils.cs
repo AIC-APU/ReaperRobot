@@ -20,6 +20,7 @@
 
 using System.IO;
 using System.Linq;
+using System.Threading;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
@@ -28,7 +29,7 @@ using UnityEngine.SceneManagement;
 
 internal static class OVRProjectSetupUtils
 {
-    private static string _rootPath = null;
+    private static string _rootPath;
 
     public static string RootPath
     {
@@ -59,6 +60,19 @@ internal static class OVRProjectSetupUtils
         return rootGameObjects.FirstOrDefault(go => go.GetComponentInChildren<T>())?.GetComponentInChildren<T>();
     }
 
+    public static T FindScriptableObjectInProject<T>() where T : ScriptableObject
+    {
+        var guids = AssetDatabase.FindAssets("t:" + typeof(T).Name);
+
+        if (guids.Length == 0)
+        {
+            return null;
+        }
+
+        var path = AssetDatabase.GUIDToAssetPath(guids[0]);
+        return AssetDatabase.LoadAssetAtPath<T>(path);
+    }
+
     public static GUIContent CreateIcon(string name, string tooltip = null, bool builtIn = false)
     {
         GUIContent content = null;
@@ -70,7 +84,7 @@ internal static class OVRProjectSetupUtils
         {
             var path = BuildIconPath(name);
             var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
-            content = new GUIContent()
+            content = new GUIContent
             {
                 image = texture,
                 tooltip = tooltip
@@ -100,7 +114,7 @@ internal static class OVRProjectSetupUtils
         {
             while (!PackageManagerListAvailable)
             {
-                System.Threading.Thread.Sleep(100);
+                Thread.Sleep(100);
             }
         }
 
@@ -114,7 +128,7 @@ internal static class OVRProjectSetupUtils
         // TODO: make this async later
         while (!request.IsCompleted)
         {
-            System.Threading.Thread.Sleep(100);
+            Thread.Sleep(100);
         }
 
         // Refresh the Client list
@@ -130,7 +144,7 @@ internal static class OVRProjectSetupUtils
         // TODO: make this async later
         while (!request.IsCompleted)
         {
-            System.Threading.Thread.Sleep(1);
+            Thread.Sleep(1);
         }
 
         // Refresh the Client list

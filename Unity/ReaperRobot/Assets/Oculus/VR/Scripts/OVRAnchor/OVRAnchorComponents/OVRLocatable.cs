@@ -21,6 +21,18 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Represents the Pose of the anchor. Enabling it will localize the anchor.
+/// </summary>
+/// <remarks>
+/// This component can be accessed from an <see cref="OVRAnchor"/> that supports it by calling
+/// <see cref="OVRAnchor.GetComponent{T}"/> from the anchor.
+/// This component needs to be enabled before requesting its Pose. See <see cref="IsEnabled"/> and
+/// <see cref="SetEnabledAsync"/>
+/// </remarks>
+/// <seealso cref="TrackingSpacePose"/>
+/// <seealso cref="TryGetSceneAnchorPose"/>
+/// <seealso cref="TryGetSpatialAnchorPose"/>
 public readonly partial struct OVRLocatable : IOVRAnchorComponent<OVRLocatable>, IEquatable<OVRLocatable>
 {
     /// <summary>

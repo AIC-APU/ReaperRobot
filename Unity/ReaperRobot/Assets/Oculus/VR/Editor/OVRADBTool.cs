@@ -198,7 +198,7 @@ public class OVRADBTool
 
         if (!string.IsNullOrEmpty(errorString))
         {
-            if (errorString.Contains("Warning"))
+            if (errorString.Contains("Warning") || errorString.Contains("daemon not running; starting now"))
             {
                 UnityEngine.Debug.LogWarning("OVRADBTool " + errorString);
             }

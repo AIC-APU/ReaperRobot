@@ -48,7 +48,7 @@ internal abstract class OVRProjectSetupSettingItem<T>
 
     public void OnSet()
     {
-        OVRProjectSetupTelemetryEvent.Start(OVRProjectSetupTelemetryEvent.EventTypes.Option)
+        OVRTelemetry.Start(OVRProjectSetupTelemetryEvent.EventTypes.Option)
             .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Uid, Uid)
             .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Value, Value.ToString())
             .Send();

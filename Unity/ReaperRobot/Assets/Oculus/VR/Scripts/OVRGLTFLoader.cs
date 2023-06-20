@@ -927,17 +927,22 @@ public class OVRGLTFLoader
                 if (!animationNodeLookup.TryGetValue(nodeId, out var animationNode))
                 {
                     m_morphTargetHandlers.TryGetValue(nodeId, out var morphTargetHandler);
-                    animationNode = animationNodeLookup[nodeId] = new OVRGLTFAnimatinonNode(m_jsonData, m_binaryChunk, inputNodeType, m_Nodes[nodeId],
+                    animationNode = animationNodeLookup[nodeId] = new OVRGLTFAnimatinonNode(m_jsonData, m_binaryChunk,
+                        inputNodeType, m_Nodes[nodeId],
                         morphTargetHandler);
                 }
+
                 if (inputNodeType != OVRGLTFInputNode.None)
                 {
-                    if (!m_InputAnimationNodes.ContainsKey(inputNodeType)) {
+                    if (!m_InputAnimationNodes.ContainsKey(inputNodeType))
+                    {
                         m_InputAnimationNodes[inputNodeType] = animationNode;
                     }
                 }
+
                 animationNode.AddChannel(channel, animation["samplers"]);
             }
+
             m_AnimationLookup[animationIndex] = animationNodeLookup.Values.ToArray();
             animationIndex++;
         }

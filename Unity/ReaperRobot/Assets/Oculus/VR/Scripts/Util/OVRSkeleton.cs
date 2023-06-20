@@ -363,7 +363,7 @@ public class OVRSkeleton : MonoBehaviour
         for (int i = 0; i < _bones.Count; ++i)
         {
             if (!IsValidBone((BoneId)_bones[i].ParentBoneIndex) ||
-                IsBodySkeleton(_skeletonType))  // Body bones are always in tracking space
+                IsBodySkeleton(_skeletonType)) // Body bones are always in tracking space
             {
                 _bones[i].Transform.SetParent(_bonesGO.transform, false);
             }
@@ -903,8 +903,9 @@ public class OVRSkeleton : MonoBehaviour
         }
     }
 
-    private static bool IsBodySkeleton(SkeletonType type) => type == SkeletonType.Body;
-    private static bool IsHandSkeleton(SkeletonType type) => type == SkeletonType.HandLeft || type == SkeletonType.HandRight;
+    internal static bool IsBodySkeleton(SkeletonType type) => type == SkeletonType.Body;
+    private static bool IsHandSkeleton(SkeletonType type) =>
+        type == SkeletonType.HandLeft || type == SkeletonType.HandRight;
 }
 
 public class OVRBone

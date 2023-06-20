@@ -37,7 +37,7 @@ public class OVRRuntimeController : MonoBehaviour
     /// <summary>
     /// Support render model animation
     /// </summary>
-    public bool m_supportAnimation;
+    public bool m_supportAnimation = true;
 
     private GameObject m_controllerObject;
 

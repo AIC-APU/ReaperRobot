@@ -35,6 +35,30 @@ public partial class OVRUnityHumanoidSkeletonRetargeter
         public class BoneData
         {
             /// <summary>
+            /// Default, no-argument constructor.
+            /// </summary>
+            public BoneData()
+            {
+            }
+
+            /// <summary>
+            /// Copy constructor.
+            /// </summary>
+            /// <param name="otherBoneData">Other bone data to copy from.</param>
+            public BoneData(BoneData otherBoneData)
+            {
+                OriginalJoint = otherBoneData.OriginalJoint;
+                FromPosition = otherBoneData.FromPosition;
+                ToPosition = otherBoneData.ToPosition;
+                JointPairStart = otherBoneData.JointPairStart;
+                JointPairEnd = otherBoneData.JointPairEnd;
+                JointPairOrientation = otherBoneData.JointPairOrientation;
+                CorrectionQuaternion = otherBoneData.CorrectionQuaternion;
+                ParentTransform = otherBoneData.ParentTransform;
+                DegenerateJoint = otherBoneData.DegenerateJoint;
+            }
+
+            /// <summary>
             /// Transform associated with joint.
             /// </summary>
             public Transform OriginalJoint;
@@ -75,6 +99,11 @@ public partial class OVRUnityHumanoidSkeletonRetargeter
             /// so we have to cache it ahead of time.
             /// </summary>
             public Transform ParentTransform;
+
+            /// <summary>
+            /// Some joints made have bad orientations due to faulty joint pairs.
+            /// </summary>
+            public bool DegenerateJoint = false;
         }
 
         /// <summary>
@@ -87,6 +116,20 @@ public partial class OVRUnityHumanoidSkeletonRetargeter
             (HumanBodyBones[])Enum.GetValues(typeof(HumanBodyBones));
 
         /// <summary>
+        /// Constructor that copies another meta data class.
+        /// </summary>
+        /// <param name="otherSkeletonMetaData">Other meta data to copy from.</param>
+        public OVRSkeletonMetadata(OVRSkeletonMetadata otherSkeletonMetaData)
+        {
+            BodyToBoneData = new Dictionary<HumanBodyBones, BoneData>();
+            foreach (var key in otherSkeletonMetaData.BodyToBoneData.Keys)
+            {
+                var value = otherSkeletonMetaData.BodyToBoneData[key];
+                BodyToBoneData[key] = new BoneData(value);
+            }
+        }
+
+        /// <summary>
         /// Main constructor.
         /// </summary>
         /// <param name="animator">Animator to build meta data from.</param>
@@ -96,7 +139,7 @@ public partial class OVRUnityHumanoidSkeletonRetargeter
         }
 
         /// <summary>
-        /// Constructor OVRSkeleton.
+        /// Constructor for OVRSkeleton.
         /// </summary>
         /// <param name="skeleton">Skeleton to build meta data from.</param>
         /// <param name="useBindPose">Whether to use bind pose (T-pose) or not.</param>
@@ -107,6 +150,7 @@ public partial class OVRUnityHumanoidSkeletonRetargeter
             BuildBoneDataSkeleton(skeleton, useBindPose, customBoneIdToHumanBodyBone);
         }
 
+
         /// <summary>
         /// Builds body to bone data with the OVRSkeleton.
         /// </summary>
@@ -115,6 +159,14 @@ public partial class OVRUnityHumanoidSkeletonRetargeter
         /// <param name="customBoneIdToHumanBodyBone">Custom bone ID to human body bone mapping.</param>
         public void BuildBoneDataSkeleton(OVRSkeleton skeleton, bool useBindPose,
             Dictionary<OVRSkeleton.BoneId, HumanBodyBones> customBoneIdToHumanBodyBone)
+        {
+            AssembleSkeleton(skeleton, useBindPose, customBoneIdToHumanBodyBone);
+        }
+
+
+        private void AssembleSkeleton(OVRSkeleton skeleton, bool useBindPose,
+            Dictionary<OVRSkeleton.BoneId, HumanBodyBones> customBoneIdToHumanBodyBone
+            )
         {
             if (BodyToBoneData.Count != 0)
             {
@@ -139,9 +191,11 @@ public partial class OVRUnityHumanoidSkeletonRetargeter
                 if (!OVRHumanBodyBonesMappings.BoneIdToJointPair.ContainsKey(bone.Id))
                 {
                     Debug.LogError($"Can't find {bone.Id} in bone Id to joint pair map!");
+                    continue;
                 }
 
-                var jointPair = OVRHumanBodyBonesMappings.BoneIdToJointPair[bone.Id];
+                var jointPair =
+                    OVRHumanBodyBonesMappings.BoneIdToJointPair[bone.Id];
                 var startOfPair = jointPair.Item1;
                 var endofPair = jointPair.Item2;
 
@@ -262,10 +316,12 @@ public partial class OVRUnityHumanoidSkeletonRetargeter
                     var node2 = boneData.JointPairStart;
                     jointPairStartPosition = node1.position;
                     jointPairEndPosition = node2.position;
+                    boneData.DegenerateJoint = true;
                 }
                 else
                 {
                     jointPairEndPosition = boneData.JointPairEnd.position;
+                    boneData.DegenerateJoint = false;
                 }
 
                 // with some joints like hands, fix the right vector. that's because the hand is nice and

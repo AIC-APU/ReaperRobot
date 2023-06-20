@@ -22,16 +22,19 @@ MonoBehaviour:
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6b9fed94c239fa6408fa6979d32f0d47
     m_Address: Japanese (ja)
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b16d3739ee4205b4495da1b1a7dd8f75
     m_Address: Pseudo-Locale(pseudo)
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: c587a869d21dd0e4da234dae0184c6fb, type: 2}
   m_SchemaSet:

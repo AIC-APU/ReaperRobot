@@ -37,7 +37,7 @@ namespace Oculus.Interaction.HandGrab
     /// </summary>
     [Serializable]
     public partial class HandGrabInteractable : PointerInteractable<HandGrabInteractor, HandGrabInteractable>,
-        IRigidbodyRef, IHandGrabbable, ICollidersRef, IRelativeToRef
+        IHandGrabInteractable, IRigidbodyRef, ICollidersRef
     {
         [SerializeField]
         private Rigidbody _rigidbody;
@@ -189,10 +189,7 @@ namespace Oculus.Interaction.HandGrab
             return findResult != GrabPoseFinder.FindResult.NotCompatible;
         }
 
-        public bool UsesHandPose()
-        {
-            return _grabPoseFinder.UsesHandPose();
-        }
+        public bool UsesHandPose => _grabPoseFinder.UsesHandPose;
 
         public bool SupportsHandedness(Handedness handedness)
         {

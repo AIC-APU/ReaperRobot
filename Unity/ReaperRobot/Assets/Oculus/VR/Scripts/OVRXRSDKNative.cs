@@ -43,5 +43,8 @@ public static class OculusXRPlugin
 
     [DllImport("OculusXRPlugin")]
     public static extern void SetAppSpaceRotation(float x, float y, float z, float w);
+
+    [DllImport("OculusXRPlugin")]
+    public static extern void SetDepthSubmission(bool enable);
 }
 #endif

@@ -52,11 +52,28 @@ public class OVRSceneVolume : MonoBehaviour, IOVRSceneComponent
     public Vector3 Dimensions => new Vector3(Width, Height, Depth);
 
     /// <summary>
+    /// The offset of the volume with respect to the anchor's pivot.
+    /// </summary>
+    /// <remarks>
+    /// The offset is mostly zero, as most objects have the anchor's pivot
+    /// aligned with the top face of the volume.
+    ///
+    /// The offset is not zero in cases where the anchor's pivot point is
+    /// aligned with another element, such as the seated area for a couch,
+    /// defined as a plane.
+    ///
+    /// The Offset is provided in the local coordinate space of the
+    /// children. See <seealso cref="OVRSceneAnchor"/> to see the
+    /// transformation of Unity and OpenXR coordinate systems.
+    public Vector3 Offset { get; private set; }
+
+    /// <summary>
     /// Whether the child transforms will be scaled according to the dimensions of this volume.
     /// </summary>
     /// <remarks>If set to True, all the child transforms will be scaled to the dimensions of this volume immediately.
     /// And, if it's set to False, dimensions of this volume will no longer affect the child transforms, and child
-    /// transforms will retain their current scale.</remarks>
+    /// transforms will retain their current scale. This can be controlled further by using a
+    /// <seealso cref="OVRSceneObjectTransformType"/>.</remarks>
     public bool ScaleChildren
     {
         get => _scaleChildren;
@@ -65,14 +82,38 @@ public class OVRSceneVolume : MonoBehaviour, IOVRSceneComponent
             _scaleChildren = value;
             if (_scaleChildren && _sceneAnchor.Space.Valid)
             {
-                SetChildScale(transform, Dimensions);
+                SetChildScale();
             }
         }
     }
 
-    [Tooltip("When enabled, scales the child transforms according to the dimensions of this volume")]
+    /// <summary>
+    /// Whether the child transforms will be offset according to the offset of this volume.
+    /// </summary>
+    /// <remarks>If set to True, all the child transforms will be offset to the offset of this volume immediately.
+    /// And, if it's set to False, offsets of this volume will no longer affect the child transforms, and child
+    /// transforms will retain their current offset. This can be controlled further by using a
+    /// <seealso cref="OVRSceneObjectTransformType"/>.</remarks>
+    public bool OffsetChildren
+    {
+        get => _offsetChildren;
+        set
+        {
+            _offsetChildren = value;
+            if (_offsetChildren && _sceneAnchor.Space.Valid)
+            {
+                SetChildOffset();
+            }
+        }
+    }
+
+    [Tooltip("When enabled, scales the child transforms according to the dimensions of this volume.")]
     [SerializeField]
     private bool _scaleChildren = true;
+
+    [Tooltip("When enabled, offsets the child transforms according to the offset of this volume.")]
+    [SerializeField]
+    private bool _offsetChildren = false;
 
     private OVRSceneAnchor _sceneAnchor;
 
@@ -90,11 +131,37 @@ public class OVRSceneVolume : MonoBehaviour, IOVRSceneComponent
         UpdateTransform();
     }
 
-    private static void SetChildScale(Transform parentTransform, Vector3 dimensions)
+    private void SetChildScale()
     {
-        for (var i = 0; i < parentTransform.childCount; i++)
+        // this will scale all children unless they specifically ask not to
+        // be scaled, using a TransformType that is not Volume.
+        for (var i = 0; i < transform.childCount; i++)
         {
-            parentTransform.GetChild(i).localScale = dimensions;
+            var child = transform.GetChild(i);
+            if (child.TryGetComponent<OVRSceneObjectTransformType>(out var transformType))
+            {
+                if (transformType.TransformType != OVRSceneObjectTransformType.Transformation.Volume)
+                    continue;
+            }
+
+            child.localScale = Dimensions;
+        }
+    }
+
+    private void SetChildOffset()
+    {
+        // this will offset all children unless they specifically ask not to
+        // be offset, using a TransformType that is not Volume.
+        for (var i = 0; i < transform.childCount; i++)
+        {
+            var child = transform.GetChild(i);
+            if (child.TryGetComponent<OVRSceneObjectTransformType>(out var transformType))
+            {
+                if (transformType.TransformType != OVRSceneObjectTransformType.Transformation.Volume)
+                    continue;
+            }
+
+            child.localPosition = Offset;
         }
     }
 
@@ -106,19 +173,33 @@ public class OVRSceneVolume : MonoBehaviour, IOVRSceneComponent
             Height = bounds.Size.h;
             Depth = bounds.Size.d;
 
-            var dimensions = Dimensions;
+            // calculate the offset as the difference between the
+            // volume pivot and anchor pivot, in Unity coordinate system
+            var anchorPivot = transform.position;
+            var minPoint = transform.TransformPoint(bounds.Pos.FromVector3f());
+            var maxPoint = transform.TransformPoint(
+                bounds.Pos.FromVector3f() + bounds.Size.FromSize3f());
+            var volumePivot = Vector3.Lerp(minPoint, maxPoint, 0.5f);
+            volumePivot.y = maxPoint.y;
+
+            Offset = new Vector3(
+                volumePivot.x - anchorPivot.x,
+                volumePivot.z - anchorPivot.z,
+                volumePivot.y - anchorPivot.y);
+
             OVRSceneManager.Development.Log(nameof(OVRSceneVolume),
-                $"[{_sceneAnchor.Uuid}] Volume has dimensions {dimensions}.");
+                $"[{_sceneAnchor.Uuid}] Volume has dimensions {Dimensions} " +
+                $"and offset {Offset}.");
 
             if (ScaleChildren)
-            {
-                SetChildScale(transform, dimensions);
-            }
+                SetChildScale();
+            if (OffsetChildren)
+                SetChildOffset();
         }
         else
         {
             OVRSceneManager.Development.LogError(nameof(OVRSceneVolume),
-                $"[{_sceneAnchor.Space}] Failed to retrieve volume's dimensions.");
+                $"[{_sceneAnchor.Space}] Failed to retrieve volume's information.");
         }
     }
 }

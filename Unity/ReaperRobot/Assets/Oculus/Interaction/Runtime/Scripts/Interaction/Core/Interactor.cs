@@ -36,6 +36,11 @@ namespace Oculus.Interaction
                                     where TInteractor : Interactor<TInteractor, TInteractable>
                                     where TInteractable : Interactable<TInteractor, TInteractable>
     {
+        #region Oculus Library Variables and Constants
+        private const ulong DefaultNativeId = 0x494e56414c494420;
+        protected ulong _nativeId = DefaultNativeId;
+        #endregion Oculus Library Methods and Constants
+
         [SerializeField, Interface(typeof(IActiveState)), Optional]
         private UnityEngine.Object _activeState;
         private IActiveState ActiveState = null;
@@ -202,6 +207,12 @@ namespace Oculus.Interaction
                 _state = value;
 
                 WhenStateChanged(new InteractorStateChangeArgs(previousState, _state));
+
+                // Update native component
+                if (_nativeId != DefaultNativeId && _state == InteractorState.Select)
+                {
+                    NativeMethods.isdk_NativeComponent_Activate(_nativeId);
+                }
             }
         }
 

@@ -47,7 +47,7 @@ MonoBehaviour:
   _hand: {fileID: 8646129326984794350}
   _offset: {x: -0.1, y: -0.035, z: 0}
   _rotation: {x: 0.105225, y: -0.6678412, z: 0.013933297, w: 0.7366965}
-  _relativeTransform: {fileID: 0}
+  _mirrorLeftRotation: 1
 --- !u!1 &206931871687596337
 GameObject:
   m_ObjectHideFlags: 0
@@ -79,7 +79,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3282029263655771826}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2225697885797083731
 MonoBehaviour:
@@ -96,7 +96,7 @@ MonoBehaviour:
   _hand: {fileID: 8646129326984794350}
   _offset: {x: -0.11, y: -0.075, z: -0.02}
   _rotation: {x: 0.105225, y: -0.6678412, z: 0.013933297, w: 0.7366965}
-  _relativeTransform: {fileID: 0}
+  _mirrorLeftRotation: 1
 --- !u!136 &2876613987327765954
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -200,7 +200,7 @@ Transform:
   - {fileID: 479229219}
   - {fileID: 2089408844803092864}
   m_Father: {fileID: 3282029263655771826}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &3282029262929392819
 Rigidbody:
@@ -249,6 +249,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1428723456311757809}
+  - {fileID: 1417937832611935061}
   - {fileID: 3282029262929392818}
   - {fileID: 5051340845603383047}
   - {fileID: 8689371495054509437}
@@ -290,6 +291,7 @@ MonoBehaviour:
   _handGrabApi: {fileID: 2165145697951878349}
   _supportedGrabTypes: -1
   _hoverOnZeroStrength: 0
+  _grabOrigin: {fileID: 1417937832611935061}
   _gripPoint: {fileID: 479229219}
   _gripCollider: {fileID: 3414864589318482299}
   _pinchPoint: {fileID: 2089408844803092864}
@@ -341,7 +343,7 @@ Transform:
   - {fileID: 7689663653683840152}
   - {fileID: 162178370248616762}
   m_Father: {fileID: 3282029263655771826}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5274135674856270696
 GameObject:
@@ -548,6 +550,53 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.03
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &8802985852996603100
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1417937832611935061}
+  - component: {fileID: 1373515880922827771}
+  m_Layer: 0
+  m_Name: HandWristPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1417937832611935061
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8802985852996603100}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3282029263655771826}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1373515880922827771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8802985852996603100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d61ea23b9fd13af40afe326bb23ac1cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hand: {fileID: 8646129326984794350}
+  _offset: {x: 0, y: 0, z: 0}
+  _rotation: {x: 0, y: 0, z: 0, w: 1}
+  _mirrorLeftRotation: 0
 --- !u!1 &8924745499081199448
 GameObject:
   m_ObjectHideFlags: 0

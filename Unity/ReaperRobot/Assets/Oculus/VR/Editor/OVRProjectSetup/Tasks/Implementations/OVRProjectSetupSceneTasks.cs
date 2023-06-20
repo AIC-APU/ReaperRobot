@@ -33,7 +33,7 @@ internal static class OVRProjectSetupSceneTasks
             isDone: buildTargetGroup => OVRProjectSetupUtils.FindComponentInScene<OVRSceneManager>() == null ||
                                         OVRProjectConfig.CachedProjectConfig.anchorSupport ==
                                         OVRProjectConfig.AnchorSupport.Enabled,
-            message: "When using Scene in your project it's required to enable it's capability in the project config",
+            message: "When using Scene in your project it's required to enable its capability in the project config",
             fix: buildTargetGroup =>
             {
                 var projectConfig = OVRProjectConfig.CachedProjectConfig;

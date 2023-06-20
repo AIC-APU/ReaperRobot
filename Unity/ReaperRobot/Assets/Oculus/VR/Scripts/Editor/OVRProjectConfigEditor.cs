@@ -35,7 +35,7 @@ public class OVRProjectConfigEditor : Editor
         DrawProjectConfigInspector(projectConfig);
     }
 
-        public static void DrawTargetDeviceInspector(OVRProjectConfig projectConfig)
+    public static void DrawTargetDeviceInspector(OVRProjectConfig projectConfig)
     {
         // Target Devices
         EditorGUILayout.LabelField("Target Devices", EditorStyles.boldLabel);
@@ -148,6 +148,7 @@ public class OVRProjectConfigEditor : Editor
                 OVREditorUtil.SetupEnumField(projectConfig, "Hand Tracking Version",
                     ref projectConfig.handTrackingVersion, ref hasModified);
 
+
                 // Enable Render Model Support
                 bool renderModelSupportAvailable = OVRPluginInfo.IsOVRPluginOpenXRActivated();
                 EditorGUI.BeginDisabledGroup(!renderModelSupportAvailable);
@@ -161,7 +162,17 @@ public class OVRProjectConfigEditor : Editor
                     ref projectConfig.renderModelSupport, ref hasModified);
                 if (hasModified && projectConfig.renderModelSupport == OVRProjectConfig.RenderModelSupport.Disabled)
                 {
-                    projectConfig.trackedKeyboardSupport = OVRProjectConfig.TrackedKeyboardSupport.None;
+                    if (projectConfig.trackedKeyboardSupport != OVRProjectConfig.TrackedKeyboardSupport.None)
+                    {
+                        Debug.LogWarning("Tracked Keyboard support disabled. Requires Render Model Support");
+                        projectConfig.trackedKeyboardSupport = OVRProjectConfig.TrackedKeyboardSupport.None;
+                    }
+
+                    if (projectConfig.virtualKeyboardSupport != OVRProjectConfig.FeatureSupport.None)
+                    {
+                        Debug.LogWarning("Virtual Keyboard support disabled. Requires Render Model Support");
+                        projectConfig.virtualKeyboardSupport = OVRProjectConfig.FeatureSupport.None;
+                    }
                 }
 
                 EditorGUI.EndDisabledGroup();
@@ -182,6 +193,18 @@ public class OVRProjectConfigEditor : Editor
                 OVREditorUtil.SetupEnumField(projectConfig, new GUIContent("Tracked Keyboard Support",
                         "Show user's physical keyboard in correct position in VR."),
                     ref projectConfig.trackedKeyboardSupport, ref hasModified);
+
+                // Virtual Keyboard Support
+                bool virtualKeyboardSupportAvailable = OVRPluginInfo.IsOVRPluginOpenXRActivated();
+                EditorGUI.BeginDisabledGroup(!virtualKeyboardSupportAvailable);
+                if (!virtualKeyboardSupportAvailable)
+                {
+                    projectConfig.virtualKeyboardSupport = OVRProjectConfig.FeatureSupport.None;
+                }
+
+                OVREditorUtil.SetupEnumField(projectConfig, new GUIContent("Virtual Keyboard Support",
+                        "Provides a consistent typing experience across Meta Quest VR applications."),
+                    ref projectConfig.virtualKeyboardSupport, ref hasModified);
 
                 // Anchor Support - linked to Shared Spatial Anchors and Scene
                 var anchorSupportRequired = projectConfig.sharedAnchorSupport != OVRProjectConfig.FeatureSupport.None;
@@ -224,6 +247,11 @@ public class OVRProjectConfigEditor : Editor
                     projectConfig.renderModelSupport = OVRProjectConfig.RenderModelSupport.Enabled;
                 }
 
+                if (hasModified && projectConfig.virtualKeyboardSupport != OVRProjectConfig.FeatureSupport.None)
+                {
+                    projectConfig.renderModelSupport = OVRProjectConfig.RenderModelSupport.Enabled;
+                }
+
                 if (!OVRPluginInfo.IsOVRPluginOpenXRActivated())
                 {
                     EditorGUILayout.HelpBox(
@@ -236,6 +264,14 @@ public class OVRProjectConfigEditor : Editor
                 {
                     EditorGUILayout.HelpBox(
                         "Render model support is required to load keyboard models from the runtime.",
+                        MessageType.Error);
+                }
+
+                if (projectConfig.virtualKeyboardSupport != OVRProjectConfig.FeatureSupport.None &&
+                    projectConfig.renderModelSupport == OVRProjectConfig.RenderModelSupport.Disabled)
+                {
+                    EditorGUILayout.HelpBox(
+                        "Render model support is required to load virtual keyboard models from the runtime.",
                         MessageType.Error);
                 }
 
@@ -291,9 +327,6 @@ public class OVRProjectConfigEditor : Editor
                 OVREditorUtil.SetupBoolField(projectConfig, new GUIContent("Experimental Features Enabled",
                         "If checked, this application can use experimental features. Note that such features are for developer use only. This option must be disabled when submitting to the Oculus Store."),
                     ref projectConfig.experimentalFeaturesEnabled, ref hasModified);
-
-                OVREditorUtil.SetupEnumField(projectConfig, "Virtual Keyboard Support",
-                    ref projectConfig.virtualKeyboardSupport, ref hasModified);
 
                 break;
         }

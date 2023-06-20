@@ -162,7 +162,8 @@ public static class OVRCustomSkeletonEditorExtensions
         {
             if (bi >= OVRSkeleton.BoneId.Hand_ThumbTip && bi <= OVRSkeleton.BoneId.Hand_PinkyTip)
             {
-                return FBXHandSidePrefix[(int)skeletonType] + FBXHandFingerNames[(int)bi - (int)OVRSkeleton.BoneId.Hand_ThumbTip] +
+                return FBXHandSidePrefix[(int)skeletonType] +
+                       FBXHandFingerNames[(int)bi - (int)OVRSkeleton.BoneId.Hand_ThumbTip] +
                        "_finger_tip_marker";
             }
             else

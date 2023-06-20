@@ -21,6 +21,14 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Represents a volume described by its <see cref="Bounds"/>.
+/// </summary>
+/// <remarks>
+/// This component can be accessed from an <see cref="OVRAnchor"/> that supports it by calling
+/// <see cref="OVRAnchor.GetComponent{T}"/> from the anchor.
+/// </remarks>
+/// <seealso cref="BoundingBox"/>
 public readonly partial struct OVRBounded3D : IOVRAnchorComponent<OVRBounded3D>, IEquatable<OVRBounded3D>
 {
     /// <summary>
