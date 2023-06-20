@@ -51,9 +51,12 @@ public readonly partial struct OVRLocatable : IOVRAnchorComponent<OVRLocatable>,
     /// <summary>
     /// Sets the enabled status of this component.
     /// </summary>
+    /// <remarks>
+    /// A component must be enabled to access its data.
+    /// </remarks>
     /// <param name="enabled">The desired state of the component.</param>
     /// <param name="timeout">The timeout, in seconds, for the operation. Use zero to indicate an infinite timeout.</param>
-    /// <returns>Returns a <see cref="OVRTask{T}" /> whose result indicates the result of the operation.</returns>
+    /// <returns>Returns an <see cref="OVRTask{T}" /> whose result indicates the result of the operation.</returns>
     public OVRTask<bool> SetEnabledAsync(bool enabled, double timeout = 0) => SetSpaceComponentStatus(Handle, Type, enabled, timeout, out var requestId)
             ? OVRTask.FromRequest<bool>(requestId)
             : OVRTask.FromResult(false);
@@ -136,9 +139,12 @@ public readonly partial struct OVRStorable : IOVRAnchorComponent<OVRStorable>, I
     /// <summary>
     /// Sets the enabled status of this component.
     /// </summary>
+    /// <remarks>
+    /// A component must be enabled to access its data.
+    /// </remarks>
     /// <param name="enabled">The desired state of the component.</param>
     /// <param name="timeout">The timeout, in seconds, for the operation. Use zero to indicate an infinite timeout.</param>
-    /// <returns>Returns a <see cref="OVRTask{T}" /> whose result indicates the result of the operation.</returns>
+    /// <returns>Returns an <see cref="OVRTask{T}" /> whose result indicates the result of the operation.</returns>
     public OVRTask<bool> SetEnabledAsync(bool enabled, double timeout = 0) => SetSpaceComponentStatus(Handle, Type, enabled, timeout, out var requestId)
             ? OVRTask.FromRequest<bool>(requestId)
             : OVRTask.FromResult(false);
@@ -221,9 +227,12 @@ public readonly partial struct OVRSharable : IOVRAnchorComponent<OVRSharable>, I
     /// <summary>
     /// Sets the enabled status of this component.
     /// </summary>
+    /// <remarks>
+    /// A component must be enabled to access its data.
+    /// </remarks>
     /// <param name="enabled">The desired state of the component.</param>
     /// <param name="timeout">The timeout, in seconds, for the operation. Use zero to indicate an infinite timeout.</param>
-    /// <returns>Returns a <see cref="OVRTask{T}" /> whose result indicates the result of the operation.</returns>
+    /// <returns>Returns an <see cref="OVRTask{T}" /> whose result indicates the result of the operation.</returns>
     public OVRTask<bool> SetEnabledAsync(bool enabled, double timeout = 0) => SetSpaceComponentStatus(Handle, Type, enabled, timeout, out var requestId)
             ? OVRTask.FromRequest<bool>(requestId)
             : OVRTask.FromResult(false);

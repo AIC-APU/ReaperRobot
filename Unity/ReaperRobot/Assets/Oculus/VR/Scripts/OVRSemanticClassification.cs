@@ -75,12 +75,47 @@ public class OVRSemanticClassification : MonoBehaviour, IOVRSceneComponent
         if (OVRPlugin.GetSpaceSemanticLabels(GetComponent<OVRSceneAnchor>().Space, out var labels))
         {
             _labels.Clear();
-            _labels.AddRange(labels.Split(','));
+            _labels.AddRange(ValidateAndUpgradeLabels(labels).Split(','));
         }
         else
         {
             OVRSceneManager.Development.LogWarning(nameof(OVRSemanticClassification),
                 $"[{GetComponent<OVRSceneAnchor>().Uuid}] {nameof(OVRSceneAnchor)} has no semantic labels.");
+        }
+    }
+
+    /// <summary>
+    /// Checks labels to ensure that we've accounted for upgraded labels,
+    /// such as all Table labels also including Desk.
+    /// </summary>
+    internal static string ValidateAndUpgradeLabels(string labels)
+    {
+        using (new OVRObjectPool.ListScope<string>(out var newLabels))
+        {
+            var splitLabels = labels.Split(',');
+            var hasTable = false;
+            var hasDesk = false;
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            // OpenXR will only return TABLE, but we support DESK as it's
+            // Obsolete. This code will be removed once we remove DESK.
+            foreach (var label in splitLabels)
+            {
+                newLabels.Add(label);
+
+                if (label == OVRSceneManager.Classification.Table)
+                    hasTable = true;
+                else if (label == OVRSceneManager.Classification.Desk)
+                    hasDesk = true;
+            }
+
+            if (hasTable && !hasDesk)
+                newLabels.Add(OVRSceneManager.Classification.Desk);
+            else if (hasDesk && !hasTable)
+                newLabels.Add(OVRSceneManager.Classification.Table);
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            return string.Join(",", newLabels);
         }
     }
 }

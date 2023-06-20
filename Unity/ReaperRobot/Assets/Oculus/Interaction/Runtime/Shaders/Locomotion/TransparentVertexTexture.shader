@@ -5,8 +5,12 @@ Shader "Unlit/TransparentVertexTexture"
         _Color("Color",COLOR) = (1,1,1,1)
         _FadeLimit("Fade Limit",VECTOR) = (0,0,1,1)
         _FadeSign("Fade Sign",Range(-1,1)) = 1
+        _Fade("Fade",Range(0,1)) = 1
         _Highlight("Highlight Strength",Range(0,1)) = 0
         _HighlightColor("Highlight Color", COLOR) = (1,1,1,1)
+
+        _OffsetFactor("Offset Factor", float) = 0
+        _OffsetUnits("Offset Units", float) = 0
     }
     SubShader
     {
@@ -16,11 +20,12 @@ Shader "Unlit/TransparentVertexTexture"
 
         Pass
         {
+            Offset[_OffsetFactor],[_OffsetUnits]
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
-
+            
             #include "UnityCG.cginc"
 
             struct VertexInput
@@ -43,8 +48,12 @@ Shader "Unlit/TransparentVertexTexture"
             half4 _Color;
             half4 _FadeLimit;
             half _FadeSign;
+            half _Fade;
             half _Highlight;
             half4 _HighlightColor;
+
+            float _OffsetFactor;
+            float _OffsetUnits;
 
             VertexOutput vert (VertexInput v)
             {
@@ -64,7 +73,7 @@ Shader "Unlit/TransparentVertexTexture"
                 half4 color = i.color;
                 half lowLimit = smoothstep(_FadeLimit.x, _FadeLimit.y, i.uv.y);
                 half highLimit = smoothstep(_FadeLimit.z, _FadeLimit.w, i.uv.y);
-                color.a *= saturate(lowLimit - _FadeSign * highLimit);
+                color.a *= saturate(lowLimit - _FadeSign * highLimit) * _Fade;
 
                 return color;
             }

@@ -36,7 +36,7 @@ public class OVRCustomSkeleton : OVRSkeleton, ISerializationCallbackReceiver
     }
 
     [SerializeField, HideInInspector]
-    internal RetargetingType retargetingType = RetargetingType.OculusSkeleton ;
+    internal RetargetingType retargetingType = RetargetingType.OculusSkeleton;
 
     protected override Transform GetBoneTransform(BoneId boneId) => _customBones_V2[(int)boneId];
 

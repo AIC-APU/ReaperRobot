@@ -71,6 +71,7 @@ namespace Oculus.Interaction
         {
             base.Awake();
             Selector = _selector as ISelector;
+            _nativeId = 0x52617949746f7220;
         }
 
         protected override void Start()

@@ -220,11 +220,13 @@ public class OVRGradleGeneration
 
 #if UNITY_ANDROID
 #if PRIORITIZE_OCULUS_XR_SETTINGS
+#if !OCULUS_XR_PLUGIN_QUEST_ONE_REMOVED
         EditorBuildSettings.TryGetConfigObject("Unity.XR.Oculus.Settings", out OculusSettings deviceSettings);
         if (deviceSettings.TargetQuest)
         {
             UnityEngine.Debug.LogWarning("Quest 1 is no longer supported as a target device as of v51. Please uncheck Quest 1 as a target device, or downgrade to v50.");
         }
+#endif
 #else
         OVRProjectConfig projectConfig = OVRProjectConfig.GetProjectConfig();
         if (projectConfig.targetDeviceTypes.Contains(OVRProjectConfig.DeviceType.Quest))

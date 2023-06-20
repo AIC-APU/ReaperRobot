@@ -72,14 +72,15 @@ public class OVRCameraRig : MonoBehaviour
     public Transform rightEyeAnchor { get; private set; }
 
     /// <summary>
-    /// Always coincides with the pose of the left hand.
+    /// Always coincides with the pose of the left active input device.
     /// </summary>
     public Transform leftHandAnchor { get; private set; }
 
     /// <summary>
-    /// Always coincides with the pose of the right hand.
+    /// Always coincides with the pose of the right active input device.
     /// </summary>
     public Transform rightHandAnchor { get; private set; }
+
 
     /// <summary>
     /// Anchors controller pose to fix offset issues for the left hand.
@@ -297,10 +298,14 @@ public class OVRCameraRig : MonoBehaviour
             }
             else
             {
-                leftHandAnchor.localPosition = OVRInput.GetLocalControllerPosition(OVRInput.Controller.LHand);
-                rightHandAnchor.localPosition = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RHand);
-                leftHandAnchor.localRotation = OVRInput.GetLocalControllerRotation(OVRInput.Controller.LHand);
-                rightHandAnchor.localRotation = OVRInput.GetLocalControllerRotation(OVRInput.Controller.RHand);
+                OVRInput.Controller leftActiveController = OVRInput.GetActiveControllerForHand(OVRInput.Handedness.LeftHanded);
+                OVRInput.Controller rightActiveController = OVRInput.GetActiveControllerForHand(OVRInput.Handedness.RightHanded);
+
+                leftHandAnchor.localPosition = OVRInput.GetLocalControllerPosition(leftActiveController);
+                rightHandAnchor.localPosition = OVRInput.GetLocalControllerPosition(rightActiveController);
+                leftHandAnchor.localRotation = OVRInput.GetLocalControllerRotation(leftActiveController);
+                rightHandAnchor.localRotation = OVRInput.GetLocalControllerRotation(rightActiveController);
+
             }
 
             trackerAnchor.localPosition = tracker.position;
@@ -418,6 +423,8 @@ public class OVRCameraRig : MonoBehaviour
 
         if (rightHandAnchor == null)
             rightHandAnchor = ConfigureAnchor(trackingSpace, rightHandAnchorName);
+
+
 
         if (trackerAnchor == null)
             trackerAnchor = ConfigureAnchor(trackingSpace, trackerAnchorName);

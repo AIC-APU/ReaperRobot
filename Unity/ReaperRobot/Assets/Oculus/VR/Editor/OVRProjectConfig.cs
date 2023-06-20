@@ -44,7 +44,7 @@ public class OVRProjectConfig : ScriptableObject, ISerializationCallbackReceiver
     {
         ControllersOnly = 0,
         ControllersAndHands = 1,
-        HandsOnly = 2
+        HandsOnly = 2,
     }
 
     public enum HandTrackingFrequency
@@ -60,6 +60,7 @@ public class OVRProjectConfig : ScriptableObject, ISerializationCallbackReceiver
         V1 = 1,
         V2 = 2
     }
+
 
     public enum AnchorSupport
     {
@@ -94,7 +95,6 @@ public class OVRProjectConfig : ScriptableObject, ISerializationCallbackReceiver
     public HandTrackingSupport handTrackingSupport = HandTrackingSupport.ControllersOnly;
     public HandTrackingFrequency handTrackingFrequency = HandTrackingFrequency.LOW;
     public HandTrackingVersion handTrackingVersion = HandTrackingVersion.Default;
-
     [FormerlySerializedAs("spatialAnchorsSupport")]
     public AnchorSupport anchorSupport = AnchorSupport.Disabled;
 

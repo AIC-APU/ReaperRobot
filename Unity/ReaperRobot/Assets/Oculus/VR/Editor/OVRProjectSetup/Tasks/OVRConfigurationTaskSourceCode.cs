@@ -109,7 +109,7 @@ internal class OVRConfigurationTaskSourceCode
             OpenAssetDelegate?.Invoke(_object, Line);
         }
 
-        OVRProjectSetupTelemetryEvent.Start(OVRProjectSetupTelemetryEvent.EventTypes.GoToSource)
+        OVRTelemetry.Start(OVRProjectSetupTelemetryEvent.EventTypes.GoToSource)
             .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.Uid, _task.Uid.ToString())
             .AddAnnotation(OVRProjectSetupTelemetryEvent.AnnotationTypes.BuildTargetGroup,
                 BuildTargetGroup.Unknown.ToString())

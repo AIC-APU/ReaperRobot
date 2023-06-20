@@ -292,6 +292,7 @@ public static class OVRInput
         HandRight                 = OVRPlugin.Hand.HandRight,
     }
 
+
     public struct HapticsAmplitudeEnvelopeVibration
     {
         public int SamplesCount;
@@ -426,7 +427,9 @@ public static class OVRInput
             activeControllerType = Controller.None;
         }
 
-        if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus && pluginSupportsActiveController)
+        bool UsePluginActiveAndConnectedControllers = (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus && pluginSupportsActiveController);
+
+        if (UsePluginActiveAndConnectedControllers)
         {
             Controller localActiveController = activeControllerType;
 
@@ -481,11 +484,11 @@ public static class OVRInput
         switch (controllerType)
         {
             case Controller.LTouch:
-                return OVRPlugin.GetNodeOrientationTracked(OVRPlugin.Node.TrackedRemoteLeft);
+                return OVRPlugin.GetNodeOrientationTracked(OVRPlugin.Node.ControllerLeft);
             case Controller.LHand:
                 return OVRPlugin.GetNodeOrientationTracked(OVRPlugin.Node.HandLeft);
             case Controller.RTouch:
-                return OVRPlugin.GetNodeOrientationTracked(OVRPlugin.Node.TrackedRemoteRight);
+                return OVRPlugin.GetNodeOrientationTracked(OVRPlugin.Node.ControllerRight);
             case Controller.RHand:
                 return OVRPlugin.GetNodeOrientationTracked(OVRPlugin.Node.HandRight);
             default:
@@ -502,11 +505,11 @@ public static class OVRInput
         switch (controllerType)
         {
             case Controller.LTouch:
-                return OVRPlugin.GetNodeOrientationValid(OVRPlugin.Node.TrackedRemoteLeft);
+                return OVRPlugin.GetNodeOrientationValid(OVRPlugin.Node.ControllerLeft);
             case Controller.LHand:
                 return OVRPlugin.GetNodeOrientationValid(OVRPlugin.Node.HandLeft);
             case Controller.RTouch:
-                return OVRPlugin.GetNodeOrientationValid(OVRPlugin.Node.TrackedRemoteRight);
+                return OVRPlugin.GetNodeOrientationValid(OVRPlugin.Node.ControllerRight);
             case Controller.RHand:
                 return OVRPlugin.GetNodeOrientationValid(OVRPlugin.Node.HandRight);
             default:
@@ -524,11 +527,11 @@ public static class OVRInput
         switch (controllerType)
         {
             case Controller.LTouch:
-                return OVRPlugin.GetNodePositionTracked(OVRPlugin.Node.TrackedRemoteLeft);
+                return OVRPlugin.GetNodePositionTracked(OVRPlugin.Node.ControllerLeft);
             case Controller.LHand:
                 return OVRPlugin.GetNodePositionTracked(OVRPlugin.Node.HandLeft);
             case Controller.RTouch:
-                return OVRPlugin.GetNodePositionTracked(OVRPlugin.Node.TrackedRemoteRight);
+                return OVRPlugin.GetNodePositionTracked(OVRPlugin.Node.ControllerRight);
             case Controller.RHand:
                 return OVRPlugin.GetNodePositionTracked(OVRPlugin.Node.HandRight);
             default:
@@ -545,16 +548,47 @@ public static class OVRInput
         switch (controllerType)
         {
             case Controller.LTouch:
-                return OVRPlugin.GetNodePositionValid(OVRPlugin.Node.TrackedRemoteLeft);
+                return OVRPlugin.GetNodePositionValid(OVRPlugin.Node.ControllerLeft);
             case Controller.LHand:
                 return OVRPlugin.GetNodePositionValid(OVRPlugin.Node.HandLeft);
             case Controller.RTouch:
-                return OVRPlugin.GetNodePositionValid(OVRPlugin.Node.TrackedRemoteRight);
+                return OVRPlugin.GetNodePositionValid(OVRPlugin.Node.ControllerRight);
             case Controller.RHand:
                 return OVRPlugin.GetNodePositionValid(OVRPlugin.Node.HandRight);
             default:
                 return false;
         }
+    }
+
+
+
+    /// <summary>
+    /// Gets the active controller type for the given handedness
+    /// </summary>
+    public static OVRInput.Controller GetActiveControllerForHand(Handedness handedness)
+    {
+        switch(handedness){
+            case Handedness.LeftHanded:
+                if((activeControllerType & Controller.LTouch) != 0){
+                    return Controller.LTouch;
+                } else if ((activeControllerType & Controller.LHand) != 0)
+                {
+                    return Controller.LHand;
+                }
+            break;
+            case Handedness.RightHanded:
+                if((activeControllerType & Controller.RTouch) != 0)
+                {
+                    return Controller.RTouch;
+                } else if ((activeControllerType & Controller.RHand) != 0)
+                {
+                    return Controller.RHand;
+                }
+            break;
+            default:
+                return Controller.None;
+        }
+        return Controller.None;
     }
 
     /// <summary>
@@ -567,13 +601,13 @@ public static class OVRInput
         {
             case Controller.LTouch:
                 if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus)
-                    return OVRPlugin.GetNodePose(OVRPlugin.Node.TrackedRemoteLeft, stepType).ToOVRPose().position;
+                    return OVRPlugin.GetNodePose(OVRPlugin.Node.ControllerLeft, stepType).ToOVRPose().position;
                 else if (OVRManager.loadedXRDevice == OVRManager.XRDevice.OpenVR)
                     return openVRControllerDetails[0].localPosition;
                 else
                 {
                     Vector3 retVec;
-                    if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.LeftHand, NodeStatePropertyType.Position, OVRPlugin.Node.TrackedRemoteLeft, stepType, out retVec))
+                    if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.LeftHand, NodeStatePropertyType.Position, OVRPlugin.Node.ControllerLeft, stepType, out retVec))
                         return retVec;
                     return Vector3.zero; //Will never be hit, but is a final fallback.
                 }
@@ -592,13 +626,13 @@ public static class OVRInput
                 }
             case Controller.RTouch:
                 if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus)
-                    return OVRPlugin.GetNodePose(OVRPlugin.Node.TrackedRemoteRight, stepType).ToOVRPose().position;
+                    return OVRPlugin.GetNodePose(OVRPlugin.Node.ControllerRight, stepType).ToOVRPose().position;
                 else if (OVRManager.loadedXRDevice == OVRManager.XRDevice.OpenVR)
                     return openVRControllerDetails[1].localPosition;
                 else
                 {
                     Vector3 retVec;
-                    if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.RightHand, NodeStatePropertyType.Position, OVRPlugin.Node.TrackedRemoteRight, stepType, out retVec))
+                    if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.RightHand, NodeStatePropertyType.Position, OVRPlugin.Node.ControllerRight, stepType, out retVec))
                         return retVec;
                     return Vector3.zero; //Will never be hit, but is a final fallback.
                 }
@@ -632,7 +666,7 @@ public static class OVRInput
         {
             case Controller.LTouch:
                 if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.LeftHand,
-                        NodeStatePropertyType.Velocity, OVRPlugin.Node.TrackedRemoteLeft, stepType, out velocity))
+                        NodeStatePropertyType.Velocity, OVRPlugin.Node.ControllerLeft, stepType, out velocity))
                 {
                     return velocity;
                 }
@@ -652,7 +686,7 @@ public static class OVRInput
                 }
             case Controller.RTouch:
                 if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.RightHand,
-                        NodeStatePropertyType.Velocity, OVRPlugin.Node.TrackedRemoteRight, stepType, out velocity))
+                        NodeStatePropertyType.Velocity, OVRPlugin.Node.ControllerRight, stepType, out velocity))
                 {
                     return velocity;
                 }
@@ -686,6 +720,15 @@ public static class OVRInput
         switch (controllerType)
         {
             case Controller.LTouch:
+                if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.LeftHand,
+                        NodeStatePropertyType.Acceleration, OVRPlugin.Node.ControllerLeft, stepType, out accel))
+                {
+                    return accel;
+                }
+                else
+                {
+                    return Vector3.zero;
+                }
             case Controller.LHand:
                 if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.LeftHand,
                         NodeStatePropertyType.Acceleration, OVRPlugin.Node.HandLeft, stepType, out accel))
@@ -697,6 +740,15 @@ public static class OVRInput
                     return Vector3.zero;
                 }
             case Controller.RTouch:
+                if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.RightHand,
+                        NodeStatePropertyType.Acceleration, OVRPlugin.Node.ControllerRight, stepType, out accel))
+                {
+                    return accel;
+                }
+                else
+                {
+                    return Vector3.zero;
+                }
             case Controller.RHand:
                 if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.RightHand,
                         NodeStatePropertyType.Acceleration, OVRPlugin.Node.HandRight, stepType, out accel))
@@ -722,14 +774,14 @@ public static class OVRInput
         {
             case Controller.LTouch:
                 if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus)
-                    return OVRPlugin.GetNodePose(OVRPlugin.Node.TrackedRemoteLeft, stepType).ToOVRPose().orientation;
+                    return OVRPlugin.GetNodePose(OVRPlugin.Node.ControllerLeft, stepType).ToOVRPose().orientation;
                 else if (OVRManager.loadedXRDevice == OVRManager.XRDevice.OpenVR)
                     return openVRControllerDetails[0].localOrientation;
                 else
                 {
                     Quaternion retQuat;
                     if (OVRNodeStateProperties.GetNodeStatePropertyQuaternion(Node.LeftHand,
-                            NodeStatePropertyType.Orientation, OVRPlugin.Node.TrackedRemoteLeft, stepType, out retQuat))
+                            NodeStatePropertyType.Orientation, OVRPlugin.Node.ControllerLeft, stepType, out retQuat))
                         return retQuat;
                     return Quaternion.identity;
                 }
@@ -748,14 +800,14 @@ public static class OVRInput
                 }
             case Controller.RTouch:
                 if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus)
-                    return OVRPlugin.GetNodePose(OVRPlugin.Node.TrackedRemoteRight, stepType).ToOVRPose().orientation;
+                    return OVRPlugin.GetNodePose(OVRPlugin.Node.ControllerRight, stepType).ToOVRPose().orientation;
                 else if (OVRManager.loadedXRDevice == OVRManager.XRDevice.OpenVR)
                     return openVRControllerDetails[0].localOrientation;
                 else
                 {
                     Quaternion retQuat;
                     if (OVRNodeStateProperties.GetNodeStatePropertyQuaternion(Node.LeftHand,
-                            NodeStatePropertyType.Orientation, OVRPlugin.Node.TrackedRemoteRight, stepType, out retQuat))
+                            NodeStatePropertyType.Orientation, OVRPlugin.Node.ControllerRight, stepType, out retQuat))
                         return retQuat;
                     return Quaternion.identity;
                 }
@@ -789,7 +841,7 @@ public static class OVRInput
         {
             case Controller.LTouch:
                 if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.LeftHand,
-                        NodeStatePropertyType.AngularVelocity, OVRPlugin.Node.TrackedRemoteLeft, stepType, out velocity))
+                        NodeStatePropertyType.AngularVelocity, OVRPlugin.Node.ControllerLeft, stepType, out velocity))
                 {
                     return velocity;
                 }
@@ -809,7 +861,7 @@ public static class OVRInput
                 }
             case Controller.RTouch:
                 if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.LeftHand,
-                        NodeStatePropertyType.AngularVelocity, OVRPlugin.Node.TrackedRemoteRight, stepType, out velocity))
+                        NodeStatePropertyType.AngularVelocity, OVRPlugin.Node.ControllerRight, stepType, out velocity))
                 {
                     return velocity;
                 }
@@ -844,7 +896,7 @@ public static class OVRInput
         {
             case Controller.LTouch:
                 if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.LeftHand,
-                        NodeStatePropertyType.AngularAcceleration, OVRPlugin.Node.TrackedRemoteLeft, stepType, out accel))
+                        NodeStatePropertyType.AngularAcceleration, OVRPlugin.Node.ControllerLeft, stepType, out accel))
                 {
                     return accel;
                 }
@@ -864,7 +916,7 @@ public static class OVRInput
                 }
             case Controller.RTouch:
                 if (OVRNodeStateProperties.GetNodeStatePropertyVector3(Node.LeftHand,
-                        NodeStatePropertyType.AngularAcceleration, OVRPlugin.Node.TrackedRemoteRight, stepType, out accel))
+                        NodeStatePropertyType.AngularAcceleration, OVRPlugin.Node.ControllerRight, stepType, out accel))
                 {
                     return accel;
                 }
@@ -910,13 +962,13 @@ public static class OVRInput
         switch (controllerType)
         {
             case Controller.LTouch:
-                poseState = OVRPlugin.GetNodePoseStateImmediate(OVRPlugin.Node.TrackedRemoteLeft);
+                poseState = OVRPlugin.GetNodePoseStateImmediate(OVRPlugin.Node.ControllerLeft);
                 break;
             case Controller.LHand:
                 poseState = OVRPlugin.GetNodePoseStateImmediate(OVRPlugin.Node.HandLeft);
                 break;
             case Controller.RTouch:
-                poseState = OVRPlugin.GetNodePoseStateImmediate(OVRPlugin.Node.TrackedRemoteRight);
+                poseState = OVRPlugin.GetNodePoseStateImmediate(OVRPlugin.Node.ControllerRight);
                 break;
             case Controller.RHand:
                 poseState = OVRPlugin.GetNodePoseStateImmediate(OVRPlugin.Node.HandRight);

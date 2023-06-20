@@ -104,6 +104,10 @@ namespace Oculus.Interaction.Locomotion
             this.BeginStart(ref _started);
             this.AssertField(_interactor, nameof(_interactor));
             this.AssertField(_tubeRenderer, nameof(_tubeRenderer));
+            if (_progress != null)
+            {
+                this.AssertField(Progress, nameof(Progress));
+            }
             this.EndStart(ref _started);
         }
 
@@ -172,7 +176,7 @@ namespace Oculus.Interaction.Locomotion
 
             _tubeRenderer.Tint = tint;
             _tubeRenderer.Progress = Progress != null ? Progress.Value() : 0f;
-            _tubeRenderer.RenderTube(_arcPoints);
+            _tubeRenderer.RenderTube(_arcPoints, Space.World);
 
             UpdatePointer(tint);
         }
@@ -215,15 +219,17 @@ namespace Oculus.Interaction.Locomotion
                 Vector3 position = EvaluateBezierArc(origin.position, midPoint, target, t);
                 Vector3 difference = (position - prevPosition);
                 totalDistance += difference.magnitude;
+
                 _arcPoints[i].position = Vector3.Scale(position, inverseScale);
                 _arcPoints[i].rotation = Quaternion.LookRotation(difference.normalized);
+
                 prevPosition = position;
             }
 
             for (int i = 1; i < ArcPointsCount; i++)
             {
                 float segmentLenght = (_arcPoints[i - 1].position - _arcPoints[i].position).magnitude;
-                _arcPoints[i].relativeLength = _arcPoints[i-1].relativeLength + (segmentLenght / totalDistance);
+                _arcPoints[i].relativeLength = _arcPoints[i - 1].relativeLength + (segmentLenght / totalDistance);
             }
         }
 
@@ -295,6 +301,7 @@ namespace Oculus.Interaction.Locomotion
         {
             _pointerAnchor = pointerAnchor;
         }
+
         #endregion
     }
 }

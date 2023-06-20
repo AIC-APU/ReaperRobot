@@ -59,6 +59,10 @@ using UnityEngine.XR;
 using UnityEngine.Experimental.XR;
 #endif
 
+#if USING_XR_SDK_OPENXR
+using Meta.XR;
+#endif
+
 using Settings = UnityEngine.XR.XRSettings;
 using Node = UnityEngine.XR.XRNode;
 
@@ -348,6 +352,8 @@ public class OVRManager : MonoBehaviour, OVRMixedRealityCaptureConfiguration
     /// @params (UInt64 requestId, bool result)
     /// </summary>
     public static event Action<UInt64, bool> SceneCaptureComplete;
+
+
 
 
 
@@ -1114,6 +1120,7 @@ public class OVRManager : MonoBehaviour, OVRMixedRealityCaptureConfiguration
 
 #endif
 
+
     /// <summary>
     /// Specify if Insight Passthrough should be enabled.
     /// Passthrough layers can only be used if passthrough is enabled.
@@ -1433,8 +1440,19 @@ public class OVRManager : MonoBehaviour, OVRMixedRealityCaptureConfiguration
     /// </summary>
     public static FoveatedRenderingLevel foveatedRenderingLevel
     {
+#if UNITY_OPENXR_1_5_3
+        get
+        {
+            return MetaXRFoveationFeature.foveatedRenderingLevel;
+        }
+        set
+        {
+            MetaXRFoveationFeature.foveatedRenderingLevel = value;
+        }
+#else
         get { return (FoveatedRenderingLevel)OVRPlugin.foveatedRenderingLevel; }
         set { OVRPlugin.foveatedRenderingLevel = (OVRPlugin.FoveatedRenderingLevel)value; }
+#endif
     }
 
     public static bool fixedFoveatedRenderingSupported
@@ -1451,8 +1469,19 @@ public class OVRManager : MonoBehaviour, OVRMixedRealityCaptureConfiguration
 
     public static bool useDynamicFoveatedRendering
     {
+#if UNITY_OPENXR_1_5_3
+        get
+        {
+            return MetaXRFoveationFeature.useDynamicFoveatedRendering;
+        }
+        set
+        {
+            MetaXRFoveationFeature.useDynamicFoveatedRendering = value;
+        }
+#else
         get { return OVRPlugin.useDynamicFoveatedRendering; }
         set { OVRPlugin.useDynamicFoveatedRendering = value; }
+#endif
     }
 
     /// <summary>
@@ -1608,6 +1637,18 @@ public class OVRManager : MonoBehaviour, OVRMixedRealityCaptureConfiguration
         return m_SpaceWarpEnabled;
     }
 
+#if OCULUS_XR_DYNAMIC_DEPTH_RESOLVE
+    public static bool SetDepthSubmission(bool enable)
+    {
+#if USING_XR_SDK_OCULUS
+        OculusXRPlugin.SetDepthSubmission(enable);
+        return true;
+#else
+        return false;
+#endif
+    }
+#endif
+
     [SerializeField]
     [Tooltip("Available only for devices that support local dimming. It improves visual quality with " +
              "a better display contrast ratio, but at a minor GPU performance cost.")]
@@ -1736,6 +1777,8 @@ public class OVRManager : MonoBehaviour, OVRMixedRealityCaptureConfiguration
              "This feature must also be enabled through the Oculus XR Plugin settings.")]
     public bool LateLatching = false;
 #endif
+
+
 
     /// <summary>
     /// True if the current platform supports virtual reality.
@@ -1907,7 +1950,7 @@ public class OVRManager : MonoBehaviour, OVRMixedRealityCaptureConfiguration
 
     private void InitOVRManager()
     {
-        using var marker = new OVRTelemetry.MarkerScope(OVRTelemetryConstants.OVRManager.MarkerId.Init);
+        using var marker = new OVRTelemetryMarker(OVRTelemetryConstants.OVRManager.MarkerId.Init);
         marker.AddSDKVersionAnnotation();
 
         // Only allow one instance at runtime.
@@ -2088,6 +2131,7 @@ public class OVRManager : MonoBehaviour, OVRMixedRealityCaptureConfiguration
         OVRPlugin.occlusionMesh = true;
 #endif
 
+
         if (isInsightPassthroughEnabled)
         {
             InitializeInsightPassthrough();
@@ -2238,6 +2282,7 @@ public class OVRManager : MonoBehaviour, OVRMixedRealityCaptureConfiguration
             boundary = new OVRBoundary();
 
         SetCurrentXRDevice();
+
     }
 
     private void Update()
@@ -3118,6 +3163,7 @@ public class OVRManager : MonoBehaviour, OVRMixedRealityCaptureConfiguration
 
     private static PassthroughCapabilities _passthroughCapabilities;
 
+
     /// <summary>
     /// Checks whether Passthrough is supported by the system. This method should only be called when the XR Plug-in is initialized.
     /// </summary>
@@ -3142,10 +3188,17 @@ public class OVRManager : MonoBehaviour, OVRMixedRealityCaptureConfiguration
         /// </summary>
         public bool SupportsColorPassthrough { get; }
 
-        public PassthroughCapabilities(bool supportsPassthrough, bool supportsColorPassthrough)
+        /// <summary>
+        /// Maximum color LUT resolution supported by the system.
+        /// </summary>
+        public uint MaxColorLutResolution { get; }
+
+        public PassthroughCapabilities(bool supportsPassthrough, bool supportsColorPassthrough,
+            uint maxColorLutResolution)
         {
             SupportsPassthrough = supportsPassthrough;
             SupportsColorPassthrough = supportsColorPassthrough;
+            MaxColorLutResolution = maxColorLutResolution;
         }
     }
 
@@ -3156,12 +3209,20 @@ public class OVRManager : MonoBehaviour, OVRMixedRealityCaptureConfiguration
     {
         if (_passthroughCapabilities == null)
         {
-            OVRPlugin.PassthroughCapabilityFlags capabilityFlags = OVRPlugin.GetPassthroughCapabilityFlags();
+            OVRPlugin.PassthroughCapabilities internalCapabilities = new OVRPlugin.PassthroughCapabilities();
+            if (!OVRPlugin.IsSuccess(OVRPlugin.GetPassthroughCapabilities(ref internalCapabilities)))
+            {
+                // Fallback to querying flags only
+                internalCapabilities.Flags = OVRPlugin.GetPassthroughCapabilityFlags();
+                internalCapabilities.MaxColorLutResolution = 64; // 64 is the value supported at initial release
+            }
+
             _passthroughCapabilities = new PassthroughCapabilities(
-                supportsPassthrough: (capabilityFlags & OVRPlugin.PassthroughCapabilityFlags.Passthrough) ==
+                supportsPassthrough: (internalCapabilities.Flags & OVRPlugin.PassthroughCapabilityFlags.Passthrough) ==
                                      OVRPlugin.PassthroughCapabilityFlags.Passthrough,
-                supportsColorPassthrough: (capabilityFlags & OVRPlugin.PassthroughCapabilityFlags.Color) ==
-                                          OVRPlugin.PassthroughCapabilityFlags.Color
+                supportsColorPassthrough: (internalCapabilities.Flags & OVRPlugin.PassthroughCapabilityFlags.Color) ==
+                                          OVRPlugin.PassthroughCapabilityFlags.Color,
+                maxColorLutResolution: internalCapabilities.MaxColorLutResolution
             );
         }
 

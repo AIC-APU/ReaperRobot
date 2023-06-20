@@ -243,7 +243,7 @@ public class OVRCustomFaceEditor : Editor
             // If not allowing duplicates, make an exception for liptowards.
             if (!allowDuplicateMapping &&
                 (usedBlendshapes.Contains(bestMatchFound) &&
-                !IsLipsToward(blendShapeName)))
+                 !IsLipsToward(blendShapeName)))
             {
                 result[i] = OVRFaceExpressions.FaceExpression.Invalid;
             }
@@ -253,6 +253,7 @@ public class OVRCustomFaceEditor : Editor
                 usedBlendshapes.Add(bestMatchFound);
             }
         }
+
         return result;
     }
 
@@ -293,9 +294,9 @@ public class OVRCustomFaceEditor : Editor
     {
         blendshapeName = blendshapeName.Substring(blendshapeName.IndexOf('.') + 1);
         return blendshapeName == "lipsToward_LB" ||
-            blendshapeName == "lipsToward_RB" ||
-            blendshapeName == "lipsToward_LT" ||
-            blendshapeName == "lipsToward_RT";
+               blendshapeName == "lipsToward_RB" ||
+               blendshapeName == "lipsToward_LT" ||
+               blendshapeName == "lipsToward_RT";
     }
 
     internal static HashSet<string> TokenizeString(string s)

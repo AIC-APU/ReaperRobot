@@ -414,8 +414,12 @@ public class OVRPluginUpdater : IOVRPluginInfoSupplier
 
     public static string GetVersionDescription(System.Version version)
     {
-        bool isVersionValid = (version != invalidVersion);
-        return isVersionValid ? version.ToString() : "(Unknown)";
+        return IsVersionValid(version) ? version.ToString() : "(Unknown)";
+    }
+
+    private static bool IsVersionValid(Version version)
+    {
+        return version != invalidVersion;
     }
 
     public static string GetEnabledUtilsPluginRootPath()
@@ -550,9 +554,13 @@ public class OVRPluginUpdater : IOVRPluginInfoSupplier
 
     private static bool autoUpdateEnabled
     {
-        get { return PlayerPrefs.GetInt(autoUpdateEnabledKey, 1) == 1; }
+        get => PlayerPrefs.GetInt(autoUpdateEnabledKey, 1) == 1;
 
-        set { PlayerPrefs.SetInt(autoUpdateEnabledKey, value ? 1 : 0); }
+        set
+        {
+            PlayerPrefs.SetInt(autoUpdateEnabledKey, value ? 1 : 0);
+            PlayerPrefs.Save();
+        }
     }
 
 
@@ -622,6 +630,7 @@ public class OVRPluginUpdater : IOVRPluginInfoSupplier
                     "No"))
             {
                 DisableAllUtilitiesPluginPackages();
+                autoUpdateEnabled = false;
 
                 if (unityRunningInBatchmode
                     || EditorUtility.DisplayDialog("Restart Unity",
@@ -960,25 +969,34 @@ public class OVRPluginUpdater : IOVRPluginInfoSupplier
                     + GetVersionDescription(currentPluginPkg.Version);
             }
 
-            int dialogResult = EditorUtility.DisplayDialogComplex("Update Oculus Utilities Plugin", dialogBody, "Yes",
-                "No, Don't Ask Again", "No");
-
-            switch (dialogResult)
+            if (IsVersionValid(currentPluginPkg.Version))
             {
-                case 0: // "Yes"
-                    userAcceptsUpdate = true;
-                    break;
-                case 1: // "No, Don't Ask Again"
-                    autoUpdateEnabled = false;
+                int dialogResult = EditorUtility.DisplayDialogComplex("Update Oculus Utilities Plugin", dialogBody,
+                    "Yes", "No, Don't Ask Again", "No");
 
-                    EditorUtility.DisplayDialog("Oculus Utilities OVRPlugin",
-                        "To manually update in the future, use the following menu option:\n\n"
-                        + "[Oculus -> Tools -> Update OVR Utilities Plugin]",
-                        "Ok",
-                        "");
-                    return;
-                case 2: // "No"
-                    return;
+                switch (dialogResult)
+                {
+                    case 0: // "Yes"
+                        userAcceptsUpdate = true;
+                        break;
+                    case 1: // "No, Don't Ask Again"
+                        autoUpdateEnabled = false;
+
+                        EditorUtility.DisplayDialog("Oculus Utilities OVRPlugin",
+                            "To manually update in the future, use the following menu option:\n\n"
+                            + "[Oculus -> Tools -> Update OVR Utilities Plugin]",
+                            "Ok",
+                            "");
+                        return;
+                    case 2: // "No"
+                        return;
+                }
+            }
+            else
+            {
+                // if there's no current valid version, update it automatically
+                autoUpdateEnabled = false;
+                userAcceptsUpdate = true;
             }
         }
 

@@ -79,7 +79,8 @@ public class OVRCustomFace : OVRFace
     /// By default it will just return the Oculus version.
     /// </summary>
     /// <returns>Two arrays, each relating a blend shape name with a face expression pair.</returns>
-    internal protected virtual (string[], OVRFaceExpressions.FaceExpression[]) GetCustomBlendShapeNameAndExpressionPairs()
+    internal protected virtual (string[], OVRFaceExpressions.FaceExpression[])
+        GetCustomBlendShapeNameAndExpressionPairs()
     {
         string[] oculusBlendShapeNames = Enum.GetNames(typeof(OVRFaceExpressions.FaceExpression));
         OVRFaceExpressions.FaceExpression[] oculusFaceExpressions =

@@ -209,6 +209,8 @@ public class OVROverlay : MonoBehaviour
         "When checked, the layer will use efficient sharpen.")]
     public bool useEfficientSharpen = false;
 
+
+
     /// <summary>
     /// Preview the overlay in the editor using a mesh renderer.
     /// </summary>

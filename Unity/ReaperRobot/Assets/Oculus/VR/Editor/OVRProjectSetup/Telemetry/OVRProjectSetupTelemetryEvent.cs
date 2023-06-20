@@ -18,227 +18,44 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
-using System.Diagnostics;
-using UnityEngine.Assertions;
+using static OVRTelemetry;
 
-public abstract class OVRProjectSetupTelemetryEvent
+internal static class OVRProjectSetupTelemetryEvent
 {
-    public enum EventTypes
+    public static class EventTypes
     {
         // Attention : Need to be kept in sync with QPL Event Ids
-        Fix = 163058027,
-        Option = 163058846,
-        GoToSource = 163056520,
-        Summary = 163063879,
-        Open = 163056010,
-        Close = 163056958,
-        InteractionFlow = 163069594,
+        public const int Fix = 163058027;
+        public const int Option = 163058846;
+        public const int GoToSource = 163056520;
+        public const int Summary = 163063879;
+        public const int Open = 163056010;
+        public const int Close = 163056958;
+        public const int InteractionFlow = 163069594;
     }
 
-    public enum AnnotationTypes
+    public static class AnnotationTypes
     {
-        // Aligned with QPL Events Attributes
-        Uid,
-        Level,
-        Type,
-        Value,
-        BuildTargetGroup,
-        Group,
-        Blocking,
-        Count,
-        Origin,
-        TimeSpent,
-        Interaction,
-        ValueAfter,
-        BuildTargetGroupAfter
+        public const string Uid = "Uid";
+        public const string Level = "Level";
+        public const string Type = "Type";
+        public const string Value = "Value";
+        public const string BuildTargetGroup = "BuildTargetGroup";
+        public const string Group = "Group";
+        public const string Blocking = "Blocking";
+        public const string Count = "Count";
+        public const string Origin = "Origin";
+        public const string TimeSpent = "TimeSpent";
+        public const string Interaction = "Interaction";
+        public const string ValueAfter = "ValueAfter";
+        public const string BuildTargetGroupAfter = "BuildTargetGroupAfter";
     }
 
-    public enum MarkerPoints
+    public static class MarkerPoints
     {
-        Process,
-        Open,
-        Interact,
-        Close,
-    }
-
-    public enum ResultTypes
-    {
-        Success,
-        Fail,
-        Cancel
-    }
-
-    private EventTypes _type;
-    private Dictionary<AnnotationTypes, string> _annotations;
-    private ResultTypes _result = ResultTypes.Success;
-    private bool _sent;
-
-    protected OVRProjectSetupTelemetryEvent()
-    {
-    }
-
-    protected virtual void Setup(EventTypes type)
-    {
-        _type = type;
-        _annotations = new Dictionary<AnnotationTypes, string>();
-    }
-
-    public virtual OVRProjectSetupTelemetryEvent AddAnnotation(AnnotationTypes annotation, string value)
-    {
-        _annotations[annotation] = value;
-        return this;
-    }
-
-    public virtual OVRProjectSetupTelemetryEvent AddPoint(MarkerPoints point)
-    {
-        return this;
-    }
-
-    public virtual OVRProjectSetupTelemetryEvent SetResult(ResultTypes result)
-    {
-        _result = result;
-        return this;
-    }
-
-    public virtual void Send()
-    {
-        Log();
-        _sent = true;
-    }
-
-    [Conditional("OVR_TELEMETRY_LOG")]
-    private void Log()
-    {
-        UnityEngine.Debug.Log($"Telemetry Event Sent : {_type}");
-    }
-
-    public static OVRProjectSetupTelemetryEvent Start(EventTypes type)
-    {
-        return Create<OVRProjectSetupTelemetryEventReal>(type);
-    }
-
-    private static OVRProjectSetupTelemetryEvent Create<T>(EventTypes type)
-        where T : OVRProjectSetupTelemetryEvent, new()
-    {
-        var telemetryEvent = new T();
-        telemetryEvent.Setup(type);
-        return telemetryEvent;
-    }
-
-#if OVRPLUGIN_TESTING
-    protected static Queue<OVRProjectSetupTelemetryEventReal> _historyQueue = null;
-    protected static Queue<OVRProjectSetupTelemetryEventExpected> _expectedQueue = null;
-
-    public static OVRProjectSetupTelemetryEvent Expect(EventTypes type)
-    {
-        return Create<OVRProjectSetupTelemetryEventExpected>(type);
-    }
-
-    public static void Mock()
-    {
-        _historyQueue = new Queue<OVRProjectSetupTelemetryEventReal>();
-        _expectedQueue = new Queue<OVRProjectSetupTelemetryEventExpected>();
-    }
-
-    public static void Unmock()
-    {
-        _historyQueue = null;
-        _expectedQueue = null;
-    }
-
-    public static void TestExpectations()
-    {
-        Assert.AreEqual(_historyQueue.Count, _expectedQueue.Count);
-        while ((_historyQueue?.Count ?? 0) > 0)
-        {
-            var actualMarker = _historyQueue.Dequeue();
-            var expectedMarker = _expectedQueue.Dequeue();
-            TestExpectation(expectedMarker, actualMarker);
-        }
-    }
-
-    private static void TestExpectation(OVRProjectSetupTelemetryEventExpected expected,
-        OVRProjectSetupTelemetryEvent actual)
-    {
-        Assert.AreEqual(true, actual._sent);
-        Assert.AreEqual(expected._type, actual._type);
-        Assert.AreEqual(expected._result, actual._result);
-        foreach (var annotation in expected._annotations)
-        {
-            Assert.AreEqual(true, actual._annotations.TryGetValue(annotation.Key, out var value));
-            Assert.AreEqual(annotation.Value, value);
-        }
-    }
-#endif
-}
-
-public class OVRProjectSetupTelemetryEventReal : OVRProjectSetupTelemetryEvent
-{
-    private OVRTelemetry.MarkerScope _marker;
-
-    private static readonly Dictionary<MarkerPoints, OVRTelemetry.MarkerPoint> _markerPoints =
-        new Dictionary<MarkerPoints, OVRTelemetry.MarkerPoint>();
-
-    private static OVRTelemetry.MarkerPoint GetMarkerPoint(MarkerPoints markerPointEnum)
-    {
-        if (!_markerPoints.TryGetValue(markerPointEnum, out var markerPoint))
-        {
-            markerPoint = new OVRTelemetry.MarkerPoint(markerPointEnum.ToString());
-            _markerPoints.Add(markerPointEnum, markerPoint);
-        }
-
-        return markerPoint;
-    }
-
-    protected override void Setup(EventTypes type)
-    {
-        base.Setup(type);
-        _marker = new OVRTelemetry.MarkerScope((int)type);
-    }
-
-    public override OVRProjectSetupTelemetryEvent AddAnnotation(AnnotationTypes annotation, string value)
-    {
-        _marker.AddAnnotation(annotation.ToString(), value);
-        return base.AddAnnotation(annotation, value);
-    }
-
-    public override OVRProjectSetupTelemetryEvent AddPoint(MarkerPoints point)
-    {
-        var markerPoint = GetMarkerPoint(point);
-        _marker.AddPoint(markerPoint);
-        return base.AddPoint(point);
-    }
-
-    public override OVRProjectSetupTelemetryEvent SetResult(ResultTypes result)
-    {
-        var resultQpl = result switch
-        {
-            ResultTypes.Fail => OVRPlugin.Qpl.ResultType.Fail,
-            ResultTypes.Cancel => OVRPlugin.Qpl.ResultType.Cancel,
-            _ => OVRPlugin.Qpl.ResultType.Success
-        };
-        _marker.SetResult(resultQpl);
-        return base.SetResult(result);
-    }
-
-    public override void Send()
-    {
-#if OVRPLUGIN_TESTING
-        _historyQueue?.Enqueue(this);
-#endif
-        _marker.Dispose();
-        base.Send();
+        public static readonly MarkerPoint Process = new MarkerPoint("Process");
+        public static readonly MarkerPoint Open = new MarkerPoint("Open");
+        public static readonly MarkerPoint Interact = new MarkerPoint("Interact");
+        public static readonly MarkerPoint Close = new MarkerPoint("Close");
     }
 }
-
-#if OVRPLUGIN_TESTING
-public class OVRProjectSetupTelemetryEventExpected : OVRProjectSetupTelemetryEvent
-{
-    protected override void Setup(EventTypes type)
-    {
-        base.Setup(type);
-        _expectedQueue?.Enqueue(this);
-    }
-}
-#endif

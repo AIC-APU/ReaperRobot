@@ -208,7 +208,17 @@ public class OVRTrackedKeyboardHands : MonoBehaviour
     {
         cameraRig_ = FindObjectOfType<OVRCameraRig>();
         leftHand_ = cameraRig_.leftHandAnchor.GetComponentInChildren<OVRHand>();
+        if (leftHand_ == null)
+        {
+            leftHand_ = cameraRig_.leftControllerAnchor.GetComponentInChildren<OVRHand>();
+        }
+
         rightHand_ = cameraRig_.rightHandAnchor.GetComponentInChildren<OVRHand>();
+        if (rightHand_ == null)
+        {
+            rightHand_ = cameraRig_.rightControllerAnchor.GetComponentInChildren<OVRHand>();
+        }
+
         leftHandSkeleton_ = leftHand_.GetComponent<OVRSkeleton>();
         rightHandSkeleton_ = rightHand_.GetComponent<OVRSkeleton>();
 

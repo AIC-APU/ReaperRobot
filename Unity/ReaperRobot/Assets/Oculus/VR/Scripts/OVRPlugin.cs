@@ -55,7 +55,7 @@ public static partial class OVRPlugin
 #if OVRPLUGIN_UNSUPPORTED_PLATFORM
     public static readonly System.Version wrapperVersion = _versionZero;
 #else
-    public static readonly System.Version wrapperVersion = OVRP_1_85_0.version;
+    public static readonly System.Version wrapperVersion = OVRP_1_86_0.version;
 #endif
 
 #if !OVRPLUGIN_UNSUPPORTED_PLATFORM
@@ -200,6 +200,7 @@ public static partial class OVRPlugin
         Failure_SpaceLocalizationFailed = -2002,
         Failure_SpaceNetworkTimeout = -2003,
         Failure_SpaceNetworkRequestFailed = -2004,
+
     }
 
     public static bool IsSuccess(this Result result) => result >= 0;
@@ -292,8 +293,8 @@ public static partial class OVRPlugin
         Head = 9,
         DeviceObjectZero = 10,
         TrackedKeyboard = 11,
-        TrackedRemoteLeft = 12,
-        TrackedRemoteRight = 13,
+        ControllerLeft = 12,
+        ControllerRight = 13,
         Count,
     }
 
@@ -613,6 +614,7 @@ public static partial class OVRPlugin
         ShapeFlagRangeMask = unchecked((int)0xF << OverlayShapeFlagShift),
 
         Hidden = unchecked((int)0x000000200),
+
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -1496,6 +1498,7 @@ public static partial class OVRPlugin
         Max = 5,
     }
 
+
     [Flags]
     public enum HandFingerPinch
     {
@@ -1593,6 +1596,7 @@ public static partial class OVRPlugin
         MaxBodyBones = BoneId.Body_End,
         MaxBones = BoneId.Max,
         MaxBoneCapsules = 19,
+        MaxNumMicrogestures = 5,
     }
 
     public enum SkeletonType
@@ -2485,7 +2489,6 @@ public static partial class OVRPlugin
     [StructLayout(LayoutKind.Sequential)]
     public struct VirtualKeyboardModelAnimationStatesInternal
     {
-        public UInt64 ModelKey;
         public uint StateCapacityInput;
         public uint StateCountOutput;
         public IntPtr StatesBuffer;
@@ -2507,17 +2510,16 @@ public static partial class OVRPlugin
     [StructLayout(LayoutKind.Sequential)]
     public struct VirtualKeyboardTextureData
     {
-        public uint TextureByteCapacityInput;
-        public uint TextureByteCountOutput;
         public uint TextureWidth;
         public uint TextureHeight;
-        public IntPtr TextureBytes;
+        public uint BufferCapacityInput;
+        public uint BufferCountOutput;
+        public IntPtr Buffer;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct VirtualKeyboardModelVisibility
     {
-        public ulong ModelKey;
         internal Bool _visible;
 
         public bool Visible
@@ -2607,6 +2609,20 @@ public static partial class OVRPlugin
         Depth = 1 << 2
     }
 
+    public enum PassthroughCapabilityFields
+    {
+        Flags = 1 << 0,
+        MaxColorLutResolution = 1 << 1,
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct PassthroughCapabilities
+    {
+        public PassthroughCapabilityFields Fields;
+        public PassthroughCapabilityFlags Flags;
+        public uint MaxColorLutResolution;
+    }
+
     public enum SpaceComponentType
     {
         Locatable = 0,
@@ -2693,6 +2709,7 @@ public static partial class OVRPlugin
         public SpaceFilterInfoComponents ComponentsInfo;
     }
 
+
     public const int SpatialEntityMaxQueryResultsPerEvent = 128;
 
     [StructLayout(LayoutKind.Sequential)]
@@ -2702,6 +2719,23 @@ public static partial class OVRPlugin
         public Guid uuid;
     }
 
+
+    public static string GuidToUuidString(Guid guid) {
+      const int GUID_BYTE_LENGTH = 36;
+
+      byte[] guidBytes = guid.ToByteArray();
+      string unformattedUuid = BitConverter.ToString(guidBytes).Replace("-", "").ToLower();
+      var formattedUuid = new System.Text.StringBuilder(GUID_BYTE_LENGTH);
+      for (var i = 0; i < 32; i++) {
+        formattedUuid.Append(unformattedUuid[i]);
+
+        if (i == 7 || i == 11 || i == 15 || i == 19) {
+          formattedUuid.Append("-");
+        }
+      }
+
+      return formattedUuid.ToString();
+    }
 
 
 
@@ -3513,7 +3547,7 @@ public static partial class OVRPlugin
             if (expensiveSharpen)
                 flags |= (uint)OverlayFlag.ExpensiveSharpen;
             if (efficientSharpen)
-                flags |= (uint)OverlayFlag.EfficientSharpen;
+                    flags |= (uint)OverlayFlag.EfficientSharpen;
             if (bicubic)
                 flags |= (uint)OverlayFlag.BicubicFiltering;
             if (secureContent)
@@ -3962,6 +3996,9 @@ public static partial class OVRPlugin
 #endif
     }
 
+
+
+
     public static Posef GetCurrentTrackingTransformPose()
     {
 #if OVRPLUGIN_UNSUPPORTED_PLATFORM
@@ -4110,6 +4147,7 @@ public static partial class OVRPlugin
         return interactionProfile;
 #endif
     }
+
 
     public static bool SetControllerVibration(uint controllerMask, float frequency, float amplitude)
     {
@@ -4472,6 +4510,7 @@ public static partial class OVRPlugin
         }
 #endif
     }
+
 
     public static EyeTextureFormat GetDesiredEyeTextureFormat()
     {
@@ -4863,6 +4902,7 @@ public static partial class OVRPlugin
 #endif
     }
 
+
     public static bool IsInsightPassthroughSupported()
     {
 #if OVRPLUGIN_UNSUPPORTED_PLATFORM
@@ -5246,6 +5286,20 @@ public static partial class OVRPlugin
 
         // Fallback to returning result of IsInsightPassthroughSupported().
         return IsInsightPassthroughSupported() ? PassthroughCapabilityFlags.Passthrough : 0;
+#endif
+    }
+
+    public static Result GetPassthroughCapabilities(ref PassthroughCapabilities outCapabilities)
+    {
+#if OVRPLUGIN_UNSUPPORTED_PLATFORM
+        return Result.Failure_Unsupported;
+#else
+        if (version >= OVRP_1_85_0.version)
+        {
+            outCapabilities.Fields = PassthroughCapabilityFields.Flags | PassthroughCapabilityFields.MaxColorLutResolution;
+            return OVRP_1_85_0.ovrp_GetPassthroughCapabilities(ref outCapabilities);
+        }
+        return Result.Failure_Unsupported;
 #endif
     }
 
@@ -6460,6 +6514,13 @@ public static partial class OVRPlugin
 #if USING_XR_SDK_OCULUS
         OculusXRPlugin.SetColorScale(colorScale.x, colorScale.y, colorScale.z, colorScale.w);
         OculusXRPlugin.SetColorOffset(colorOffset.x, colorOffset.y, colorOffset.z, colorOffset.w);
+        if (applyToAllLayers)
+        {
+            if (version >= OVRP_1_31_0.version)
+                return OVRP_1_31_0.ovrp_SetColorScaleAndOffset(colorScale, colorOffset, Bool.True) == Result.Success;
+            else
+                return false;
+        }
         return true;
 #elif REQUIRES_XR_SDK
         return false;
@@ -7849,8 +7910,7 @@ public static partial class OVRPlugin
 #endif
     }
 
-    public static Result GetVirtualKeyboardModelAnimationStates(UInt64 modelKey,
-        out VirtualKeyboardModelAnimationStates animationStates)
+    public static Result GetVirtualKeyboardModelAnimationStates(out VirtualKeyboardModelAnimationStates animationStates)
     {
         animationStates = default;
 #if OVRPLUGIN_UNSUPPORTED_PLATFORM
@@ -7860,7 +7920,6 @@ public static partial class OVRPlugin
         {
             var animationStatesInternal = new VirtualKeyboardModelAnimationStatesInternal
             {
-                ModelKey = modelKey,
                 StateCapacityInput = 0
             };
 
@@ -8234,6 +8293,7 @@ public static partial class OVRPlugin
         version >= OVRP_1_78_0.version &&
         OVRP_1_78_0.ovrp_StartBodyTracking() == Result.Success;
 #endif // OVRPLUGIN_UNSUPPORTED_PLATFORM
+
 
     public static bool StopBodyTracking() =>
 #if OVRPLUGIN_UNSUPPORTED_PLATFORM
@@ -8623,6 +8683,7 @@ public static partial class OVRPlugin
         }
 #endif
     }
+
 
     public static unsafe bool RetrieveSpaceQueryResults(UInt64 requestId,
         out NativeArray<SpaceQueryResult> results, Allocator allocator)
@@ -9155,6 +9216,7 @@ public static partial class OVRPlugin
         }
 #endif
     }
+
 
 
 
@@ -11282,8 +11344,20 @@ public static partial class OVRPlugin
 
         [DllImport(pluginName, CallingConvention = CallingConvention.Cdecl)]
         public static extern Result ovrp_OnEditorShutdown();
+
+        [DllImport(pluginName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern Result ovrp_GetPassthroughCapabilities(ref PassthroughCapabilities capabilityFlags);
     }
 
+    private static class OVRP_1_86_0
+    {
+        public static readonly System.Version version = new System.Version(1, 86, 0);
+
+
+
+
+
+    }
     /* INSERT NEW OVRP CLASS ABOVE THIS LINE */
     // After modify this file, run `fbpython arvr/projects/integrations/codegen/generate_mockovrplugin.py` to update OculusInternal/Tests/MockOVRPlugin.cs
 }

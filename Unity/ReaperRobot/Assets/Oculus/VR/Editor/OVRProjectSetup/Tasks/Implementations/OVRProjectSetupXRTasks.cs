@@ -143,23 +143,31 @@ internal static class OVRProjectSetupXRTasks
             return settings;
         }
 
-        // Method A : Reflection
-        // Hardcoded name of the method we're trying to call
-        // May require maintenance here to align with newer versions of the UnityEngine.XR.Management plugin
-        const string getOrCreateMethodName = "GetOrCreate";
-        var getOrCreateMethod = typeof(XRGeneralSettingsPerBuildTarget).GetMethod(getOrCreateMethodName,
-            BindingFlags.Static | BindingFlags.NonPublic);
-        getOrCreateMethod?.Invoke(null, null);
-
+        // we have to create these settings ourselves as
+        // long as Unity doesn't expose the internal function
+        // XRGeneralSettingsPerBuildTarget.GetOrCreate()
+        var settingsKey = UnityEngine.XR.Management.XRGeneralSettings.k_SettingsKey;
         EditorBuildSettings.TryGetConfigObject<XRGeneralSettingsPerBuildTarget>(
-            UnityEngine.XR.Management.XRGeneralSettings.k_SettingsKey, out var buildTargetSettings);
-        if (buildTargetSettings != null && !buildTargetSettings.HasManagerSettingsForBuildTarget(buildTargetGroup))
+            settingsKey, out var settingsPerBuildTarget);
+
+        if (settingsPerBuildTarget == null)
         {
-            buildTargetSettings.CreateDefaultManagerSettingsForBuildTarget(buildTargetGroup);
+            settingsPerBuildTarget = ScriptableObject.CreateInstance<XRGeneralSettingsPerBuildTarget>();
+            if (!AssetDatabase.IsValidFolder("Assets/XR"))
+                AssetDatabase.CreateFolder("Assets", "XR");
+            const string assetPath = "Assets/XR/XRGeneralSettingsPerBuildTarget.asset";
+            AssetDatabase.CreateAsset(settingsPerBuildTarget, assetPath);
+            AssetDatabase.SaveAssets();
+
+            EditorBuildSettings.AddConfigObject(settingsKey, settingsPerBuildTarget, true);
         }
 
-        settings = XRGeneralSettingsPerBuildTarget.XRGeneralSettingsForBuildTarget(buildTargetGroup);
-        return settings;
+        if (!settingsPerBuildTarget.HasManagerSettingsForBuildTarget(buildTargetGroup))
+        {
+            settingsPerBuildTarget.CreateDefaultManagerSettingsForBuildTarget(buildTargetGroup);
+        }
+
+        return XRGeneralSettingsPerBuildTarget.XRGeneralSettingsForBuildTarget(buildTargetGroup);
     }
 #endif
 }

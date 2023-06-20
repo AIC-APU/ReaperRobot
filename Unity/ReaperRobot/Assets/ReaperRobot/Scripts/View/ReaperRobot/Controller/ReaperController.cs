@@ -49,7 +49,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
             _reaperActionMap["Cutter"].started -= RotateCutter;
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             if (!_playerInput.enabled || !_reaperActionMap.enabled) return;
 

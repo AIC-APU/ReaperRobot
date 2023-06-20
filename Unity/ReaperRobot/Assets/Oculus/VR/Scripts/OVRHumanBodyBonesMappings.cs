@@ -476,7 +476,7 @@ public partial class OVRUnityHumanoidSkeletonRetargeter
                 { HumanBodyBones.RightRingDistal, BodySection.RightHand },
                 { HumanBodyBones.RightLittleProximal, BodySection.RightHand },
                 { HumanBodyBones.RightLittleIntermediate, BodySection.RightHand },
-                { HumanBodyBones.RightLittleDistal, BodySection.RightHand }
+                { HumanBodyBones.RightLittleDistal, BodySection.RightHand },
             };
 
         /// <summary>
