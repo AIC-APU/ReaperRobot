@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/ReaperRobot/Scenes/SimpleField_SOLO.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
+  - enabled: 0
     path: Assets/ReaperRobot/Scenes/SimpleField_VR.unity
     guid: c2b1e3813d07c484a91e0b50cf1df289
   - enabled: 0
@@ -23,7 +23,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/ReaperRobot/Scenes/Replay_SOLO.unity
     guid: 4264c2c4d66fc5e459e74cb7d25f0135
-  - enabled: 0
+  - enabled: 1
     path: Assets/ReaperRobot/Scenes/MultiView_SOLO.unity
     guid: 5251f5e5a375fa14fa5c620f30f2098e
   - enabled: 0
