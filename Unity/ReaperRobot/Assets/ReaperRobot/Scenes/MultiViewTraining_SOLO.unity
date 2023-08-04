@@ -720,7 +720,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8682096594036127541, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _ja
-      value: "\u30ED\u30DC\u30C3\u30C8\u3092\u52D5\u304B\u3057\u3066\u8D64\u306E\u30DD\u30FC\u30EB\u307E\u3067\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
+      value: "\u8349\u5208\u6A5F\u3092\u52D5\u304B\u3057\u3066\u8D64\u306E\u30DD\u30FC\u30EB\u307E\u3067\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
       objectReference: {fileID: 0}
     - target: {fileID: 8682096594036127541, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _target
@@ -3595,7 +3595,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8682096594036127541, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _ja
-      value: "\u30ED\u30DC\u30C3\u30C8\u3092\u52D5\u304B\u3057\u3066\u8D64\u306E\u30DD\u30FC\u30EB\u307E\u3067\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
+      value: "\u8349\u5208\u6A5F\u3092\u52D5\u304B\u3057\u3066\u8D64\u306E\u30DD\u30FC\u30EB\u307E\u3067\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
       objectReference: {fileID: 0}
     - target: {fileID: 8682096594036127541, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _target
@@ -4297,7 +4297,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8682096594036127541, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _ja
-      value: "\u30ED\u30DC\u30C3\u30C8\u3092\u52D5\u304B\u3057\u3066\u8D64\u306E\u30DD\u30FC\u30EB\u307E\u3067\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
+      value: "\u8349\u5208\u6A5F\u3092\u52D5\u304B\u3057\u3066\u8D64\u306E\u30DD\u30FC\u30EB\u307E\u3067\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
       objectReference: {fileID: 0}
     - target: {fileID: 8682096594036127541, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _target
@@ -6604,7 +6604,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19e762a3f8e497c44a8d09f90c509057, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ja: "\u5F71\u306B\u91CD\u306A\u308B\u3088\u3046\u306B\u30ED\u30DC\u30C3\u30C8\u3092\u505C\u6B62\u3055\u305B\u307E\u3057\u3087\u3046\u3002"
+  _ja: "\u5F71\u306B\u91CD\u306A\u308B\u3088\u3046\u306B\u8349\u5208\u6A5F\u3092\u505C\u6B62\u3055\u305B\u307E\u3057\u3087\u3046\u3002"
   _en: Stop the reaper robot so that it overlaps the shadow.
   _target: {fileID: 898190598}
   _goal: {fileID: 150042627}
@@ -7112,7 +7112,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8682096594036127541, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _ja
-      value: "\u30ED\u30DC\u30C3\u30C8\u3092\u52D5\u304B\u3057\u3066\u8D64\u306E\u30DD\u30FC\u30EB\u307E\u3067\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
+      value: "\u8349\u5208\u6A5F\u3092\u52D5\u304B\u3057\u3066\u8D64\u306E\u30DD\u30FC\u30EB\u307E\u3067\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
       objectReference: {fileID: 0}
     - target: {fileID: 8682096594036127541, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _target
@@ -7197,7 +7197,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8682096594036127541, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _ja
-      value: "\u30ED\u30DC\u30C3\u30C8\u3092\u52D5\u304B\u3057\u3066\u8D64\u306E\u30DD\u30FC\u30EB\u307E\u3067\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
+      value: "\u8349\u5208\u6A5F\u3092\u52D5\u304B\u3057\u3066\u8D64\u306E\u30DD\u30FC\u30EB\u307E\u3067\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
       objectReference: {fileID: 0}
     - target: {fileID: 8682096594036127541, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _target
@@ -7361,7 +7361,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8682096594036127541, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _ja
-      value: "\u30ED\u30DC\u30C3\u30C8\u3092\u52D5\u304B\u3057\u3066\u8D64\u306E\u30DD\u30FC\u30EB\u307E\u3067\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
+      value: "\u8349\u5208\u6A5F\u3092\u52D5\u304B\u3057\u3066\u8D64\u306E\u30DD\u30FC\u30EB\u307E\u3067\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
       objectReference: {fileID: 0}
     - target: {fileID: 8682096594036127541, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _target
