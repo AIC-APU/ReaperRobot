@@ -1971,7 +1971,7 @@ MonoBehaviour:
   _viewMode: REAPER_FPV
   _target: {fileID: 282077254}
   _camera: {fileID: 1095629508}
-  _cameraDefaultOffsetPos: {x: 0, y: 0.6, z: 0.2}
+  _cameraDefaultOffsetPos: {x: 0, y: 0.6, z: 0}
   _cameraDefaultOffsetRot: {x: 0, y: 0, z: 0}
 --- !u!114 &856294186
 MonoBehaviour:
@@ -6265,7 +6265,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1809707655
 RectTransform:
   m_ObjectHideFlags: 0

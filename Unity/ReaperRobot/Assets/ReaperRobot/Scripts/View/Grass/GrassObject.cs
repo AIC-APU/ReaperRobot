@@ -38,7 +38,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Grass
         #endregion
 
         #region Readonly Fields
-        readonly float _finishCutTime = 0.5f;
+        readonly float _finishCutTime = 1f;
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -65,6 +65,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Grass
 
             if (other.CompareTag("Cutting"))
             {
+                //刃が回転しているReaperRobotが接触した時、cutTimeを増やす
                 _cutTime.Value += Time.deltaTime;
 
                 //切られている時にパーティクルを生成・再生する
@@ -168,15 +169,19 @@ namespace Plusplus.ReaperRobot.Scripts.View.Grass
             Destroy(_cutEffectInstance);
         }
 
-        private void DestroyParticle()
+        private async void DestroyParticle()
         {
             //isCut = true になった後の挙動
             if (_cutEffectInstance != null)
             {
                 //パーティクルの停止と破棄
                 _particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                _ = DelayAsync(3f, () => Destroy(_particleSystem));
-                _ = DelayAsync(3f, () => Destroy(_cutEffectInstance));
+
+                await DelayAsync(0.1f, () => Destroy(_particleSystem));
+                _particleSystem = null;
+
+                await DelayAsync(0.1f, () => Destroy(_cutEffectInstance));
+                _cutEffectInstance = null;
             }
         }
 
