@@ -1129,6 +1129,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1233103145}
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.GUI.FadePanel,
+          ReaperRobot.GUI
+        m_MethodName: SetRepeat
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnPopupIntroduction:
     m_PersistentCalls:
       m_Calls:
@@ -1157,6 +1170,19 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1233103145}
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.GUI.FadePanel,
+          ReaperRobot.GUI
+        m_MethodName: SetRepeat
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
   _checkPointList:
   - {fileID: 1662108549}
@@ -7575,7 +7601,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1687856320
 RectTransform:
   m_ObjectHideFlags: 0

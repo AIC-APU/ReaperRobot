@@ -33,14 +33,14 @@ namespace Plusplus.ReaperRobot.Scripts.View.DelayProjector
             _delaySlider.maxValue = maxDelay;
             _delaySlider.minValue = 0;
 
-            var defaultDelay = Mathf.Clamp(_projector.delay, 0, maxDelay);
+            var defaultDelay = Mathf.Clamp(_projector.Delay, 0, maxDelay);
             SetDelay(defaultDelay);
             _delaySlider.value = defaultDelay;
         }
 
         private void SetDelay(float delay)
         {
-            _projector.delay = delay;
+            _projector.Delay = delay;
             _delayNumText.text = delay.ToString("F1");
         }
     }
