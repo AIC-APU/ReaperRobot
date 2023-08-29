@@ -23,13 +23,13 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/ReaperRobot/Scenes/Replay_SOLO.unity
     guid: 4264c2c4d66fc5e459e74cb7d25f0135
-  - enabled: 0
+  - enabled: 1
     path: Assets/ReaperRobot/Scenes/MultiView_SOLO.unity
     guid: 5251f5e5a375fa14fa5c620f30f2098e
   - enabled: 0
     path: Assets/ReaperRobot/Scenes/MultiViewTraining_SOLO.unity
     guid: 435435e1d463633469006383b3d3622b
-  - enabled: 1
+  - enabled: 0
     path: Assets/ReaperRobot/Scenes/MultiView_SOLO_grassTest.unity
     guid: 772c52b5bc35934499d6023c0cb396b1
   m_configObjects:
