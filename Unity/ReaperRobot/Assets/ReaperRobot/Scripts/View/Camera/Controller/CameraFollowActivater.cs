@@ -7,22 +7,22 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
         //CameraのFollowTargetのみを使用したい場合に使用する
         //CameraControllerとの併用はしないこと
         #region Public Fields
-        [SerializeField] private BaseCamera _camera;
+        [SerializeField] private BaseCamera _baseCamera;
         #endregion
 
         #region MonoBehaviour Callbacks
         void Awake()
         {
-            if(_camera == null)
+            if(_baseCamera == null)
             {
                 throw new System.NullReferenceException("Camera is null");
             }
 
-            _camera.ResetCamera();
+            _baseCamera.ResetCamera();
         }
         void LateUpdate()
         {
-            _camera.FollowTarget();
+            _baseCamera.FollowTarget();
         }
         #endregion
     }
