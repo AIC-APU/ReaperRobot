@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 namespace Plusplus.ReaperRobot.Scripts.View.Camera
 {
     public class AroundViewCamera : BaseCamera
@@ -26,7 +25,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
         readonly float defaultFOV = 60f;
         readonly float zoomSpeed = 1f;
         readonly float rotateSpeed = 0.7f;
-        readonly float minAngleX = 5f;
+        readonly float minAngleX = 10f;
         readonly float maxAngleX = 50f;
         readonly CameraParam _cameraDefaultParam;
         #endregion
