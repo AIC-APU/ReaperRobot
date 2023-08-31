@@ -1,34 +1,27 @@
 using UnityEngine;
 
-
 namespace Plusplus.ReaperRobot.Scripts.View.Camera
 {
     public class AroundViewCamera : BaseCamera
     {
-        #region Struct
-        private struct CameraParam
-        {
-            public Vector3 angleOffset;
-            public Vector3 positionOffset;
-            public Vector3 localPos;
-        }
-        #endregion
-
         #region Serialized Fields
         [SerializeField] private bool _rotateCameraWhenTargetRotate = true;
         #endregion
 
         #region Private Fields
-        private CameraParam _cameraParam;
+        private Vector3 _localPos;
+        private Vector3 _localAngle;
+        private Vector3 _positionOffset;
         #endregion
 
         #region Readonly Fields
         readonly float defaultFOV = 60f;
         readonly float zoomSpeed = 1f;
+        readonly float minDistance = 2f;
+        readonly float maxDistance = 4f;
         readonly float rotateSpeed = 0.7f;
-        readonly float minAngleX = 5f;
-        readonly float maxAngleX = 50f;
-        readonly CameraParam _cameraDefaultParam;
+        readonly float minAngle = 20f;
+        readonly float maxAngle = 70f;
         #endregion
 
         #region Public method
@@ -38,15 +31,18 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
             {
                 //ターゲットの回転に合わせてカメラが背後に回ってほしい場合はこっち（子オブジェクトの様にカメラが追従する）
                 //ロボットに付けるカメラはこっちの方がいい
-                _camera.transform.position = _target.transform.TransformPoint(_cameraParam.localPos);
-                _camera.transform.eulerAngles = _target.transform.eulerAngles - _cameraParam.angleOffset;
+                _camera.transform.position = _target.transform.TransformPoint(_localPos);
+                _camera.transform.eulerAngles = _target.transform.eulerAngles + _localAngle;   
             }
             else
             {
                 //ターゲットの回転に合わせてカメラが回ってほしくない場合はこっち
                 //キャラクターの様にカメラの向きによって移動方法を決めている場合はこっちの方がいい
-                _camera.transform.position = _target.transform.position + _cameraParam.positionOffset;
+                _camera.transform.position = _target.transform.position + _positionOffset;
             }
+
+            //カメラの向きをターゲットに向ける
+            _camera.transform.LookAt(_target.transform.position);
         }
 
         public override void ResetCamera()
@@ -55,8 +51,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
             _camera.transform.position = _target.transform.position + _target.transform.TransformDirection(_cameraDefaultOffsetPos);
             _camera.transform.eulerAngles = _target.transform.eulerAngles + _cameraDefaultOffsetRot;
 
-            //CameraParamの初期化
-            _cameraParam = CalcCameraParam(_camera, _target);
+            //相対位置の初期化
+            SaveCameraLocalAndOffset(_camera, _target.transform);
 
             //CameraのFOVを変更
             _camera.fieldOfView = defaultFOV;
@@ -66,45 +62,43 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
         {
             //vertical...ロボットに近づく
             var distance = Vector3.Distance(_target.transform.position, _camera.transform.position);
-            if ((distance > zoomSpeed * 2f && vertical > 0) || (distance < zoomSpeed * 4f && vertical < 0))
+            if ((distance > minDistance && vertical > 0) || (distance < maxDistance && vertical < 0))
             {
                 _camera.transform.position += zoomSpeed * vertical * _camera.transform.forward;
             }
 
-            //位置情報の更新
-            _cameraParam = CalcCameraParam(_camera, _target);
+            //相対位置の更新
+            SaveCameraLocalAndOffset(_camera, _target.transform);
         }
 
         public override void RotateCamera(float horizontal, float vertical)
         {
             //horizontal...
             var horizontalAngle = horizontal * rotateSpeed;
-            var center = new Vector3(_target.transform.position.x, _camera.transform.position.y, _target.transform.position.z);
-            _camera.transform.RotateAround(center, Vector3.up, horizontalAngle);
+            _camera.transform.RotateAround(_target.transform.position, _target.transform.up, horizontalAngle);
 
             //vertical...
             var verticalAngle = vertical * rotateSpeed;
-            if ((verticalAngle > 0 && _camera.transform.eulerAngles.x < maxAngleX)
-                || (verticalAngle < 0 && _camera.transform.eulerAngles.x > minAngleX))
+            var angle = Vector3.Angle(_target.transform.up, _camera.transform.position - _target.transform.position);
+            if ((verticalAngle > 0 && angle > minAngle) || (verticalAngle < 0 && angle < maxAngle))
             {
                 _camera.transform.RotateAround(_target.transform.position, _camera.transform.right, verticalAngle);
             }
 
-            //位置情報の更新
-            _cameraParam = CalcCameraParam(_camera, _target);
+            //相対位置の更新
+            SaveCameraLocalAndOffset(_camera, _target.transform);
         }
         #endregion
 
         #region Private method
-        private CameraParam CalcCameraParam(UnityEngine.Camera camera, GameObject obj)
+        private void SaveCameraLocalAndOffset(UnityEngine.Camera camera, Transform targetTransform)
         {
-            var param = new CameraParam();
+            _localPos = targetTransform.InverseTransformPoint(camera.transform.position);
 
-            param.positionOffset = camera.transform.position - obj.transform.position;
-            param.angleOffset = obj.transform.eulerAngles - camera.transform.eulerAngles;
-            param.localPos = _target.transform.InverseTransformPoint(camera.transform.position);
-            
-            return param;
+            _localAngle = camera.transform.eulerAngles - targetTransform.eulerAngles;
+            _localAngle.x = Mathf.Repeat(_localAngle.x + 180f, 360f) - 180f;
+
+            _positionOffset = camera.transform.position - targetTransform.position;
         }
         #endregion
     }
