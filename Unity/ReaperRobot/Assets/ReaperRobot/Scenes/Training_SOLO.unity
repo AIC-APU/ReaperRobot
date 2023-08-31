@@ -1129,6 +1129,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1233103145}
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.GUI.FadePanel,
+          ReaperRobot.GUI
+        m_MethodName: SetRepeat
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnPopupIntroduction:
     m_PersistentCalls:
       m_Calls:
@@ -1157,6 +1170,19 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1233103145}
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.GUI.FadePanel,
+          ReaperRobot.GUI
+        m_MethodName: SetRepeat
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
   _checkPointList:
   - {fileID: 1662108549}
@@ -6030,9 +6056,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewMode: PERSON_AROUND
-  _target: {fileID: 1937706699}
+  _target: {fileID: 1937706700}
   _camera: {fileID: 1685995399}
-  _cameraDefaultOffsetPos: {x: 0, y: 1.5, z: -1}
+  _cameraDefaultOffsetPos: {x: 0, y: 0.5, z: -1}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
   _rotateCameraWhenTargetRotate: 0
 --- !u!1 &1452276740
@@ -6553,6 +6579,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _personManager: {fileID: 1937706698}
+  _personCamera: {fileID: 1685995399}
 --- !u!114 &1504616884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6583,7 +6610,7 @@ MonoBehaviour:
   _pairs:
   - Target: {fileID: 1821138473}
     ActionMapName: Reaper
-  - Target: {fileID: 1937706699}
+  - Target: {fileID: 1937706700}
     ActionMapName: Person
 --- !u!114 &1504616886
 MonoBehaviour:
@@ -7476,7 +7503,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1685995400}
   - component: {fileID: 1685995399}
-  - component: {fileID: 1685995398}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -7484,14 +7510,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1685995398
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1685995397}
-  m_Enabled: 1
 --- !u!20 &1685995399
 Camera:
   m_ObjectHideFlags: 0
@@ -7524,7 +7542,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 30
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -7575,7 +7593,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1687856320
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8695,6 +8713,11 @@ MonoBehaviour:
 --- !u!1 &1937706699 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 384662605969435491, guid: 1c1c0a51e4ed0e140bdc347be2343327, type: 3}
+  m_PrefabInstance: {fileID: 1937706696}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1937706700 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3869975726634102540, guid: 1c1c0a51e4ed0e140bdc347be2343327, type: 3}
   m_PrefabInstance: {fileID: 1937706696}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1937985293

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Cysharp.Threading.Tasks;
 
 namespace Plusplus.ReaperRobot.Scripts.View.DelayProjector
 {
@@ -11,29 +10,35 @@ namespace Plusplus.ReaperRobot.Scripts.View.DelayProjector
         //カメラが撮影した映像をRawImageに投影します
         //delayの秒数,表示を遅らせることができます
 
-        //Build SettingsのプラットフォームがWindows・MacOSX・Linuxの時のみ上手く表示することができます
+        //Build SettingsのプラットフォームがWindows・MacOSX・Linux・WebGLの時のみ上手く表示することができます
         //androidにしていた時、いくつかのオブジェクトが表示されませんでした
 
         #region public Fields
-        public float delay = 0f; //単位: 秒
-        public Camera recordingCamera;
+        public float Delay = 0f; //単位: 秒
+        public Camera RecordingCamera;
         #endregion
 
         #region private Fields
         private Queue<Texture2D> _savedTexQueue = new();
         private RawImage _rawImage;
-        private Vector2Int _textureSize;
+        private RenderTexture _renderTexture;
         #endregion
 
         #region MonoBehaviour Callbacks
-        private async void Awake()
+        void Awake()
         {
             _rawImage = GetComponent<RawImage>();
-            _textureSize = Vector2Int.RoundToInt(_rawImage.rectTransform.rect.size);
 
-            await UniTask.WaitUntil(() => recordingCamera != null);
+            //RenderTextureを生成
+            var textureSize = Vector2Int.RoundToInt(_rawImage.rectTransform.rect.size);
+            _renderTexture = new RenderTexture(textureSize.x, textureSize.y, 24, RenderTextureFormat.ARGB32);
+            RecordingCamera.targetTexture = _renderTexture;
+        }
 
-            var newTexture = RecordTexture(recordingCamera, _textureSize);
+        void Start()
+        {
+            //カメラの準備ができたら、RenderTextureを生成
+            var newTexture = RecordTexture(RecordingCamera, _rawImage);
             _rawImage.texture = newTexture;
             newTexture = null;
         }
@@ -50,20 +55,20 @@ namespace Plusplus.ReaperRobot.Scripts.View.DelayProjector
             Destroy(_rawImage.texture);
             _rawImage.texture = null;
 
+            _renderTexture.Release();
+            Destroy(_renderTexture);
+            _renderTexture = null;
+
             _savedTexQueue.Clear();
         }
 
         private void FixedUpdate()
         {
             //テクスチャの生成と保存
-            _textureSize = Vector2Int.RoundToInt(_rawImage.rectTransform.rect.size);
-
-            var newTexture = RecordTexture(recordingCamera, _textureSize);
-            _savedTexQueue.Enqueue(newTexture);
-            newTexture = null;
+            _savedTexQueue.Enqueue(RecordTexture(RecordingCamera, _rawImage));
 
             //delayのために保存が必要なテクスチャの枚数を計算
-            var optimalTexQueueSize = (int)(delay / Time.fixedDeltaTime);
+            var optimalTexQueueSize = (int)(Delay / Time.fixedDeltaTime);
 
             //保存しているテクスチャの枚数がdelayのために必要な枚数に達していない場合は、何もしない
             if (_savedTexQueue.Count < optimalTexQueueSize + 1) return;
@@ -89,26 +94,27 @@ namespace Plusplus.ReaperRobot.Scripts.View.DelayProjector
         #endregion
 
         #region private method
-        private Texture2D RecordTexture(Camera camera, Vector2Int textureSize)
+        private Texture2D RecordTexture(Camera camera, RawImage rawImage)
         {
             //cameraの画像をテクスチャとして取得
+            var textureSize = Vector2Int.RoundToInt(rawImage.rectTransform.rect.size);
             var texture = new Texture2D(textureSize.x, textureSize.y, TextureFormat.RGBA32, false);
-            var render = new RenderTexture(textureSize.x, textureSize.y, 24, RenderTextureFormat.ARGB32);
 
-            camera.targetTexture = render;
-            camera.Render();
+            if (_renderTexture.texelSize.x != texture.texelSize.x ||
+                _renderTexture.texelSize.y != texture.texelSize.y)
+            {
+                //前のRenderTextureを破棄
+                _renderTexture.Release();
+                Destroy(_renderTexture);
+                _renderTexture = null;
 
-            //var cache = RenderTexture.active;
-            //RenderTexture.active = render;
+                //新しくRenderTextureを生成
+                _renderTexture = new RenderTexture(textureSize.x, textureSize.y, 24, RenderTextureFormat.ARGB32);
+                RecordingCamera.targetTexture = _renderTexture;
+                camera.Render();
+            }
 
-            Graphics.CopyTexture(render, texture);
-
-            //RenderTexture.active = cache;
-            camera.targetTexture = null;
-
-            render.Release();
-            Destroy(render);
-            render = null;
+            Graphics.CopyTexture(_renderTexture, texture);
 
             return texture;
         }

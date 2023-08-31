@@ -20,6 +20,13 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
             _rigidBody = GetComponent<Rigidbody>();
             _animator = GetComponent<Animator>();
         }
+
+        private void Update()
+        {
+            //アニメーション操作
+            var speed = new Vector2(_rigidBody.velocity.x, _rigidBody.velocity.z).magnitude;
+            _animator.SetFloat("Speed", speed, 0.05f, Time.deltaTime);
+        }
         #endregion
 
         #region Public Method
@@ -31,7 +38,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
 
             _rigidBody.velocity = moveForward * moveSpeed + new Vector3(0, _rigidBody.velocity.y, 0);
 
-            if(moveForward == Vector3.zero)
+            if (moveForward == Vector3.zero)
             {
                 _rigidBody.angularVelocity = Vector3.zero;
             }
@@ -39,17 +46,12 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
             {
                 transform.rotation = Quaternion.LookRotation(moveForward, Vector3.up);
             }
-
-            //アニメーション操作
-            var speed = new Vector2(_rigidBody.velocity.x, _rigidBody.velocity.z).magnitude;
-            _animator.SetFloat("Speed", speed, 0.1f, Time.deltaTime);
         }
 
         public void StopMove()
         {
             _rigidBody.velocity = new Vector3(0, _rigidBody.velocity.y, 0);
             _rigidBody.angularVelocity = Vector3.zero;
-            _animator.SetFloat("Speed", 0);
         }
         #endregion
     }
