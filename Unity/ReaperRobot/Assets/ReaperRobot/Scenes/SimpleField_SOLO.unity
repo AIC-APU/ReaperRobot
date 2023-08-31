@@ -672,7 +672,7 @@ MonoBehaviour:
   _camera: {fileID: 1015506785}
   _cameraDefaultOffsetPos: {x: 0, y: 1, z: -1.5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
-  _rotateCameraWhenTargetRotate: 1
+  _rotateCameraWhenTargetRotate: 0
 --- !u!1 &88091891
 GameObject:
   m_ObjectHideFlags: 0
@@ -3148,6 +3148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _personManager: {fileID: 2038885717}
+  _personCamera: {fileID: 963194227}
 --- !u!114 &653367590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3261,7 +3262,7 @@ MonoBehaviour:
   _pairs:
   - Target: {fileID: 282077254}
     ActionMapName: Reaper
-  - Target: {fileID: 1399509881}
+  - Target: {fileID: 756405435}
     ActionMapName: Person
 --- !u!114 &653367600
 MonoBehaviour:
@@ -3739,6 +3740,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 736411797}
   m_CullTransparentMesh: 1
+--- !u!1 &756405435 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3869975726634102540, guid: 1c1c0a51e4ed0e140bdc347be2343327, type: 3}
+  m_PrefabInstance: {fileID: 2038885715}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &835220683
 GameObject:
   m_ObjectHideFlags: 0
@@ -8120,9 +8126,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewMode: PERSON_AROUND
-  _target: {fileID: 1399509881}
+  _target: {fileID: 756405435}
   _camera: {fileID: 963194227}
-  _cameraDefaultOffsetPos: {x: 0, y: 1.5, z: -1}
+  _cameraDefaultOffsetPos: {x: 0, y: 0.5, z: -1}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
   _rotateCameraWhenTargetRotate: 0
 --- !u!4 &1100132408

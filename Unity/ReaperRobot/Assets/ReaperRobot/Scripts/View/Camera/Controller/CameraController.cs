@@ -42,8 +42,11 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
 
             ActiveCamera.FollowTarget();
 
-            var vec = _actionMap["RotateCamera"].ReadValue<Vector2>();
-            ActiveCamera.RotateCamera(vec.x, vec.y);
+            if(_actionMap["RotateCamera"].IsPressed())
+            {
+                var vec = _actionMap["RotateCamera"].ReadValue<Vector2>();
+                ActiveCamera.RotateCamera(vec.x, vec.y);
+            }
         }
         #endregion
 
