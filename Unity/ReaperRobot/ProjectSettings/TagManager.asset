@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Grass
   - Cutting
+  - ReaperRobot
   layers:
   - Default
   - TransparentFX
