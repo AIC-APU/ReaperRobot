@@ -304,7 +304,7 @@ QualitySettings:
     PSP2: 2
     Server: 0
     Stadia: 5
-    Standalone: 5
+    Standalone: 3
     WebGL: 2
     Windows Store Apps: 5
     XboxOne: 5
