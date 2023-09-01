@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using UniRx;
+using Cysharp.Threading.Tasks;
 
 namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
 {
@@ -10,6 +11,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         #region Serialized Private Fields    
         [SerializeField] private ReaperManager _reaperManager;
         [SerializeField] private bool _transmitterMode = true;
+        [SerializeField] private float _delay = 0f;
+        [SerializeField] private bool _enableDelay = false;
         #endregion
 
         #region private Fields
@@ -63,27 +66,44 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
             {
                 move = _reaperActionMap["Move"].ReadValue<Vector2>();
             }
-            _reaperManager.Move(move.x, move.y);
+
+            Move(move.x, move.y);
+        }
+        #endregion
+
+        #region public method
+        public void SwitchEnableDelay()
+        {
+            _enableDelay = !_enableDelay;
         }
         #endregion
 
 
         #region private method
-        private void Brake(InputAction.CallbackContext obj)
+        private async void Brake(InputAction.CallbackContext obj)
         {
+            if (_enableDelay && _delay > 0) await UniTask.Delay((int)(_delay * 1000));
             _reaperManager.PutOnBrake();
         }
-        private void OffBrake(InputAction.CallbackContext obj)
+        private async void OffBrake(InputAction.CallbackContext obj)
         {
+            if (_enableDelay && _delay > 0) await UniTask.Delay((int)(_delay * 1000));
             _reaperManager.ReleaseBrake();
         }
-        private void MoveLift(InputAction.CallbackContext obj)
+        private async void MoveLift(InputAction.CallbackContext obj)
         {
+            if (_enableDelay && _delay > 0) await UniTask.Delay((int)(_delay * 1000));
             _reaperManager.MoveLift(!_reaperManager.IsLiftDown.Value);
         }
-        private void RotateCutter(InputAction.CallbackContext obj)
+        private async void RotateCutter(InputAction.CallbackContext obj)
         {
+            if (_enableDelay && _delay > 0) await UniTask.Delay((int)(_delay * 1000));
             _reaperManager.RotateCutter(!_reaperManager.IsCutting.Value);
+        }
+        private async void Move(float horizontal, float vertical)
+        {
+            if (_enableDelay && _delay > 0) await UniTask.Delay((int)(_delay * 1000));
+            _reaperManager.Move(horizontal, vertical);
         }
         #endregion
     }
