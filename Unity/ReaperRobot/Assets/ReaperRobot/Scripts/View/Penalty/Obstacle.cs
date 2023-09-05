@@ -4,11 +4,11 @@ namespace Plusplus.ReaperRobot.Scripts.View.Penalty
 {
     public class Obstacle : MonoBehaviour
     {
-        [SerializeField] GameObject _targetObject;
+        [SerializeField] GameObject _collisionTarget;
 
         void Awake()
         {
-            if (_targetObject == null)
+            if (_collisionTarget == null)
             {
                 Debug.LogError("TargetObject is null.");
             }
@@ -16,8 +16,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.Penalty
 
         void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject == _targetObject 
-                || IsChildOfTarget(collision.gameObject, _targetObject))
+            if (collision.gameObject == _collisionTarget 
+                || IsChildOfTarget(collision.gameObject, _collisionTarget))
             {
                 PenaltyManager.Instance.TriggerPenalty();
             }
