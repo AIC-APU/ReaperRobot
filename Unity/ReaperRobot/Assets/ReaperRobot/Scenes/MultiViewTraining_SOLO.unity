@@ -2412,8 +2412,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _reaperManager: {fileID: 898190599}
   _transmitterMode: 1
-  _delay: 0
   _enableDelay: 0
+  _delay: 0
+  OnFirstInput:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 974599980}
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.ElapsedTimer.ElapsedTimer,
+          ReaperRobot.ElapsedTimer
+        m_MethodName: StartTimer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &653367590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4437,7 +4453,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nowTime: 0
-  _startOnAwake: 1
+  _startOnAwake: 0
 --- !u!1 &1024900610
 GameObject:
   m_ObjectHideFlags: 0
@@ -9387,7 +9403,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8682096594036127541, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _ja
-      value: "\u8349\u5208\u6A5F\u3092\u52D5\u304B\u3057\u3066\u8D64\u306E\u30DD\u30FC\u30EB\u307E\u3067\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
+      value: "\u4EBA\u306B\u885D\u7A81\u3057\u306A\u3044\u3088\u3046\u306B\u8D64\u306E\u30DD\u30FC\u30EB\u307E\u3067\u79FB\u52D5\u3057\u307E\u3057\u3087\u3046\u3002"
       objectReference: {fileID: 0}
     - target: {fileID: 8682096594036127541, guid: af10df3aae263734c819e36471800404, type: 3}
       propertyPath: _target

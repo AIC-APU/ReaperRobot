@@ -12,8 +12,9 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
         #endregion
 
         #region  Serialized Private Fields
-        [SerializeField] private float _delay = 0f;
+        [Header("Delay")]
         [SerializeField] private bool _enableDelay = false;
+        [SerializeField] private float _delay = 0f;
         #endregion
 
         #region Private Fields
