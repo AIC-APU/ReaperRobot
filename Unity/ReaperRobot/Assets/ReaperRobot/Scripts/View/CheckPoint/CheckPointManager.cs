@@ -8,6 +8,10 @@ namespace Plusplus.ReaperRobot.Scripts.View.CheckPoint
 {
     public class CheckPointManager : MonoBehaviour
     {
+        #region Serialized Private Fields
+        [SerializeField] private List<BaseCheckPoint> _checkPointList = new();
+        #endregion
+
         #region Event
         public UnityEvent OnCheckPointPass;
         private void InvokeCheckPointPass() => OnCheckPointPass?.Invoke();
@@ -16,10 +20,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.CheckPoint
         public UnityEvent<string> OnPopupIntroduction;
         private void InvokePopupIntroduction(string intro) => OnPopupIntroduction?.Invoke(intro);
         #endregion
-
-        #region Serialized Private Fields
-        [SerializeField] private List<BaseCheckPoint> _checkPointList = new();
-        #endregion
+       
 
         #region Private Fields
         private CancellationTokenSource _cancellationTokenSource;
