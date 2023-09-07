@@ -49,7 +49,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
                 _agent.speed = 0;
                 _animator.SetTrigger("Collision");
 
-                await UniTask.Delay(2000);
+                await UniTask.Delay(1500);
 
                 _agent.speed = 1;
             }

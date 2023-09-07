@@ -6,6 +6,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
     {
         #region Serialized Fields
         [SerializeField] private bool _rotateCameraWhenTargetRotate = true;
+        [SerializeField] private bool _lookAtTarget = true;
         #endregion
 
         #region Private Fields
@@ -32,7 +33,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
                 //ターゲットの回転に合わせてカメラが背後に回ってほしい場合はこっち（子オブジェクトの様にカメラが追従する）
                 //ロボットに付けるカメラはこっちの方がいい
                 _camera.transform.position = _target.transform.TransformPoint(_localPos);
-                _camera.transform.eulerAngles = _target.transform.eulerAngles + _localAngle;   
+                _camera.transform.eulerAngles = _target.transform.eulerAngles + _localAngle;
             }
             else
             {
@@ -41,8 +42,11 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
                 _camera.transform.position = _target.transform.position + _positionOffset;
             }
 
-            //カメラの向きをターゲットに向ける
-            _camera.transform.LookAt(_target.transform.position);
+            if (_lookAtTarget)
+            {
+                //カメラの向きをターゲットに向ける
+                _camera.transform.LookAt(_target.transform.position);
+            }
         }
 
         public override void ResetCamera()
