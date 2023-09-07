@@ -59,9 +59,9 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
             if(transforms.Count > 1)
             {
                 var randomIndex = Random.Range(0, transforms.Count);
-                while (randomIndex == _currentGoalIndex)
+                if(randomIndex == _currentGoalIndex)
                 {
-                    randomIndex = Random.Range(0, transforms.Count);
+                    randomIndex = (randomIndex + 1) % transforms.Count;
                 }
                 pos = transforms[randomIndex].position;
                 _currentGoalIndex = randomIndex;
