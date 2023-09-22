@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.22317715, g: 0.24847724, b: 0.28659475, a: 1}
+  m_IndirectSpecularColor: {r: 0.22387674, g: 0.24893853, b: 0.28696772, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -737,7 +737,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _goals:
-  - {fileID: 1515729588}
+  - {fileID: 0}
   _interval: 10
   _lookGoalWhenStop: 1
 --- !u!114 &935306219
@@ -1321,6 +1321,7 @@ MonoBehaviour:
   _cameraDefaultOffsetPos: {x: 0, y: 1, z: -1.5}
   _cameraDefaultOffsetRot: {x: 30, y: 0, z: 0}
   _rotateCameraWhenTargetRotate: 1
+  _lookAtTarget: 1
 --- !u!1001 &1421279776
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1542,37 +1543,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1515729587
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1515729588}
-  m_Layer: 0
-  m_Name: Test
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1515729588
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1515729587}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -5.79, y: 0, z: 6.45}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 14
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &1534159558
 GameObject:
   m_ObjectHideFlags: 0
@@ -1621,8 +1591,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ActiveCamera: {fileID: 41955608}
-  _delay: 0
   _enableDelay: 0
+  _delay: 0
 --- !u!114 &1534159561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1637,8 +1607,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _reaperManager: {fileID: 1927411364}
   _transmitterMode: 1
-  _delay: 0
   _enableDelay: 0
+  _delay: 0
+  OnFirstInput:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1534159562
 MonoBehaviour:
   m_ObjectHideFlags: 0

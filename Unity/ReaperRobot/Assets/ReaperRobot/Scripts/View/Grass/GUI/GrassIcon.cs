@@ -39,6 +39,12 @@ namespace Plusplus.ReaperRobot.Scripts.View.Grass
                 })
                 .AddTo(this);
         }
+
+        void OnDestroy()
+        {
+            Destroy(_grassIcon);
+            _grassIcon = null;
+        }
     }
 }
 
