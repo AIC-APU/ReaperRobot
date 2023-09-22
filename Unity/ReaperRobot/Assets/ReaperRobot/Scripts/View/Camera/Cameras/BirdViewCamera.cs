@@ -8,7 +8,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
         readonly float zoomSpeed = 1f;
         readonly float rotateSpeed = 0.5f;
         readonly float hightSpeed = 4f;
-        readonly float maxHeight = 20f;
+        readonly float maxHeight = 10f;
         readonly float minHeight = 0.5f;
         readonly float defaultFOV = 60f;
         #endregion
