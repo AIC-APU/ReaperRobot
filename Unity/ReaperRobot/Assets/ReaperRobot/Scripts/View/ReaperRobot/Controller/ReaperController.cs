@@ -57,22 +57,23 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         {
             _reaperActionMap["Brake"].started += Brake;
             _reaperActionMap["Brake"].canceled += OffBrake;
-            _reaperActionMap["Lift"].started += MoveLift;
-            _reaperActionMap["Cutter"].started += RotateCutter;
+            _reaperActionMap["CutterOn"].started += RotateCutter;
+            _reaperActionMap["CutterOff"].started += StopCutter;
         }
 
         private void OnDisable()
         {
             _reaperActionMap["Brake"].started -= Brake;
             _reaperActionMap["Brake"].canceled -= OffBrake;
-            _reaperActionMap["Lift"].started -= MoveLift;
-            _reaperActionMap["Cutter"].started -= RotateCutter;
+            _reaperActionMap["CutterOn"].started -= RotateCutter;
+            _reaperActionMap["CutterOff"].started -= StopCutter;
         }
 
         private void Update()
         {
             if (!_playerInput.enabled || !_reaperActionMap.enabled) return;
 
+            //Moveの処理
             var move = new Vector2();
             if (_transmitterMode)
             {
@@ -83,8 +84,17 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
             {
                 move = _reaperActionMap["Move"].ReadValue<Vector2>();
             }
-
             Move(move.x, move.y);
+
+            //Liftの処理
+            if (_reaperActionMap["LiftDown"].IsPressed() && !_reaperActionMap["LiftUp"].IsPressed())
+            {
+                MoveLift(true);
+            }
+            else if(!_reaperActionMap["LiftDown"].IsPressed() && _reaperActionMap["LiftUp"].IsPressed())
+            {
+                MoveLift(false);
+            }
         }
         #endregion
 
@@ -107,21 +117,27 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
             if (_enableDelay && _delay > 0) await UniTask.Delay((int)(_delay * 1000));
             _reaperManager.ReleaseBrake();
         }
-        private async void MoveLift(InputAction.CallbackContext obj)
-        {
-            if (_enableDelay && _delay > 0) await UniTask.Delay((int)(_delay * 1000));
-            _reaperManager.MoveLift(!_reaperManager.IsLiftDown.Value);
-        }
+        
         private async void RotateCutter(InputAction.CallbackContext obj)
         {
             if (_enableDelay && _delay > 0) await UniTask.Delay((int)(_delay * 1000));
-            _reaperManager.RotateCutter(!_reaperManager.IsCutting.Value);
+            _reaperManager.RotateCutter(true);
+        }
+        private async void StopCutter(InputAction.CallbackContext obj)
+        {
+            if (_enableDelay && _delay > 0) await UniTask.Delay((int)(_delay * 1000));
+            _reaperManager.RotateCutter(false);
         }
         private async void Move(float horizontal, float vertical)
         {
             if (_enableDelay && _delay > 0) await UniTask.Delay((int)(_delay * 1000));
             if (!_firstMoveFlag.Value && (horizontal != 0 || vertical != 0)) _firstMoveFlag.Value = true;
             _reaperManager.Move(horizontal, vertical);
+        }
+        private async void MoveLift(bool IsLiftDown)
+        {
+            if (_enableDelay && _delay > 0) await UniTask.Delay((int)(_delay * 1000));
+            _reaperManager.MoveLift(IsLiftDown);
         }
         #endregion
     }
