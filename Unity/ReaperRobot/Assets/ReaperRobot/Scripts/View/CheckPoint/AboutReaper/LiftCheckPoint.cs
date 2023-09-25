@@ -7,17 +7,9 @@ namespace Plusplus.ReaperRobot.Scripts.View.CheckPoint.AboutReaper
 {
     public class LiftCheckPoint : BaseCheckPoint
     {
-         #region Enum
-        private enum LiftGoal
-        {
-            DOWN,
-            UP,
-        }
-        #endregion
-
         #region Serialized Private Fields
         [Header("Setting")]
-        [SerializeField] private LiftGoal _goal = LiftGoal.DOWN;
+        [SerializeField] private float _goal = 0.9f;
         [SerializeField] private ReaperManager _reaperManager;
         #endregion
 
@@ -36,17 +28,11 @@ namespace Plusplus.ReaperRobot.Scripts.View.CheckPoint.AboutReaper
         public override void InitializeCheckPoint()
         {
             //CheckPointの判定
-            _disposable = 
+            _disposable =
                 _reaperManager
-                .IsLiftDown
-                .Subscribe(isDown =>
-                {
-                    if ((isDown && _goal == LiftGoal.DOWN)
-                        || (!isDown && _goal == LiftGoal.UP))
-                    {
-                        _isChecked.Value = true;
-                    }
-                });
+                .LiftAngleRate
+                .Where(rate => rate >= _goal)
+                .Subscribe(_ => _isChecked.Value = true);
         }
 
         public override void FinalizeCheckPoint()
