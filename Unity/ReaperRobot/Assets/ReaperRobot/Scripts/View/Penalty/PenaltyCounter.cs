@@ -6,8 +6,10 @@ namespace Plusplus.ReaperRobot.Scripts.View.Penalty
 {
     public class PenaltyCounter : MonoBehaviour
     {
-        public IReadOnlyReactiveProperty<int> PenaltyCount => _penaltyCount;
         private ReactiveProperty<int> _penaltyCount = new(0);
+
+        public IReadOnlyReactiveProperty<int> PenaltyCountRx => _penaltyCount;
+        public int PenaltyCount => _penaltyCount.Value;
 
         #region MonoBehaviour Callbacks
         private async void Awake()
