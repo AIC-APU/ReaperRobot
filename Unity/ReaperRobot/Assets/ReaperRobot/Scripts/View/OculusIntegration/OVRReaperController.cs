@@ -13,7 +13,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.OculusIntegration
         [SerializeField] private OVRInput.Axis2D _forwardBackStick = OVRInput.Axis2D.PrimaryThumbstick;
         [SerializeField] private OVRInput.Axis2D _turnStick = OVRInput.Axis2D.SecondaryThumbstick;
         [SerializeField] private OVRInput.Axis2D _moveStick = OVRInput.Axis2D.PrimaryThumbstick;
-        [SerializeField] private OVRInput.Button _liftButton = OVRInput.Button.PrimaryIndexTrigger;
+        [SerializeField] private OVRInput.Button _liftUpButton = OVRInput.Button.SecondaryIndexTrigger;
+        [SerializeField] private OVRInput.Button _liftDownButton = OVRInput.Button.PrimaryIndexTrigger;
         [SerializeField] private OVRInput.Button _cutterButton = OVRInput.Button.SecondaryIndexTrigger;
         [SerializeField] private OVRInput.Button _brakeButton = OVRInput.Button.Two;
         
@@ -26,9 +27,14 @@ namespace Plusplus.ReaperRobot.Scripts.View.OculusIntegration
         void Awake()
         {
             //リフトの昇降
-            this.ObserveEveryValueChanged(x => OVRInput.GetDown(_liftButton))
+            this.ObserveEveryValueChanged(x => OVRInput.GetDown(_liftUpButton))
                 .Where(x => x)
-                .Subscribe(_ => _reaperRobot.MoveLift(!_reaperRobot.IsLiftDown.Value))
+                .Subscribe(_ => _reaperRobot.MoveLift(false))
+                .AddTo(this);
+
+            this.ObserveEveryValueChanged(x => OVRInput.GetDown(_liftDownButton))
+                .Where(x => x)
+                .Subscribe(_ => _reaperRobot.MoveLift(true))
                 .AddTo(this);
             
             //カッターを回転・停止

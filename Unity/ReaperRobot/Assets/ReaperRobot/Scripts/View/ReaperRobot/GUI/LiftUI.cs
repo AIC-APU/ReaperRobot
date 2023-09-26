@@ -15,17 +15,20 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         private void Awake()
         {
             //Liftのランプ
-            _reaperManager.IsLiftDown.Subscribe(isDown =>
-            {
-                if (isDown)
+            _reaperManager
+                .LiftAngleRate
+                .Subscribe(rate =>
                 {
-                    _liftLamp.color = _liftDownColor;
-                }
-                else
-                {
-                    _liftLamp.color = _liftUpColor;
-                }
-            }).AddTo(this);
+                    if (rate < 0.1f)
+                    {
+                        _liftLamp.color = _liftDownColor;
+                    }
+                    else
+                    {
+                        _liftLamp.color = _liftUpColor;
+                    }
+                })
+                .AddTo(this);
         }
         #endregion
 

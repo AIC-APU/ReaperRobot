@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using System.Threading;
 using UniRx;
 using UnityEngine;
@@ -33,14 +33,17 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         public IReadOnlyReactiveProperty<float> InputH => _inputH;
         public IReadOnlyReactiveProperty<float> InputV => _inputV;
         public IReadOnlyReactiveProperty<bool> IsCutting => _isCutting;
-        public IReadOnlyReactiveProperty<bool> IsLiftDown => _isLiftDown;
+
+        /// <summary>
+        /// 0~1の範囲で、リフトの角度の割合を返す。0がリフトが下がっている状態、1がリフトが上がっている状態
+        /// </summary>
+        public IReadOnlyReactiveProperty<float> LiftAngleRate => _liftAngleRate;
         #endregion
 
         #region Private
         //カッター&リフト関連
         private ReactiveProperty<bool> _isCutting = new(true);
-        private ReactiveProperty<bool> _isLiftDown = new(true);
-        private CancellationTokenSource _liftCancellationTokenSource = new();
+        private ReactiveProperty<float> _liftAngleRate = new(0f);
         private CancellationTokenSource _cutterCancellationTokenSource = new();
         private float _nowCutterSpeed = 0f;
 
@@ -51,6 +54,12 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         //入力関連
         private ReactiveProperty<float> _inputH = new(0);
         private ReactiveProperty<float> _inputV = new(0);
+        #endregion
+
+        #region Readonly field
+        readonly float _maxLiftAngle = 20f;
+        readonly float _minLiftAngle = 0f;
+        readonly float _liftSpeed = 10f;
         #endregion
 
 
@@ -77,15 +86,6 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
             _leftRpm.Subscribe(x => _crawlerL.SetFloat("WheelTorque", (float)x / 70f)).AddTo(this);
             _rightRpm.Subscribe(x => _crawlerR.SetFloat("WheelTorque", (float)x / 70f)).AddTo(this);
 
-            //リフトの処理
-            _isLiftDown.
-                Subscribe(isDown =>
-                {
-                    _liftCancellationTokenSource?.Cancel();
-                    _liftCancellationTokenSource = new();
-                    AsyncMoveLift(isDown, _liftCancellationTokenSource.Token).Forget();
-                })
-                .AddTo(this);
 
             //カッターの処理
             _isCutting
@@ -117,7 +117,6 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         private void OnDestroy()
         {
             //非同期処理の停止            
-            _liftCancellationTokenSource?.Cancel();
             _cutterCancellationTokenSource?.Cancel();
         }
         #endregion
@@ -188,7 +187,32 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
 
         public void MoveLift(bool isDown)
         {
-            _isLiftDown.Value = isDown;
+            if (isDown && GetConvertedLocalAngleX(_reaper.transform) > _minLiftAngle)
+            {
+                //リフトを下げる処理
+                _reaper.transform.Rotate(_liftSpeed * Time.deltaTime, 0, 0);
+            }
+            else if (!isDown && GetConvertedLocalAngleX(_reaper.transform) < _maxLiftAngle)
+            {
+                //リフトを上げる処理
+                _reaper.transform.Rotate(-_liftSpeed * Time.deltaTime, 0, 0);
+            }
+
+            var rate = GetConvertedLocalAngleX(_reaper.transform) / _maxLiftAngle;
+            _liftAngleRate.Value = Mathf.Clamp(rate, 0f, 1f);
+
+            //reaperの角度が、0度を起点に±180度になるように変換するローカルメゾット（真上が+90度）
+            static float GetConvertedLocalAngleX(Transform reaper)
+            {
+                var reaperAngleX = reaper.localEulerAngles.x;
+                return reaperAngleX >= 180f ? 360f - reaperAngleX : -reaperAngleX;
+            }
+        }
+
+        public void MoveLift(float angle)
+        {
+            //角度を指定してリフトを上昇下降させる機能を実装するかも。とりあえず保留
+            throw new System.NotImplementedException();
         }
 
         public void RotateCutter(bool isRotate)
@@ -199,40 +223,6 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
 
 
         #region private method
-        /// <summary>
-        /// isCuttingがtrueならリフトを下げる、falseなら上げる非同期処理
-        /// </summary>
-        private async UniTaskVoid AsyncMoveLift(bool isDown, CancellationToken ct = default)
-        {
-            var reaperTransform = _reaper.transform;
-            var liftSpeed = 10f;
-            if (isDown)
-            {
-                //0度までリフトを下げるためのループ
-                while (GetConvertedLocalAngleX(reaperTransform) > 0)
-                {
-                    reaperTransform.Rotate(liftSpeed * Time.deltaTime, 0, 0);
-                    await UniTask.Yield(PlayerLoopTiming.Update, ct);
-                }
-            }
-            else
-            {
-                //20度までリフトを上げるためのループ
-                while (GetConvertedLocalAngleX(reaperTransform) < 20)
-                {
-                    reaperTransform.Rotate(-liftSpeed * Time.deltaTime, 0, 0);
-                    await UniTask.Yield(PlayerLoopTiming.Update, ct);
-                }
-            }
-
-            //reaperの角度が、0度を起点に±180度になるように変換するローカルメゾット（真上が+90度）
-            static float GetConvertedLocalAngleX(Transform reaper)
-            {
-                var reaperAngleX = reaper.localEulerAngles.x;
-                return reaperAngleX >= 180f ? 360f - reaperAngleX : -reaperAngleX;
-            }
-        }
-
         /// <summary>
         ///  isCuttingがtrueならカッターを回転させる、falseなら回転を止める非同期処理
         /// </summary>
