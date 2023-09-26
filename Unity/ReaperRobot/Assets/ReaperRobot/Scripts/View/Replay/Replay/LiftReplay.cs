@@ -28,6 +28,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.Replay
         protected override void Replay()
         {
             var liftData = _replayManager.GetLift();
+
+            //後ほど、Recorder.cs の仕様が変わったから変更するかも。
             _reaperManager.MoveLift(liftData);
         }
         #endregion

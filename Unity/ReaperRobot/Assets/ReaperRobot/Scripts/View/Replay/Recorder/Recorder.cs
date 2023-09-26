@@ -32,7 +32,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Replay
         private List<ReaperDataSet> _dataList = new();
         private Vector3 _defaultPosition;
         private Quaternion _defaultRotation;
-
+        private float _lastLiftAngleRate = 0;
         #endregion
 
         #region Readonly Fields
@@ -53,7 +53,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Replay
             var time = _timer.Time.Value;
             var inputH = _reaperManager.InputH.Value;
             var inputV = _reaperManager.InputV.Value;
-            var lift = _reaperManager.IsLiftDown.Value;
+            var lift = false; //リフトの昇降は記録しない。いずれ仕様を定める
             var cutter = _reaperManager.IsCutting.Value;
             var positionX = _reaperTransform.position.x;
             var positionY = _reaperTransform.position.y;
