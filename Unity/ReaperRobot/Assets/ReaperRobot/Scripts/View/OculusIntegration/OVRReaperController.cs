@@ -16,9 +16,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.OculusIntegration
         [SerializeField] private OVRInput.Button _liftUpButton = OVRInput.Button.SecondaryIndexTrigger;
         [SerializeField] private OVRInput.Button _liftDownButton = OVRInput.Button.PrimaryIndexTrigger;
         [SerializeField] private OVRInput.Button _cutterButton = OVRInput.Button.SecondaryIndexTrigger;
-        [SerializeField] private OVRInput.Button _brakeButton = OVRInput.Button.Two;
         
-
         [Header("Axis Settings")]
         [SerializeField] private bool _transmitterMode = true;
         #endregion
@@ -43,17 +41,6 @@ namespace Plusplus.ReaperRobot.Scripts.View.OculusIntegration
                 .Subscribe(_ => _reaperRobot.RotateCutter(!_reaperRobot.IsCutting.Value))
                 .AddTo(this);
             
-            //ブレーキをかける
-            this.ObserveEveryValueChanged(x => OVRInput.GetDown(_brakeButton))
-                .Where(x => x)
-                .Subscribe(_ => _reaperRobot.PutOnBrake())
-                .AddTo(this);
-
-            //ブレーキを解除する
-            this.ObserveEveryValueChanged(x => OVRInput.GetUp(_brakeButton))
-                .Where(x => x)
-                .Subscribe(_ => _reaperRobot.ReleaseBrake())
-                .AddTo(this);
 
             //移動の処理(transmitterMode=true)
             this.ObserveEveryValueChanged(x => OVRInput.Get(_forwardBackStick))
