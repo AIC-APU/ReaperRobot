@@ -1,5 +1,7 @@
 using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 using System.Threading;
+using System.Linq;
 using UniRx;
 using UnityEngine;
 
@@ -16,10 +18,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         [SerializeField] private Transform _cutterR;
 
         [Header("Wheel Collider")]
-        [SerializeField] private WheelCollider _wheelColliderL2;
-        [SerializeField] private WheelCollider _wheelColliderL3;
-        [SerializeField] private WheelCollider _wheelColliderR2;
-        [SerializeField] private WheelCollider _wheelColliderR3;
+        [SerializeField] private List<WheelCollider> _wheelColliderL = new();
+        [SerializeField] private List<WheelCollider> _wheelColliderR = new();
 
         [Header("Crawler")]
         [SerializeField] private Animator _crawlerL;
@@ -110,14 +110,17 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
 
         private void Update()
         {
-            _leftRpm.Value = (int)_wheelColliderL2.rpm;
-            _rightRpm.Value = (int)_wheelColliderR2.rpm;
+            _leftRpm.Value = (int)_wheelColliderL[0].rpm;
+            _rightRpm.Value = (int)_wheelColliderR[0].rpm;
         }
 
         private void OnDestroy()
         {
             //非同期処理の停止            
             _cutterCancellationTokenSource?.Cancel();
+
+            _wheelColliderL.Clear();
+            _wheelColliderR.Clear();
         }
         #endregion
 
@@ -128,11 +131,19 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         /// </summary>
         /// <param name="horizontal">水平方向の入力。-1~+1の範囲</param>
         /// <param name="vertical">垂直方向の入力。-1~+1の範囲</param>
-        public void Move(float horizontal, float vertical, bool useRPC = true)
+        public void Move(float horizontal, float vertical)
         {
-            if (horizontal == 0 && vertical == 0 && _wheelColliderL2.motorTorque == 0 && _wheelColliderR2.motorTorque == 0)
+            if (_wheelColliderL.Count == 0 || _wheelColliderR.Count == 0) return;
+            
+            if (horizontal == 0 && vertical == 0)
             {
-                return;
+                _wheelColliderL.ForEach(x => x.brakeTorque = _params.BrakeTorque.Value);
+                _wheelColliderR.ForEach(x => x.brakeTorque = _params.BrakeTorque.Value);
+            }
+            else
+            {
+                _wheelColliderL.ForEach(x => x.brakeTorque = 0);
+                _wheelColliderR.ForEach(x => x.brakeTorque = 0);
             }
 
             //入力値の範囲を制限
@@ -163,26 +174,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
                 torqueR *= _params.TorqueRateAtCutting.Value;
             }
 
-            _wheelColliderL2.motorTorque = torqueL;
-            _wheelColliderL3.motorTorque = torqueL;
-            _wheelColliderR2.motorTorque = torqueR;
-            _wheelColliderR3.motorTorque = torqueR;
-        }
-
-        public void PutOnBrake()
-        {
-            _wheelColliderL2.brakeTorque = _params.BrakeTorque.Value;
-            _wheelColliderL3.brakeTorque = _params.BrakeTorque.Value;
-            _wheelColliderR2.brakeTorque = _params.BrakeTorque.Value;
-            _wheelColliderR3.brakeTorque = _params.BrakeTorque.Value;
-        }
-
-        public void ReleaseBrake()
-        {
-            _wheelColliderL2.brakeTorque = 0;
-            _wheelColliderL3.brakeTorque = 0;
-            _wheelColliderR2.brakeTorque = 0;
-            _wheelColliderR3.brakeTorque = 0;
+            _wheelColliderL.ForEach(x => x.motorTorque = torqueL);
+            _wheelColliderR.ForEach(x => x.motorTorque = torqueR);
         }
 
         public void MoveLift(bool isDown)
@@ -251,50 +244,44 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
         private void SetWheelDanpingRate(float dampingRate)
         {
             //Danpingの設定
-            _wheelColliderL2.wheelDampingRate = dampingRate;
-            _wheelColliderL3.wheelDampingRate = dampingRate;
-            _wheelColliderR2.wheelDampingRate = dampingRate;
-            _wheelColliderR3.wheelDampingRate = dampingRate;
+            _wheelColliderL.ForEach(x => x.wheelDampingRate = dampingRate);
+            _wheelColliderR.ForEach(x => x.wheelDampingRate = dampingRate);
         }
 
         private void SetWheelForwardFriction(float stiffness)
         {
             //前輪の摩擦の設定
-            var forwardFrictionL2 = _wheelColliderL2.forwardFriction;
-            forwardFrictionL2.stiffness = stiffness;
-            _wheelColliderL2.forwardFriction = forwardFrictionL2;
+            _wheelColliderL.ForEach(x =>
+            {
+                var forwardFriction = x.forwardFriction;
+                forwardFriction.stiffness = stiffness;
+                x.forwardFriction = forwardFriction;
+            });
 
-            var forwardFrictionL3 = _wheelColliderL3.forwardFriction;
-            forwardFrictionL3.stiffness = stiffness;
-            _wheelColliderL3.forwardFriction = forwardFrictionL3;
-
-            var forwardFrictionR2 = _wheelColliderR2.forwardFriction;
-            forwardFrictionR2.stiffness = stiffness;
-            _wheelColliderR2.forwardFriction = forwardFrictionR2;
-
-            var forwardFrictionR3 = _wheelColliderR3.forwardFriction;
-            forwardFrictionR3.stiffness = stiffness;
-            _wheelColliderR3.forwardFriction = forwardFrictionR3;
+            _wheelColliderR.ForEach(x =>
+            {
+                var forwardFriction = x.forwardFriction;
+                forwardFriction.stiffness = stiffness;
+                x.forwardFriction = forwardFriction;
+            });
         }
 
         private void SetWheelSidewaysFriction(float stiffness)
         {
             //後輪の摩擦の設定
-            var sidewaysFrictionL2 = _wheelColliderL2.sidewaysFriction;
-            sidewaysFrictionL2.stiffness = stiffness;
-            _wheelColliderL2.sidewaysFriction = sidewaysFrictionL2;
+            _wheelColliderL.ForEach(x =>
+            {
+                var sidewaysFriction = x.sidewaysFriction;
+                sidewaysFriction.stiffness = stiffness;
+                x.sidewaysFriction = sidewaysFriction;
+            });
 
-            var sidewaysFrictionL3 = _wheelColliderL3.sidewaysFriction;
-            sidewaysFrictionL3.stiffness = stiffness;
-            _wheelColliderL3.sidewaysFriction = sidewaysFrictionL3;
-
-            var sidewaysFrictionR2 = _wheelColliderR2.sidewaysFriction;
-            sidewaysFrictionR2.stiffness = stiffness;
-            _wheelColliderR2.sidewaysFriction = sidewaysFrictionR2;
-
-            var sidewaysFrictionR3 = _wheelColliderR3.sidewaysFriction;
-            sidewaysFrictionR3.stiffness = stiffness;
-            _wheelColliderR3.sidewaysFriction = sidewaysFrictionR3;
+            _wheelColliderR.ForEach(x =>
+            {
+                var sidewaysFriction = x.sidewaysFriction;
+                sidewaysFriction.stiffness = stiffness;
+                x.sidewaysFriction = sidewaysFriction;
+            });
         }
         #endregion
     }

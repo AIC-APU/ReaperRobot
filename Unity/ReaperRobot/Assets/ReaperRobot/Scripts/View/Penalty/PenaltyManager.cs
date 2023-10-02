@@ -7,7 +7,15 @@ namespace Plusplus.ReaperRobot.Scripts.View.Penalty
     {
         public static PenaltyManager Instance { get; private set;}
         public event Action PenaltyEvent;
-        public void TriggerPenalty() => PenaltyEvent?.Invoke();
+        public bool ActivePenalty { get; set; } = true;
+        
+        public void TriggerPenalty()
+        {
+            if (ActivePenalty)
+            {
+                PenaltyEvent?.Invoke();
+            }
+        }
 
         private void Awake()
         {
