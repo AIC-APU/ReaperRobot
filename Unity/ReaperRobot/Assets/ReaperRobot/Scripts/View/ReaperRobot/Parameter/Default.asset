@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Default
   m_EditorClassIdentifier: 
   MoveTorque:
-    value: 1000
+    value: 2000
   BrakeTorque:
     value: 500
   TorqueRateAtCutting:
