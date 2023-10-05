@@ -265,10 +265,10 @@ MonoBehaviour:
   _timer: {fileID: 974599980}
   _penaltyCounter: {fileID: 264827081}
   _penaltyRate: 10
-  _sRank: 30
-  _aRank: 60
-  _bRank: 90
-  _cRank: 120
+  _sRank: 150
+  _aRank: 180
+  _bRank: 230
+  _cRank: 300
 --- !u!1 &83199805
 GameObject:
   m_ObjectHideFlags: 0
