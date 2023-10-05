@@ -19,7 +19,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.URL
 
         [SerializeField] private List<SceneAndKey> _sceneAndKeys = new();
 
-#if UNITY_WEBGL
+#if UNITY_WEBGL && !UNITY_EDITOR
 
         void OnEnable()
         {

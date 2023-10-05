@@ -167,6 +167,22 @@ MonoBehaviour:
     m_Key: USERSTUDY
     m_Metadata:
       m_Items: []
+  - m_Id: 146388677109698560
+    m_Key: SCORE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 146389078617837568
+    m_Key: PENALTY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 146389599252598784
+    m_Key: QUIT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 146390088211976192
+    m_Key: RESULT
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
