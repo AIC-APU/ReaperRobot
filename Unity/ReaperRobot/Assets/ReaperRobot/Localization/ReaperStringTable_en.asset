@@ -23,7 +23,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 886604779520
-    m_Localized: 'Time:'
+    m_Localized: Time
     m_Metadata:
       m_Items: []
   - m_Id: 1447634882560
@@ -168,6 +168,22 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 12699094804025344
     m_Localized: UserStudy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 146388677109698560
+    m_Localized: Score
+    m_Metadata:
+      m_Items: []
+  - m_Id: 146389078617837568
+    m_Localized: Penalty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 146389599252598784
+    m_Localized: Quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 146390088211976192
+    m_Localized: Result
     m_Metadata:
       m_Items: []
   references:
