@@ -16986,11 +16986,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 384662605969435491, guid: 1c1c0a51e4ed0e140bdc347be2343327, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4565192319948886580, guid: 1c1c0a51e4ed0e140bdc347be2343327, type: 3}
       propertyPath: m_Mass
-      value: 500
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 4565192319948886580, guid: 1c1c0a51e4ed0e140bdc347be2343327, type: 3}
       propertyPath: m_IsKinematic
