@@ -186,6 +186,10 @@ MonoBehaviour:
     m_Localized: Result
     m_Metadata:
       m_Items: []
+  - m_Id: 151516564792799232
+    m_Localized: Reposition
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
