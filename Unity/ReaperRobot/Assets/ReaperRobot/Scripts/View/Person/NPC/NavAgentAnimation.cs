@@ -38,19 +38,25 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
             // }
         }
 
-        async void OnCollisionEnter(Collision collision)
+        void OnCollisionEnter(Collision collision)
         {
-            if(_animator.GetAnimatorTransitionInfo(0).IsName("Base Layer -> Collision")) return;
-            
+            if (_animator.GetAnimatorTransitionInfo(0).IsName("Base Layer -> Collision")) return;
+
             //衝突対象に衝突したら一時停止
-            if (collision.gameObject == _collisionTarget 
+            if (collision.gameObject == _collisionTarget
                 || IsChildOfTarget(collision.gameObject, _collisionTarget))
             {
                 _agent.speed = 0;
                 _animator.SetTrigger("Collision");
+            }
+        }
 
-                await UniTask.Delay(1500);
-
+        async void OnCollisionExit(Collision collision)
+        {
+            if (collision.gameObject == _collisionTarget
+                || IsChildOfTarget(collision.gameObject, _collisionTarget))
+            {
+                await UniTask.Delay(3000);
                 _agent.speed = 1;
             }
         }
