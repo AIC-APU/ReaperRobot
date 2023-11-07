@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using Cysharp.Threading.Tasks;
+using System.Threading;
 
 namespace Plusplus.ReaperRobot.Scripts.View.Person
 {
@@ -19,6 +20,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
             _animator = GetComponent<Animator>();
             _agent = GetComponent<NavMeshAgent>();
         }
+
+
 
         void Update()
         {
@@ -51,13 +54,22 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
             }
         }
 
+        void OnCollisionStay(Collision collision)
+        {
+            if (collision.gameObject == _collisionTarget
+                || IsChildOfTarget(collision.gameObject, _collisionTarget))
+            {
+                _agent.speed = 0;
+            }
+        }
+
         async void OnCollisionExit(Collision collision)
         {
             if (collision.gameObject == _collisionTarget
                 || IsChildOfTarget(collision.gameObject, _collisionTarget))
             {
                 await UniTask.Delay(3000);
-                _agent.speed = 1;
+                _agent.speed = 1f;
             }
         }
 

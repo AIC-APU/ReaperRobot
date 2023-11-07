@@ -4,7 +4,7 @@ using Plusplus.ReaperRobot.Scripts.View.Grass;
 
 [CustomEditor(typeof(GrassObject))]
 [CanEditMultipleObjects]
-public class GroundObjectsEditor : Editor
+public class GroundGrassEditor : Editor
 {
     public override void OnInspectorGUI()
     {
