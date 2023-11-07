@@ -1,5 +1,5 @@
 {
-    "name": "ReaperRobot.Editor",
+    "name": "ReaperRobot.GrassEditor",
     "rootNamespace": "",
     "references": [
         "GUID:4f20adee7548caf419422c4ac48eedd9"

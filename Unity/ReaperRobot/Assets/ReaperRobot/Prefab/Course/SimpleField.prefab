@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 3455388047845541607}
   - component: {fileID: 3455388047845541400}
   - component: {fileID: 3455388047845541401}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ReaperField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
