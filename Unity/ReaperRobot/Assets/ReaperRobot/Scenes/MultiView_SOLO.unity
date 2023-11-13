@@ -181,7 +181,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 129
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 6686165c7b851054d885bda077edf314, type: 2}
   m_TargetDisplay: 0
@@ -2725,7 +2725,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _collisionTarget: {fileID: 282077254}
-  _speedRate: 0.8
+  _speedAnimationRate: 0.8
+  _angularAnimationRate: 0.001
 --- !u!114 &625677895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2761,7 +2762,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0.5
+  m_StoppingDistance: 0.2
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -5733,6 +5734,26 @@ PrefabInstance:
     - target: {fileID: 3228704337261673278, guid: 783fa7b83bb801f4595982b253818444, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0.0845513
+      objectReference: {fileID: 0}
+    - target: {fileID: 3270225531103646495, guid: 783fa7b83bb801f4595982b253818444, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7196429
+      objectReference: {fileID: 0}
+    - target: {fileID: 3270225531103646495, guid: 783fa7b83bb801f4595982b253818444, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3270225531103646495, guid: 783fa7b83bb801f4595982b253818444, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.69434446
+      objectReference: {fileID: 0}
+    - target: {fileID: 3270225531103646495, guid: 783fa7b83bb801f4595982b253818444, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3270225531103646495, guid: 783fa7b83bb801f4595982b253818444, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 87.95
       objectReference: {fileID: 0}
     - target: {fileID: 3272057183356041258, guid: 783fa7b83bb801f4595982b253818444, type: 3}
       propertyPath: m_IsActive
@@ -14012,7 +14033,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 129
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: a3d0fc1f58674454fa3e44586ee5d6d1, type: 2}
   m_TargetDisplay: 0
@@ -14488,7 +14509,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 129
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: f1b41646acef6bb4f86ca3eff48c0d04, type: 2}
   m_TargetDisplay: 0
@@ -19109,7 +19130,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 65
+    m_Bits: 193
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 61d9a7bd7f385d7498a867b3671d362d, type: 2}
   m_TargetDisplay: 2
