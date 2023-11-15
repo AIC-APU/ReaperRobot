@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using Cysharp.Threading.Tasks;
-using System.Threading;
+using System;
 
 namespace Plusplus.ReaperRobot.Scripts.View.Person
 {
@@ -15,17 +15,18 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
 
         private Animator _animator;
         private NavMeshAgent _agent;
-
         private float _defaultSpeed;
         private float _defaultAngularSpeed;
+        private float _waitTime = 0.0f;
 
         void Awake()
         {
             _animator = GetComponent<Animator>();
             _agent = GetComponent<NavMeshAgent>();
+
+            _defaultSpeed = _agent.speed;
+            _defaultAngularSpeed = _agent.angularSpeed;
         }
-
-
 
         void Update()
         {
@@ -48,18 +49,29 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
 
         void OnCollisionEnter(Collision collision)
         {
+            //衝突アニメーション中は無視
             if (_animator.GetAnimatorTransitionInfo(0).IsName("Base Layer -> Collision")) return;
 
-            //衝突対象に衝突したら一時停止
             if (collision.gameObject == _collisionTarget
                 || IsChildOfTarget(collision.gameObject, _collisionTarget))
             {
-                _defaultSpeed = _agent.speed;
-                _defaultAngularSpeed = _agent.angularSpeed;
-
+                //衝突対象に衝突したら一時停止
                 _agent.speed = 0;
                 _agent.angularSpeed = 0;
-                _animator.SetTrigger("Collision");
+
+                //衝突アニメーション
+                //衝突対象の速度に応じてアニメーションを変化させる
+                var speed = new Vector2(collision.relativeVelocity.x, collision.relativeVelocity.z).magnitude;
+                if (speed > 0.1f)
+                {
+                    _animator.SetTrigger("DangerousCollision");
+                    _waitTime = 5.0f; //アニメーションの長さ(s)
+                }
+                else
+                {
+                    _animator.SetTrigger("Collision");
+                    _waitTime = 1.2f; //アニメーションの長さ(s)
+                }
             }
         }
 
@@ -78,7 +90,10 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
             if (collision.gameObject == _collisionTarget
                 || IsChildOfTarget(collision.gameObject, _collisionTarget))
             {
-                await UniTask.Delay(3000);
+                //衝突アニメーションが終わるまで待機
+                await UniTask.Delay(TimeSpan.FromSeconds(_waitTime));
+
+                //衝突アニメーションが終わったら移動を再開
                 _agent.speed = _defaultSpeed;
                 _agent.angularSpeed = _defaultAngularSpeed;
             }
