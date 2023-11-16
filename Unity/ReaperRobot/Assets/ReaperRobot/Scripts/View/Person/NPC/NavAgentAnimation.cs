@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 
 namespace Plusplus.ReaperRobot.Scripts.View.Person
 {
@@ -19,6 +20,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
         private float _defaultAngularSpeed;
         private float _waitTime = 0.0f;
 
+        private CancellationTokenSource _cts = new();
+
         void Awake()
         {
             _animator = GetComponent<Animator>();
@@ -26,6 +29,11 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
 
             _defaultSpeed = _agent.speed;
             _defaultAngularSpeed = _agent.angularSpeed;
+        }
+
+        void OnDestroy()
+        {
+            _cts?.Cancel();
         }
 
         void Update()
@@ -56,6 +64,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
                 || IsChildOfTarget(collision.gameObject, _collisionTarget))
             {
                 //衝突対象に衝突したら一時停止
+                _cts?.Cancel();
                 _agent.speed = 0;
                 _agent.angularSpeed = 0;
 
@@ -90,12 +99,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
             if (collision.gameObject == _collisionTarget
                 || IsChildOfTarget(collision.gameObject, _collisionTarget))
             {
-                //衝突アニメーションが終わるまで待機
-                await UniTask.Delay(TimeSpan.FromSeconds(_waitTime));
-
-                //衝突アニメーションが終わったら移動を再開
-                _agent.speed = _defaultSpeed;
-                _agent.angularSpeed = _defaultAngularSpeed;
+                _cts = new CancellationTokenSource();
+                await SetAgentSpeed(_agent, _defaultSpeed, _defaultAngularSpeed, _waitTime, _cts.Token);
             }
         }
 
@@ -113,6 +118,21 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
             {
                 return IsChildOfTarget(child.transform.parent.gameObject, parent);
             }
+        }
+
+        private async UniTask SetAgentSpeed(NavMeshAgent agent,float speed, float angularSpeed, float waitTime = 0f, CancellationToken token = default)
+        {
+            //衝突アニメーションが終わるまで待機
+            if (waitTime > 0)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(waitTime), false, PlayerLoopTiming.Update, token);
+            }
+
+            if(token.IsCancellationRequested) return;
+
+            //衝突アニメーションが終わったら移動を再開
+            agent.speed = speed;
+            agent.angularSpeed = angularSpeed;
         }
     }
 }
