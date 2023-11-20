@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
 using Cysharp.Threading.Tasks;
+using System;
+using System.Threading;
 
 namespace Plusplus.ReaperRobot.Scripts.View.Person
 {
@@ -9,49 +11,96 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
     public class NavAgentAnimation : MonoBehaviour
     {
         [SerializeField] private GameObject _collisionTarget;
-        [SerializeField] private float _speedRate = 0.8f;
+        [SerializeField] private float _speedAnimationRate = 0.8f;
+        [SerializeField] private float _angularAnimationRate = 0.001f;
 
         private Animator _animator;
         private NavMeshAgent _agent;
+        private float _defaultSpeed;
+        private float _defaultAngularSpeed;
+        private float _waitTime = 0.0f;
+
+        private CancellationTokenSource _cts = new();
 
         void Awake()
         {
             _animator = GetComponent<Animator>();
             _agent = GetComponent<NavMeshAgent>();
+
+            _defaultSpeed = _agent.speed;
+            _defaultAngularSpeed = _agent.angularSpeed;
+        }
+
+        void OnDestroy()
+        {
+            _cts?.Cancel();
         }
 
         void Update()
         {
             //移動アニメーション
             var speed = new Vector2(_agent.velocity.x, _agent.velocity.z).magnitude;
-            _animator.SetFloat("Speed", speed * _speedRate, 0.05f, Time.deltaTime);
+            var angureSpeed = _agent.angularSpeed;
+            _animator.SetFloat("Speed", speed * _speedAnimationRate + angureSpeed * _angularAnimationRate, 0.05f, Time.deltaTime);
 
 
-            //目標地点に到達したら待機アニメーション(未実装)
-            // if (_agent.hasPath && _agent.remainingDistance < _agent.stoppingDistance)
-            // {
-            //     _animator.SetBool("hoge_motion", true);
-            // }
-            // else
-            // {
-            //     _animator.SetBool("hoge_motion", false);
-            // }
+            //目標地点に到達したら待機アニメーション
+            if (_agent.remainingDistance < _agent.stoppingDistance)
+            {
+                _animator.SetBool("TreeCare", true);
+            }
+            else
+            {
+                _animator.SetBool("TreeCare", false);
+            }
         }
 
-        async void OnCollisionEnter(Collision collision)
+        void OnCollisionEnter(Collision collision)
         {
-            if(_animator.GetAnimatorTransitionInfo(0).IsName("Base Layer -> Collision")) return;
-            
-            //衝突対象に衝突したら一時停止
-            if (collision.gameObject == _collisionTarget 
+            //衝突アニメーション中は無視
+            if (_animator.GetAnimatorTransitionInfo(0).IsName("Base Layer -> Collision")) return;
+
+            if (collision.gameObject == _collisionTarget
+                || IsChildOfTarget(collision.gameObject, _collisionTarget))
+            {
+                //衝突対象に衝突したら一時停止
+                _cts?.Cancel();
+                _agent.speed = 0;
+                _agent.angularSpeed = 0;
+
+                //衝突アニメーション
+                //衝突対象の速度に応じてアニメーションを変化させる
+                var speed = new Vector2(collision.relativeVelocity.x, collision.relativeVelocity.z).magnitude;
+                if (speed > 0.1f)
+                {
+                    _animator.SetTrigger("DangerousCollision");
+                    _waitTime = 5.0f; //アニメーションの長さ(s)
+                }
+                else
+                {
+                    _animator.SetTrigger("Collision");
+                    _waitTime = 1.2f; //アニメーションの長さ(s)
+                }
+            }
+        }
+
+        void OnCollisionStay(Collision collision)
+        {
+            if (collision.gameObject == _collisionTarget
                 || IsChildOfTarget(collision.gameObject, _collisionTarget))
             {
                 _agent.speed = 0;
-                _animator.SetTrigger("Collision");
+                _agent.angularSpeed = 0;
+            }
+        }
 
-                await UniTask.Delay(1500);
-
-                _agent.speed = 1;
+        async void OnCollisionExit(Collision collision)
+        {
+            if (collision.gameObject == _collisionTarget
+                || IsChildOfTarget(collision.gameObject, _collisionTarget))
+            {
+                _cts = new CancellationTokenSource();
+                await SetAgentSpeed(_agent, _defaultSpeed, _defaultAngularSpeed, _waitTime, _cts.Token);
             }
         }
 
@@ -69,6 +118,21 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
             {
                 return IsChildOfTarget(child.transform.parent.gameObject, parent);
             }
+        }
+
+        private async UniTask SetAgentSpeed(NavMeshAgent agent,float speed, float angularSpeed, float waitTime = 0f, CancellationToken token = default)
+        {
+            //衝突アニメーションが終わるまで待機
+            if (waitTime > 0)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(waitTime), false, PlayerLoopTiming.Update, token);
+            }
+
+            if(token.IsCancellationRequested) return;
+
+            //衝突アニメーションが終わったら移動を再開
+            agent.speed = speed;
+            agent.angularSpeed = angularSpeed;
         }
     }
 }

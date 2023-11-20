@@ -13,6 +13,11 @@ namespace Plusplus.ReaperRobot.Scripts.View.CheckPoint.AboutGrass
         public override void InitializeCheckPoint()
         {
             _grassCounter.OnAllGrassCut.AddListener(OnAllGrassCut);
+
+            if (_grassCounter.CutGrassRatio == 1)
+            {
+                OnAllGrassCut();
+            }
         }
 
         public override void FinalizeCheckPoint()

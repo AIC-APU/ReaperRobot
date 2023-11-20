@@ -7,10 +7,20 @@ namespace Plusplus.ReaperRobot.Scripts.View.CheckPoint.AboutReaper
 {
     public class LiftCheckPoint : BaseCheckPoint
     {
+        #region enum
+        private enum LiftState
+        {
+            Down,
+            Up
+        }
+        #endregion
+
+
         #region Serialized Private Fields
         [Header("Setting")]
-        [SerializeField] private float _goal = 0.9f;
         [SerializeField] private ReaperManager _reaperManager;
+        [SerializeField] private float _goalLiftRate = 0.9f;
+        [SerializeField] private LiftState _lifgGoal = LiftState.Up;
         #endregion
 
         #region Private Fields
@@ -31,8 +41,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.CheckPoint.AboutReaper
             _disposable =
                 _reaperManager
                 .LiftAngleRate
-                .Where(rate => rate >= _goal)
-                .Subscribe(_ => _isChecked.Value = true);
+                .Where(rate => (_lifgGoal == LiftState.Down && rate < _goalLiftRate) || (_lifgGoal == LiftState.Up && rate > _goalLiftRate))
+                .Subscribe(rate => _isChecked.Value = true);
         }
 
         public override void FinalizeCheckPoint()
