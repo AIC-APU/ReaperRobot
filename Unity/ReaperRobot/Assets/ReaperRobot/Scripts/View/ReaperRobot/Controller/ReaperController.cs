@@ -55,16 +55,13 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
 
         private void OnEnable()
         {
-            _reaperActionMap["Brake"].started += Brake;
-            _reaperActionMap["Brake"].canceled += OffBrake;
             _reaperActionMap["CutterOn"].started += RotateCutter;
             _reaperActionMap["CutterOff"].started += StopCutter;
         }
 
         private void OnDisable()
         {
-            _reaperActionMap["Brake"].started -= Brake;
-            _reaperActionMap["Brake"].canceled -= OffBrake;
+            _reaperManager.Move(0, 0);
             _reaperActionMap["CutterOn"].started -= RotateCutter;
             _reaperActionMap["CutterOff"].started -= StopCutter;
         }
@@ -107,17 +104,6 @@ namespace Plusplus.ReaperRobot.Scripts.View.ReaperRobot
 
 
         #region private method
-        private async void Brake(InputAction.CallbackContext obj)
-        {
-            if (_enableDelay && _delay > 0) await UniTask.Delay((int)(_delay * 1000));
-            _reaperManager.PutOnBrake();
-        }
-        private async void OffBrake(InputAction.CallbackContext obj)
-        {
-            if (_enableDelay && _delay > 0) await UniTask.Delay((int)(_delay * 1000));
-            _reaperManager.ReleaseBrake();
-        }
-        
         private async void RotateCutter(InputAction.CallbackContext obj)
         {
             if (_enableDelay && _delay > 0) await UniTask.Delay((int)(_delay * 1000));

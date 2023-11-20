@@ -11,7 +11,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Penalty
 
         private void Start()
         {
-            _penaltyCounter.PenaltyCount.Subscribe(count => _penaltyNumText.text = count.ToString());
+            _penaltyCounter.PenaltyCountRx.Subscribe(count => _penaltyNumText.text = count.ToString());
         }
     }
 }
