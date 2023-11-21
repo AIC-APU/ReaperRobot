@@ -1,0 +1,16 @@
+{
+    "name": "ReaperRobot.XR",
+    "rootNamespace": "Plusplus.ReaperRobot.Scripts.View.XR",
+    "references": [
+        "GUID:e40ba710768534012815d3193fa296cb"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

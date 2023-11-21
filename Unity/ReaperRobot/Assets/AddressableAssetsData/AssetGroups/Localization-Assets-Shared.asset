@@ -21,6 +21,7 @@ MonoBehaviour:
     m_Address: Assets/Localization/ReaperStringTable Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: c587a869d21dd0e4da234dae0184c6fb, type: 2}
   m_SchemaSet:
