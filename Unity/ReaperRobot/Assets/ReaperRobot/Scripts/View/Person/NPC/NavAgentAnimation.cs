@@ -22,6 +22,9 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
 
         private CancellationTokenSource _cts = new();
 
+        private Quaternion _lastRotation;
+        private bool _isPlayingAnimation = false;
+
         void Awake()
         {
             _animator = GetComponent<Animator>();
@@ -58,7 +61,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
         void OnCollisionEnter(Collision collision)
         {
             //衝突アニメーション中は無視
-            if (_animator.GetAnimatorTransitionInfo(0).IsName("Base Layer -> Collision")) return;
+            if (_isPlayingAnimation) return;
 
             if (collision.gameObject == _collisionTarget
                 || IsChildOfTarget(collision.gameObject, _collisionTarget))
@@ -68,8 +71,17 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
                 _agent.speed = 0;
                 _agent.angularSpeed = 0;
 
+                //現在の向きを保存
+                _lastRotation = transform.rotation;
+
+                //衝突対象の方を向く
+                var direction = collision.transform.position - transform.position;
+                var lookRotation = Quaternion.LookRotation(direction);
+                transform.rotation = lookRotation;
+
                 //衝突アニメーション
                 //衝突対象の速度に応じてアニメーションを変化させる
+                _isPlayingAnimation = true;
                 var speed = new Vector2(collision.relativeVelocity.x, collision.relativeVelocity.z).magnitude;
                 if (speed > 0.1f)
                 {
@@ -100,7 +112,10 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
                 || IsChildOfTarget(collision.gameObject, _collisionTarget))
             {
                 _cts = new CancellationTokenSource();
+
                 await SetAgentSpeed(_agent, _defaultSpeed, _defaultAngularSpeed, _waitTime, _cts.Token);
+
+                _isPlayingAnimation = false;
             }
         }
 
@@ -120,7 +135,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
             }
         }
 
-        private async UniTask SetAgentSpeed(NavMeshAgent agent,float speed, float angularSpeed, float waitTime = 0f, CancellationToken token = default)
+        private async UniTask SetAgentSpeed(NavMeshAgent agent, float speed, float angularSpeed, float waitTime = 0f, CancellationToken token = default)
         {
             //衝突アニメーションが終わるまで待機
             if (waitTime > 0)
@@ -128,7 +143,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
                 await UniTask.Delay(TimeSpan.FromSeconds(waitTime), false, PlayerLoopTiming.Update, token);
             }
 
-            if(token.IsCancellationRequested) return;
+            if (token.IsCancellationRequested) return;
 
             //衝突アニメーションが終わったら移動を再開
             agent.speed = speed;
