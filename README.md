@@ -25,6 +25,8 @@
 
 キーボードによる操作もできますが、ゲームパッドによる操作がお勧めです。
 
+Unity/ReaperRobot/Assets/ReaperRobot/Scenes/MultiViewTraining_SOLO.unity からシーンを起動してください。
+
 <br/>
 
 ### 草刈りトレーニング
@@ -34,6 +36,7 @@
 
 草刈トレーニングでは、仮想空間に作られた果樹園で草刈りをします。すべての草を刈るまでのタイムによりスコアが決まりますので、できるだけ効率よくすべての草を刈りましょう。
 
+Unity/ReaperRobot/Assets/ReaperRobot/Scenes/MultiView_SOLO.unity からシーンを起動してください。
 
 <br/>
 
