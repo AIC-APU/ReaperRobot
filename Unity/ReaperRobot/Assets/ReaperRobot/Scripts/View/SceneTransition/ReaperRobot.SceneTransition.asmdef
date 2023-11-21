@@ -1,0 +1,16 @@
+{
+    "name": "ReaperRobot.SceneTransition",
+    "rootNamespace": "Plusplus.ReaperRobot.Scripts.View.SceneTransition",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
