@@ -3,6 +3,7 @@ using UnityEngine.AI;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
+using System.ComponentModel;
 
 namespace Plusplus.ReaperRobot.Scripts.View.Person
 {
@@ -18,9 +19,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
         private NavMeshAgent _agent;
         private float _defaultSpeed;
         private float _defaultAngularSpeed;
-        private float _waitTime = 0.0f;
-
-        private CancellationTokenSource _cts = new();
+        private Quaternion _previousRotation;
+        private bool _isPlayingCollisionAnimation = false;
 
         void Awake()
         {
@@ -29,20 +29,18 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
 
             _defaultSpeed = _agent.speed;
             _defaultAngularSpeed = _agent.angularSpeed;
-        }
-
-        void OnDestroy()
-        {
-            _cts?.Cancel();
+            _previousRotation = transform.rotation;
         }
 
         void Update()
         {
-            //移動アニメーション
+            //移動アニメーションの計算
             var speed = new Vector2(_agent.velocity.x, _agent.velocity.z).magnitude;
-            var angureSpeed = _agent.angularSpeed;
-            _animator.SetFloat("Speed", speed * _speedAnimationRate + angureSpeed * _angularAnimationRate, 0.05f, Time.deltaTime);
+            var deltaAngle = Mathf.DeltaAngle(_previousRotation.eulerAngles.y, transform.rotation.eulerAngles.y);
+            var angleSpeed = Mathf.Abs(deltaAngle / Time.deltaTime);
+            _previousRotation = transform.rotation;
 
+            _animator.SetFloat("Speed", speed * _speedAnimationRate + angleSpeed * _angularAnimationRate, 0.05f, Time.deltaTime);
 
             //目標地点に到達したら待機アニメーション
             if (_agent.remainingDistance < _agent.stoppingDistance)
@@ -55,52 +53,54 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
             }
         }
 
-        void OnCollisionEnter(Collision collision)
+        async void OnCollisionEnter(Collision collision)
         {
             //衝突アニメーション中は無視
-            if (_animator.GetAnimatorTransitionInfo(0).IsName("Base Layer -> Collision")) return;
+            if (_isPlayingCollisionAnimation) return;
 
             if (collision.gameObject == _collisionTarget
                 || IsChildOfTarget(collision.gameObject, _collisionTarget))
             {
                 //衝突対象に衝突したら一時停止
-                _cts?.Cancel();
                 _agent.speed = 0;
                 _agent.angularSpeed = 0;
 
+                //現在の向きを保存
+                var rotationBeforeCollision = transform.rotation;
+
+                //衝突対象の方を向く
+                var direction = collision.transform.position - transform.position;
+                var lookRotation = Quaternion.LookRotation(direction);
+                transform.rotation = lookRotation;
+
                 //衝突アニメーション
+                //フラグを立てる
+                _isPlayingCollisionAnimation = true;
+
                 //衝突対象の速度に応じてアニメーションを変化させる
                 var speed = new Vector2(collision.relativeVelocity.x, collision.relativeVelocity.z).magnitude;
+                float waitTime;
                 if (speed > 0.1f)
                 {
                     _animator.SetTrigger("DangerousCollision");
-                    _waitTime = 5.0f; //アニメーションの長さ(s)
+                    waitTime = 5.0f; //アニメーションの長さ(s)
                 }
                 else
                 {
                     _animator.SetTrigger("Collision");
-                    _waitTime = 1.2f; //アニメーションの長さ(s)
+                    waitTime = 1.2f; //アニメーションの長さ(s)
                 }
-            }
-        }
+                await UniTask.Delay(TimeSpan.FromSeconds(waitTime));
 
-        void OnCollisionStay(Collision collision)
-        {
-            if (collision.gameObject == _collisionTarget
-                || IsChildOfTarget(collision.gameObject, _collisionTarget))
-            {
-                _agent.speed = 0;
-                _agent.angularSpeed = 0;
-            }
-        }
+                //衝突アニメーションが終わったら向きを戻す
+                await RotateTarget(gameObject, rotationBeforeCollision);
 
-        async void OnCollisionExit(Collision collision)
-        {
-            if (collision.gameObject == _collisionTarget
-                || IsChildOfTarget(collision.gameObject, _collisionTarget))
-            {
-                _cts = new CancellationTokenSource();
-                await SetAgentSpeed(_agent, _defaultSpeed, _defaultAngularSpeed, _waitTime, _cts.Token);
+                //停止を解除
+                _agent.speed = _defaultSpeed;
+                _agent.angularSpeed = _defaultAngularSpeed;
+
+                //フラグを戻す
+                _isPlayingCollisionAnimation = false;
             }
         }
 
@@ -120,19 +120,15 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
             }
         }
 
-        private async UniTask SetAgentSpeed(NavMeshAgent agent,float speed, float angularSpeed, float waitTime = 0f, CancellationToken token = default)
+        private async UniTask RotateTarget(GameObject obj, Quaternion targetRotation)
         {
-            //衝突アニメーションが終わるまで待機
-            if (waitTime > 0)
+            var rotationSpeed = 5f;
+            var angleThreshold = 5f;
+            while (Quaternion.Angle(obj.transform.rotation, targetRotation) > angleThreshold)
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(waitTime), false, PlayerLoopTiming.Update, token);
+                obj.transform.rotation = Quaternion.Slerp(obj.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                await UniTask.Yield();
             }
-
-            if(token.IsCancellationRequested) return;
-
-            //衝突アニメーションが終わったら移動を再開
-            agent.speed = speed;
-            agent.angularSpeed = angularSpeed;
         }
     }
 }
