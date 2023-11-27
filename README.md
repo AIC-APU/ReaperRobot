@@ -44,3 +44,5 @@ Unity/ReaperRobot/Assets/ReaperRobot/Scenes/MultiView_SOLO.unity からシーン
 ## ライセンス
 
 このプロジェクトは [Apache License 2.0](LICENSE) のもとで公開されています。
+
+© Agri-Innovation Education and Research Center, Akita Prefectural University © PLUSPLUS Co., Ltd.
