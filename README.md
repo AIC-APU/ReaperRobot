@@ -1,6 +1,6 @@
 # ReaperRobot
 
-<!-- ![image](https://github.com/AIC-APU/ReaperRobot/assets/126754093/8313d57e-265c-4d7d-8cdd-fc46b6d124a0) -->
+![image1](https://github.com/AIC-APU/ReaperRobot/assets/126750996/6fa5ba9f-e8b9-462f-a6ef-439e3a942359)
 
 このプロジェクトは秋田県立大学AIC在宅草刈りシステムのバーチャルトレーニングシステムです。ゲーム感覚で操作できるリモート草刈機シミュレーターを使い、操作方法を習得して効率的な作業を身につけることで、実際のリモート草刈り作業に備えることができます。
 
@@ -16,7 +16,8 @@
 バーチャルトレーニングには２つのシーンがあります。
 
 ### 操作トレーニング
-<!-- ![image](https://github.com/AIC-APU/ReaperRobot/assets/126754093/007cfabe-f868-498a-812a-dc2510acefa9) -->
+
+![image2](https://github.com/AIC-APU/ReaperRobot/assets/126750996/50cbd608-88bb-4bb9-943e-5a532ca5db99)
 
 操作トレーニングはリモート草刈機の基本的な操作を学ぶチュートリアルです。
 
@@ -26,11 +27,11 @@
 キーボードによる操作もできますが、ゲームパッドによる操作がお勧めです。
 
 Unity/ReaperRobot/Assets/ReaperRobot/Scenes/MultiViewTraining_SOLO.unity からシーンを起動してください。
-
 <br/>
 
 ### 草刈りトレーニング
-<!-- ![image](https://github.com/AIC-APU/ReaperRobot/assets/126754093/93757ce0-663f-47b7-8668-042a97d1b8c2) -->
+
+![image3](https://github.com/AIC-APU/ReaperRobot/assets/126750996/626436af-8070-4376-b76f-74e82916befe)
 
 操作トレーニングで基本操作を学んだら、草刈トレーニングに挑戦しましょう。
 
