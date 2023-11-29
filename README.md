@@ -26,7 +26,8 @@
 
 キーボードによる操作もできますが、ゲームパッドによる操作がお勧めです。
 
-Unity/ReaperRobot/Assets/ReaperRobot/Scenes/MultiViewTraining_SOLO.unity からシーンを起動してください。
+Unity/ReaperRobot/Assets/Scenes/MultiViewTraining_SOLO.unity からシーンを起動してください。
+
 <br/>
 
 ### 草刈りトレーニング
@@ -37,9 +38,16 @@ Unity/ReaperRobot/Assets/ReaperRobot/Scenes/MultiViewTraining_SOLO.unity から�
 
 草刈トレーニングでは、仮想空間に作られた果樹園で草刈りをします。すべての草を刈るまでのタイムによりスコアが決まりますので、できるだけ効率よくすべての草を刈りましょう。
 
-Unity/ReaperRobot/Assets/ReaperRobot/Scenes/MultiView_SOLO.unity からシーンを起動してください。
+Unity/ReaperRobot/Assets/Scenes/MultiView_SOLO.unity からシーンを起動してください。
 
 <br/>
+
+## 操作方法
+本トレーニングはキーボード、コントローラともに操作することができます。
+操作方法は以下の画像の通りです。
+
+![キーボード入力](https://github.com/AIC-APU/ReaperRobot/assets/126754093/c6de267e-4878-40c1-870b-36f7aafe0b60)
+![コントローラ入力](https://github.com/AIC-APU/ReaperRobot/assets/126754093/024fbda5-888a-427f-994c-c7e7cedf2177)
 
 ## ライセンス
 
