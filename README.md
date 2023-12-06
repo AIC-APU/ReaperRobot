@@ -7,8 +7,11 @@
 <br/>
 
 ## インストール
-このプロジェクトはUnity(2022.3.2f1)によって起動・ビルドをすることができます。
+このプロジェクトはUnity(2022.3.2f1)によって起動することができます。
 リポジトリをクローンし、ReaperRobot/Unity/ReaperRobot を起動してください。
+
+または、ビルド済みのWindowsバイナリを[リリースページ](https://github.com/AIC-APU/ReaperRobot/releases/)からダウンロードしてください。
+
 
 <br/>
 
