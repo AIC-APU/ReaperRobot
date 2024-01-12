@@ -6,8 +6,6 @@ namespace Plusplus.ReaperRobot.Scripts.View.Web
 {
     public abstract class BaseJsonSender : MonoBehaviour
     {
-        [SerializeField] protected string _url;
-
         protected IEnumerator SendJsonData(string url, string json)
         {
             UnityWebRequest request = new UnityWebRequest(url, "POST");
