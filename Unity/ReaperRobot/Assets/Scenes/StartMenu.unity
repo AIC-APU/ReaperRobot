@@ -696,11 +696,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sceneAndKeys:
   - key: Field
-    sceneName: MultiView_SOLO
+    sceneName: Field_MultiView
   - key: Training
-    sceneName: MultiViewTraining_SOLO
+    sceneName: Training_MultiView
   - key: Slope
-    sceneName: MultiViewSlope_SOLO
+    sceneName: Slope_MultiView
 --- !u!1 &937208141
 GameObject:
   m_ObjectHideFlags: 0
@@ -1299,7 +1299,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _button: {fileID: 1326396459}
-  _sceneName: MultiViewTraining_SOLO
+  _sceneName: Training_MultiView
 --- !u!114 &1326396459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1518,7 +1518,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _button: {fileID: 1406311560}
-  _sceneName: MultiView_SOLO
+  _sceneName: Field_MultiView
 --- !u!1 &1474700837
 GameObject:
   m_ObjectHideFlags: 0
@@ -2244,7 +2244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _button: {fileID: 1844181052}
-  _sceneName: MultiViewSlope_SOLO
+  _sceneName: Slope_MultiView
 --- !u!222 &1844181055
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -5,6 +5,9 @@ namespace Plusplus.ReaperRobot.Scripts.View.Score
 {
     public class ScoreCalcurator : MonoBehaviour
     {
+        public int Score {get; private set;}
+        public string Rank {get; private set;}
+
         [Header("References")]
         [SerializeField] private ElapsedTimer.ElapsedTimer _timer;
         [SerializeField] private PenaltyCounter _penaltyCounter;
@@ -28,32 +31,32 @@ namespace Plusplus.ReaperRobot.Scripts.View.Score
 
         public string CalcRank()
         {
-            var score = CalcScore();
-            var rank = "None";
+            Score = CalcScore();
+            Rank = "None";
 
-            if (score <= _sRank)
+            if (Score <= _sRank)
             {
-                rank = "S";
+                Rank = "S";
             }
-            else if (score <= _aRank)
+            else if (Score <= _aRank)
             {
-                rank = "A";
+                Rank = "A";
             }
-            else if (score <= _bRank)
+            else if (Score <= _bRank)
             {
-                rank = "B";
+                Rank = "B";
             }
-            else if (score <= _cRank)
+            else if (Score <= _cRank)
             {
-                rank = "C";
+                Rank = "C";
             }
             else
             {
-                rank = "D";
+                Rank = "D";
             }
 
-            Debug.Log($"Score: {score}, Rank: {rank}");
-            return rank;
+            Debug.Log($"Score: {Score}, Rank: {Rank}");
+            return Rank;
         }
     }
 }
