@@ -4384,7 +4384,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _collisionTarget: {fileID: 1524737720}
-  _speedRate: 0.8
+  _speedAnimationRate: 0.8
+  _angularAnimationRate: 0.001
 --- !u!114 &738409618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4840,6 +4841,19 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
         m_MethodName: set_enabled
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1942675230}
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.Web.SendResult,
+          ReaperRobot.Web
+        m_MethodName: SendScoreData
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -5716,6 +5730,7 @@ Transform:
   - {fileID: 784236146}
   - {fileID: 264827080}
   - {fileID: 63865674}
+  - {fileID: 1942675229}
   m_Father: {fileID: 0}
   m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9961,7 +9976,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _collisionTarget: {fileID: 1524737720}
-  _speedRate: 0.8
+  _speedAnimationRate: 0.8
+  _angularAnimationRate: 0.001
 --- !u!114 &1485507010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11710,6 +11726,54 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af10df3aae263734c819e36471800404, type: 3}
+--- !u!1 &1942675228
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1942675229}
+  - component: {fileID: 1942675230}
+  m_Layer: 0
+  m_Name: ResultSenderToWeb
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1942675229
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1942675228}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 902527486}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1942675230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1942675228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c6cddad99eb984fbb33fe81945ddae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _url: https://akitapu_dev.plusplus.tokyo/wp-json/myplugin/v1/user/register_score
+  _timer: {fileID: 974599980}
+  _penaltyCounter: {fileID: 264827081}
+  _scoreCalcurator: {fileID: 63865675}
 --- !u!1001 &1993418239
 PrefabInstance:
   m_ObjectHideFlags: 0

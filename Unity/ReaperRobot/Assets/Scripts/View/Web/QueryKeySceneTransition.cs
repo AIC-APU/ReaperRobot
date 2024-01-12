@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Plusplus.ReaperRobot.Scripts.View.URL
+namespace Plusplus.ReaperRobot.Scripts.View.Web
 {
-    public class URLSceneTransition : MonoBehaviour
+    public class QueryKeySceneTransition : MonoBehaviour
     {
-        public static URLSceneTransition Instance;
+        public static QueryKeySceneTransition Instance;
 
         [Serializable]
         private struct SceneAndKey
@@ -20,7 +20,6 @@ namespace Plusplus.ReaperRobot.Scripts.View.URL
         [SerializeField] private List<SceneAndKey> _sceneAndKeys = new();
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-
         void OnEnable()
         {
             if (Instance == null)
@@ -28,7 +27,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.URL
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
 
-                var key = GetSceneKey();
+                var key = QueryReaderUtility.GetValue("scene");
                 if (key == "") return;
 
                 LoadScene(_sceneAndKeys, key);
@@ -38,37 +37,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.URL
                 Destroy(gameObject);
             }
         }
-        
-
 #endif
-
-        private Dictionary<string, string> GetQueryDictionary()
-        {
-            var uri = new Uri(Application.absoluteURL);
-            var queryStr = uri.GetComponents(UriComponents.Query, UriFormat.SafeUnescaped);
-
-            var queries = queryStr
-                .Split('&')
-                .Select(q => q.Split('='))
-                .Where(x => x.Length == 2)
-                .ToDictionary(x => x[0], x => x[1]);
-
-            return queries;
-        }
-
-        private string GetSceneKey()
-        {
-            var queries = GetQueryDictionary();
-
-            if (queries.ContainsKey("scene"))
-            {
-                return queries["scene"];
-            }
-            else
-            {
-                return "";
-            }
-        }
 
         private void LoadScene(IEnumerable<SceneAndKey> sceneAndKeys, string key)
         {
