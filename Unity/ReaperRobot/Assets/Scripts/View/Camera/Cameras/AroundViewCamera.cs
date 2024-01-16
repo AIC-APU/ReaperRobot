@@ -10,9 +10,9 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
         #endregion
 
         #region Private Fields
-        private Vector3 _localPos;
-        private Vector3 _localAngle;
-        private Vector3 _positionOffset;
+        private Vector3 _cameraOffsetLocalPos;
+        private Vector3 _cameraOffsetAngle;
+        private Vector3 _cameraOffsetWorldPos;
         #endregion
 
         #region Readonly Fields
@@ -20,8 +20,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
         readonly float zoomSpeed = 1f;
         readonly float minDistance = 2f;
         readonly float maxDistance = 4f;
-        readonly float rotateSpeed = 0.7f;
-        readonly float minAngle = 20f;
+        readonly float rotateSpeed = 0.5f;
+        readonly float minAngle = 30f;
         readonly float maxAngle = 70f;
         #endregion
 
@@ -32,14 +32,14 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
             {
                 //ターゲットの回転に合わせてカメラが背後に回ってほしい場合はこっち（子オブジェクトの様にカメラが追従する）
                 //ロボットに付けるカメラはこっちの方がいい
-                _camera.transform.position = _target.transform.TransformPoint(_localPos);
-                _camera.transform.eulerAngles = _target.transform.eulerAngles + _localAngle;
+                _camera.transform.position = _target.transform.position + _target.transform.TransformDirection(_cameraOffsetLocalPos);
+                _camera.transform.rotation = _target.transform.rotation * Quaternion.Euler(_cameraOffsetAngle);
             }
             else
             {
                 //ターゲットの回転に合わせてカメラが回ってほしくない場合はこっち
                 //キャラクターの様にカメラの向きによって移動方法を決めている場合はこっちの方がいい
-                _camera.transform.position = _target.transform.position + _positionOffset;
+                _camera.transform.position = _target.transform.position + _cameraOffsetWorldPos;
             }
 
             if (_lookAtTarget)
@@ -51,12 +51,10 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
 
         public override void ResetCamera()
         {
-            //Cameraの位置を変更
-            _camera.transform.position = _target.transform.position + _target.transform.TransformDirection(_cameraDefaultOffsetPos);
-            _camera.transform.eulerAngles = _target.transform.eulerAngles + _cameraDefaultOffsetRot;
-
             //相対位置の初期化
-            SaveCameraLocalAndOffset(_camera, _target.transform);
+            _cameraOffsetLocalPos = _cameraDefaultOffsetPos;
+            _cameraOffsetWorldPos = _cameraDefaultOffsetPos;
+            _cameraOffsetAngle = _cameraDefaultOffsetRot;
 
             //CameraのFOVを変更
             _camera.fieldOfView = defaultFOV;
@@ -68,11 +66,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
             var distance = Vector3.Distance(_target.transform.position, _camera.transform.position);
             if ((distance > minDistance && vertical > 0) || (distance < maxDistance && vertical < 0))
             {
-                _camera.transform.position += zoomSpeed * vertical * _camera.transform.forward;
+                _cameraOffsetLocalPos += zoomSpeed * vertical * _camera.transform.forward;
             }
-
-            //相対位置の更新
-            SaveCameraLocalAndOffset(_camera, _target.transform);
         }
 
         public override void RotateCamera(float horizontal, float vertical)
@@ -90,19 +85,10 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
             }
 
             //相対位置の更新
-            SaveCameraLocalAndOffset(_camera, _target.transform);
-        }
-        #endregion
-
-        #region Private method
-        private void SaveCameraLocalAndOffset(UnityEngine.Camera camera, Transform targetTransform)
-        {
-            _localPos = targetTransform.InverseTransformPoint(camera.transform.position);
-
-            _localAngle = camera.transform.eulerAngles - targetTransform.eulerAngles;
-            _localAngle.x = Mathf.Repeat(_localAngle.x + 180f, 360f) - 180f;
-
-            _positionOffset = camera.transform.position - targetTransform.position;
+            _cameraOffsetLocalPos = _target.transform.InverseTransformPoint(_camera.transform.position);
+            _cameraOffsetWorldPos = _camera.transform.position - _target.transform.position;
+            _cameraOffsetAngle = _camera.transform.eulerAngles - _target.transform.eulerAngles;
+            _cameraOffsetAngle.x = Mathf.Repeat(_cameraOffsetAngle.x + 180f, 360f) - 180f;
         }
         #endregion
     }
