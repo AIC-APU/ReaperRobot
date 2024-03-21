@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Plusplus.ReaperRobot.Scripts.View.Penalty;
 using Plusplus.ReaperRobot.Scripts.View.Score;

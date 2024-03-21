@@ -39,7 +39,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Web
         }
 #endif
 
-        private void LoadScene(IEnumerable<SceneAndKey> sceneAndKeys, string key)
+        void LoadScene(IEnumerable<SceneAndKey> sceneAndKeys, string key)
         {
             var sceneAndKey = sceneAndKeys.FirstOrDefault(x => x.key == key);
 

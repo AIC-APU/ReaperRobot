@@ -429,6 +429,7 @@ GameObject:
   - component: {fileID: 204382049}
   - component: {fileID: 204382048}
   - component: {fileID: 204382047}
+  - component: {fileID: 204382051}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -464,7 +465,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 204382045}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9ddcdc900f84374399d41c95e4b5d5b, type: 3}
   m_Name: 
@@ -514,7 +515,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 204382049}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 204382051}
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.Web.MenuPageNavigator,
+          ReaperRobot.Web
+        m_MethodName: GoToMenuPage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &204382049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -553,6 +567,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 204382045}
   m_CullTransparentMesh: 1
+--- !u!114 &204382051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 204382045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a15cc425116a64c82b428c4258e9ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &204690258
 GameObject:
   m_ObjectHideFlags: 0
@@ -15679,6 +15705,7 @@ GameObject:
   - component: {fileID: 1328981345}
   - component: {fileID: 1328981344}
   - component: {fileID: 1328981343}
+  - component: {fileID: 1328981347}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -15714,7 +15741,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1328981341}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9ddcdc900f84374399d41c95e4b5d5b, type: 3}
   m_Name: 
@@ -15764,7 +15791,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1328981345}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1328981347}
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.Web.MenuPageNavigator,
+          ReaperRobot.Web
+        m_MethodName: GoToMenuPage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1328981345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15803,6 +15843,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1328981341}
   m_CullTransparentMesh: 1
+--- !u!114 &1328981347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1328981341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a15cc425116a64c82b428c4258e9ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1346002978
 GameObject:
   m_ObjectHideFlags: 0
@@ -17071,7 +17123,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.175, y: 0.5}
-  m_AnchoredPosition: {x: 30.799927, y: -1.3999939}
+  m_AnchoredPosition: {x: 30.799896, y: -1.3999939}
   m_SizeDelta: {x: 61.60007, y: -2.7999864}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1731229241
@@ -19139,7 +19191,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20c6cddad99eb984fbb33fe81945ddae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _url: https://akitapu_dev.plusplus.tokyo/wp-json/myplugin/v1/user/register_score
   _timer: {fileID: 974599980}
   _penaltyCounter: {fileID: 1280192169}
   _scoreCalcurator: {fileID: 909463314}
