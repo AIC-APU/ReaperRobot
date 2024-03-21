@@ -2087,9 +2087,9 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 900484620}
+  - {fileID: 1760260330}
   - {fileID: 1770658977}
   - {fileID: 1315113621}
-  - {fileID: 1760260330}
   m_Father: {fileID: 1869938159}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10528,7 +10528,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.175, y: 0.5}
-  m_AnchoredPosition: {x: 30.799927, y: -1.4000244}
+  m_AnchoredPosition: {x: 30.799896, y: -1.4000244}
   m_SizeDelta: {x: 61.60007, y: -2.7999864}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1731229240
@@ -10640,6 +10640,7 @@ GameObject:
   - component: {fileID: 1760260333}
   - component: {fileID: 1760260332}
   - component: {fileID: 1760260331}
+  - component: {fileID: 1760260335}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -10675,7 +10676,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1760260329}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9ddcdc900f84374399d41c95e4b5d5b, type: 3}
   m_Name: 
@@ -10725,7 +10726,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1760260333}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1760260335}
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.Web.MenuPageNavigator,
+          ReaperRobot.Web
+        m_MethodName: GoToMenuPage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1760260333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10764,6 +10778,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1760260329}
   m_CullTransparentMesh: 1
+--- !u!114 &1760260335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760260329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a15cc425116a64c82b428c4258e9ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1770658976
 GameObject:
   m_ObjectHideFlags: 0
@@ -11770,7 +11796,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20c6cddad99eb984fbb33fe81945ddae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _url: https://akitapu_dev.plusplus.tokyo/wp-json/myplugin/v1/user/register_score
   _timer: {fileID: 974599980}
   _penaltyCounter: {fileID: 264827081}
   _scoreCalcurator: {fileID: 63865675}
@@ -12428,6 +12453,7 @@ GameObject:
   - component: {fileID: 2138702951}
   - component: {fileID: 2138702950}
   - component: {fileID: 2138702949}
+  - component: {fileID: 2138702953}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -12463,7 +12489,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2138702947}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9ddcdc900f84374399d41c95e4b5d5b, type: 3}
   m_Name: 
@@ -12513,7 +12539,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2138702951}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2138702953}
+        m_TargetAssemblyTypeName: Plusplus.ReaperRobot.Scripts.View.Web.MenuPageNavigator,
+          ReaperRobot.Web
+        m_MethodName: GoToMenuPage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2138702951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12552,6 +12591,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2138702947}
   m_CullTransparentMesh: 1
+--- !u!114 &2138702953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2138702947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a15cc425116a64c82b428c4258e9ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &2139527492 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5541683488892601461, guid: af10df3aae263734c819e36471800404, type: 3}
