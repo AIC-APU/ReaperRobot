@@ -65,7 +65,7 @@ public class MassPlacementTool : EditorWindow
 
     private void OnGUI()
     {
-        GUILayout.Label("Drag to select a range in the Scene view");
+        GUILayout.Label("Ckick and drag to place objects on the Object with 'Ground layer'. ");
 
         _selectedPrefab = EditorGUILayout.ObjectField(_selectedPrefab, typeof(GameObject), false) as GameObject;
         _processInterval = EditorGUILayout.Slider("Process Interval (seconds)", _processInterval, 0.1f, 1.0f);

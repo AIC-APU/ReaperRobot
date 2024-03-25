@@ -2,8 +2,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using Cysharp.Threading.Tasks;
 using System;
-using System.Threading;
-using System.ComponentModel;
 
 namespace Plusplus.ReaperRobot.Scripts.View.Person
 {
@@ -43,7 +41,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Person
             _animator.SetFloat("Speed", speed * _speedAnimationRate + angleSpeed * _angularAnimationRate, 0.05f, Time.deltaTime);
 
             //目標地点に到達したら待機アニメーション
-            if (_agent.remainingDistance < _agent.stoppingDistance)
+            if (_agent.remainingDistance < _agent.stoppingDistance && speed < 0.1f)
             {
                 _animator.SetBool("TreeCare", true);
             }
