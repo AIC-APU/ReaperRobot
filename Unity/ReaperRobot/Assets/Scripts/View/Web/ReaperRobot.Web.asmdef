@@ -1,0 +1,21 @@
+{
+    "name": "ReaperRobot.Web",
+    "rootNamespace": "Plusplus.ReaperRobot.Scripts.View.Web",
+    "references": [
+        "GUID:5d39fe4e8e9008c4aa43f8ca921f9c8b",
+        "GUID:335d8514495ec704191b66bc5bbb0005",
+        "GUID:5848b807abe34444fb8452a57e4baca7"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "WebGL"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

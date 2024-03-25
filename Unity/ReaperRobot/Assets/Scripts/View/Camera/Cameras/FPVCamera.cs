@@ -22,8 +22,8 @@ namespace Plusplus.ReaperRobot.Scripts.View.Camera
         /// </summary>
         public override void FollowTarget()
         {
-            _camera.transform.position = _target.transform.TransformPoint(_cameraOffsetPos.Value);
-            _camera.transform.eulerAngles = _target.transform.eulerAngles + _cameraOffsetRot.Value;
+            _camera.transform.position = _target.transform.position + _target.transform.TransformDirection(_cameraOffsetPos.Value);
+            _camera.transform.rotation = _target.transform.rotation * Quaternion.Euler(_cameraOffsetRot.Value);
         }
 
         public override void ResetCamera()

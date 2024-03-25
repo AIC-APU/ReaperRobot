@@ -9,26 +9,29 @@ EditorBuildSettings:
     path: Assets/Scenes/StartMenu.unity
     guid: 3fcc2f08b312a7a40b959330d0d76eb0
   - enabled: 0
-    path: Assets/Scenes/SimpleField_SOLO.unity
+    path: Assets/Scenes/Field.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 0
     path: Assets/Scenes/SimpleField_VR.unity
     guid: c2b1e3813d07c484a91e0b50cf1df289
   - enabled: 0
-    path: Assets/Scenes/Training_SOLO.unity
+    path: Assets/Scenes/Training.unity
     guid: 12a7d03c6e4503a4f8382eaeb905a013
   - enabled: 0
-    path: Assets/Scenes/Recording_SOLO.unity
+    path: Assets/Scenes/Recording.unity
     guid: 055ba7b95c0b8da4b874e8ec34ebfa48
   - enabled: 0
-    path: Assets/Scenes/Replay_SOLO.unity
+    path: Assets/Scenes/Replay.unity
     guid: 4264c2c4d66fc5e459e74cb7d25f0135
   - enabled: 1
-    path: Assets/Scenes/MultiView_SOLO.unity
+    path: Assets/Scenes/Field_MultiView.unity
     guid: 076acbc914c122444b610e68861b0690
   - enabled: 1
-    path: Assets/Scenes/MultiViewTraining_SOLO.unity
+    path: Assets/Scenes/Training_MultiView.unity
     guid: 435435e1d463633469006383b3d3622b
+  - enabled: 1
+    path: Assets/Scenes/Slope_MultiView.unity
+    guid: df84bcc18b7c3ae40801d1ef6191b4bc
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: c0dcafadd040d644b87cb681e28f92d0, type: 2}
     com.unity.addressableassets: {fileID: 11400000, guid: da36cd3cc8be38545bbf1a74791ae9f2, type: 2}
