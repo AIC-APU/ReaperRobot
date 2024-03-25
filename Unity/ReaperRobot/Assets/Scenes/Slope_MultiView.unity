@@ -2767,7 +2767,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0
+  m_BaseOffset: -0.05
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!4 &625677907 stripped
@@ -3503,7 +3503,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20c6cddad99eb984fbb33fe81945ddae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _url: https://akitapu_dev.plusplus.tokyo/wp-json/myplugin/v1/user/register_score
   _timer: {fileID: 974599980}
   _penaltyCounter: {fileID: 1280192169}
   _scoreCalcurator: {fileID: 909463314}
