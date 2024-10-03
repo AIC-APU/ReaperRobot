@@ -10,14 +10,12 @@ namespace Plusplus.ReaperRobot.Scripts.View.Web
     {
         public static QueryKeySceneTransition Instance;
 
-        [Serializable]
-        private struct SceneAndKey
+        private Dictionary<string, string> _sceneDctionary = new()
         {
-            public string key;
-            public string sceneName;
-        }
-
-        [SerializeField] private List<SceneAndKey> _sceneAndKeys = new();
+            {"Field","Field_MultiView"},
+            {"Training","Training_MultiView"},
+            {"Slope","Slope_MultiView"},
+        };
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         void OnEnable()
@@ -30,7 +28,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Web
                 var key = QueryReaderUtility.GetValue("scene");
                 if (key == "") return;
 
-                LoadScene(_sceneAndKeys, key);
+                LoadScene(_sceneDctionary, key);
             }
             else
             {
@@ -39,13 +37,13 @@ namespace Plusplus.ReaperRobot.Scripts.View.Web
         }
 #endif
 
-        void LoadScene(IEnumerable<SceneAndKey> sceneAndKeys, string key)
+        void LoadScene(Dictionary<string, string> sceneDictionary, string key)
         {
-            var sceneAndKey = sceneAndKeys.FirstOrDefault(x => x.key == key);
+            var sceneName = sceneDictionary.FirstOrDefault(x => x.Key == key).Value;
 
-            if (sceneAndKey.sceneName != null)
+            if (sceneName != null)
             {
-                SceneManager.LoadScene(sceneAndKey.sceneName);
+                SceneManager.LoadScene(sceneName);
             }
         }
     }
