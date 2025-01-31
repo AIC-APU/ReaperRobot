@@ -2,8 +2,9 @@ using UnityEngine;
 
 namespace Plusplus.ReaperRobot.Scripts.View.Penalty
 {
-    public class Obstacle : MonoBehaviour
+    public class PenaltyTrigger : MonoBehaviour
     {
+        [SerializeField] PenaltyHandler _penaltyHandler;
         [SerializeField] GameObject _collisionTarget;
 
         void Awake()
@@ -19,7 +20,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Penalty
             if (collision.gameObject == _collisionTarget 
                 || IsChildOfTarget(collision.gameObject, _collisionTarget))
             {
-                PenaltyManager.Instance.TriggerPenalty();
+                _penaltyHandler.TriggerPenalty();
             }
         }
 

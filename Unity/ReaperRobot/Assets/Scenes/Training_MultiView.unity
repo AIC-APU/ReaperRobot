@@ -1574,6 +1574,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95d85fa970d6c9648b6370720c1a7c44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _penaltyHandler: {fileID: 264827082}
 --- !u!114 &264827082
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2661,7 +2662,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.02
   far clip plane: 150
   field of view: 60
   orthographic: 0
@@ -4370,6 +4371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 471ef6dbf8c7ba1498daef0152d354e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _penaltyHandler: {fileID: 264827082}
   _collisionTarget: {fileID: 1524737720}
 --- !u!114 &738409617
 MonoBehaviour:
@@ -5078,7 +5080,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.02
   far clip plane: 25
   field of view: 60
   orthographic: 0
@@ -9962,6 +9964,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 471ef6dbf8c7ba1498daef0152d354e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _penaltyHandler: {fileID: 264827082}
   _collisionTarget: {fileID: 1524737720}
 --- !u!114 &1485507009
 MonoBehaviour:
@@ -10528,7 +10531,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.175, y: 0.5}
-  m_AnchoredPosition: {x: 30.799896, y: -1.4000244}
+  m_AnchoredPosition: {x: 30.799927, y: -1.4000244}
   m_SizeDelta: {x: 61.60007, y: -2.7999864}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1731229240
@@ -11967,6 +11970,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0361e5f5af3616343aa4c1a02a2bdd5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _penaltyHandler: {fileID: 264827082}
   _popupTime: 0.1
   _fadeOutTime: 0.3
 --- !u!225 &2013668957

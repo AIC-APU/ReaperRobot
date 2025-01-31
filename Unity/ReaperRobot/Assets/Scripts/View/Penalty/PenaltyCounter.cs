@@ -6,21 +6,21 @@ namespace Plusplus.ReaperRobot.Scripts.View.Penalty
 {
     public class PenaltyCounter : MonoBehaviour
     {
+        [SerializeField] PenaltyHandler _penaltyHandler;
         private ReactiveProperty<int> _penaltyCount = new(0);
 
         public IReadOnlyReactiveProperty<int> PenaltyCountRx => _penaltyCount;
         public int PenaltyCount => _penaltyCount.Value;
 
         #region MonoBehaviour Callbacks
-        private async void Awake()
+        void Awake()
         {
-            await UniTask.WaitUntil(() => PenaltyManager.Instance != null);
-            PenaltyManager.Instance.PenaltyEvent += AddPenalty;
+            _penaltyHandler.PenaltyEvent += AddPenalty;
         }
 
         private void OnDestroy()
         {
-            PenaltyManager.Instance.PenaltyEvent -= AddPenalty;
+            _penaltyHandler.PenaltyEvent -= AddPenalty;
         }
         #endregion
 

@@ -8,8 +8,9 @@ namespace Plusplus.ReaperRobot.Scripts.View.Penalty
     public class PenaltyEffect : MonoBehaviour
     {
         #region Serialized Private Fields
-        [SerializeField,Range(0,1)] private float _popupTime = 0.1f;
-        [SerializeField,Range(0,1)] private float _fadeOutTime = 0.3f;
+        [SerializeField] PenaltyHandler _penaltyHandler;
+        [SerializeField,Range(0,1)] float _popupTime = 0.1f;
+        [SerializeField,Range(0,1)] float _fadeOutTime = 0.3f;
         #endregion
 
         #region Private Fields
@@ -17,18 +18,17 @@ namespace Plusplus.ReaperRobot.Scripts.View.Penalty
         #endregion
 
         #region MonoBehaviour Callbacks
-        async void Awake()
+        void Awake()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
             _canvasGroup.alpha = 0f;
 
-            await UniTask.WaitUntil(() => PenaltyManager.Instance != null);
-            PenaltyManager.Instance.PenaltyEvent += PopupPenaltyEffectPanel;
+            _penaltyHandler.PenaltyEvent += PopupPenaltyEffectPanel;
         }
 
         private void OnDestroy()
         {
-            PenaltyManager.Instance.PenaltyEvent -= PopupPenaltyEffectPanel;
+            _penaltyHandler.PenaltyEvent -= PopupPenaltyEffectPanel;
         }
         #endregion
 
@@ -53,5 +53,4 @@ namespace Plusplus.ReaperRobot.Scripts.View.Penalty
         }
         #endregion
     }
-
 }
