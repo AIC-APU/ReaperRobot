@@ -5,6 +5,7 @@ namespace Plusplus.ReaperRobot.Scripts.View.Web
 {
     public class MenuPageNavigator : MonoBehaviour
     {
+        
         public void GoToMenuPage()
         {
             //#if UNITY_WEBGL && !UNITY_EDITOR
